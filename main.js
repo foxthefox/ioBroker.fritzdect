@@ -66,8 +66,8 @@ function main() {
     adapter.log.info('config test1: ' + adapter.config.test2);
 
     var options = {
-        bridge:     adapter.config.milight-ip       || '192.168.178.33',
-        port:       adapter.config.milight-port     || 8899
+        bridge:     adapter.config.fritzbox-ip       || '192.xx.xx.xx',
+        port:       adapter.config.fritzbox-port     || 8899
     };
 
     /**

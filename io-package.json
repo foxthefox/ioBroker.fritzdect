@@ -9,7 +9,7 @@
         "license": 	   	"MIT",
         "keywords":		["smart home", "DECT200", "fritzbox"],
         "type":			"hardware",
-        "icon":                 "template.png",
+        "icon":                 "fritzdect_logo.png",
 	"extIcon":          	"https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
 	"readme":           	"https://github.com/foxthefox/ioBroker.fritzdect/master/README.md",
 	"loglevel":		"debug"

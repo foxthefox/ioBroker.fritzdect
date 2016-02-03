@@ -20,6 +20,7 @@
     "url": "https://github.com/foxthefox/ioBroker.fritzdect"
   },
   "dependencies": {
+    "smartfritz": "^0.1.7"
   },
   "devDependencies": {
       "grunt": "^0.4.5",

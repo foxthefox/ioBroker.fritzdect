@@ -4,6 +4,12 @@
 
 "use strict";
 
+var fritz = require('smartfritz-promise');
+ 
+fritz.getSessionID("user", "password").then(function(sid) {
+    console.log(sid);
+});
+
 // you have to require the utils module and call adapter function
 var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 
@@ -69,6 +75,10 @@ function main() {
         bridge:     adapter.config.fritzbox-ip       || '192.xx.xx.xx',
         port:       adapter.config.fritzbox-port     || 8899
     };
+    
+    fritz.getSwitchList(sid).then(function(ains){
+    console.log("Switches AINs: "+ains);
+    });
 
     /**
      *

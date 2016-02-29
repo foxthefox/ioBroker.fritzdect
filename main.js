@@ -5,10 +5,11 @@
 "use strict";
 
 var fritz = require('smartfritz-promise');
- 
-fritz.getSessionID("user", "password").then(function(sid) {
-    console.log(sid);
-});
+
+
+var username = DEFINE HERE;
+var password = DEFINE HERE;
+
 
 // you have to require the utils module and call adapter function
 var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
@@ -76,10 +77,31 @@ function main() {
         port:       adapter.config.fritzbox-port     || 8899
     };
     
-    fritz.getSwitchList(sid).then(function(ains){
-    console.log("Switches AINs: "+ains);
-    });
+fritz.getSessionID(username, password).then(function(sid) {
+    console.log("SID: " + sid);
+    // display switch information
+    fritz.getSwitchList(sid).then(function(switches) {
+        console.log("Switches: " + switches);
 
+        if (switches.length) {
+            fritz.getSwitchName(sid, switches[0]).then(function(name) {
+                console.log("Switch name [" + switches[0] + "]: " + name);
+
+                fritz.getSwitchPresence(sid, switches[0]).then(function(presence) {
+                    console.log("Switch presence [" + switches[0] + "]: " + presence);
+
+                    fritz.getSwitchState(sid, switches[0]).then(function(state) {
+                        console.log("Switch state [" + switches[0] + "]: " + state);
+                    });
+
+                    fritz.getSwitchTemperature(sid, switches[0]).then(function(temp) {
+                        console.log("Switch temperature [" + switches[0] + "]: " + temp + "°C");
+                    });
+                });
+            });
+        }
+    });
+});
     /**
      *
      *      For every state in the system there has to be also an object of type state

@@ -4,7 +4,7 @@
 
 "use strict";
 
-var fritz = require('smartfritz-promise');
+var fritz = require('smartfritz');
 
 
 var username = DEFINE HERE;
@@ -67,41 +67,16 @@ adapter.on('ready', function () {
 
 function main() {
 
-    // The adapters config (in the instance object everything under the attribute "native") is accessible via
-    // adapter.config:
-    adapter.log.info('config test1: ' + adapter.config.test1);
-    adapter.log.info('config test1: ' + adapter.config.test2);
+var moreParam = { url:"192.168.178.1" };
+fritz.getSessionID("user", "password", function(sid){
+    adapter.log.info(sid);
+      fritz.getSwitchList(sid,function(listinfos){
+      adapter.log.info("Switches AIDs: "+listinfos);
+  });
+}, moreParam);
 
-    var options = {
-        bridge:     adapter.config.fritzbox-ip       || '192.xx.xx.xx',
-        port:       adapter.config.fritzbox-port     || 8899
-    };
     
-fritz.getSessionID(username, password).then(function(sid) {
-    adapter.log.info("SID: " + sid);
-    // display switch information
-    fritz.getSwitchList(sid).then(function(switches) {
-        adapter.log.info("Switches: " + switches);
 
-        if (switches.length) {
-            fritz.getSwitchName(sid, switches[0]).then(function(name) {
-                adapter.log.info("Switch name [" + switches[0] + "]: " + name);
-
-                fritz.getSwitchPresence(sid, switches[0]).then(function(presence) {
-                    adapter.log.info("Switch presence [" + switches[0] + "]: " + presence);
-
-                    fritz.getSwitchState(sid, switches[0]).then(function(state) {
-                        adapter.log.info("Switch state [" + switches[0] + "]: " + state);
-                    });
-
-                    fritz.getSwitchTemperature(sid, switches[0]).then(function(temp) {
-                        adapter.log.info("Switch temperature [" + switches[0] + "]: " + temp + "°C");
-                    });
-                });
-            });
-        }
-    });
-});
     /**
      *
      *      For every state in the system there has to be also an object of type state

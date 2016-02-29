@@ -7,6 +7,8 @@ ALPHA
 
 Installation:
 
+npm install https://github.com/foxthefox/ioBroker.fritzdect/tarball/master --production
+
 Setup
 
 TODO

@@ -78,24 +78,24 @@ function main() {
     };
     
 fritz.getSessionID(username, password).then(function(sid) {
-    console.log("SID: " + sid);
+    adapter.log.info("SID: " + sid);
     // display switch information
     fritz.getSwitchList(sid).then(function(switches) {
-        console.log("Switches: " + switches);
+        adapter.log.info("Switches: " + switches);
 
         if (switches.length) {
             fritz.getSwitchName(sid, switches[0]).then(function(name) {
-                console.log("Switch name [" + switches[0] + "]: " + name);
+                adapter.log.info("Switch name [" + switches[0] + "]: " + name);
 
                 fritz.getSwitchPresence(sid, switches[0]).then(function(presence) {
-                    console.log("Switch presence [" + switches[0] + "]: " + presence);
+                    adapter.log.info("Switch presence [" + switches[0] + "]: " + presence);
 
                     fritz.getSwitchState(sid, switches[0]).then(function(state) {
-                        console.log("Switch state [" + switches[0] + "]: " + state);
+                        adapter.log.info("Switch state [" + switches[0] + "]: " + state);
                     });
 
                     fritz.getSwitchTemperature(sid, switches[0]).then(function(temp) {
-                        console.log("Switch temperature [" + switches[0] + "]: " + temp + "°C");
+                        adapter.log.info("Switch temperature [" + switches[0] + "]: " + temp + "°C");
                     });
                 });
             });

@@ -4,11 +4,7 @@
 
 "use strict";
 
-var fritz = require('smartfritz');
-
-
-var username = DEFINE HERE;
-var password = DEFINE HERE;
+var fritz = require('smartfritz-promise');
 
 
 // you have to require the utils module and call adapter function
@@ -46,34 +42,23 @@ adapter.on('stateChange', function (id, state) {
     }
 });
 
-// Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
-adapter.on('message', function (obj) {
-    if (typeof obj == 'object' && obj.message) {
-        if (obj.command == 'send') {
-            // e.g. send email or pushover or whatever
-            console.log('send command');
-
-            // Send response in callback if required
-            if (obj.callback) adapter.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-        }
-    }
-});
 
 // is called when databases are connected and adapter received configuration.
 // start here!
 adapter.on('ready', function () {
+    adapter.log.info('entered ready');
     main();
 });
 
 function main() {
-
+    
+    
+var username = DEFINE HERE;
+var password = DEFINE HERE;
 var moreParam = { url:"192.168.178.1" };
-fritz.getSessionID("user", "password", function(sid){
-    adapter.log.info(sid);
-      fritz.getSwitchList(sid,function(listinfos){
-      adapter.log.info("Switches AIDs: "+listinfos);
-  });
-}, moreParam);
+fritz.getSessionID("user", "password", moreParam).then(function(sid) {
+    adapter.log.info('SID : '+sid);
+});
 
     
 
@@ -109,17 +94,6 @@ fritz.getSessionID("user", "password", function(sid){
 
     // same thing, but the state is deleted after 30s (getState will return null afterwards)
     adapter.setState('testVariable', {val: true, ack: true, expire: 30});
-
-
-
-    // examples for the checkPassword/checkGroup functions
-    adapter.checkPassword('admin', 'iobroker', function (res) {
-        console.log('check user admin pw ioboker: ' + res);
-    });
-
-    adapter.checkGroup('admin', 'admin', function (res) {
-        console.log('check group user admin group admin: ' + res);
-    });
 
 
 

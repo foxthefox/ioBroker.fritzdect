@@ -53,9 +53,9 @@ adapter.on('ready', function () {
 function main() {
     
     
-var username = DEFINE HERE;
-var password = DEFINE HERE;
-var moreParam = { url:"192.168.178.1" };
+var username = "admin";
+var password = adapter.config.fritz_pw;
+var moreParam = { url: adapter.config.fritz_ip };
 fritz.getSessionID("user", "password", moreParam).then(function(sid) {
     adapter.log.info('SID : '+sid);
 });

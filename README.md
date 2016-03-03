@@ -9,6 +9,7 @@ npm install https://github.com/foxthefox/ioBroker.fritzdect/tarball/master --pro
 
 Setup
 If IP-adress of Fritzbox is not reachable with fritz.box the IP should be defined in io-package.json.
+Password has to be defined in io-package.json.
 
 The decices are detected automatically.
 

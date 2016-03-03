@@ -16,39 +16,34 @@
 
     },
       "native": {
-        "fritzbox-ip":  "192.x.x.x",
-        "fritzbox-port": "9999"
+        "fritz_ip":  "192.x.x.x",
+        "fritz_pw": "9999"
     },
     "objects": [
 
     ],
     "instanceObjects": [
         {
-            "_id": "power",
-            "type": "state",
+            "_id": "GuestWLAN",
+            "type": "channel",
             "common": {
-                "name":  "Lamp state",
-                "type":  "boolean",
-                "role":  "button",
-                "read":  true,
-                "write": true,
-                "def":   null
+                "name":  "GuestWLAN",
+                "role":  "switch"
             },
-            "native": {
-                "command": "lamp-state",
-                "values": ["off","on","toggle","query"]
-            }
+            "native": {}
         },
         {
-            "_id": "connected",
+            "_id": "GuestWLAN.state",
             "type": "state",
             "common": {
-                "name":  "Input selector",
-                "type":  "string",
-                "role":  "indicator",
+                "name":  "GuestWLAN  on/off",
+                "type":  "boolean",
+                "role":  "switch",
                 "read":  true,
-                "write": false
-            }
+                "write": true,
+                "desc":  "GuestWLAN  on/off"
+            },
+            "native": {}
         }
     ]
 }

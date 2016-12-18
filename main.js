@@ -4,7 +4,7 @@
 
 "use strict";
 
-var fritz = require('smartfritz-promise');
+var fritz = require('fritzapi');
 
 
 // you have to require the utils module and call adapter function

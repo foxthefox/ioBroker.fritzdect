@@ -15,11 +15,15 @@ Password has to be defined in io-package.json.
 The decices are detected automatically.
 
 Known Issues:
-??
+
+GuestWlan not working
 
 TODO
+
 dynamic AID
+
 Thermostat
+
 Energy statistics
 
 
@@ -29,6 +33,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 
 Changelog
 0.0.2
+
 smartfritz-promise->fritzapi
 running version, tested with 1x DECT200 and Fritzbox FW=6.51
 

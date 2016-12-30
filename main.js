@@ -6,7 +6,6 @@
 
 var fritz = require('fritzapi');
 
-
 // you have to require the utils module and call adapter function
 var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 
@@ -28,37 +27,39 @@ adapter.on('unload', function (callback) {
 // is called if a subscribed object changes
 adapter.on('objectChange', function (id, obj) {
     // Warning, obj can be null if it was deleted
-    adapter.log.info('objectChange ' + id + ' ' + JSON.stringify(obj));
+    adapter.log.debug('objectChange ' + id + ' ' + JSON.stringify(obj));
 });
 
 // is called if a subscribed state changes
 adapter.on('stateChange', function (id, state) {
     // Warning, state can be null if it was deleted
-    adapter.log.info('stateChange ' + id + ' ' + JSON.stringify(state));
-
+    adapter.log.debug('stateChange ' + id + ' ' + JSON.stringify(state));
+var username = "admin";
+var password = adapter.config.fritz_pw || "9999";
+var moreParam = { url: "http://192.168.178.1" };
     // you can use the ack flag to detect if it is status (true) or command (false)
     if (state && !state.ack) {
-        adapter.log.info('ack is not set!');
+        adapter.log.debug('ack is not set! -> command');
 
         var tmp = id.split('.');
         var dp = tmp.pop();
-        adapter.log.info('dp'+dp);
+        adapter.log.debug('data  ?'   +dp);
         var idx = tmp.pop();
         id = idx.replace(/DECT200_/g,''); //Switch
-        adapter.log.debug('SWITCH ID: '+ id + 'identified');
+        adapter.log.debug('SWITCH ID: '+ id + ' identified');
 
         if (dp == 'state') {
             if (state.val == 0) {
                 if (id==="GuestWLAN"){
-                    fritz.getSessionID(username, password, function (sid) {
-                        fritz.setGuestWLan(sid, state.val, function (sid) {
+                    fritz.getSessionID(username, password, moreParam).then(function (sid) {
+                        fritz.setGuestWlan(sid, state.val, function (sid) {
                             adapter.log.info('Turned WLAN ' + id + ' off');
                         });
                     });
 
                 }else {
-                    fritz.getSessionID(username, password, function (sid) {
-                        fritz.setSwitchOff(sid, id, function (sid) {
+                    fritz.getSessionID(username, password, moreParam).then(function (sid) {
+                        fritz.setSwitchOff(sid, id).then(function (sid) {
                             adapter.log.info('Turned switch ' + id + ' off');
                         });
                     });
@@ -66,14 +67,14 @@ adapter.on('stateChange', function (id, state) {
             }
             else if (state.val == 1) {
                 if (id==="GuestWLAN"){
-                    fritz.getSessionID(username, password, function (sid) {
-                        fritz.setGuestWLan(sid, state.val, function (sid) {
+                    fritz.getSessionID(username, password, moreParam).then(function (sid) {
+                        fritz.setGuestWlan(sid, state.val, moreParam).then(function (sid) {
                             adapter.log.info('Turned WLAN ' + id + ' on');
-                        }, moreWLAN);
+                        });
                     });
                 }else {
-                    fritz.getSessionID(username, password, function (sid) {
-                        fritz.setSwitchOn(sid, id, function (sid) {
+                    fritz.getSessionID(username, password, moreParam).then(function (sid) {
+                        fritz.setSwitchOn(sid, id).then(function (sid) {
                             adapter.log.info('Turned switch ' + id + ' on');
                         });
                     });
@@ -93,10 +94,9 @@ adapter.on('ready', function () {
 
 function main() {
     
-    
 var username = "admin";
 var password = adapter.config.fritz_pw || "9999";
-var moreParam = { url: "192.168.178.1" };
+var moreParam = { url: "http://192.168.178.1" };    
 
     function insertDECT200(id){
         adapter.log.info('setting up object '+ id);
@@ -182,7 +182,7 @@ var moreParam = { url: "192.168.178.1" };
                 common: {
                     "name":  "Switch act power",
                     "type": "number",
-                    "unit": "mW",
+                    "unit": "W",
                     "min": 0,
                     "max": 4000,
                     "read": true,
@@ -210,44 +210,53 @@ var moreParam = { url: "192.168.178.1" };
             });
     }
 
-        fritz.getSessionID(username, password, function(sid){
+    fritz.getSessionID(username, password, moreParam).then(function(sid){
         adapter.log.info('SID : '+sid);
-        fritz.getSwitchList(sid,function(listinfos){
-            adapter.log.info("Switches AIDs: "+listinfos);
-            insertDECT200(listinfos);
+        fritz.getSwitchList(sid,moreParam).then(function(switches){
+            adapter.log.info("Switches AIDs: "+switches);
+            insertDECT200(switches);
         });
-    }, moreParam);
+    })
+    .catch(function(error) {
+    adapter.log.debug("errorhandler:   " +error);
+    });
 
-    fritz.getSessionID(username, password, function(sid){
-        fritz.getGuestWLan(sid,function(listinfos){
-            adapter.log.info("WLANs: "+JSON.stringify(listinfos));
+    fritz.getSessionID(username, password, moreParam).then(function(sid){
+        fritz.getGuestWlan(sid).then(function(listinfos){
+            adapter.log.info("Guest WLAN: "+JSON.stringify(listinfos));
         });
-    }, moreParam);
+    })
+   .catch(function(error) {
+    adapter.log.debug("errorhandler:   " +error);
+    });
 
-    fritz.getSessionID(username, password, function(sid){
-        console.log('sid2 : '+ sid);
-        fritz.getSwitchState(sid, '087610006102', function(sid){
-            adapter.log.info('state :' + sid);
-            adapter.setState('DECT200_'+ '087610006102' +'.state', {val: sid, ack: true});
+    fritz.getSessionID(username, password, moreParam).then(function(sid){
+        adapter.log.debug('sid2 : '+ sid);
+        fritz.getSwitchState(sid, '087610006102', moreParam).then(function(state){
+            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'state :' + state);
+            adapter.setState('DECT200_'+ '087610006102' +'.state', {val: state, ack: true});
         });
-        fritz.getSwitchPresence(sid, '087610006102', function(sid){
-            adapter.log.info('present :' + sid);
-            adapter.setState('DECT200_'+ '087610006102' +'.present', {val: sid, ack: true});
+        fritz.getSwitchPresence(sid, '087610006102', moreParam).then(function(presence){
+            adapter.log.info('DECT200_'+ '087610006102'+ ' : ' +'present :' + presence);
+            adapter.setState('DECT200_'+ '087610006102' +'.present', {val: presence, ack: true});
         });
-        fritz.getTemperature(sid, '087610006102', function(sid){
-            adapter.log.info('temp :' + sid);
-            adapter.setState('DECT200_'+ '087610006102' +'.temp', {val: sid, ack: true});
+        fritz.getTemperature(sid, '087610006102', moreParam).then(function(temp){
+            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'temp :' + temp);
+            adapter.setState('DECT200_'+ '087610006102' +'.temp', {val: temp, ack: true});
         });
-        fritz.getSwitchPower(sid, '087610006102', function(sid){
-            adapter.log.info('pwer :' + sid);
-            adapter.setState('DECT200_'+ '087610006102' +'.power', {val: sid, ack: true});
+        fritz.getSwitchPower(sid, '087610006102', moreParam).then(function(power){
+            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'power :' + power);
+            adapter.setState('DECT200_'+ '087610006102' +'.power', {val: power, ack: true});
         });
-        fritz.getSwitchEnergy(sid, '087610006102', function(sid){
-            adapter.log.info('energy :' + sid);
-            adapter.setState('DECT200_'+ '087610006102' +'.energy', {val: sid, ack: true});
+        fritz.getSwitchEnergy(sid, '087610006102', moreParam).then(function(energy){
+            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'energy :' + energy);
+            adapter.setState('DECT200_'+ '087610006102' +'.energy', {val: energy, ack: true});
         });
 
-    }, moreParam);
+    })
+    .catch(function(error) {
+    adapter.log.debug("errorhandler:   " +error);
+    });
 
   
     // in this template all states changes inside the adapters namespace are subscribed

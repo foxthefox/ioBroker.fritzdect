@@ -1,3 +1,4 @@
+
 ![Logo](admin/fritzdect_logo.png)
 # ioBroker.fritzdect
 =================
@@ -14,12 +15,13 @@ Password has to be defined in io-package.json.
 The decices are detected automatically.
 
 Known Issues:
-
-temperature reading on DECT200 not working
+??
 
 TODO
-
+dynamic AID
+Thermostat
 Energy statistics
+
 
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+ain+'&xhr=1'
 
@@ -28,7 +30,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 Changelog
 0.0.2
 smartfritz-promise->fritzapi
-to be tested with FW=6.51
+running version, tested with 1x DECT200 and Fritzbox FW=6.51
 
 0.0.1
 running version, tested with 1x DECT200 and Fritzbox FW=6.30

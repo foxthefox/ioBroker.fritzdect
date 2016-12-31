@@ -34,9 +34,9 @@ adapter.on('objectChange', function (id, obj) {
 adapter.on('stateChange', function (id, state) {
     // Warning, state can be null if it was deleted
     adapter.log.debug('stateChange ' + id + ' ' + JSON.stringify(state));
-var username = "admin";
-var password = adapter.config.fritz_pw || "9999";
-var moreParam = { url: "http://192.168.178.1" };
+    var username = "admin";
+    var password = adapter.config.fritz_pw;
+    var moreParam = { url: adapter.config.fritz_ip};
     // you can use the ack flag to detect if it is status (true) or command (false)
     if (state && !state.ack) {
         adapter.log.debug('ack is not set! -> command');
@@ -94,14 +94,17 @@ adapter.on('ready', function () {
 
 function main() {
     
-var username = "admin";
-var password = adapter.config.fritz_pw || "9999";
-var moreParam = { url: "http://192.168.178.1" };    
+    var username = "admin";
+    var password = adapter.config.fritz_pw;
+    var moreParam = { url: adapter.fritz_ip};    
 
     function insertDECT200(id){
-        adapter.log.info('setting up object '+ id);
+        var switches = id;
+        var i=0;
+        for (i=0;i<switches.length; i++){
+        adapter.log.info('setting up switch object '+ switches[i]);
 
-            var newId = id;
+            var newId = switches[i];
             adapter.setObject('DECT200_' + newId, {
                 type: 'channel',
                 common: {
@@ -110,6 +113,19 @@ var moreParam = { url: "http://192.168.178.1" };
                 },
                 native: {
                     "aid": newId
+                }
+            });
+            adapter.setObject('DECT200_' + newId +'.name', {
+                type: 'state',
+                common: {
+                    "name": "Name",
+                    "type": "string",
+                    "read": true,
+                    "write": false,
+                    "role": "text",
+                    "desc":  "Name"
+                },
+                native: {
                 }
             });
             adapter.setObject('DECT200_' + newId +'.state', {
@@ -208,17 +224,153 @@ var moreParam = { url: "http://192.168.178.1" };
                 native: {
                 }
             });
+        }
+    }
+    function insertComet(id){
+        var comets = id;
+        var i=0;
+        for (i=0;i<comets.length; i++){
+        adapter.log.info('setting up thermostat object '+ comets[i]);
+
+            var newId = comets[i];
+            adapter.setObject('Comet_' + newId, {
+                type: 'channel',
+                common: {
+                    name: 'FritzComet ' + newId,
+                    role: 'thermo'
+                },
+                native: {
+                    "aid": newId
+                }
+            });
+            adapter.setObject('Comet_' + newId +'.targettemp', {
+                type: 'state',
+                common: {
+                    "name":  "Target Temp",
+                    "type": "number",
+                    "unit": "°C",
+                    "read": true,
+                    "write": true,
+                    "role": "value.temperature",
+                    "desc":  "Target Temp"
+                },
+                native: {
+                }
+            });
+            adapter.setObject('Comet_' + newId +'.comfytemp', {
+                type: 'state',
+                common: {
+                    "name":  "Comfort Temp",
+                    "type": "number",
+                    "unit": "°C",                    
+                    "read": true,
+                    "write": false,
+                    "role": "value.temperature",
+                    "desc":  "Comfort Temp"
+                },
+                native: {
+                }
+            });
+            adapter.setObject('Comet_' + newId +'.nighttemp', {
+                type: 'state',
+                common: {
+                    "name":  "Night Temp",
+                    "type": "number",
+                    "unit": "°C",
+                    "read": true,
+                    "write": false,
+                    "role": "value.temperature",
+                    "desc":  "Night Temp"
+                },
+                native: {
+                }
+            });
+            adapter.setObject('Comet_' + newId +'.battery', {
+                type: 'state',
+                common: {
+                    "name":  "Battery", 
+                    "type": "number",
+                    "unit": "V",
+                    "read": true,
+                    "write": false,
+                    "role": "value.battery",
+                    "desc":  "Battery"
+                },
+                native: {
+                }
+            });
+        }
+    }
+    function getSwitchInfo(switches, i, sid, moreParam){
+        fritz.getSwitchName(sid, switches[i], moreParam).then(function(name){
+            adapter.log.info('DECT200_'+ switches[i] + ' : '  +'name :' + name);
+            adapter.setState('DECT200_'+ switches[i] +'.state', {val: name, ack: true});
+        });
+        fritz.getSwitchState(sid, switches[i], moreParam).then(function(state){
+            adapter.log.info('DECT200_'+ switches[i] + ' : '  +'state :' + state);
+            adapter.setState('DECT200_'+ switches[i] +'.state', {val: state, ack: true});
+        });
+        fritz.getSwitchPresence(sid,switches[i], moreParam).then(function(presence){
+            adapter.log.info('DECT200_'+ switches[i] + ' : ' +'present :' + presence);
+            adapter.setState('DECT200_'+ switches[i] +'.present', {val: presence, ack: true});
+        });
+        fritz.getTemperature(sid,switches[i], moreParam).then(function(temp){
+            adapter.log.info('DECT200_'+ switches[i] + ' : '  +'temp :' + temp);
+            adapter.setState('DECT200_'+ switches[i] +'.temp', {val: temp, ack: true});
+        });
+        fritz.getSwitchPower(sid,switches[i], moreParam).then(function(power){
+            adapter.log.info('DECT200_'+ switches[i]+ ' : '  +'power :' + power);
+            adapter.setState('DECT200_'+ switches[i] +'.power', {val: power, ack: true});
+        });
+        fritz.getSwitchEnergy(sid,switches[i], moreParam).then(function(energy){
+            adapter.log.info('DECT200_'+ switches[i]+ ' : '  +'energy :' + energy);
+            adapter.setState('DECT200_'+ switches[i] +'.energy', {val: energy, ack: true});
+        });
+    }
+
+    function getCometInfo(comets, i, sid, moreParam){
+        fritz.getTempTarget(sid, comets[i], moreParam).then(function(targettemp){
+            adapter.log.info('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
+            adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
+        });
+        fritz.getTempComfort(sid,comets[i], moreParam).then(function(comfytemp){
+            adapter.log.info('Comet_'+ comets[i] + ' : '  +'comfytemp :' + comfytemptemp);
+            adapter.setState('Comet_'+ comets[i] +'.comfytemp', {val: comfytemp, ack: true});
+        });
+        fritz.getTempNight(sid,comets[i], moreParam).then(function(nighttemp){
+            adapter.log.info('Comet_'+ comets[i]+ ' : '  +'nighttemp :' + nighttemp);
+            adapter.setState('Comet_'+ comets[i] +'.nighttemp', {val: nighttemp, ack: true});
+        });
+        fritz.getBatteryCharge(sid,comets[i], moreParam).then(function(battery){
+            adapter.log.info('Comet_'+ comets[i]+ ' : '  +'battery :' + battery);
+            adapter.setState('Comet_'+ comets[i] +'.battery', {val: battery, ack: true});
+        });
     }
 
     fritz.getSessionID(username, password, moreParam).then(function(sid){
-        adapter.log.info('SID : '+sid);
+        adapter.log.debug('SID for switchlist : '+sid);
         fritz.getSwitchList(sid,moreParam).then(function(switches){
-            adapter.log.info("Switches AIDs: "+switches);
-            insertDECT200(switches);
+            if (switches.length){
+               adapter.log.info("Switches AIDs: "+switches);
+               insertDECT200(switches);}
+            else{adapter.log.info("no switches found");}   
         });
     })
     .catch(function(error) {
-    adapter.log.debug("errorhandler:   " +error);
+    adapter.log.debug("errorhandler switches:   " +error);
+    });
+
+    fritz.getSessionID(username, password, moreParam).then(function(sid){
+        adapter.log.debug('SID for thermostatlist : '+sid);
+        fritz.getThermostatList(sid,moreParam).then(function(comets){
+            if (comets.length){
+                adapter.log.info("Comet AIDs: "+comets);
+                insertComet(comets);}
+            else{adapter.log.info("no thermostats found");}
+        });
+    })
+    .catch(function(error) {
+    adapter.log.debug("errorhandler thermostats:   " +error);
     });
 
     fritz.getSessionID(username, password, moreParam).then(function(sid){
@@ -227,37 +379,40 @@ var moreParam = { url: "http://192.168.178.1" };
         });
     })
    .catch(function(error) {
-    adapter.log.debug("errorhandler:   " +error);
+    adapter.log.debug("errorhandler wlan:   " +error);
     });
 
     fritz.getSessionID(username, password, moreParam).then(function(sid){
-        adapter.log.debug('sid2 : '+ sid);
-        fritz.getSwitchState(sid, '087610006102', moreParam).then(function(state){
-            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'state :' + state);
-            adapter.setState('DECT200_'+ '087610006102' +'.state', {val: state, ack: true});
-        });
-        fritz.getSwitchPresence(sid, '087610006102', moreParam).then(function(presence){
-            adapter.log.info('DECT200_'+ '087610006102'+ ' : ' +'present :' + presence);
-            adapter.setState('DECT200_'+ '087610006102' +'.present', {val: presence, ack: true});
-        });
-        fritz.getTemperature(sid, '087610006102', moreParam).then(function(temp){
-            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'temp :' + temp);
-            adapter.setState('DECT200_'+ '087610006102' +'.temp', {val: temp, ack: true});
-        });
-        fritz.getSwitchPower(sid, '087610006102', moreParam).then(function(power){
-            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'power :' + power);
-            adapter.setState('DECT200_'+ '087610006102' +'.power', {val: power, ack: true});
-        });
-        fritz.getSwitchEnergy(sid, '087610006102', moreParam).then(function(energy){
-            adapter.log.info('DECT200_'+ '087610006102'+ ' : '  +'energy :' + energy);
-            adapter.setState('DECT200_'+ '087610006102' +'.energy', {val: energy, ack: true});
-        });
-
+        adapter.log.debug('SID for switch status  : '+ sid);
+        fritz.getSwitchList(sid,moreParam).then(function(switches){
+            if (switches.length){
+                var i=0;
+                for (i;i<switches.length;i++){
+                    adapter.log.debug("looping through switch status i="+i);
+                    getSwitchInfo(switches,i,sid,moreParam);       
+                }
+            }
+        })
     })
     .catch(function(error) {
-    adapter.log.debug("errorhandler:   " +error);
+    adapter.log.debug("errorhandler switchstatus:   " +error);
     });
 
+    fritz.getSessionID(username, password, moreParam).then(function(sid){
+        adapter.log.debug('SID for thermostat status  : '+ sid);
+        fritz.getThermostatList(sid,moreParam).then(function(comets){
+            if (comets.length){
+                var i=0;
+                for (i;i<comets.length;i++){
+                    adapter.log.debug("looping through comet status i="+i);
+                    getCometInfo(comets,i,sid,moreParam);       
+                }
+            }
+        })
+    })
+    .catch(function(error) {
+    adapter.log.debug("errorhandler switchstatus:   " +error);
+    });
   
     // in this template all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates('*');

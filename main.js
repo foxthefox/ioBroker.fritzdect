@@ -3,7 +3,7 @@
 
 
 "use strict";
-p
+
 var fritz = require('fritzapi');
 // you have to require the utils module and call adapter function
 var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils

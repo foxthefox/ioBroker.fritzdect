@@ -7,7 +7,7 @@
         "platform":             "Javascript/Node.js",
         "mode":                 "daemon",
         "license": 	   	"MIT",
-        "keywords":		["smart home", "DECT200", "fritzbox"],
+        "keywords":		["smart home", "DECT200", "COMET", "fritzbox"],
         "type":			"hardware",
         "icon":                 "fritzdect_logo.png",
 	"extIcon":          	"https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",

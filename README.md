@@ -10,6 +10,7 @@ Installation:
 npm install https://github.com/foxthefox/ioBroker.fritzdect/tarball/master --production
 
 Setup
+
 If IP-adress of Fritzbox is not reachable with fritz.box the IP should be defined in io-package.json.
 Password has to be defined in io-package.json.
 
@@ -19,7 +20,7 @@ Known Issues:
 
 GuestWlan not working
 
-TODO
+TODO:
 
 cyclic status polling
 
@@ -34,6 +35,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='+ain+'&xhr=1'
 
 Changelog
+
 0.0.2
 
 smartfritz-promise->fritzapi

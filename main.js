@@ -34,8 +34,9 @@ adapter.on('stateChange', function (id, state) {
     adapter.log.debug('stateChange ' + id + ' ' + JSON.stringify(state));
     var username = "admin";
     var password = adapter.config.fritz_pw;
-    adapter.log.debug("PW= "+);
+    adapter.log.debug("PW= "+password);
     var moreParam = { url: adapter.config.fritz_ip};
+    adapter.log.debug("moreParam= "+JSON.stringify(moreParam));
     // you can use the ack flag to detect if it is status (true) or command (false)
     if (state && !state.ack) {
         adapter.log.debug('ack is not set! -> command');
@@ -95,7 +96,9 @@ function main() {
     
     var username = "admin";
     var password = adapter.config.fritz_pw;
-    var moreParam = { url: adapter.fritz_ip};    
+    adapter.log.debug("PW= "+password);
+    var moreParam = { url: adapter.fritz_ip};
+    adapter.log.debug("moreParam "+JSON.stringify(moreParam));
 
     function insertDECT200(id){
         var switches = id;

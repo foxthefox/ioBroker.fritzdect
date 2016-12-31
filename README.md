@@ -12,7 +12,7 @@ Setup
 If IP-adress of Fritzbox is not reachable with fritz.box the IP should be defined in io-package.json.
 Password has to be defined in io-package.json.
 
-The decices are detected automatically.
+The devices are detected automatically during startup of fritzdect instance.
 
 Known Issues:
 
@@ -20,11 +20,11 @@ GuestWlan not working
 
 TODO
 
-dynamic AID
+cyclic status polling
 
-Thermostat
+setTemp
 
-Energy statistics
+to be testesd with COMET
 
 
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+ain+'&xhr=1'

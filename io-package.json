@@ -16,7 +16,7 @@
 
     },
       "native": {
-        "fritz_ip":  "192.x.x.x",
+        "fritz_ip":  "http://192.x.x.x",
         "fritz_pw": "password"
     },
     "objects": [

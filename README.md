@@ -18,6 +18,8 @@ The devices are detected automatically during startup of fritzdect instance.
 
 Known Issues:
 
+somehow not correctly taking over the FB settings from io-package on 4.7.0 raspberry 
+
 GuestWlan not working
 
 TODO:
@@ -39,7 +41,7 @@ Changelog
 0.0.2
 
 smartfritz-promise->fritzapi
-running version, tested with 1x DECT200 and Fritzbox FW=6.51
+running version, tested with 1x DECT200 and Fritzbox FW=6.51 on Win10 with 4.5.0
 
 0.0.1
 running version, tested with 1x DECT200 and Fritzbox FW=6.30

@@ -7,8 +7,7 @@
 <script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
 
 <!-- these two file always have to be included -->
-<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
-<script type="text/javascript" src="../../js/translate.js"></script>
+<link rel="stylesheet" type="text/css" href="../../css/adapter.css"/><script type="text/javascript" src="../../js/translate.js"></script>
 <script type="text/javascript" src="../../js/adapter-settings.js"></script>
 
 
@@ -18,8 +17,7 @@
     systemDictionary = {
         "fritzdect adapter settings": {"de": "fritzdect Adapter Einstellung", "ru": "Настройки fritzdect Драйвера"},
 
-        "on save adapter restarts with new config immediately": {
-            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
+        "on save adapter restarts with new config immediately": {            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
             "ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"
         }
     };
@@ -64,17 +62,17 @@
         <td><h3 class="translate">Fritzbox DECT adapter settings</h3></td>
     </tr></table>
     
-    "fritzbox-ip": "192.168.178.xx",
-    "fritzbox-port": "8899",	
+    "fritzbox-ip": "192.168.xx.xx",
+    "fritzbox-pw": "password",	
 
     <table>
         <tr>
             <td class="translate">Fritzbox IP</td>
-            <td><input type="text" id="fritzbox-ip" class="value"/></td>
+            <td><input type="text" id="fritzbox_ip" class="value"/></td>
         </tr>
         <tr>
-            <td class="translate">Fritzbox Port</td>
-            <td><input type="text" id="fritzbox-port" class="value"/></td>
+            <td class="translate">Fritzbox Password</td>
+            <td><input type="text" id="fritzbox_pw" class="value"/></td>
         </tr>
     </table>
     

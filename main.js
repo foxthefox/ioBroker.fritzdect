@@ -265,8 +265,7 @@ function main() {
                     "unit": "°C",                    
                     "read": true,
                     "write": false,
-                    "role": "value.temperature",
-                    "desc":  "Comfort Temp"
+                    "role": "value.temperature",                    "desc":  "Comfort Temp"
                 },
                 native: {
                 }
@@ -276,8 +275,7 @@ function main() {
                 common: {
                     "name":  "Night Temp",
                     "type": "number",
-                    "unit": "°C",
-                    "read": true,
+                    "unit": "°C",                    "read": true,
                     "write": false,
                     "role": "value.temperature",
                     "desc":  "Night Temp"
@@ -304,7 +302,7 @@ function main() {
     function getSwitchInfo(switches, i, sid, moreParam){
         fritz.getSwitchName(sid, switches[i], moreParam).then(function(name){
             adapter.log.info('DECT200_'+ switches[i] + ' : '  +'name :' + name);
-            adapter.setState('DECT200_'+ switches[i] +'.state', {val: name, ack: true});
+            adapter.setState('DECT200_'+ switches[i] +'.name', {val: name, ack: true});
         });
         fritz.getSwitchState(sid, switches[i], moreParam).then(function(state){
             adapter.log.info('DECT200_'+ switches[i] + ' : '  +'state :' + state);

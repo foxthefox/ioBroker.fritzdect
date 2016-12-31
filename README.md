@@ -1,4 +1,5 @@
 
+
 ![Logo](admin/fritzdect_logo.png)
 # ioBroker.fritzdect
 =================
@@ -26,6 +27,7 @@ setTemp
 
 to be testesd with COMET
 
+Energystats
 
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+ain+'&xhr=1'
 

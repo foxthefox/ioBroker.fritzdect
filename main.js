@@ -3,12 +3,10 @@
 
 
 "use strict";
-
+p
 var fritz = require('fritzapi');
-
 // you have to require the utils module and call adapter function
 var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
-
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
@@ -36,6 +34,7 @@ adapter.on('stateChange', function (id, state) {
     adapter.log.debug('stateChange ' + id + ' ' + JSON.stringify(state));
     var username = "admin";
     var password = adapter.config.fritz_pw;
+    adapter.log.debug("PW= "+);
     var moreParam = { url: adapter.config.fritz_ip};
     // you can use the ack flag to detect if it is status (true) or command (false)
     if (state && !state.ack) {

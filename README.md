@@ -21,15 +21,15 @@ The devices are detected automatically during startup of fritzdect instance.
 
 ##TODO:
 
-*cyclic status polling
+* cyclic status polling
 
-*setTemp on COMET
+* setTemp on COMET
 
-*to be tested with COMET
+* to be tested with COMET
 
-*configuration via admin/index.html
+* configuration via admin/index.html
 
-*Energystats
+* Energystats
 
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+ain+'&xhr=1'
 
@@ -39,8 +39,8 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 
 ###0.0.2
 
-*smartfritz-promise->fritzapi
-*running version, tested with 1x DECT200 and Fritzbox FW=6.51 on Win10 with 4.5.0 and raspberry 4.7.0
+* smartfritz-promise->fritzapi
+* running version, tested with 1x DECT200 and Fritzbox FW=6.51 on Win10 with 4.5.0 and raspberry 4.7.0
 
 ###0.0.1
-*running version, tested with 1x DECT200 and Fritzbox FW=6.30
+* running version, tested with 1x DECT200 and Fritzbox FW=6.30

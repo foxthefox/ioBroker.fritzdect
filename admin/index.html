@@ -2,8 +2,7 @@
 
 <!-- these 4 files always have to be included -->
 <link rel="stylesheet" type="text/css" href="../../lib/css/themes/jquery-ui/redmond/jquery-ui.min.css"/>
-<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
-<script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script><script type="text/javascript" src="../../socket.io/socket.io.js"></script>
 <script type="text/javascript" src="../../lib/js/jquery-ui-1.10.3.full.min.js"></script>
 
 <!-- these two file always have to be included -->
@@ -23,8 +22,7 @@
     };
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
-        // example: select elements with id=key and class=value and insert value
-        for (var key in settings) {
+        // example: select elements with id=key and class=value and insert value        for (var key in settings) {
             // example: select elements with id=key and class=value and insert value
             if ($('#' + key + '.value').attr('type') == 'checkbox') {
                 $('#' + key + '.value').prop('checked', settings[key]).change(function () {
@@ -68,11 +66,11 @@
     <table>
         <tr>
             <td class="translate">Fritzbox IP</td>
-            <td><input type="text" id="fritzbox_ip" class="value"/></td>
+            <td><input type="text" id="fritz_ip" class="value"/></td>
         </tr>
         <tr>
             <td class="translate">Fritzbox Password</td>
-            <td><input type="text" id="fritzbox_pw" class="value"/></td>
+            <td><input type="text" id="fritz_pw" class="value"/></td>
         </tr>
     </table>
     

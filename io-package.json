@@ -12,7 +12,8 @@
         "icon":                 "fritzdect_logo.png",
 	"extIcon":          	"https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
 	"readme":           	"https://github.com/foxthefox/ioBroker.fritzdect/master/README.md",
-	"loglevel":		"debug"
+	"loglevel":		"debug",
+	"restartAdapters":          ["vis"]	
 
     },
       "native": {

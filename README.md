@@ -27,8 +27,6 @@ The devices are detected automatically during startup of fritzdect instance.
 
 * to be tested with COMET
 
-* configuration via admin/index.html
-
 * Energystats
 
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+ain+'&xhr=1'

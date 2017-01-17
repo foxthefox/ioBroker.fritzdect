@@ -17,7 +17,7 @@ The devices are detected automatically during startup of fritzdect instance.
 
 ##Known Issues:
 
-*GuestWlan to be tested
+* GuestWlan to be tested
 
 ##TODO:
 

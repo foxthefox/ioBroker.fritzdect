@@ -41,86 +41,7 @@ vis.binds.fritzdectui = {
         }
 
     },
-    slider: function (el, options) {
-        var $this = $(el).parent().find('.slider');
-        var oid     = $this.attr('data-oid');
-        var wid     = $this.attr('data-oid-working');
 
-        if (!oid && options.hideIfNoOid) {
-            $this.hide();
-            return;
-        }
-
-        var min = (options.min === undefined || options.min === null || options.min === '') ? 0.00 : parseFloat(options.min);
-        var max = (options.max === undefined || options.min === null || options.max === '') ? 1.00 : parseFloat(options.max);
-
-        if (max < min) {
-            var tmp = max;
-            max = min;
-            min = tmp;
-        }
-        var val = vis.states.attr(oid + '.val');
-        if (val === true  || val === 'true')  val = max;
-        if (val === false || val === 'false') val = min;
-        val = parseFloat(val);
-        if (isNaN(val)) val = min;
-
-        if (val < min) val = min;
-        if (val > max) val = max;
-
-        options.min = min;
-        options.max = max;
-        options.simRange = 100;
-        options.range    = options.max - options.min;
-        options.factor   = options.simRange / options.range;
-        val = Math.floor((val - options.min) * options.factor);
-
-        $this.metroSlider({
-            min:           0,
-            max:           options.simRange,
-            accuracy:      options.accuracy      || 0,
-            color:         options.color         || undefined,
-            completeColor: options.completeColor || undefined,
-            markerColor:   options.markerColor   || undefined,
-            position:      val,
-            animate:       true,
-            change:        function (val) {
-                val = (parseFloat(val) / options.factor) + options.min;
-                if (options.step) {
-                    val = Math.round(val / options.step) * options.step;
-                }
-                if (options.digits !== undefined && options.digits !== null && options.digits !== '') {
-                    vis.setValue(oid, val.toFixed(options.digits));
-                    //vis.setValue(oid, parseFloat(val).toFixed(options.digits));
-                } else {
-                    vis.setValue(oid, val);
-                    //vis.setValue(oid, parseFloat(val));
-                }
-            },
-            changed:       function (val) {
-
-            }
-        });
-
-        vis.states.bind(oid + '.val', function (e, newVal, oldVal) {
-            var val = vis.states.attr(oid + '.val');
-
-            if (val === true  || val === 'true')  val = options.max;
-            if (val === false || val === 'false') val = options.min;
-
-            val = parseFloat(val);
-            if (isNaN(val)) val = options.min;
-            if (val < options.min) val = options.min;
-            if (val > options.max) val = options.max;
-            val = Math.floor((val - options.min) * options.factor);
-
-            try {
-                $this.metroSlider('value', val);
-            } catch (e) {
-                console.error(e);
-            }
-        });
-    },
 
     tileDialogFritz: function (el, wid, level_id, power_id, energy_id, temp_id, options, sliderOptions) {
         var $this = $(el).parent().find('.tile');
@@ -140,8 +61,6 @@ vis.binds.fritzdectui = {
         sliderOptions.min = (sliderOptions.min === undefined || sliderOptions.min === null || sliderOptions.min === '') ? 0.00 : parseFloat(sliderOptions.min);
         sliderOptions.max = (sliderOptions.max === undefined || sliderOptions.min === null || sliderOptions.max === '') ? 1.00 : parseFloat(sliderOptions.max);
 
-        var range =  sliderOptions.max - sliderOptions.min;
-        var factor = 100 / range;
 
         $(el).parent().on('click touchstart', function () {
             // Protect against two events

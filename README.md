@@ -38,7 +38,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 ##Changelog
 
 ###0.0.2
-
+* metro widget for Dect200
 * smartfritz-promise->fritzapi
 * running version, tested with 1x DECT200 and Fritzbox FW=6.51 on Win10 with 4.5.0 and raspberry 4.7.0
 

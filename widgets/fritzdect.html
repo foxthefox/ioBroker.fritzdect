@@ -8,23 +8,100 @@
     extended for fritzdect
 -->
 
-<script type="text/javascript" src="widgets/fritzdect/js/fritzdect.js"></script>
 
 <link rel="stylesheet" href="widgets/metro/css/iconFont.min.css" />
 <link rel="stylesheet" href="widgets/metro/css/metro-bootstrap.css" />
 <script type="text/javascript" src="widgets/metro/js/metro.js"></script>
 
-<script id="tplMetroDect200TileSwitchDialog"
-        type="text/ejs"
-        data-vis-prev='<div id="prev_tplMetroLifxTileSwitchDialog" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev vis-widget-lock" style="width: 120px; height: 120px; padding: 3px;"> <div style="width: 100%; height: 100%" class="metro vis-widget-prev-body"> <div style="width: 100%; height: 100%;" class="tile hover bg-indigo"><div class="tile-content" style="text-align: center"><img width="90%" src="widgets/jqui-mfd/img/message_socket_on.png"></div> <div class="brand ribbed-steel"><span class="label fg-white">Dect200 Dialog</span></div> </div><div style="padding: 42px 10px 10px;"></div></div></div></div>'
+<script type="text/javascript">
+
+    'use strict';
+    if (vis.editMode) {
+        // Add words for basic widgets
+        $.extend(true, systemDictionary, {
+            "oid-temp": { "en": "temperature", "de": "Temperatur" },
+            "oid-power": { "en": "power", "de": "Leistung" },
+            "oid-energy": { "en": "energy", "de": "Energie" }
+        });
+    }
+
+    $.extend(true, systemDictionary, {
+        "Leistung":          {"en": "power",      "de": "Leistung"},
+        "Energie":          {"en": "energy",      "de": "Energie"},
+        "Temp.":            { "en": "temp",      "de": "Temp."}
+    });
+
+
+    vis.binds.fritzdect = {
+        version: "0.0.1",
+        tileDialogFritz: function (el, wid, level_id, power_id, energy_id, temp_id, options, sliderOptions) {
+            var $this = $(el).parent().find('.tile');
+
+            var width = parseInt(options.width, 10);
+            var height = parseInt(options.height, 10);
+
+            if (isNaN(width)) width = undefined;
+            if (isNaN(height)) height = undefined;
+
+            level_id = level_id || '';
+            power_id = power_id || '';
+            energy_id = energy_id || '';
+            temp_id = temp_id || '';
+
+
+            sliderOptions.min = (sliderOptions.min === undefined || sliderOptions.min === null || sliderOptions.min === '') ? 0.00 : parseFloat(sliderOptions.min);
+            sliderOptions.max = (sliderOptions.max === undefined || sliderOptions.min === null || sliderOptions.max === '') ? 1.00 : parseFloat(sliderOptions.max);
+
+            $(el).parent().on('click touchstart', function () {
+                // Protect against two events
+                if (vis.detectBounce(this)) return;
+
+                $.metroDialog({
+                    width: width,
+                    height: height,
+                    overlay: options.overlay || false,
+                    shadow: options.shadow || false,
+                    flat: options.flat || false,
+                    draggable: options.draggable || false,
+                    icon: options.icon ? '<img src="' + options.icon + '">' : (options.icon_class ? '<span class="' + options.icon_class + '"></span>' : false),
+                    title: options.title || '',
+                    content: '',
+                    onShow: function (_dialog) {
+                        var content = _dialog.children('.content');
+                        var html = '<div style="margin: 24px 0 0 24px;">';
+                        html += '<div class="input-control switch"><label>';
+                        html += '<input type="checkbox" name="' + wid + '_checkbox" id="' + wid + '_checkbox" data-oid="' + level_id + '"/>';
+                        html += '<span class="check"></span>';
+                        html += '</label></div>';
+                        html += '</div><div style="margin: 12px 12px 0 12px;">';
+                        html += '<table style="margin-top: 1px; margin-left: 12px; font-size:14px;display:inline-block;">' +
+                            (power_id ? ('<tr><td>' + (options.label_set || ('Leistung')) + ':</td><td><span class="metro-dialog-string" data-oid="' + power_id + '">' + power_id + '</span>W</td></tr>') : '') +
+                            (energy_id ? ('<tr><td>' + (options.label_temp || _('Energie')) + ':</td><td><span class="metro-dialog-string" data-oid="' + energy_id + '">' + energy_id + '</span>Wh</td></tr>') : '') +
+                            (temp_id ? ('<tr><td>' + (options.label_drive || _('Temp.')) + ':</td><td><span class="metro-dialog-string" data-oid="' + temp_id + '">' + temp_id + '</span>°C</td></tr>') : '') +
+                            '</table>';
+                        content.html(html);
+
+                        vis.binds.basic.checkbox(document.getElementById(wid + '_checkbox'), true, sliderOptions.min, sliderOptions.max); //warum galt slideroption für beides?
+                    }
+                });
+            });
+        }
+    };
+
+	console.log('fritzdect widget version: "' + vis.binds.fritzdect.version + '"');
+</script>
+
+<script id="tplMetroDect200TileSwitchDialog" 
+        type="text/ejs" 
+        data-vis-prev='<div id="prev_tplMetroDect200TileSwitchDialog" style="position: relative; text-align: initial;padding: 4px "><div class="vis-widget_prev vis-widget-lock" style="width: 120px; height: 120px; padding: 3px;"> <div style="width: 100%; height: 100%" class="metro vis-widget-prev-body"> <div style="width: 100%; height: 100%;" class="tile hover bg-indigo"><div class="tile-content" style="text-align: center"><img width="90%" src="widgets/jqui-mfd/img/message_socket_on.png"></div> <div class="brand ribbed-steel"><span class="label fg-white">Dect200 Dialog</span></div> </div><div style="padding: 42px 10px 10px;"></div></div></div></div>'
         data-vis-attrs="oid;oid-power;oid-energy;oid-temp;min[0];max[1];digits/number;hover[true]/checkbox;transform[true]/checkbox;label[FritzDECT200];"
-        data-vis-attrs0="bg_class[bg-indigo]/style,metro-,bg- ribbed-;"
+        data-vis-attrs0="bg_class[bg-indigo]/style,metro-,bg- ribbed-;" 
         data-vis-attrs1="brand_bg_class[none]/style,metro-,bg- ribbed-;"
-        data-vis-attrs2="group.slider;sliderColor/color;sliderCompleteColor/color;sliderMarkerColor/color;"
+        data-vis-attrs2="group.slider;sliderColor/color;sliderCompleteColor/color;sliderMarkerColor/color;" 
         data-vis-attrs3="group.dialog;dialog_flat/checkbox;dialog_shadow/checkbox;dialog_draggable[true]/checkbox;dialog_modal/checkbox"
-        class="vis-tpl"
-        data-vis-set="fritzdect"
-        data-vis-type="ctrl,dialog"
+        class="vis-tpl" 
+        data-vis-set="fritzdect" 
+        data-vis-type="ctrl,dialog" 
         data-vis-name="Tile Switch Dialog">
     <div id="<%= this.data.attr('wid') %>" class="vis-widget" style="width: 136px; height: 136px; padding: 3px;" <%= (el) -> vis.preloadImages(['widgets/jqui-mfd/img/message_socket_on.png','widgets/jqui-mfd/img/message_socket_off.png']); %>>
         <div style="width: 100%; height: 100%" class="metro vis-widget-body <%== this.data.attr('class') %>" >
@@ -68,7 +145,7 @@
                 </div>
             </div>
             <div
-                <%= (el) -> vis.binds.fritzdectui.tileDialogFritz(el, data.wid, data.oid, data['oid-power'], data['oid-energy'], data['oid-temp'], {title: data.label, flat: data.dialog_flat, shadow: data.dialog_shadow, overlay: data.dialog_modal, icon: data.dialog_icon_src, icon_class: data.dialog_icon_class, draggable: data.dialog_draggable, width: 300, height: 180}, {min: data.min, max: data.max}) %> style="padding: 42px 10px 10px;">
+                <%= (el) -> vis.binds.fritzdect.tileDialogFritz(el, data.wid, data.oid, data['oid-power'], data['oid-energy'], data['oid-temp'], {title: data.label, flat: data.dialog_flat, shadow: data.dialog_shadow, overlay: data.dialog_modal, icon: data.dialog_icon_src, icon_class: data.dialog_icon_class, draggable: data.dialog_draggable, width: 300, height: 180}, {min: data.min, max: data.max}) %> style="padding: 42px 10px 10px;">
             </div>
             <div <%= (el) -> vis.binds.metro.tile(el, data.transform) %>></div>
         </div>

@@ -19,7 +19,8 @@
     if (vis.editMode) {
         // Add words for basic widgets
         $.extend(true, systemDictionary, {
-            "oid-temp":     { "en": "temperature",  "de": "Temperatur" },
+            "oid":          { "en": "switch",  "de": "Schalter" },
+	    "oid-temp":     { "en": "temperature",  "de": "Temperatur" },
             "oid-power":    { "en": "power",        "de": "Leistung" },
             "oid-energy":   { "en": "energy",       "de": "Energie" },
             "label_power":  { "en": "label power",       "de": "Label Leistung" },
@@ -148,8 +149,10 @@
                 <% } %>
                 </div>
                 <div style="color:white; font-size:11px; margin-top: 92px; padding-left: 12px;">
-                    <span><%== this.data.attr('label_power')   ?  this.data.attr('label_power')  : _('Leistung') %>: <%=  + vis.binds.metro.format(vis.states.attr(this.data.attr('oid-power')   + '.val'), 'W') %></span>
-                </div>
+		  <% if (this.data.attr('oid-power')) { %>
+                    <span><%== this.data.attr('label_power')   ?  this.data.attr('label_power')  : _('Leistung') %> : <%=  + vis.binds.metro.format(vis.states.attr(this.data.attr('oid-power')   + '.val'), 'W') %> W</span>
+                  <% } %>
+		</div>
                 <div class="brand <%= this.data.attr("brand_bg_class") %>">
                     <span class="label fg-white"><%= this.data.attr("label") %></span>
                 </div>

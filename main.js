@@ -201,7 +201,7 @@ function main() {
                     "max": 4000,
                     "read": true,
                     "write": false,
-                    "role": "value",
+                    "role": "value.power",
                     "desc":  "Switch act power"
                 },
                 native: {

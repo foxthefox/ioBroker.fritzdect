@@ -92,7 +92,7 @@ adapter.on('ready', function () {
 
 function main() {
     
-    var username = "admin";
+    var username = adapter.config.fritz_user;
     var password = adapter.config.fritz_pw;
     var moreParam = { url: adapter.config.fritz_ip};
 

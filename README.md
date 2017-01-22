@@ -1,8 +1,11 @@
-
-
 ![Logo](admin/fritzdect_logo.png)
 # ioBroker.fritzdect
 =================
+[![NPM version](http://img.shields.io/npm/v/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
+
+[![NPM](https://nodei.co/npm/iobroker.fritzdect.png?downloads=true)](https://nodei.co/npm/iobroker.fritzdect/)
+
 Fritzbox DECT adapter for ioBroker
 
 ##Installation:

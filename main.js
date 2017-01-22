@@ -32,7 +32,7 @@ adapter.on('objectChange', function (id, obj) {
 adapter.on('stateChange', function (id, state) {
     // Warning, state can be null if it was deleted
     adapter.log.debug('stateChange ' + id + ' ' + JSON.stringify(state));
-    var username = "admin";
+    var username = adapter.config.fritz_user;
     var password = adapter.config.fritz_pw;
     var moreParam = { url: adapter.config.fritz_ip};
     // you can use the ack flag to detect if it is status (true) or command (false)

@@ -43,6 +43,9 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 
 ##Changelog
 
+###ongoing
+* user now configurable
+
 ###0.0.2
 * metro widget for Dect200
 * smartfritz-promise->fritzapi

@@ -43,7 +43,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 
 ##Changelog
 
-###ongoing
+###0.0.3
 * user now configurable
 
 ###0.0.2

@@ -40,5 +40,8 @@
   },
   "main": "main.js",
   "readmeFilename": "README.md"
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha test/testAdapter.js && node node_modules/mocha/bin/mocha test/testPackageFiles.js"
+  }
 }
 

@@ -29,8 +29,6 @@ The devices are detected automatically during startup of fritzdect instance.
 
 ##TODO:
 
-* cyclic status polling
-
 * setTemp on COMET
 
 * to be tested with COMET
@@ -42,6 +40,9 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='+ain+'&xhr=1'
 
 ##Changelog
+
+###0.0.4 ongoing
+* cyclic status polling
 
 ###0.0.3
 * user now configurable

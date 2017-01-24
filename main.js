@@ -10,10 +10,14 @@ var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
+
+var fritzTimeout;
+
 var adapter = utils.adapter('fritzdect');
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
 adapter.on('unload', function (callback) {
+    if (fritzTimeout) clearTimeout(fritzTimeout);
     try {
         adapter.log.info('cleaned everything up...');
         callback();
@@ -88,6 +92,10 @@ adapter.on('stateChange', function (id, state) {
 adapter.on('ready', function () {
     adapter.log.info('entered ready');
     main();
+});
+
+process.on('SIGINT', function () {
+    if (fritzTimeout) clearTimeout(fritzTimeout);
 });
 
 function main() {
@@ -342,32 +350,35 @@ function main() {
             adapter.setState('Comet_'+ comets[i] +'.battery', {val: battery, ack: true});
         });
     }
-
-    fritz.getSessionID(username, password, moreParam).then(function(sid){
-        adapter.log.debug('SID for switchlist : '+sid);
-        fritz.getSwitchList(sid,moreParam).then(function(switches){
-            if (switches.length){
-               adapter.log.info("Switches AIDs: "+switches);
-               insertDECT200(switches);}
-            else{adapter.log.info("no switches found");}   
+    
+    function insertDectObj(){
+        fritz.getSessionID(username, password, moreParam).then(function(sid){
+            adapter.log.debug('SID for switchlist : '+sid);
+            fritz.getSwitchList(sid,moreParam).then(function(switches){
+                if (switches.length){
+                adapter.log.info("Switches AIDs: "+switches);
+                insertDECT200(switches);}
+                else{adapter.log.info("no switches found");}   
+            });
+        })
+        .catch(function(error) {
+        adapter.log.error("errorhandler switches:   " +error);
         });
-    })
-    .catch(function(error) {
-    adapter.log.debug("errorhandler switches:   " +error);
-    });
-
-    fritz.getSessionID(username, password, moreParam).then(function(sid){
-        adapter.log.debug('SID for thermostatlist : '+sid);
-        fritz.getThermostatList(sid,moreParam).then(function(comets){
-            if (comets.length){
-                adapter.log.info("Comet AIDs: "+comets);
-                insertComet(comets);}
-            else{adapter.log.info("no thermostats found");}
+    }
+    function insertCometObj(){
+        fritz.getSessionID(username, password, moreParam).then(function(sid){
+            adapter.log.debug('SID for thermostatlist : '+sid);
+            fritz.getThermostatList(sid,moreParam).then(function(comets){
+                if (comets.length){
+                    adapter.log.info("Comet AIDs: "+comets);
+                    insertComet(comets);}
+                else{adapter.log.info("no thermostats found");}
+            });
+        })
+        .catch(function(error) {
+        adapter.log.error("errorhandler thermostats:   " +error);
         });
-    })
-    .catch(function(error) {
-    adapter.log.debug("errorhandler thermostats:   " +error);
-    });
+    }
 
     fritz.getSessionID(username, password, moreParam).then(function(sid){
         fritz.getGuestWlan(sid).then(function(listinfos){
@@ -375,44 +386,58 @@ function main() {
         });
     })
    .catch(function(error) {
-    adapter.log.debug("errorhandler wlan:   " +error);
+    adapter.log.error("errorhandler wlan:   " +error);
     });
 
-    fritz.getSessionID(username, password, moreParam).then(function(sid){
-        adapter.log.debug('SID for switch status  : '+ sid);
-        fritz.getSwitchList(sid,moreParam).then(function(switches){
-            if (switches.length){
-                var i=0;
-                for (i;i<switches.length;i++){
-                    adapter.log.debug("looping through switch status i="+i);
-                    getSwitchInfo(switches,i,sid,moreParam);       
+    function updateFritzDect(){
+        fritz.getSessionID(username, password, moreParam).then(function(sid){
+            adapter.log.debug('SID for switch status  : '+ sid);
+            fritz.getSwitchList(sid,moreParam).then(function(switches){
+                if (switches.length){
+                    var i=0;
+                    for (i;i<switches.length;i++){
+                        adapter.log.debug("looping through switch status i="+i);
+                        getSwitchInfo(switches,i,sid,moreParam);       
+                    }
                 }
-            }
+            })
         })
-    })
-    .catch(function(error) {
-    adapter.log.debug("errorhandler switchstatus:   " +error);
-    });
+        .catch(function(error) {
+        adapter.log.error("errorhandler switchstatus:   " +error);
+        });
+    }
 
-    fritz.getSessionID(username, password, moreParam).then(function(sid){
-        adapter.log.debug('SID for thermostat status  : '+ sid);
-        fritz.getThermostatList(sid,moreParam).then(function(comets){
-            if (comets.length){
-                var i=0;
-                for (i;i<comets.length;i++){
-                    adapter.log.debug("looping through comet status i="+i);
-                    getCometInfo(comets,i,sid,moreParam);       
+    function updateFritzComet(){
+        fritz.getSessionID(username, password, moreParam).then(function(sid){
+            adapter.log.debug('SID for thermostat status  : '+ sid);
+            fritz.getThermostatList(sid,moreParam).then(function(comets){
+                if (comets.length){
+                    var i=0;
+                    for (i;i<comets.length;i++){
+                        adapter.log.debug("looping through comet status i="+i);
+                        getCometInfo(comets,i,sid,moreParam);       
+                    }
                 }
-            }
+            })
         })
-    })
-    .catch(function(error) {
-    adapter.log.debug("errorhandler switchstatus:   " +error);
-    });
-  
+        .catch(function(error) {
+        adapter.log.error("errorhandler switchstatus:   " +error);
+        });
+    }
+    function pollFritzData() {
+        var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 60;
+        updateFritzDect();
+        updateFritzComet();
+        adapter.log.info("polling!");
+        fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
+    }
+    insertDectObj();
+    insertCometObj();
+    pollFritzData();
+
     // in this template all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates('*');
 
-
-
 }
+
+

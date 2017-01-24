@@ -138,7 +138,7 @@
                 <%
                 var str = vis.states.attr(this.data.oid + '.val');
                 var val = parseFloat(str);
-                if (str === true || str === 'true') val = 1;
+                if (str === true || str === 'true' || str === 1) val = 1;
                 if (isNaN(val)) val = 0;
                                 
                 if (val === 1) {

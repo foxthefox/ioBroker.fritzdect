@@ -2,6 +2,12 @@
     "common": {
         "name":                 "fritzdect",
         "version":              "0.0.3",
+	"news": {
+            "0.3.0": {
+                "en": 				"Inital version at npm",
+                "de": 				"Erste Version in npm"
+            }
+        },   
         "title":                "fritzbox dect adapter",
         "desc":                 "ioBroker fritzdect Adapter",
         "platform":             "Javascript/Node.js",

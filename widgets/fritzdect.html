@@ -1,7 +1,7 @@
 <!--
     ioBroker.vis fritzdect200 metro widget
 
-    version: "0.0.1"
+    version: "0.0.2"
     Copyright foxthtefox
 
     based on iobroker.metro
@@ -138,7 +138,7 @@
                 <%
                 var str = vis.states.attr(this.data.oid + '.val');
                 var val = parseFloat(str);
-                if (str === true || str === 'true' || str === 1) val = 1;
+                if (str === true || str === 'true' || str === 1 || str === 'on') val = 1;
                 if (isNaN(val)) val = 0;
                                 
                 if (val === 1) {

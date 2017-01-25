@@ -6,8 +6,7 @@
 	   "0.0.4": {
                 "en": 				"update cyclic polling",
                 "de": 				"zyklische Abfrage"
-            }
-        },   
+            },  
             "0.0.3": {
                 "en": 				"Inital version at npm",
                 "de": 				"Erste Version in npm"

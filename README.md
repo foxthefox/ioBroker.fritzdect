@@ -41,7 +41,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 
 ##Changelog
 
-###0.0.4 ongoing
+###0.0.4
 * cyclic status polling
 
 ###0.0.3

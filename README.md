@@ -23,6 +23,7 @@ IP-address and password of Fritzbox should be defined in io-package.json or via 
 
 The devices are detected automatically during startup of fritzdect instance.
 
+the widget requires that also vis-metro and vis-jqui-mfd are installed
 ##Known Issues:
 
 * GuestWlan to be tested

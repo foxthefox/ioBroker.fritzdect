@@ -282,7 +282,8 @@ function main() {
                     "unit": "°C",                    
                     "read": true,
                     "write": false,
-                    "role": "value.temperature",                    "desc":  "Comfort Temp"
+                    "role": "value.temperature",                    
+                    "desc":  "Comfort Temp"
                 },
                 native: {
                 }
@@ -305,7 +306,7 @@ function main() {
                 common: {
                     "name":  "Battery", 
                     "type": "number",
-                    "unit": "V",
+                    "unit": "%",
                     "read": true,
                     "write": false,
                     "role": "value.battery",

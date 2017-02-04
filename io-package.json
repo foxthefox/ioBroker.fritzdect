@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.4",
+        "version":              "0.0.5",
 	"news": {
+	   "0.0.5": {
+                "en": 				"Comet set temp",
+                "de": 				"Comet Temperatur vorgeben"
+            },
 	   "0.0.4": {
                 "en": 				"update cyclic polling",
                 "de": 				"zyklische Abfrage"

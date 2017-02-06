@@ -59,7 +59,7 @@ adapter.on('stateChange', function (id, state) {
         else if (idx.startsWith("DECT200_")) { //must be DECT
             id = idx.replace(/DECT200_/g,''); //Switch
             adapter.log.info('SWITCH ID: '+ id + ' identified for command');
-            if (dp == 'state') {
+            if (dp == 'targettemp') {
                 if (state.val == 0) {
                         fritz.getSessionID(username, password, moreParam).then(function (sid) {
                             fritz.setSwitchOff(sid, id).then(function (sid) {

@@ -42,50 +42,61 @@ adapter.on('stateChange', function (id, state) {
     // you can use the ack flag to detect if it is status (true) or command (false)
     if (state && !state.ack) {
         adapter.log.debug('ack is not set! -> command');
-
         var tmp = id.split('.');
-        var dp = tmp.pop();
-        adapter.log.debug('data  ?'   +dp);
-        var idx = tmp.pop();
-        id = idx.replace(/DECT200_/g,''); //Switch
-        adapter.log.debug('SWITCH ID: '+ id + ' identified');
-
-        if (dp == 'state') {
-            if (state.val == 0) {
-                if (id==="GuestWLAN"){
+        var dp = tmp.pop(); //should always be "state"
+        var idx = tmp.pop(); //is the name after fritzdect.x.
+        if (idx.startsWith("Comet_")){ //must be comet
+            id = idx.replace(/Comet_/g,''); //Thermostat
+            adapter.log.info('Comet ID: '+ id + ' identified for command');
+            if (dp === 'state'){
+                fritz.getSessionID(username, password, moreParam).then(function (sid) {
+                    fritz.setTempTarget(sid, id, state.val).then(function (sid) {
+                        adapter.log.info('Set target temp ' + id + state.val +' °C');
+                    });
+                });
+            }
+        }
+        else if (idx.startsWith("DECT200_")) { //must be DECT
+            id = idx.replace(/DECT200_/g,''); //Switch
+            adapter.log.info('SWITCH ID: '+ id + ' identified for command');
+            if (dp == 'targettemp') {
+                if (state.val == 0) {
+                        fritz.getSessionID(username, password, moreParam).then(function (sid) {
+                            fritz.setSwitchOff(sid, id).then(function (sid) {
+                                adapter.log.info('Turned switch ' + id + ' off');
+                            });
+                        });
+                }
+                else if (state.val == 1) {
+                        fritz.getSessionID(username, password, moreParam).then(function (sid) {
+                            fritz.setSwitchOn(sid, id).then(function (sid) {
+                                adapter.log.info('Turned switch ' + id + ' on');
+                            });
+                        });
+                    }
+            }           
+        }
+        else { //must be GuestWLAN
+            adapter.log.info('GuestWLAN identified for command');
+            if (dp == 'state') {
+                if (state.val == 0) {
                     fritz.getSessionID(username, password, moreParam).then(function (sid) {
                         fritz.setGuestWlan(sid, state.val, function (sid) {
-                            adapter.log.debug('Turned WLAN ' + id + ' off');
+                            adapter.log.info('Turned WLAN ' + id + ' off');
                         });
                     });
-
-                }else {
-                    fritz.getSessionID(username, password, moreParam).then(function (sid) {
-                        fritz.setSwitchOff(sid, id).then(function (sid) {
-                            adapter.log.debug('Turned switch ' + id + ' off');
-                        });
-                    });
-                }
-            }
-            else if (state.val == 1) {
-                if (id==="GuestWLAN"){
+                }    
+                else if (state.val == 1) {
                     fritz.getSessionID(username, password, moreParam).then(function (sid) {
                         fritz.setGuestWlan(sid, state.val, moreParam).then(function (sid) {
                             adapter.log.info('Turned WLAN ' + id + ' on');
                         });
                     });
-                }else {
-                    fritz.getSessionID(username, password, moreParam).then(function (sid) {
-                        fritz.setSwitchOn(sid, id).then(function (sid) {
-                            adapter.log.debug('Turned switch ' + id + ' on');
-                        });
-                    });
                 }
-
             }
-        }
-    }
-});
+        }     
+    } //from if state&ack
+}); //from adapter on
 
 // is called when databases are connected and adapter received configuration.
 // start here!
@@ -271,7 +282,8 @@ function main() {
                     "unit": "°C",                    
                     "read": true,
                     "write": false,
-                    "role": "value.temperature",                    "desc":  "Comfort Temp"
+                    "role": "value.temperature",                    
+                    "desc":  "Comfort Temp"
                 },
                 native: {
                 }
@@ -294,7 +306,7 @@ function main() {
                 common: {
                     "name":  "Battery", 
                     "type": "number",
-                    "unit": "V",
+                    "unit": "%",
                     "read": true,
                     "write": false,
                     "role": "value.battery",

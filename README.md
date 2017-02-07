@@ -25,13 +25,8 @@ The devices are detected automatically during startup of fritzdect instance.
 
 the widget requires that also vis-metro and vis-jqui-mfd are installed
 ##Known Issues:
-
-* GuestWlan to be tested
-
+??
 ##TODO:
-
-* setTemp on COMET
-
 * to be tested with COMET
 
 * Energystats
@@ -41,6 +36,9 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='+ain+'&xhr=1'
 
 ##Changelog
+###0.0.5
+* setTemp on COMET
+* GuestWlan corrected
 
 ###0.0.4
 * cyclic status polling

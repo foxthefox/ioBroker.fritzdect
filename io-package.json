@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.4",
+        "version":              "0.0.5",
 	"news": {
+	   "0.0.5": {
+                "en": 				"Comet set temp",
+                "de": 				"Comet Temperatur vorgeben"
+            },
 	   "0.0.4": {
                 "en": 				"update cyclic polling",
                 "de": 				"zyklische Abfrage"
@@ -21,7 +25,7 @@
         "type":			"hardware",
         "icon":                 "fritzdect_logo.png",
 	"extIcon":          	"https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
-	"readme":           	"https://github.com/foxthefox/ioBroker.fritzdect/master/README.md",
+	"readme":           	"https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
 	"loglevel":		"info",
 	"restartAdapters":          ["vis"]	
 

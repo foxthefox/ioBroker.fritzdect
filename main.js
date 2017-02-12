@@ -48,7 +48,7 @@ adapter.on('stateChange', function (id, state) {
         if (idx.startsWith("Comet_")){ //must be comet
             id = idx.replace(/Comet_/g,''); //Thermostat
             adapter.log.info('Comet ID: '+ id + ' identified for command');
-            if (dp === 'state'){
+            if (dp === 'targettemp'){
                 fritz.getSessionID(username, password, moreParam).then(function (sid) {
                     fritz.setTempTarget(sid, id, state.val).then(function (sid) {
                         adapter.log.info('Set target temp ' + id + state.val +' °C');
@@ -59,7 +59,7 @@ adapter.on('stateChange', function (id, state) {
         else if (idx.startsWith("DECT200_")) { //must be DECT
             id = idx.replace(/DECT200_/g,''); //Switch
             adapter.log.info('SWITCH ID: '+ id + ' identified for command');
-            if (dp == 'targettemp') {
+            if (dp == 'state') {
                 if (state.val == 0) {
                         fritz.getSessionID(username, password, moreParam).then(function (sid) {
                             fritz.setSwitchOff(sid, id).then(function (sid) {

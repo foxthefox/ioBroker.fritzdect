@@ -36,6 +36,8 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='+ain+'&xhr=1'
 
 ##Changelog
+###0.0.6
+* correction targettemp in DECT200 section
 ###0.0.5
 * setTemp on COMET
 * GuestWlan corrected

@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.5",
+        "version":              "0.0.6",
 	"news": {
+	   "0.0.6": {
+                "en": 				"correction state/targettemp",
+                "de": 				"correction state/targettemp"
+            },
 	   "0.0.5": {
                 "en": 				"Comet set temp",
                 "de": 				"Comet Temperatur vorgeben"

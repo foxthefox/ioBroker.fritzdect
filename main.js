@@ -413,7 +413,7 @@ function main() {
     function updateFritzGuest(){
         fritz.getSessionID(username, password, moreParam).then(function(sid){
             fritz.getGuestWlan(sid).then(function(listinfos){
-                adapter.log.info("Guest WLAN: "+JSON.stringify(listinfos));
+                adapter.log.debug("Guest WLAN: "+JSON.stringify(listinfos));
             });
         })
        .catch(function(error) {

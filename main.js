@@ -260,6 +260,20 @@ function main() {
                     "aid": newId
                 }
             });
+            adapter.setObject('Comet_' + newId +'.temp', {
+                type: 'state',
+                common: {
+                    "name":  "Comet Temp",
+                    "type": "number",
+                    "unit": "°C",
+                    "read": true,
+                    "write": false,
+                    "role": "value.temperature",
+                    "desc":  "Actual Temp"
+                },
+                native: {
+                }
+            });
             adapter.setObject('Comet_' + newId +'.targettemp', {
                 type: 'state',
                 common: {
@@ -345,6 +359,10 @@ function main() {
     }
 
     function getCometInfo(comets, i, sid, moreParam){
+        fritz.getTemperature(sid, comets[i], moreParam).then(function(temp){
+            adapter.log.debug('Comet_'+ comets[i] + ' : '  +'temp :' + temp);
+            adapter.setState('Comet_'+ comets[i] +'.temp', {val: temp, ack: true});
+        });
         fritz.getTempTarget(sid, comets[i], moreParam).then(function(targettemp){
             adapter.log.debug('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
             adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
@@ -392,15 +410,17 @@ function main() {
         });
     }
 
-    fritz.getSessionID(username, password, moreParam).then(function(sid){
-        fritz.getGuestWlan(sid).then(function(listinfos){
-            adapter.log.info("Guest WLAN: "+JSON.stringify(listinfos));
+    function updateFritzGuest(){
+        fritz.getSessionID(username, password, moreParam).then(function(sid){
+            fritz.getGuestWlan(sid).then(function(listinfos){
+                adapter.log.info("Guest WLAN: "+JSON.stringify(listinfos));
+            });
+        })
+       .catch(function(error) {
+        adapter.log.error("errorhandler wlan:   " +error);
         });
-    })
-   .catch(function(error) {
-    adapter.log.error("errorhandler wlan:   " +error);
-    });
-
+    }
+    
     function updateFritzDect(){
         fritz.getSessionID(username, password, moreParam).then(function(sid){
             adapter.log.debug('SID for switch status  : '+ sid);
@@ -440,6 +460,7 @@ function main() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateFritzDect();
         updateFritzComet();
+        updateFritzGuest();
         adapter.log.info("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
     }

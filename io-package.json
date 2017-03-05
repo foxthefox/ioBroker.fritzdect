@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.6",
+        "version":              "0.0.7",
 	"news": {
+	   "0.0.7": {
+                "en": 				"COMET act temp, polling GeustWLAN",
+                "de": 				"COMET Isttemp., zykl. Abfrage GästeWLAN"
+            },
 	   "0.0.6": {
                 "en": 				"correction state/targettemp",
                 "de": 				"correction state/targettemp"

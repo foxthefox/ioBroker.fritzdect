@@ -24,11 +24,11 @@ IP-address and password of Fritzbox should be defined in io-package.json or via 
 The devices are detected automatically during startup of fritzdect instance.
 
 the widget requires that also vis-metro and vis-jqui-mfd are installed
+
 ##Known Issues:
 ??
-##TODO:
-* to be tested with COMET
 
+##TODO:
 * Energystats
 
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+ain+'&xhr=1'
@@ -36,6 +36,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='+ain+'&xhr=1'
 
 ##Changelog
+
 ###0.0.7
 * current temp of Comet/DECT300
 * cyclic polling GuestWLAN

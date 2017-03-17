@@ -48,7 +48,7 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 * setTemp on COMET
 * GuestWlan corrected
 
-###0.0.4
+### 0.0.4
 * cyclic status polling
 
 ### 0.0.3

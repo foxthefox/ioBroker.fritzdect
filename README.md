@@ -30,8 +30,8 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |DECT200.state|boolean|x|true/false -> ON/OFF|
-|DECT200.mode|boolean|-|true/false -> auto/man|
-|DECT200.lock|boolean|-|0=unlocked, 1=locked|
+|DECT200.mode|boolean|-|not live, for future version|
+|DECT200.lock|boolean|-|not live, for future version|
 |DECT200.present|boolean|-|true/false -> connected/not available|
 |DECT200.temp|value|-|actual temperature in °C)|
 |DECT200.power|value|-|actual power in W)|

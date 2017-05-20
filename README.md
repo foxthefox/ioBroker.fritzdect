@@ -37,10 +37,10 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |DECT200.power|value|-|actual power in W)|
 |DECT200.energy|value|-|actual energy consumption in Wh|
 |DECT200.name|text|-|name of device|
-|COMET.temp|value|-|actual temperature in °C)|
-|COMET.targettemp|value|x|target temperature in °C)|
-|COMET.comfytemp|value|-|comfort temperature in °C)|
-|COMET.nighttemp|value|-|night temperature in °C)|
+|COMET.temp|value|-|actual temperature in °C|
+|COMET.targettemp|value|x|target temperature in °C|
+|COMET.comfytemp|value|-|comfort temperature in °C|
+|COMET.nighttemp|value|-|night temperature in °C|
 |COMET.battery|value|-|actual capacity in %|
 |GuestWLAN.state|boolean|x|true/false -> ON/OFF|
 

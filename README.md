@@ -25,6 +25,26 @@ The devices are detected automatically during startup of fritzdect instance.
 
 the widget requires that also vis-metro and vis-jqui-mfd are installed
 
+## objects
+
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|DECT200.state|boolean|x|true/false -> ON/OFF|
+|DECT200.mode|boolean|-|true/false -> auto/man|
+|DECT200.lock|boolean|-|0=unlocked, 1=locked|
+|DECT200.present|boolean|-|true/false -> connected/not available|
+|DECT200.temp|value|-|actual temperature in °C)|
+|DECT200.power|value|-|actual power in W)|
+|DECT200.energy|value|-|actual energy consumption in Wh|
+|DECT200.name|text|-|name of device|
+|COMET.temp|value|-|actual temperature in °C)|
+|COMET.targettemp|value|x|target temperature in °C)|
+|COMET.comfytemp|value|-|comfort temperature in °C)|
+|COMET.nighttemp|value|-|night temperature in °C)|
+|COMET.battery|value|-|actual capacity in %|
+|GuestWLAN.state|boolean|x|true/false -> ON/OFF|
+
+
 ## Known Issues:
 ??
 

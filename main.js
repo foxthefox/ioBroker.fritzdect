@@ -187,7 +187,7 @@ function main() {
             adapter.setObject('DECT200_' + newId +'.lock', {
                 type: 'state',
                 common: {
-                    "name":  "Switch mode", //switch lock 0=unlocked, 1=locked
+                    "name":  "Switch lock", //switch lock 0=unlocked, 1=locked
                     "type": "number",
                     "read": true,
                     "write": false,

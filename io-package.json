@@ -3,6 +3,10 @@
         "name":                 "fritzdect",
         "version":              "0.0.7",
 	"news": {
+	  "0.0.8": {
+                "en": 				"multiple values for OFF/ON",
+                "de": 				"verschiedene vaules für AUS/EIN"
+	    },
 	   "0.0.7": {
                 "en": 				"COMET act temp, polling GeustWLAN",
                 "de": 				"COMET Isttemp., zykl. Abfrage GästeWLAN"

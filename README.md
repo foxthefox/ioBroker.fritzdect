@@ -10,13 +10,16 @@
 Fritzbox DECT adapter for ioBroker
 
 ## Installation:
-released version on npm with 
-* npm install iobroker.fritzdect
+released version on npm with
+```javascript
+ npm install iobroker.fritzdect
+```
+
 
 or the actual version from github with 
-
-* npm install https://github.com/foxthefox/ioBroker.fritzdect/tarball/master --production
-
+```javascript
+npm install https://github.com/foxthefox/ioBroker.fritzdect/tarball/master --production
+```
 ## Setup
 
 IP-address and password of Fritzbox should be defined in io-package.json or via admin page, before the first start of the instance.
@@ -56,6 +59,11 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_10&id='+
 http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='+ain+'&xhr=1'
 
 ## Changelog
+
+### 0.0.8
+* messages info-> debug
+* values 1/true/on/ON accepted for ON
+* values 0/false/off/OFF accepted for ON
 
 ### 0.0.7
 * current temp of Comet/DECT300

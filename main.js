@@ -51,7 +51,7 @@ adapter.on('stateChange', function (id, state) {
             if (dp === 'targettemp'){
                 fritz.getSessionID(username, password, moreParam).then(function (sid) {
                     fritz.setTempTarget(sid, id, state.val).then(function (sid) {
-                        adapter.log.info('Set target temp ' + id + state.val +' °C');
+                        adapter.log.debug('Set target temp ' + id + state.val +' °C');
                     });
                 });
             }
@@ -60,17 +60,17 @@ adapter.on('stateChange', function (id, state) {
             id = idx.replace(/DECT200_/g,''); //Switch
             adapter.log.info('SWITCH ID: '+ id + ' identified for command');
             if (dp == 'state') {
-                if (state.val == 0) {
+                if (state.val === 0 || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
                         fritz.getSessionID(username, password, moreParam).then(function (sid) {
                             fritz.setSwitchOff(sid, id).then(function (sid) {
-                                adapter.log.info('Turned switch ' + id + ' off');
+                                adapter.log.debug('Turned switch ' + id + ' off');
                             });
                         });
                 }
-                else if (state.val == 1) {
+                else if (state.val === 1 || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
                         fritz.getSessionID(username, password, moreParam).then(function (sid) {
                             fritz.setSwitchOn(sid, id).then(function (sid) {
-                                adapter.log.info('Turned switch ' + id + ' on');
+                                adapter.log.debug('Turned switch ' + id + ' on');
                             });
                         });
                     }
@@ -79,17 +79,17 @@ adapter.on('stateChange', function (id, state) {
         else { //must be GuestWLAN
             adapter.log.info('GuestWLAN identified for command');
             if (dp == 'state') {
-                if (state.val == 0) {
+                if (state.val === 0 || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
                     fritz.getSessionID(username, password, moreParam).then(function (sid) {
                         fritz.setGuestWlan(sid, state.val, function (sid) {
-                            adapter.log.info('Turned WLAN ' + id + ' off');
+                            adapter.log.debug('Turned WLAN ' + id + ' off');
                         });
                     });
                 }    
-                else if (state.val == 1) {
+                else if (state.val === 1 || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
                     fritz.getSessionID(username, password, moreParam).then(function (sid) {
                         fritz.setGuestWlan(sid, state.val, moreParam).then(function (sid) {
-                            adapter.log.info('Turned WLAN ' + id + ' on');
+                            adapter.log.debug('Turned WLAN ' + id + ' on');
                         });
                     });
                 }
@@ -461,7 +461,7 @@ function main() {
         updateFritzDect();
         updateFritzComet();
         updateFritzGuest();
-        adapter.log.info("polling! fritzdect is alive");
+        adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
     }
     insertDectObj();

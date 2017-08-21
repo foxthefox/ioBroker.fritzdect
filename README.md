@@ -60,6 +60,10 @@ http://fritz.box/net/home_auto_query.lua?sid=+sid+'&command=EnergyStats_24h&id='
 
 ## Changelog
 
+### 0.0.9
+* values '1' accepted for ON
+* values '0' accepted for ON
+
 ### 0.0.8
 * messages info-> debug
 * values 1/true/on/ON accepted for ON

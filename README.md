@@ -52,7 +52,7 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 Sometimes the setting of a command for switch or targetTemp does not work. Seems a combination of certain FW and fritzBox model.
 
 ## TODO:
-* BatteryStat Comet/DECT300
+* getOSversion
 
 ## Changelog
 

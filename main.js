@@ -307,7 +307,8 @@ function main() {
                 common: {
                     "name":  "Night Temp",
                     "type": "number",
-                    "unit": "°C",                    "read": true,
+                    "unit": "°C",                    
+                    "read": true,
                     "write": false,
                     "role": "value.temperature",
                     "desc":  "Night Temp"
@@ -368,7 +369,7 @@ function main() {
             adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
         });
         fritz.getTempComfort(sid,comets[i], moreParam).then(function(comfytemp){
-            adapter.log.debug('Comet_'+ comets[i] + ' : '  +'comfytemp :' + comfytemptemp);
+            adapter.log.debug('Comet_'+ comets[i] + ' : '  +'comfytemp :' + comfytemp);
             adapter.setState('Comet_'+ comets[i] +'.comfytemp', {val: comfytemp, ack: true});
         });
         fritz.getTempNight(sid,comets[i], moreParam).then(function(nighttemp){

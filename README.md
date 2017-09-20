@@ -49,7 +49,7 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 
 
 ## Known Issues:
-??
+Sometimes the setting of a command for switch or targetTemp does not work. Seems a combination of certain FW and fritzBox model.
 
 ## TODO:
 * Energystats

@@ -58,12 +58,12 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 
 ### 0.0.9
 * values '1' accepted for ON
-* values '0' accepted for ON
+* values '0' accepted for OFF
 
 ### 0.0.8
 * messages info-> debug
 * values 1/true/on/ON accepted for ON
-* values 0/false/off/OFF accepted for ON
+* values 0/false/off/OFF accepted for OFF
 
 ### 0.0.7
 * current temp of Comet/DECT300

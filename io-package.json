@@ -31,7 +31,10 @@
                 "en": 				"Inital version at npm",
                 "de": 				"Erste Version in npm"
             }
-        },   
+        },
+	"authors": [
+            "foxthefox <foxthefox@wysiwis.net>"
+	],
         "title":                "fritzbox dect adapter",
         "desc":                 "ioBroker fritzdect Adapter",
         "platform":             "Javascript/Node.js",

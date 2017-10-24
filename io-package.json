@@ -56,22 +56,20 @@
 	]
 
     },
-      "native": {
-        "fritz_ip":  "http://192.x.x.x",
-	"fritz_user": "admin",      
+    "native": {
+        "fritz_ip": "http://192.x.x.x",
+        "fritz_user": "admin",
         "fritz_pw": "password",
-	"fritz_interval": "300"      
+        "fritz_interval": "300"
     },
-    "objects": [
-
-    ],
+    "objects": [],
     "instanceObjects": [
         {
             "_id": "GuestWLAN",
             "type": "channel",
             "common": {
-                "name":  "GuestWLAN",
-                "role":  "switch"
+                "name": "GuestWLAN",
+                "role": "switch"
             },
             "native": {}
         },
@@ -79,12 +77,12 @@
             "_id": "GuestWLAN.state",
             "type": "state",
             "common": {
-                "name":  "GuestWLAN  on/off",
-                "type":  "boolean",
-                "role":  "switch",
-                "read":  true,
+                "name": "GuestWLAN  on/off",
+                "type": "boolean",
+                "role": "switch",
+                "read": true,
                 "write": true,
-                "desc":  "GuestWLAN  on/off"
+                "desc": "GuestWLAN  on/off"
             },
             "native": {}
         }

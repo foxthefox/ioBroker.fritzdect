@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.9",
+        "version":              "0.0.10",
 	"news": {
+	  "0.0.10": {
+                "en": "change to object oriented interface, added OSVersion",
+                "de": "Änderung zu object oriented interface, neue OSVersion"
+	    },
 	  "0.0.9": {
                 "en": "values '0'/'1' for OFF/ON",
                 "de": "Werte '0'/'1' für AUS/EIN"

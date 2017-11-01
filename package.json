@@ -1,6 +1,6 @@
 {
   "name": "iobroker.fritzdect",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "ioBroker fritzbox DECT Adapter",
   "author": {
     "name": "foxthefox",
@@ -24,7 +24,7 @@
     "url": "https://github.com/foxthefox/ioBroker.fritzdect"
   },
   "dependencies": {
-    "fritzapi": "^0.9.1"
+    "fritzapi": "^0.9.6"
   },
   "devDependencies": {
     "grunt": "^1.0.1",

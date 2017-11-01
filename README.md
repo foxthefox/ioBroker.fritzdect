@@ -52,9 +52,12 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 Sometimes the setting of a command for switch or targetTemp does not work. Seems a combination of certain FW and fritzBox model.
 
 ## TODO:
-* getOSversion
 
 ## Changelog
+
+### 0.0.10
+* change to object oriented interface
+* getOSversion when starting for log
 
 ### 0.0.9
 * values '1' accepted for ON

@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.10",
+        "version":              "0.0.11",
 	"news": {
+	  "0.0.11": {
+                "en": "added state for thermostat",
+                "de": "Zustand für Thermostat hinzugefügt"
+	    },
 	  "0.0.10": {
                 "en": "change to object oriented interface, added OSVersion",
                 "de": "Änderung zu object oriented interface, neue OSVersion"

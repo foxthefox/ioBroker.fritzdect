@@ -45,6 +45,7 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |COMET.comfytemp|value|-|comfort temperature in °C|
 |COMET.nighttemp|value|-|night temperature in °C|
 |COMET.battery|value|-|actual capacity in %|
+|COMET.state|boolean|-|actual state of thermostat|
 |GuestWLAN.state|boolean|x|true/false -> ON/OFF|
 
 
@@ -54,6 +55,8 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 ## TODO:
 
 ## Changelog
+### 0.0.11
+* added state OFF/ON for thermostat
 
 ### 0.0.10
 * change to object oriented interface

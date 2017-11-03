@@ -64,6 +64,21 @@ adapter.on('stateChange', function (id, state) {
                 })
                 .catch(errorHandler);
             }
+            if (dp == 'state') {
+                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                    fritz.setTempTarget(id, 253).then(function (sid) {
+                        adapter.log.debug('Turned Thermostat ' + id + ' off');
+                    })
+                    .catch(errorHandler);
+                }
+                else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                    fritz.setTempTarget(id, 254).then(function (sid) {
+                        adapter.log.debug('Turned Thermostat ' + id + ' on');
+                    })
+                    .catch(errorHandler);
+
+                }
+            } 
         }
         else if (idx.startsWith("DECT200_")) { //must be DECT
             id = idx.replace(/DECT200_/g,''); //Switch
@@ -282,6 +297,19 @@ function main() {
                 native: {
                 }
             });
+            adapter.setObject('Comet_' + newId +'.state', {
+                type: 'state',
+                common: {
+                    "name":  "Thermostat on/off",
+                    "type": "boolean",
+                    "read": true,
+                    "write": true,
+                    "role": "switch",
+                    "desc":  "Thermostat on/off"
+                },
+                native: {
+                }
+            });
             adapter.setObject('Comet_' + newId +'.targettemp', {
                 type: 'state',
                 common: {
@@ -378,8 +406,18 @@ function main() {
         })
         .catch(errorHandler);
         fritz.getTempTarget(comets[i]).then(function(targettemp){
-            adapter.log.debug('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
-            adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
+            if (targettemp < 57){
+                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
+                adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
+            } else
+            if (targettemp == 253){
+                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'state : OFF');
+                adapter.setState('Comet_'+ comets[i] +'.state', {val: false, ack: true});
+            } else
+            if (targettemp == 254){
+                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'state : ON');
+                adapter.setState('Comet_'+ comets[i] +'.state', {val: true, ack: true});
+            }
         })
         .catch(errorHandler);
         fritz.getTempComfort(comets[i]).then(function(comfytemp){

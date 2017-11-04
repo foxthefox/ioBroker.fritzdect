@@ -81,19 +81,22 @@ adapter.on('stateChange', function (id, state) {
                 }
             } else if (dp === 'mode') {
                 if (state.val === 0) {
-                    var targettemp = adapter.getState('Comet_' + id + '.targettemp').val;
-                    if (targettemp < 8) {
-                        adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
-                        targettemp = 8;
-                    } else if (targettemp > 28) {
-                        adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
-                        targettemp = 28;
-                    }
-                    
-                    fritz.setTempTarget(id, targettemp).then(function (sid) {
-                        adapter.log.debug('Set target temp ' + id + targettemp +' °C');
-                    })
-                    .catch(errorHandler);
+                    adapter.getState('Comet_' + id + '.targettemp', function (err, targettemp) {
+                        var setTemp = targettemp.val;
+                        if (setTemp < 8) {
+                            adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
+                            setTemp = 8;
+                        } else if (setTemp > 28) {
+                            adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
+                            setTemp = 28;
+                        }
+
+                        fritz.setTempTarget(id, setTemp).then(function (sid) {
+                            adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
+                        })
+                            .catch(errorHandler);
+
+                    });
                 } else if (state.val === 1) {
                     fritz.setTempTarget(id, 'off').then(function (sid) {
                         adapter.log.debug('Switched Mode' + id + ' to closed.');

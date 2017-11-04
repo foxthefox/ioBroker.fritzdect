@@ -1,4 +1,4 @@
-/* jshint -W097 */// jshint strict:false
+/* jshint -W097 */// jshint strict:galse
 /*jslint node: true */
 
 
@@ -81,7 +81,6 @@ adapter.on('stateChange', function (id, state) {
                 }
             } else if (dp === 'mode') {
                 if (state.val === 0) {
-                    adapter.log.info(adapter.getState('Comet_' + id + '.targettemp'));
                     var targettemp = adapter.getState('Comet_' + id + '.targettemp').val;
                     if (targettemp < 8) {
                         adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
@@ -445,12 +444,10 @@ function main() {
             } else
             if (targettemp == 'off'){
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode: Closed');
-                adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: 7, ack: true});
                 adapter.setState('Comet_'+ comets[i] +'.mode', {val: 1, ack: true});
             } else
             if (targettemp == 'on'){
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode : Opened');
-                adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: 29, ack: true});
                 adapter.setState('Comet_'+ comets[i] +'.', {val: 2, ack: true});
             }
         })

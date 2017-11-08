@@ -59,26 +59,57 @@ adapter.on('stateChange', function (id, state) {
             id = idx.replace(/Comet_/g,''); //Thermostat
             adapter.log.info('Comet ID: '+ id + ' identified for command : ' + state.val);
             if (dp === 'targettemp'){
-                fritz.setTempTarget(id, state.val).then(function (sid) {
-                    adapter.log.debug('Set target temp ' + id + state.val +' °C');
-                })
-                .catch(errorHandler);
-            }
-            if (dp == 'state') {
-                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.setTempTarget(id, 253).then(function (sid) {
-                        adapter.log.debug('Turned Thermostat ' + id + ' off');
+                if (state.val < 8) {
+                    adapter.setState('Comet_'+ id +'.mode', {val: 1, ack: false});
+                    fritz.setTempTarget(id, 'off').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to closed');
                     })
                     .catch(errorHandler);
-                }
-                else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                    fritz.setTempTarget(id, 254).then(function (sid) {
-                        adapter.log.debug('Turned Thermostat ' + id + ' on');
+                } else if (state.val > 28) {
+                    adapter.setState('Comet_'+ id +'.mode', {val: 2, ack: false});
+                    fritz.setTempTarget(id, 'on').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                    })
+                    .catch(errorHandler);
+                } else {
+                    adapter.setState('Comet_'+ id +'.mode', {val: 0, ack: false});
+                    fritz.setTempTarget(id, state.val).then(function (sid) {
+                        adapter.log.debug('Set target temp ' + id + state.val +' °C');
                     })
                     .catch(errorHandler);
 
                 }
-            } 
+            } else if (dp === 'mode') {
+                if (state.val === 0) {
+                    adapter.getState('Comet_' + id + '.targettemp', function (err, targettemp) {
+                        var setTemp = targettemp.val;
+                        if (setTemp < 8) {
+                            adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
+                            setTemp = 8;
+                        } else if (setTemp > 28) {
+                            adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
+                            setTemp = 28;
+                        }
+
+                        fritz.setTempTarget(id, setTemp).then(function (sid) {
+                            adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
+                        })
+                            .catch(errorHandler);
+
+                    });
+                } else if (state.val === 1) {
+                    fritz.setTempTarget(id, 'off').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to closed.');
+                    })
+                    .catch(errorHandler); 
+                } else if (state.val === 2) {
+                    fritz.setTempTarget(id, 'on').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                    })
+                    .catch(errorHandler);
+   
+                }
+            }
         }
         else if (idx.startsWith("DECT200_")) { //must be DECT
             id = idx.replace(/DECT200_/g,''); //Switch
@@ -297,15 +328,18 @@ function main() {
                 native: {
                 }
             });
-            adapter.setObject('Comet_' + newId +'.state', {
-                type: 'state',
-                common: {
-                    "name":  "Thermostat on/off",
-                    "type": "boolean",
-                    "read": true,
+            adapter.setObject('Comet_' + newId +'.mode', {
+                type:'state',
+                common:{
+                    "name":  "Thermostat operation mode (auto, closed, open)",
+                    "type":  "array",
+                    "read":  true,
                     "write": true,
-                    "role": "switch",
-                    "desc":  "Thermostat on/off"
+                    "role":  "command",
+                    "states": "0:auto;1:closed;2:opened",
+                    "min": 0,
+                    "max": 2,
+                    "def": 0
                 },
                 native: {
                 }
@@ -409,14 +443,15 @@ function main() {
             if (targettemp < 57){
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
                 adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
+                adapter.setState('Comet_'+ comets[i] +'.mode', {val: 0, ack: true});
             } else
-            if (targettemp == 253){
-                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'state : OFF');
-                adapter.setState('Comet_'+ comets[i] +'.state', {val: false, ack: true});
+            if (targettemp == 'off'){
+                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode: Closed');
+                adapter.setState('Comet_'+ comets[i] +'.mode', {val: 1, ack: true});
             } else
-            if (targettemp == 254){
-                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'state : ON');
-                adapter.setState('Comet_'+ comets[i] +'.state', {val: true, ack: true});
+            if (targettemp == 'on'){
+                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode : Opened');
+                adapter.setState('Comet_'+ comets[i] +'.', {val: 2, ack: true});
             }
         })
         .catch(errorHandler);

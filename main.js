@@ -59,13 +59,13 @@ adapter.on('stateChange', function (id, state) {
             id = idx.replace(/Comet_/g,''); //Thermostat
             adapter.log.info('Comet ID: '+ id + ' identified for command : ' + state.val);
             if (dp === 'targettemp'){
-                if (state.val < 8) {
+                if (state.val < 8) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
                     adapter.setState('Comet_'+ id +'.mode', {val: 1, ack: false});
                     fritz.setTempTarget(id, 'off').then(function (sid) {
                         adapter.log.debug('Switched Mode' + id + ' to closed');
                     })
                     .catch(errorHandler);
-                } else if (state.val > 28) {
+                } else if (state.val > 28) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
                     adapter.setState('Comet_'+ id +'.mode', {val: 2, ack: false});
                     fritz.setTempTarget(id, 'on').then(function (sid) {
                         adapter.log.debug('Switched Mode' + id + ' to opened permanently');
@@ -75,13 +75,14 @@ adapter.on('stateChange', function (id, state) {
                     adapter.setState('Comet_'+ id +'.mode', {val: 0, ack: false});
                     fritz.setTempTarget(id, state.val).then(function (sid) {
                         adapter.log.debug('Set target temp ' + id + state.val +' °C');
+                        adapter.setState('Comet_'+ comets[i] +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
                     })
                     .catch(errorHandler);
 
                 }
             } else if (dp === 'mode') {
                 if (state.val === 0) {
-                    adapter.getState('Comet_' + id + '.targettemp', function (err, targettemp) {
+                    adapter.getState('Comet_' + id + '.targettemp', function (err, targettemp) { // oder hier die Verwendung von lasttarget
                         var setTemp = targettemp.val;
                         if (setTemp < 8) {
                             adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
@@ -358,6 +359,20 @@ function main() {
                 native: {
                 }
             });
+            adapter.setObject('Comet_' + newId +'.lasttarget', {
+                type: 'state',
+                common: {
+                    "name":  "last setting of target temp",
+                    "type": "number",
+                    "unit": "°C",
+                    "read": true,
+                    "write": false,
+                    "role": "value.temperature",
+                    "desc":  "last setting of target temp"
+                },
+                native: {
+                }
+            });
             adapter.setObject('Comet_' + newId +'.comfytemp', {
                 type: 'state',
                 common: {
@@ -440,17 +455,20 @@ function main() {
         })
         .catch(errorHandler);
         fritz.getTempTarget(comets[i]).then(function(targettemp){
-            if (targettemp < 57){
+            if (targettemp < 57){ // die Abfrage au <57 brauchen wir wahrscheinlich nicht
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
                 adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
+                adapter.setState('Comet_'+ comets[i] +'.lasttarget', {val: targettemp, ack: true}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
                 adapter.setState('Comet_'+ comets[i] +'.mode', {val: 0, ack: true});
             } else
             if (targettemp == 'off'){
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode: Closed');
+                // adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                 adapter.setState('Comet_'+ comets[i] +'.mode', {val: 1, ack: true});
             } else
             if (targettemp == 'on'){
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode : Opened');
+                // adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                 adapter.setState('Comet_'+ comets[i] +'.', {val: 2, ack: true});
             }
         })

@@ -298,125 +298,143 @@ function main() {
             });
         }
     }
-    function insertComet(id){
-        var comets = id;
-        var i=0;
-        for (i=0;i<comets.length; i++){
-        adapter.log.info('setting up thermostat object '+ comets[i]);
+    
+    function insertComet(comets) {
+        for (var i=0;i<comets.length; i++){
+            fritz.getDevice(comets[i]).then(function(device) { 
+                var newId = device.identifier.replace(/\s/g, '');
+                adapter.log.info('setting up thermostat object ' + newId + ' (' + device.name + ')');
 
-            var newId = comets[i];
-            adapter.setObject('Comet_' + newId, {
-                type: 'channel',
-                common: {
-                    name: 'FritzComet ' + newId,
-                    role: 'thermo'
-                },
-                native: {
-                    "aid": newId
-                }
-            });
-            adapter.setObject('Comet_' + newId +'.temp', {
-                type: 'state',
-                common: {
-                    "name":  "Comet Temp",
-                    "type": "number",
-                    "unit": "°C",
-                    "read": true,
-                    "write": false,
-                    "role": "value.temperature",
-                    "desc":  "Actual Temp"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('Comet_' + newId +'.mode', {
-                type:'state',
-                common:{
-                    "name":  "Thermostat operation mode (auto, closed, open)",
-                    "type":  "array",
-                    "read":  true,
-                    "write": true,
-                    "role":  "command",
-                    "states": "0:auto;1:closed;2:opened",
-                    "min": 0,
-                    "max": 2,
-                    "def": 0
-                },
-                native: {
-                }
-            });
-            adapter.setObject('Comet_' + newId +'.targettemp', {
-                type: 'state',
-                common: {
-                    "name":  "Target Temp",
-                    "type": "number",
-                    "unit": "°C",
-                    "read": true,
-                    "write": true,
-                    "role": "value.temperature",
-                    "desc":  "Target Temp"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('Comet_' + newId +'.lasttarget', {
-                type: 'state',
-                common: {
-                    "name":  "last setting of target temp",
-                    "type": "number",
-                    "unit": "°C",
-                    "read": true,
-                    "write": false,
-                    "role": "value.temperature",
-                    "desc":  "last setting of target temp"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('Comet_' + newId +'.comfytemp', {
-                type: 'state',
-                common: {
-                    "name":  "Comfort Temp",
-                    "type": "number",
-                    "unit": "°C",                    
-                    "read": true,
-                    "write": false,
-                    "role": "value.temperature",                    
-                    "desc":  "Comfort Temp"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('Comet_' + newId +'.nighttemp', {
-                type: 'state',
-                common: {
-                    "name":  "Night Temp",
-                    "type": "number",
-                    "unit": "°C",                    
-                    "read": true,
-                    "write": false,
-                    "role": "value.temperature",
-                    "desc":  "Night Temp"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('Comet_' + newId +'.battery', {
-                type: 'state',
-                common: {
-                    "name":  "Battery", 
-                    "type": "number",
-                    "unit": "%",
-                    "read": true,
-                    "write": false,
-                    "role": "value.battery",
-                    "desc":  "Battery"
-                },
-                native: {
-                }
+                adapter.setObject('Comet_' + newId, {
+                    type: 'channel',
+                    common: {
+                        name: device.name,
+                        role: 'thermo.heat'
+                    },
+                    native: {
+                        "aid": newId
+                    }
+                });;
+                
+                adapter.setObject('Comet_' + newId +'.name', {
+                    type: 'state',
+                    common: {
+                        "name":  "Comet device name",
+                        "type": "string",
+                        "read": true,
+                        "write": false,
+                        "role": "text",
+                        "desc":  "Device name of the thermostat"
+                    },
+                    native: {
+                    }
+                });
+                adapter.setState('Comet_'+ newId +'.name', {val: device.name, ack: true});
+                
+                adapter.setObject('Comet_' + newId +'.temp', {
+                    type: 'state',
+                    common: {
+                        "name":  "Comet Temp",
+                        "type": "number",
+                        "unit": "°C",
+                        "read": true,
+                        "write": false,
+                        "role": "value.temperature",
+                        "desc":  "Actual Temp"
+                    },
+                    native: {
+                    }
+                });
+                adapter.setObject('Comet_' + newId +'.mode', {
+                    type:'state',
+                    common:{
+                        "name":  "Thermostat operation mode (auto, closed, open)",
+                        "type":  "array",
+                        "read":  true,
+                        "write": true,
+                        "role":  "command",
+                        "states": "0:auto;1:closed;2:opened",
+                        "min": 0,
+                        "max": 2,
+                        "def": 0
+                    },
+                    native: {
+                    }
+                });
+                adapter.setObject('Comet_' + newId +'.targettemp', {
+                    type: 'state',
+                    common: {
+                        "name":  "Target Temp",
+                        "type": "number",
+                        "unit": "°C",
+                        "read": true,
+                        "write": true,
+                        "role": "value.temperature",
+                        "desc":  "Target Temp"
+                    },
+                    native: {
+                    }
+                });
+                adapter.setObject('Comet_' + newId +'.lasttarget', {
+                    type: 'state',
+                    common: {
+                        "name":  "last setting of target temp",
+                        "type": "number",
+                        "unit": "°C",
+                        "read": true,
+                        "write": false,
+                        "role": "value.temperature",
+                        "desc":  "last setting of target temp"
+                    },
+                    native: {
+                    }
+                });
+                adapter.setObject('Comet_' + newId +'.comfytemp', {
+                    type: 'state',
+                    common: {
+                        "name":  "Comfort Temp",
+                        "type": "number",
+                        "unit": "°C",                    
+                        "read": true,
+                        "write": false,
+                        "role": "value.temperature",                    
+                        "desc":  "Comfort Temp"
+                    },
+                    native: {
+                    }
+                });
+                adapter.setObject('Comet_' + newId +'.nighttemp', {
+                    type: 'state',
+                    common: {
+                        "name":  "Night Temp",
+                        "type": "number",
+                        "unit": "°C",                    
+                        "read": true,
+                        "write": false,
+                        "role": "value.temperature",
+                        "desc":  "Night Temp"
+                    },
+                    native: {
+                    }
+                });
+                adapter.setObject('Comet_' + newId +'.battery', {
+                    type: 'state',
+                    common: {
+                        "name":  "Battery", 
+                        "type": "number",
+                        "unit": "%",
+                        "read": true,
+                        "write": false,
+                        "role": "value.battery",
+                        "desc":  "Battery"
+                    },
+                    native: {
+                    }
+                });
             });
         }
     }
+
     function getSwitchInfo(switches, i){
         fritz.getSwitchName(switches[i]).then(function(name){
             adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'name :' + name);

@@ -47,6 +47,7 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |COMET.battery|value|-|actual capacity in %|
 |COMET.mode|array|-| AUTO/OFF/ON state of thermostat|
 |COMET.lasttarget|value|-| last target temperature in °C|
+|COMET.name|text|-|name of device|
 |GuestWLAN.state|boolean|x|true/false -> ON/OFF|
 
 
@@ -57,6 +58,9 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 * DECT100 temperature reading
 
 ## Changelog
+
+### 0.0.13
+  added name state for thermostat
 
 ### 0.0.12
 * changed state to  mode AUTO/OFF/ON for thermostat (including datapoint lasttarget when going back to AUTO)

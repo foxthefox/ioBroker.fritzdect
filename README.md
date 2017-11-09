@@ -56,14 +56,13 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 
 ## TODO:
 * DECT100 temperature reading
+* Contact reading
 
 ## Changelog
 
-### 0.0.13
-  added name state for thermostat
-
 ### 0.0.12
 * changed state to  mode AUTO/OFF/ON for thermostat (including datapoint lasttarget when going back to AUTO)
+* added name state for thermostat
 
 ### 0.0.11
 * added state OFF/ON for thermostat

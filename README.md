@@ -45,7 +45,7 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |COMET.comfytemp|value|-|comfort temperature in °C|
 |COMET.nighttemp|value|-|night temperature in °C|
 |COMET.battery|value|-|actual capacity in %|
-|COMET.mode|array|-| AUTO/OFF/ON state of thermostat|
+|COMET.mode|array|x| AUTO/OFF/ON state of thermostat|
 |COMET.lasttarget|value|-| last target temperature in °C|
 |COMET.name|text|-|name of device|
 |DECT100.present|boolean|-|true/false -> connected/not available|

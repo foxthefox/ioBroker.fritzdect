@@ -48,6 +48,12 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |COMET.mode|array|-| AUTO/OFF/ON state of thermostat|
 |COMET.lasttarget|value|-| last target temperature in °C|
 |COMET.name|text|-|name of device|
+|DECT100.present|boolean|-|true/false -> connected/not available|
+|DECT100.temp|value|-|actual temperature in °C|
+|DECT100.name|text|-|name of device|
+|Contact.present|boolean|-|true/false -> connected/not available|
+|Contact.name|text|-|name of device|
+|Contact.state|boolean|-|true/false -> ON/OFF|
 |GuestWLAN.state|boolean|x|true/false -> ON/OFF|
 
 
@@ -55,14 +61,16 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 Sometimes the setting of a command for switch or targetTemp does not work. Seems a combination of certain FW and fritzBox model.
 
 ## TODO:
-* DECT100 temperature reading
-* Contact reading
+* finalize DECT100 temperature reading
+* finalize Contact reading
 
 ## Changelog
 
 ### 0.0.12
 * changed state to  mode AUTO/OFF/ON for thermostat (including datapoint lasttarget when going back to AUTO)
 * added name state for thermostat
+* DECT100 temperature reading
+* Contact reading
 
 ### 0.0.11
 * added state OFF/ON for thermostat

@@ -434,7 +434,117 @@ function main() {
             });
         }
     }
+    function insertDECT100(newid, name){
+        adapter.log.info('setting up Dect100 object '+ name);
+        adapter.setObject('DECT100_' + newId, {
+            type: 'channel',
+            common: {
+                name: 'FritzDECT100 ' + newId,
+                role: 'sensor'
+            },
+            native: {
+                "aid": newId
+            }
+        });
+        adapter.setObject('DECT100_' + newId +'.name', {
+            type: 'state',
+            common: {
+                "name": "Name",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "Name"
+            },
+            native: {
+            }
+        });
+        adapter.setState('DECT100_'+ newId +'.name', {val: name, ack: true});
 
+        adapter.setObject('DECT100_' + newId +'.present', {
+            type: 'state',
+            common: {
+                "name":  "Switch present",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator.connected",
+                "desc":  "Switch present"
+            },
+            native: {
+            }
+        });
+        adapter.setObject('DECT100_' + newId +'.temp', {
+            type: 'state',
+            common: {
+                "name":  "Switch Temp",
+                "type": "number",
+                "unit": "°C",
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "Switch Temp"
+            },
+            native: {
+            }
+        });
+    }
+
+    function insertContact(newid, name){
+        adapter.log.info('setting up Contact object '+ name);
+        adapter.setObject('Contact_' + newId, {
+            type: 'channel',
+            common: {
+                name: 'Contact ' + newId,
+                role: 'sensor'
+            },
+            native: {
+                "aid": newId
+            }
+        });
+        adapter.setObject('Contact_' + newId +'.name', {
+            type: 'state',
+            common: {
+                "name": "Name",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "Name"
+            },
+            native: {
+            }
+        });
+        adapter.setState('Contact_'+ newId +'.name', {val: name, ack: true});
+
+        adapter.setObject('Contact_' + newId +'.present', {
+            type: 'state',
+            common: {
+                "name":  "Contact present",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator.connected",
+                "desc":  "Contact present"
+            },
+            native: {
+            }
+        });
+        adapter.setObject('Contact_' + newId +'.state', {
+            type: 'state',
+            common: {
+                "name":  "Contact OFF/ON",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator.connected",
+                "desc":  "Contact OFF/ON"
+            },
+            native: {
+            }
+        });
+    }
+    
     function getSwitchInfo(switches, i){
         fritz.getSwitchName(switches[i]).then(function(name){
             adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'name :' + name);
@@ -525,6 +635,40 @@ function main() {
         })
         .catch(errorHandler);
     }
+    
+    function insertDect100Obj(){
+        fritz.getDeviceList().then(function(devices){
+            var dect100 = []
+            if (devices.length){
+                for (i=0; i < devices.length; i++){
+                    if (devices[i].bitmask == '1280'){
+                        dect100.push(devices[i].identifier.replace(/\s/g, ''));
+                        insertDECT100(devices[i].identifier.replace(/\s/g, ''),devices[i].name);
+                    }      
+                }
+            adapter.log.info("DECT100 AINs: "+ dect100);
+            }
+            else{adapter.log.info("no DECT100 found");}   
+        })
+        .catch(errorHandler);
+    }   
+
+    function insertContactObj(){
+        fritz.getDeviceList().then(function(devices){
+            var contact = []
+            if (devices.length){
+                for (i=0; i < devices.length; i++){
+                    if (devices[i].bitmask == '8208'){
+                        contact.push(devices[i].identifier.replace(/\s/g, ''));
+                        insertContact(devices[i].identifier.replace(/\s/g, ''),devices[i].name);
+                    }      
+                }
+            adapter.log.info("DECT100 AINs: "+ contact);
+            }
+            else{adapter.log.info("no contacts found");}   
+        })
+        .catch(errorHandler);
+    }      
     function updateFritzGuest(){
         fritz.getGuestWlan().then(function(listinfos){
             adapter.log.debug("Guest WLAN: "+JSON.stringify(listinfos));
@@ -573,6 +717,8 @@ function main() {
     logVersion();
     insertDectObj();
     insertCometObj();
+    insertDect100Obj();
+    insertContactObj();
     pollFritzData();
 
     // in this template all states changes inside the adapters namespace are subscribed

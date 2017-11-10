@@ -641,7 +641,7 @@ function main() {
             var dect100 = []
             if (devices.length){
                 for (i=0; i < devices.length; i++){
-                    if (devices[i].bitmask == '1280'){
+                    if (devices[i].functionbitmask == '1280'){
                         dect100.push(devices[i].identifier.replace(/\s/g, ''));
                         insertDECT100(devices[i].identifier.replace(/\s/g, ''),devices[i].name);
                     }      
@@ -658,7 +658,7 @@ function main() {
             var contact = []
             if (devices.length){
                 for (i=0; i < devices.length; i++){
-                    if (devices[i].bitmask == '8208'){
+                    if (devices[i].functionbitmask == '8208'){
                         contact.push(devices[i].identifier.replace(/\s/g, ''));
                         insertContact(devices[i].identifier.replace(/\s/g, ''),devices[i].name);
                     }      

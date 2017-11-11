@@ -61,8 +61,8 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 Sometimes the setting of a command for switch or targetTemp does not work. Seems a combination of certain FW and fritzBox model.
 
 ## TODO:
-* finalize DECT100 temperature reading
-* finalize Contact reading
+* comfytemp/nighttemp elimiate off/on (stay with number)
+* contact bitmask=8208 / DECT100 bitmask=1280 may be not universal enough
 
 ## Changelog
 

@@ -434,13 +434,13 @@ function main() {
             });
         }
     }
-    function insertDECT100(newid, name){
+    function insertDECT100(newId, name){
         adapter.log.info('setting up Dect100 object '+ name);
         adapter.setObject('DECT100_' + newId, {
             type: 'channel',
             common: {
                 name: 'FritzDECT100 ' + newId,
-                role: 'sensor'
+                role: 'thermo'
             },
             native: {
                 "aid": newId
@@ -490,7 +490,7 @@ function main() {
         });
     }
 
-    function insertContact(newid, name){
+    function insertContact(newId, name){
         adapter.log.info('setting up Contact object '+ name);
         adapter.setObject('Contact_' + newId, {
             type: 'channel',
@@ -638,34 +638,28 @@ function main() {
     
     function insertDect100Obj(){
         fritz.getDeviceList().then(function(devices){
-            var dect100 = []
             if (devices.length){
-                for (i=0; i < devices.length; i++){
-                    if (devices[i].functionbitmask == '1280'){
-                        dect100.push(devices[i].identifier.replace(/\s/g, ''));
-                        insertDECT100(devices[i].identifier.replace(/\s/g, ''),devices[i].name);
-                    }      
-                }
-            adapter.log.info("DECT100 AINs: "+ dect100);
+                devices.forEach( function (device){
+                    if(device.functionbitmask == '1280'){
+                        adapter.log.info("DECT100 AIN: "+ device.identifier.replace(/\s/g, ''));
+                        insertDECT100(device.identifier.replace(/\s/g, ''),device.name);
+                    }
+                })
             }
-            else{adapter.log.info("no DECT100 found");}   
         })
         .catch(errorHandler);
     }   
 
     function insertContactObj(){
         fritz.getDeviceList().then(function(devices){
-            var contact = []
             if (devices.length){
-                for (i=0; i < devices.length; i++){
-                    if (devices[i].functionbitmask == '8208'){
-                        contact.push(devices[i].identifier.replace(/\s/g, ''));
-                        insertContact(devices[i].identifier.replace(/\s/g, ''),devices[i].name);
-                    }      
-                }
-            adapter.log.info("DECT100 AINs: "+ contact);
+               devices.forEach( function (device){
+                    if(device.functionbitmask == '8208'){
+                        adapter.log.info("Contact AIN: "+ device.identifier.replace(/\s/g, ''));
+                        insertContact(device.identifier.replace(/\s/g, ''),device.name);
+                    }
+                })
             }
-            else{adapter.log.info("no contacts found");}   
         })
         .catch(errorHandler);
     }      

@@ -693,10 +693,42 @@ function main() {
         })
         .catch(errorHandler);
     }
+    function updateObjects(){
+        fritz.getDeviceList().then(function(devices){
+            devices.forEach(function (device){
+                if(device.functionbitmask == '1280'){
+
+                    adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
+                    adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+                    
+                    adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
+                    adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
+                    
+                    adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
+                    adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+                    
+                }
+                if(device.functionbitmask == '8208'){
+                    
+                    adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
+                    adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+                    
+                    adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'state : ' + device.alert.state);
+                    adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.state', {val: device.alert.state, ack: true});
+                    
+                    adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
+                    adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+                    
+                }
+            })
+        })
+        .catch(errorHandler);
+    } 
     function pollFritzData() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateFritzDect();
         updateFritzComet();
+        updateObjects();
         updateFritzGuest();
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);

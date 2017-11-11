@@ -597,7 +597,7 @@ function main() {
             if (targettemp == 'on'){
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode : Opened');
                 // adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-                adapter.setState('Comet_'+ comets[i] +'.', {val: 2, ack: true});
+                adapter.setState('Comet_'+ comets[i] +'.mode', {val: 2, ack: true});
             }
         })
         .catch(errorHandler);

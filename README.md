@@ -63,6 +63,7 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 ## TODO:
 * comfytemp/nighttemp elimiate off/on (stay with number)
 * contact bitmask=8208 / DECT100 bitmask=1280 may be not universal enough
+* use getTemperatureDevice/ getName/ getAlarmContactList/ get RepeaterList / getTemperatureDevice when these functions are available in fritzapi
 
 ## Changelog
 

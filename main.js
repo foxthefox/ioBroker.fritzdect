@@ -19,7 +19,7 @@ function errorHandler(error) {
     if (error == "0000000000000000")
         adapter.log.debug("Did not get session id- invalid username or password?")
     else
-        adapter.log.error(JSON.stringify(error));
+        adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
 }
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
@@ -728,7 +728,7 @@ function main() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateFritzDect();
         updateFritzComet();
-        updateObjects();
+        updateObjects(); // für Kontakte und DECT100
         updateFritzGuest();
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);

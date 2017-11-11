@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.11",
+        "version":              "0.0.12",
 	"news": {
+	  "0.0.12": {
+                "en": "convertet state to mode for thermostat, contacts and DECT100 added",
+                "de": "Zustand für Thermostat geändert in mode, Kontakte und DECT100 aufgenommen"
+	    },
 	  "0.0.11": {
                 "en": "added state for thermostat",
                 "de": "Zustand für Thermostat hinzugefügt"

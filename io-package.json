@@ -45,7 +45,11 @@
             }
         },
         "title":                "fritzbox dect adapter",
-        "desc":                 "ioBroker fritzdect Adapter",
+        "desc":                     {
+            "en": "connects DECT ULE devices (fritzdect) to ioBroker",
+            "de": "Bindet DECT ULE Geräte (fritzdect) an ioBroker an",
+            "ru": "connects DECT ULE devices (fritzdect) to ioBroker"
+        },
         "platform":             "Javascript/Node.js",
         "mode":                 "daemon",
         "license": 	   	"MIT",

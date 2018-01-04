@@ -747,7 +747,7 @@ function main() {
                     adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
                     
                     adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.powermeter.voltage/10);
-                    adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage/10, ack: true});
+                    adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage / 100, ack: true});
                     
                 }
             })

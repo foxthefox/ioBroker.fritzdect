@@ -16,7 +16,8 @@
     systemDictionary = {
         "fritzdect adapter settings": {"de": "fritzdect Adapter Einstellung", "en": "fritzdect adapter setup", "ru": "Настройки fritzdect Драйвера"},
 	"enable DECT200 temp reading": {"de": "DECT200 Temp einlesen", "en": "enable DECT200 temp reading", "ru": "enable DECT200 temp reading"},
-        "on save adapter restarts with new config immediately": {            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
+	"enable DECT200 voltage reading": {"de": "DECT200 Spannung einlesen", "en": "enable DECT200 voltage reading", "ru": "enable DECT200 voltage reading"},
+	"on save adapter restarts with new config immediately": {            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
 								 	"ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"
         }
     };
@@ -82,7 +83,12 @@
             <td class="translate">enable DECT200 temp reading</td>
             <td><input id="dect200temp_en" class="value" type="checkbox" /></td>
             <td><p>disable when problems with temp reading</p></td>
-	</tr>    
+	</tr>
+	<tr>
+            <td class="translate">enable DECT200 voltage reading</td>
+            <td><input id="dect200volt_en" class="value" type="checkbox" /></td>
+            <td><p>enable when voltage reading is possible</p></td>
+	</tr> 
      </table>
 	
 

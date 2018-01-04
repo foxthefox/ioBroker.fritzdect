@@ -13,7 +13,7 @@ var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 
 var fritzTimeout;
 
-var adapter = utils.adapter('fritzdect');
+var adapter = utils.Adapter('fritzdect');
 
 function errorHandler(error) {
     if (error == "0000000000000000")

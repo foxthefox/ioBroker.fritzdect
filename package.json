@@ -37,6 +37,6 @@
   "main": "main.js",
   "readmeFilename": "README.md",
   "scripts": {
-    "test": "node node_modules/mocha/bin/mocha"
+    "test": "node node_modules/mocha/bin/mocha --exit"
   }
 }

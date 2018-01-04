@@ -15,7 +15,7 @@
     // Dictionary (systemDictionary is global variable from adapter-settings.js)
     systemDictionary = {
         "fritzdect adapter settings": {"de": "fritzdect Adapter Einstellung", "en": "fritzdect adapter setup", "ru": "Настройки fritzdect Драйвера"},
-
+	"enable DECT200 temp reading": {"de": "DECT200 Temp einlesen", "en": "enable DECT200 temp reading", "ru": "enable DECT200 temp reading"},
         "on save adapter restarts with new config immediately": {            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
 								 	"ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"
         }
@@ -77,7 +77,12 @@
         <tr>
             <td class="translate">Fritzbox Polling Interval</td>
             <td><input type="text" id="fritz_interval" class="value"/></td>
-        </tr>    
+        </tr>
+	<tr>
+            <td class="translate">enable DECT200 temp reading</td>
+            <td><input id="dect200temp_en" class="value" type="checkbox" /></td>
+            <td><p>disable when problems with temp reading</p></td>
+	</tr>    
      </table>
 	
 

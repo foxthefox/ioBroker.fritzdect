@@ -68,6 +68,10 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 * include groups if feasable
 
 ## Changelog
+### 0.0.13
+* DECT200 checkbox for temperature reading (e.g. due to reported incompatibility with 7360SL)
+* DECT200 voltage new object
+* DECT200 mode/lock value polling
 
 ### 0.0.12
 * changed state to  mode AUTO/OFF/ON for thermostat (including datapoint lasttarget when going back to AUTO)

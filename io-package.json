@@ -1,8 +1,12 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.12",
+        "version":              "0.0.13",
 	"news": {
+	  "0.0.13": {
+                "en": "DECT200 improvement",
+                "de": "DECT200 Verbesserung"
+	    },
 	  "0.0.12": {
                 "en": "convertet state to mode for thermostat, contacts and DECT100 added",
                 "de": "Zustand für Thermostat geändert in mode, Kontakte und DECT100 aufgenommen"
@@ -76,7 +80,9 @@
         "fritz_ip": "http://192.x.x.x",
         "fritz_user": "admin",
         "fritz_pw": "password",
-        "fritz_interval": "300"
+        "fritz_interval": "300",
+	"dect200temp_en": true,
+	"dect200volt_en": true
     },
     "objects": [],
     "instanceObjects": [

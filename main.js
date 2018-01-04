@@ -281,6 +281,22 @@ function main() {
                 native: {
                 }
             });
+            adapter.setObject('DECT200_' + newId +'.voltage', {
+                type: 'state',
+                common: {
+                    "name":  "Switch act voltage",
+                    "type": "number",
+                    "unit": "V",
+                    "min": 0,
+                    "max": 250,
+                    "read": true,
+                    "write": false,
+                    "role": "value.voltage",
+                    "desc":  "Switch act voltage"
+                },
+                native: {
+                }
+            });
             adapter.setObject('DECT200_' + newId +'.energy', {
                 type: 'state',
                 common: {
@@ -560,11 +576,13 @@ function main() {
             adapter.setState('DECT200_'+ switches[i] +'.present', {val: presence, ack: true});
         })
         .catch(errorHandler);
-        fritz.getTemperature(switches[i]).then(function(temp){
-            adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'temp :' + temp);
-            adapter.setState('DECT200_'+ switches[i] +'.temp', {val: temp, ack: true});
-        })
-        .catch(errorHandler);
+        if( adapter.config.dect200temp_en === 'true' || adapter.config.dect200temp_en  === true || adapter.config.dect200temp_en  === 1) {            
+            fritz.getTemperature(switches[i]).then(function(temp){
+                adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'temp :' + temp);
+                adapter.setState('DECT200_'+ switches[i] +'.temp', {val: temp, ack: true});
+            })
+            .catch(errorHandler);
+        }
         fritz.getSwitchPower(switches[i]).then(function(power){
             adapter.log.debug('DECT200_'+ switches[i]+ ' : '  +'power :' + power);
             adapter.setState('DECT200_'+ switches[i] +'.power', {val: power, ack: true});
@@ -720,6 +738,20 @@ function main() {
                     adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
                     
                 }
+                if(device.functionbitmask == '2944'){
+                    
+                    adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : ' + device.switch.mode);
+                    adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: device.switch.mode, ack: true});
+                    
+                    adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock : ' + device.switch.lock);
+                    adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
+                    
+                    // if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.powermeter.voltage/100);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage / 100, ack: true});
+                    //}
+                    
+                }
             })
         })
         .catch(errorHandler);
@@ -728,7 +760,7 @@ function main() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateFritzDect();
         updateFritzComet();
-        updateObjects(); // für Kontakte und DECT100
+        updateObjects(); // für Kontakte und DECT100 und non-standard Werte aus DECT200
         updateFritzGuest();
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);

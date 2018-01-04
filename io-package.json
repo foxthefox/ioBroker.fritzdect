@@ -81,7 +81,8 @@
         "fritz_user": "admin",
         "fritz_pw": "password",
         "fritz_interval": "300",
-	"dect200temp_en": true
+	"dect200temp_en": true,
+	"dect200volt_en": true
     },
     "objects": [],
     "instanceObjects": [

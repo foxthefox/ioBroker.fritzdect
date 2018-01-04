@@ -746,10 +746,10 @@ function main() {
                     adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock : ' + device.switch.lock);
                     adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
                     
-                    if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
+                    // if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
                         adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.powermeter.voltage/100);
                         adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage / 100, ack: true});
-                    }
+                    //}
                     
                 }
             })

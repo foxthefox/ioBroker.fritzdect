@@ -38,6 +38,7 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |DECT200.present|boolean|-|true/false -> connected/not available|
 |DECT200.temp|value|-|actual temperature in °C|
 |DECT200.power|value|-|actual power in W|
+|DECT200.voltage|value|-|actual voltage in V|
 |DECT200.energy|value|-|actual energy consumption in Wh|
 |DECT200.name|text|-|name of device|
 |COMET.temp|value|-|actual temperature in °C|
@@ -71,7 +72,9 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 ### 0.0.13
 * DECT200 checkbox for temperature reading (e.g. due to reported incompatibility with 7360SL)
 * DECT200 voltage new object
+* DECT200 voltage checkbox for voltage reading (e.g. due to reported incompatibility with 7390)
 * DECT200 mode/lock value polling
+* ADMIN v3
 
 ### 0.0.12
 * changed state to  mode AUTO/OFF/ON for thermostat (including datapoint lasttarget when going back to AUTO)

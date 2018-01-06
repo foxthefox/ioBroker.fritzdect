@@ -1,4 +1,4 @@
-![Logo](admin/fritzdect_logo.png)
+![Logo](../../admin/fritzdect_logo.png)
 # Installationshinweise
 
 ## FritzBox Einstellungen

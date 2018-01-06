@@ -4,8 +4,15 @@
         "version":              "0.0.13",
 	"news": {
 	  "0.0.13": {
-                "en": "DECT200 improvement",
-                "de": "DECT200 Verbesserung"
+	    "en": "DECT200 improvement",
+	    "de": "DECT200 Verbesserung",
+	    "ru": "Улучшение DECT200",
+	    "pt": "Melhoria DECT200",
+	    "nl": "DECT200-verbetering",
+	    "fr": "Amélioration DECT200",
+	    "it": "Miglioramento DECT200",
+	    "es": "Mejora DECT200",
+	    "pl": "Poprawa DECT200"
 	    },
 	  "0.0.12": {
                 "en": "convertet state to mode for thermostat, contacts and DECT100 added",
@@ -49,11 +56,30 @@
             }
         },
         "title":                "fritzbox dect adapter",
+	"titleLang": {
+	    "en": "fritzbox dect adapter",
+	    "de": "fritzbox dect Adapter",
+	    "ru": "Адаптер fritzbox dect",
+	    "pt": "adaptador fritzbox dect",
+	    "nl": "fritzbox dect-adapter",
+	    "fr": "fritzbox dect adaptateur",
+	    "it": "Adattatore per fritzbox",
+	    "es": "adaptador fritzbox dect",
+	    "pl": "Fritzbox adapter Dect"
+	  },
+
         "desc":                     {
-            "en": "connects DECT ULE devices (fritzdect) to ioBroker",
-            "de": "Bindet DECT ULE Geräte (fritzdect) an ioBroker an",
-            "ru": "connects DECT ULE devices (fritzdect) to ioBroker"
-        },
+	    "en": "connects DECT ULE devices (fritzdect) to ioBroker",
+	    "de": "verbindet DECT ULE-Geräte (fritzdect) mit ioBroker",
+	    "ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
+	    "pt": "liga dispositivos DECT ULE (fritzdect) a ioBroker",
+	    "nl": "verbindt DECT ULE-apparaten (fritzdect) met ioBroker",
+	    "fr": "connecte les périphériques DECT ULE (fritzdect) à ioBroker",
+	    "it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
+	    "es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
+	    "pl": "łączy urządzenia DECT ULE (fritzdect) z ioBroker"
+	  },
+	    
         "platform":             "Javascript/Node.js",
         "mode":                 "daemon",
         "license": 	   	"MIT",

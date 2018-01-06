@@ -79,6 +79,9 @@
 	    "es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
 	    "pl": "łączy urządzenia DECT ULE (fritzdect) z ioBroker"
 	  },
+	  "docs": {
+            "de": "docs/de/install.md"
+	  },
 	    
         "platform":             "Javascript/Node.js",
         "mode":                 "daemon",

@@ -576,6 +576,7 @@ function main() {
             adapter.setState('DECT200_'+ switches[i] +'.present', {val: presence, ack: true});
         })
         .catch(errorHandler);
+        /* verschoben nach updateObjects
         if( adapter.config.dect200temp_en === 'true' || adapter.config.dect200temp_en  === true || adapter.config.dect200temp_en  === 1) {            
             fritz.getTemperature(switches[i]).then(function(temp){
                 adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'temp :' + temp);
@@ -583,6 +584,7 @@ function main() {
             })
             .catch(errorHandler);
         }
+        */
         fritz.getSwitchPower(switches[i]).then(function(power){
             adapter.log.debug('DECT200_'+ switches[i]+ ' : '  +'power :' + power);
             adapter.setState('DECT200_'+ switches[i] +'.power', {val: power, ack: true});
@@ -601,7 +603,7 @@ function main() {
         })
         .catch(errorHandler);
         fritz.getTempTarget(comets[i]).then(function(targettemp){
-            if (targettemp < 57){ // die Abfrage au <57 brauchen wir wahrscheinlich nicht
+            if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
                 adapter.log.debug('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
                 adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
                 adapter.setState('Comet_'+ comets[i] +'.lasttarget', {val: targettemp, ack: true}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
@@ -746,7 +748,13 @@ function main() {
                     adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock : ' + device.switch.lock);
                     adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
                     
-                    if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
+                    if(device.temperature.celsius){ //Hier temperatur, da manchmal nicht über getTemp eingelesen
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
+                    }
+                    
+                    if(device.powermeter.voltage){
+                    //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
                         adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.powermeter.voltage/1000);
                         adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
                     }

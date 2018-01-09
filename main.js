@@ -75,7 +75,7 @@ adapter.on('stateChange', function (id, state) {
                     adapter.setState('Comet_'+ id +'.mode', {val: 0, ack: false});
                     fritz.setTempTarget(id, state.val).then(function (sid) {
                         adapter.log.debug('Set target temp ' + id + state.val +' °C');
-                        adapter.setState('Comet_'+ comets[i] +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
+                        adapter.setState('Comet_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
                     })
                     .catch(errorHandler);
 

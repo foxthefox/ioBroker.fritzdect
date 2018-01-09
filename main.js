@@ -57,7 +57,7 @@ adapter.on('stateChange', function (id, state) {
         var idx = tmp.pop(); //is the name after fritzdect.x.
         if (idx.startsWith("Comet_")){ //must be comet
             id = idx.replace(/Comet_/g,''); //Thermostat
-            adapter.log.info('Comet ID: '+ id + ' identified for command : ' + state.val);
+            adapter.log.info('Comet ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
             if (dp === 'targettemp'){
                 if (state.val < 8) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
                     adapter.setState('Comet_'+ id +'.mode', {val: 1, ack: false});
@@ -95,7 +95,7 @@ adapter.on('stateChange', function (id, state) {
                         fritz.setTempTarget(id, setTemp).then(function (sid) {
                             adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
                         })
-                            .catch(errorHandler);
+                        .catch(errorHandler);
 
                     });
                 } else if (state.val === 1) {
@@ -114,7 +114,7 @@ adapter.on('stateChange', function (id, state) {
         }
         else if (idx.startsWith("DECT200_")) { //must be DECT
             id = idx.replace(/DECT200_/g,''); //Switch
-            adapter.log.info('SWITCH ID: '+ id + ' identified for command : ' + state.val);
+            adapter.log.info('SWITCH ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
             if (dp == 'state') {
                 if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
                     fritz.setSwitchOff(id).then(function (sid) {
@@ -132,7 +132,7 @@ adapter.on('stateChange', function (id, state) {
             }           
         }
         else { //must be GuestWLAN
-            adapter.log.info('GuestWLAN identified for command : ' + state.val);
+            adapter.log.info('GuestWLAN identified for command (' + dp + ') : ' + state.val);
             if (dp == 'state') {
                 if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
                     fritz.setGuestWlan(state.val).then(function (sid) {

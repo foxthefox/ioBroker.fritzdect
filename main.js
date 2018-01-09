@@ -364,15 +364,14 @@ function main() {
                 adapter.setObject('Comet_' + newId +'.mode', {
                     type:'state',
                     common:{
-                        "name":  "Thermostat operation mode (auto, closed, open)",
-                        "type":  "array",
+                        "name":  "Thermostat operation mode (0=auto, 1=closed, 2=open)",
+                        "type":  "number",
                         "read":  true,
                         "write": true,
-                        "role":  "command",
-                        "states": "0:auto;1:closed;2:opened",
+                        "role":  "value",
                         "min": 0,
                         "max": 2,
-                        "def": 0
+                        "desc": "Thermostat operation mode (0=auto, 1=closed, 2=open)"
                     },
                     native: {
                     }

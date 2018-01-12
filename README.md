@@ -46,7 +46,7 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |COMET.comfytemp|value|-|comfort temperature in °C|
 |COMET.nighttemp|value|-|night temperature in °C|
 |COMET.battery|value|-|actual capacity in %|
-|COMET.mode|array|x| AUTO/OFF/ON state of thermostat|
+|COMET.mode|number|x| 0=AUTO/1=OFF/2=ON state of thermostat|
 |COMET.lasttarget|value|-| last target temperature in °C|
 |COMET.name|text|-|name of device|
 |DECT100.present|boolean|-|true/false -> connected/not available|
@@ -62,18 +62,15 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 Sometimes the setting of a command for switch or targetTemp does not work. Seems a combination of certain FW and fritzBox model.
 
 ## TODO:
-* comfytemp/nighttemp elimiate off/on (stay with number)
 * contact bitmask=8208 / DECT100 bitmask=1280 may be not universal enough
-* use getTemperatureDevice/ getName/ getAlarmContactList/ get RepeaterList / getAlarmState when these functions are available in fritzapi
-* include polling mode/lock value
+* create objects according transmitted data
 * include groups if feasable
 
 ## Changelog
 ### 0.0.13
-* DECT200 checkbox for temperature reading (e.g. due to reported incompatibility with 7360SL)
 * DECT200 voltage new object
-* DECT200 voltage checkbox for voltage reading (e.g. due to reported incompatibility with 7390)
 * DECT200 mode/lock value polling
+* Comet mode as number and not array
 * ADMIN v3
 
 ### 0.0.12

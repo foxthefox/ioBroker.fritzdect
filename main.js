@@ -748,8 +748,8 @@ function main() {
                     adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
                     
                     if(device.temperature.celsius){ //Hier temperatur, da manchmal nicht über getTemp eingelesen
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius));
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true}); //json string enthält schon die korrgierte Temperatur
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + parseFloat(device.temperature.celsius)/10);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true}); //json string enthält schon die korrgierte Temperatur
                     }
                     
                     if(device.powermeter.voltage){

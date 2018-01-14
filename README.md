@@ -33,8 +33,8 @@ the widget requires that also vis-metro and vis-jqui-mfd are installed
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |DECT200.state|boolean|x|true/false -> ON/OFF|
-|DECT200.mode|boolean|-|not live, for future version|
-|DECT200.lock|boolean|-|not live, for future version|
+|DECT200.mode|string|-|manual, auto|
+|DECT200.lock|number|-|0,1 |
 |DECT200.present|boolean|-|true/false -> connected/not available|
 |DECT200.temp|value|-|actual temperature in °C|
 |DECT200.power|value|-|actual power in W|
@@ -67,6 +67,8 @@ Sometimes the setting of a command for switch or targetTemp does not work. Seems
 * include groups if feasable
 
 ## Changelog
+### 0.0.14
+* correction of temp offset influence
 ### 0.0.13
 * DECT200 voltage new object
 * DECT200 mode/lock value polling

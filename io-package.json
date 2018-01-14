@@ -1,8 +1,19 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.13",
+        "version":              "0.0.14",
 	"news": {
+	 "0.0.14": {
+		     "en": "DECT200 temp Offset correction",
+		    "de": "DECT200 temp Offsetkorrektur",
+		    "ru": "DECT200 temp Коррекция смещения",
+		    "pt": "DECT200 temp Correção de compensação",
+		    "nl": "DECT200 temp Correctie offset",
+		    "fr": "DECT200 temp Correction de décalage",
+		    "it": "DECT200 temp Correzione offset",
+		    "es": "DECT200 temp Corrección de compensación",
+		    "pl": "Korekta przesunięcia DECT200"
+	 },
 	  "0.0.13": {
 	    "en": "DECT200 improvement",
 	    "de": "DECT200 Verbesserung",

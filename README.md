@@ -28,11 +28,11 @@ The devices are detected automatically during startup of fritzdect instance.
 
 the widget requires that also vis-metro and vis-jqui-mfd are installed
 
-### ioBroker objects
+## ioBroker objects
 
 objects in *italic* are not part of all fritz.box configurations
 
-## all devices
+### all devices
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |devicetype.id|text|-|internal id of device|
@@ -43,13 +43,13 @@ objects in *italic* are not part of all fritz.box configurations
 |devicetype.manufacturer|text|-|product manufacturer|
 |devicetype.fwversion|text|-|product FW version|
 
-## groups
+### groups
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |group.masterdeviceid|text|-|internal id of group|
 |group.members|text|-|member id's of group|
 
-## switch e.g DECT200/DECT210
+### switch e.g DECT200/DECT210
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |DECT200.state|boolean|x|true/false -> ON/OFF|
@@ -60,7 +60,7 @@ objects in *italic* are not part of all fritz.box configurations
 |*DECT200.temp*|value|-|actual temperature in °C|
 |*DECT200.voltage*|value|-|actual voltage in V|
 
-## thermostat eg. COMET/DECT300/ Heater group
+### thermostat eg. COMET/DECT300/ Heater group
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |COMET.temp|value|-|actual temperature in °C|
@@ -77,17 +77,17 @@ objects in *italic* are not part of all fritz.box configurations
 |*COMET.summeractive*|boolean|-|summer program status|
 |*COMET.holidayactive*|boolean|-|holiday program status|
 
-## repeater e.g. DECT100
+### repeater e.g. DECT100
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |DECT100.temp|value|-|actual temperature in °C|
 
-## contact
+### contact
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |Contact.state|boolean|-|true/false -> ON/OFF|
 
-## guest WLAN
+### guest WLAN
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |GuestWLAN.state|boolean|x|true/false -> ON/OFF|

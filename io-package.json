@@ -1,8 +1,19 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.0.14",
+        "version":              "0.1.0",
 	"news": {
+	 "0.1.0": {
+	    "en": "Major Change, Groups added",
+	    "de": "Hauptänderung, Gruppen hinzugefügt",
+	    "ru": "Основное изменение, добавлены группы",
+	    "pt": "Major Change, Grupos adicionados",
+	    "nl": "Grote wijziging, groepen toegevoegd",
+	    "fr": "Changement majeur, groupes ajoutés",
+	    "it": "Cambiamenti principali, gruppi aggiunti",
+	    "es": "Cambio importante, grupos agregados",
+	    "pl": "Główna zmiana, dodano grupy"
+	 },		
 	 "0.0.14": {
 		     "en": "DECT200 temp Offset correction",
 		    "de": "DECT200 temp Offsetkorrektur",

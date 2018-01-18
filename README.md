@@ -28,47 +28,91 @@ The devices are detected automatically during startup of fritzdect instance.
 
 the widget requires that also vis-metro and vis-jqui-mfd are installed
 
-## objects
+### ioBroker objects
 
+objects in *italic* are not part of all fritz.box configurations
+
+## all devices
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|devicetype.id|text|-|internal id of device|
+|devicetype.name|text|-|name of device|
+|devicetype.mode|text|-|mode, manuell or auto|
+|devicetype.present|boolean|-|true/false -> connected/not available|
+|devicetype.productname|text|-|product name|
+|devicetype.manufacturer|text|-|product manufacturer|
+|devicetype.fwversion|text|-|product FW version|
+
+## groups
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|group.masterdeviceid|text|-|internal id of group|
+|group.members|text|-|member id's of group|
+
+## switch e.g DECT200/DECT210
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |DECT200.state|boolean|x|true/false -> ON/OFF|
-|DECT200.mode|string|-|manual, auto|
-|DECT200.lock|number|-|0,1 |
-|DECT200.present|boolean|-|true/false -> connected/not available|
-|DECT200.temp|value|-|actual temperature in °C|
 |DECT200.power|value|-|actual power in W|
-|DECT200.voltage|value|-|actual voltage in V|
 |DECT200.energy|value|-|actual energy consumption in Wh|
-|DECT200.name|text|-|name of device|
+|DECT200.lock|boolean|-|UI/API lock|
+|DECT200.devicelock|boolean|-|Button lock|
+|*DECT200.temp*|value|-|actual temperature in °C|
+|*DECT200.voltage*|value|-|actual voltage in V|
+
+## thermostat eg. COMET/DECT300/ Heater group
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
 |COMET.temp|value|-|actual temperature in °C|
 |COMET.targettemp|value|x|target temperature in °C|
 |COMET.comfytemp|value|-|comfort temperature in °C|
 |COMET.nighttemp|value|-|night temperature in °C|
-|COMET.battery|value|-|actual capacity in %|
-|COMET.mode|number|x| 0=AUTO/1=OFF/2=ON state of thermostat|
+|COMET.mode|array|x| 0=AUTO/1=OFF/2=ON state of thermostat|
 |COMET.lasttarget|value|-| last target temperature in °C|
-|COMET.name|text|-|name of device|
-|DECT100.present|boolean|-|true/false -> connected/not available|
+|COMET.batterylow|boolean|-|battery status|
+|COMET.errorcode|number|-|errorcode|
+|COMET.lock|boolean|-|UI/API lock|
+|COMET.devicelock|boolean|-|Button lock|
+|*COMET.battery*|value|-|actual capacity in %|
+|*COMET.summeractive*|boolean|-|summer program status|
+|*COMET.holidayactive*|boolean|-|holiday program status|
+
+## repeater e.g. DECT100
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
 |DECT100.temp|value|-|actual temperature in °C|
-|DECT100.name|text|-|name of device|
-|Contact.present|boolean|-|true/false -> connected/not available|
-|Contact.name|text|-|name of device|
+
+## contact
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
 |Contact.state|boolean|-|true/false -> ON/OFF|
+
+## guest WLAN
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
 |GuestWLAN.state|boolean|x|true/false -> ON/OFF|
 
 
 ## Known Issues:
-Sometimes the setting of a command for switch or targetTemp does not work. Seems a combination of certain FW and fritzBox model.
+After startup of adapter the firmware version of fritzbox is requested, some models do not respond to this request and therefore an error is logged.
 
 ## TODO:
-* contact bitmask=8208 / DECT100 bitmask=1280 may be not universal enough
-* create objects according transmitted data
-* include groups if feasable
+* universal object names
+* improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
+* widget for thermostat
 
 ## Changelog
+
+### 0.1.0
+* major code change to use the xml stream instead the dedicated API-commands for the dedicated values
+* creation of objects according the feedback from fritzbox
+* support of groups
+* still usage of non-universal object names
+* more objects
+
 ### 0.0.14
 * correction of temp offset influence
+
 ### 0.0.13
 * DECT200 voltage new object
 * DECT200 mode/lock value polling

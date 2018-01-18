@@ -782,7 +782,7 @@ function main() {
                 })
             }
         })
-        //.catch(errorHandler);
+        .catch(errorHandler);
     }
 
     function createGroups(){

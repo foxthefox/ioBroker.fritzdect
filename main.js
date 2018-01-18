@@ -1,10 +1,11 @@
-/* jshint -W097 */// jshint strict:false
+/*jshint -W097 */// jshint strict:false
 /*jslint node: true */
 
 
 "use strict";
 
-var Fritz = require('fritzapi').Fritz;
+var Fritz = require('fritzapi').Fritz,
+    parser = require('xml2json-light');
 // you have to require the utils module and call adapter function
 var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
 // you have to call the adapter function and pass a options object
@@ -15,11 +16,27 @@ var fritzTimeout;
 
 var adapter = utils.Adapter('fritzdect');
 
+
 function errorHandler(error) {
     if (error == "0000000000000000")
         adapter.log.debug("Did not get session id- invalid username or password?")
-    else
+    else {
+
+        if (error.response.statusCode == 403){
+            adapter.log.error("no permission for this call (403), has user all the rights and access to fritzbox?")
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
+        else if (error.response.statusCode == 404){
+            adapter.log.error("call to API does not exist! (404)");
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
+        else if (error.response.statusCode == 400){
+            adapter.log.error("bad request (400), ain correct?");
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
+        else
         adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+    }
 }
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
@@ -112,12 +129,69 @@ adapter.on('stateChange', function (id, state) {
                 }
             }
         }
+        else if (idx.startsWith("Hgroup_")){ //must be comet group
+            id = idx.replace(/Hgroup_/g,''); //Thermostat
+            adapter.log.info('HGROUP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+            if (dp === 'targettemp'){
+                if (state.val < 8) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+                    adapter.setState('Hgroup_'+ id +'.mode', {val: 1, ack: false});
+                    fritz.setTempTarget(id, 'off').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to closed');
+                    })
+                    .catch(errorHandler);
+                } else if (state.val > 28) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+                    adapter.setState('Hgroup_'+ id +'.mode', {val: 2, ack: false});
+                    fritz.setTempTarget(id, 'on').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                    })
+                    .catch(errorHandler);
+                } else {
+                    adapter.setState('Hgroup_'+ id +'.mode', {val: 0, ack: false});
+                    fritz.setTempTarget(id, state.val).then(function (sid) {
+                        adapter.log.debug('Set target temp ' + id + state.val +' °C');
+                        adapter.setState('Hgroup_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
+                    })
+                    .catch(errorHandler);
+
+                }
+            } else if (dp === 'mode') {
+                if (state.val === 0) {
+                    adapter.getState('Hgroup_' + id + '.targettemp', function (err, targettemp) { // oder hier die Verwendung von lasttarget
+                        var setTemp = targettemp.val;
+                        if (setTemp < 8) {
+                            adapter.setState('Hgroup_' + id + '.targettemp', {val: 8, ack:true});
+                            setTemp = 8;
+                        } else if (setTemp > 28) {
+                            adapter.setState('Hgroup_' + id + '.targettemp', {val: 28, ack:true});
+                            setTemp = 28;
+                        }
+
+                        fritz.setTempTarget(id, setTemp).then(function (sid) {
+                            adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
+                        })
+                        .catch(errorHandler);
+
+                    });
+                } else if (state.val === 1) {
+                    fritz.setTempTarget(id, 'off').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to closed.');
+                    })
+                    .catch(errorHandler); 
+                } else if (state.val === 2) {
+                    fritz.setTempTarget(id, 'on').then(function (sid) {
+                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                    })
+                    .catch(errorHandler);
+   
+                }
+            }
+        }
         else if (idx.startsWith("DECT200_")) { //must be DECT
             id = idx.replace(/DECT200_/g,''); //Switch
             adapter.log.info('SWITCH ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
             if (dp == 'state') {
                 if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.setSwitchOff(id).then(function (sid) {
+                    fritz.setSwitchOff(id+1).then(function (sid) {
                         adapter.log.debug('Turned switch ' + id + ' off');
                     })
                     .catch(errorHandler);
@@ -127,7 +201,24 @@ adapter.on('stateChange', function (id, state) {
                         adapter.log.debug('Turned switch ' + id + ' on');
                     })
                     .catch(errorHandler);
-
+                }
+            }           
+        }
+        else if (idx.startsWith("Sgroup_")) { //must be DECT switch group
+            id = idx.replace(/Sgroup_/g,''); //Switch
+            adapter.log.info('GROUP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+            if (dp == 'state') {
+                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                    fritz.setSwitchOff(id).then(function (sid) {
+                        adapter.log.debug('Turned group ' + id + ' off');
+                    })
+                    .catch(errorHandler);
+                }
+                else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                    fritz.setSwitchOn(id).then(function (sid) {
+                        adapter.log.debug('Turned group ' + id + ' on');
+                    })
+                    .catch(errorHandler);
                 }
             }           
         }
@@ -169,299 +260,41 @@ function main() {
     var moreParam = adapter.config.fritz_ip;
     
     var fritz = new Fritz(username, password||"", moreParam||"");
-
-    function insertDECT200(id){
-        var switches = id;
-        var i=0;
-        for (i=0;i<switches.length; i++){
-        adapter.log.info('setting up switch object '+ switches[i]);
-
-            var newId = switches[i];
-            adapter.setObject('DECT200_' + newId, {
-                type: 'channel',
-                common: {
-                    name: 'FritzDECT200 ' + newId,
-                    role: 'switch'
-                },
-                native: {
-                    "aid": newId
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.name', {
-                type: 'state',
-                common: {
-                    "name": "Name",
-                    "type": "string",
-                    "read": true,
-                    "write": false,
-                    "role": "text",
-                    "desc":  "Name"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.state', {
-                type: 'state',
-                common: {
-                    "name":  "Switch on/off",
-                    "type": "boolean",
-                    "read": true,
-                    "write": true,
-                    "role": "switch",
-                    "desc":  "Switch on/off"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.present', {
-                type: 'state',
-                common: {
-                    "name":  "Switch present",
-                    "type": "boolean",
-                    "read": true,
-                    "write": false,
-                    "role": "indicator.connected",
-                    "desc":  "Switch present"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.mode', {
-                type: 'state',
-                common: {
-                    "name":  "Switch mode", //auto or man
-                    "type": "boolean",
-                    "read": true,
-                    "write": false,
-                    "role": "indicator",
-                    "desc":  "Switch mode"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.lock', {
-                type: 'state',
-                common: {
-                    "name":  "Switch lock", //switch lock 0=unlocked, 1=locked
-                    "type": "number",
-                    "read": true,
-                    "write": false,
-                    "role": "indicator"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.temp', {
-                type: 'state',
-                common: {
-                    "name":  "Switch Temp",
-                    "type": "number",
-                    "unit": "°C",
-                    "read": true,
-                    "write": false,
-                    "role": "value.temperature",
-                    "desc":  "Switch Temp"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.power', {
-                type: 'state',
-                common: {
-                    "name":  "Switch act power",
-                    "type": "number",
-                    "unit": "W",
-                    "min": 0,
-                    "max": 4000,
-                    "read": true,
-                    "write": false,
-                    "role": "value.power",
-                    "desc":  "Switch act power"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.voltage', {
-                type: 'state',
-                common: {
-                    "name":  "Switch act voltage",
-                    "type": "number",
-                    "unit": "V",
-                    "min": 0,
-                    "max": 250,
-                    "read": true,
-                    "write": false,
-                    "role": "value.voltage",
-                    "desc":  "Switch act voltage"
-                },
-                native: {
-                }
-            });
-            adapter.setObject('DECT200_' + newId +'.energy', {
-                type: 'state',
-                common: {
-                    "name":  "Switch total energy",
-                    "type": "number",
-                    "unit": "Wh",
-                    "min": 0,
-                    "read": true,
-                    "write": false,
-                    "role": "value.power.consumption",
-                    "desc":  "Switch total energy"
-                },
-                native: {
-                }
-            });
-        }
-    }
     
-    function insertComet(comets) {
-        for (var i=0;i<comets.length; i++){
-            fritz.getDevice(comets[i]).then(function(device) { 
-                var newId = device.identifier.replace(/\s/g, '');
-                adapter.log.info('setting up thermostat object ' + newId + ' (' + device.name + ')');
-
-                adapter.setObject('Comet_' + newId, {
-                    type: 'channel',
-                    common: {
-                        name: device.name,
-                        role: 'thermo.heat'
-                    },
-                    native: {
-                        "aid": newId
-                    }
-                });;
-                
-                adapter.setObject('Comet_' + newId +'.name', {
-                    type: 'state',
-                    common: {
-                        "name":  "Comet device name",
-                        "type": "string",
-                        "read": true,
-                        "write": false,
-                        "role": "text",
-                        "desc":  "Device name of the thermostat"
-                    },
-                    native: {
-                    }
-                });
-                adapter.setState('Comet_'+ newId +'.name', {val: device.name, ack: true});
-                
-                adapter.setObject('Comet_' + newId +'.temp', {
-                    type: 'state',
-                    common: {
-                        "name":  "Comet Temp",
-                        "type": "number",
-                        "unit": "°C",
-                        "read": true,
-                        "write": false,
-                        "role": "value.temperature",
-                        "desc":  "Actual Temp"
-                    },
-                    native: {
-                    }
-                });
-                adapter.setObject('Comet_' + newId +'.mode', {
-                    type:'state',
-                    common:{
-                        "name":  "Thermostat operation mode (0=auto, 1=closed, 2=open)",
-                        "type":  "number",
-                        "read":  true,
-                        "write": true,
-                        "role":  "value",
-                        "min": 0,
-                        "max": 2,
-                        "desc": "Thermostat operation mode (0=auto, 1=closed, 2=open)"
-                    },
-                    native: {
-                    }
-                });
-                adapter.setObject('Comet_' + newId +'.targettemp', {
-                    type: 'state',
-                    common: {
-                        "name":  "Target Temp",
-                        "type": "number",
-                        "unit": "°C",
-                        "read": true,
-                        "write": true,
-                        "role": "value.temperature",
-                        "desc":  "Target Temp"
-                    },
-                    native: {
-                    }
-                });
-                adapter.setObject('Comet_' + newId +'.lasttarget', {
-                    type: 'state',
-                    common: {
-                        "name":  "last setting of target temp",
-                        "type": "number",
-                        "unit": "°C",
-                        "read": true,
-                        "write": false,
-                        "role": "value.temperature",
-                        "desc":  "last setting of target temp"
-                    },
-                    native: {
-                    }
-                });
-                adapter.setObject('Comet_' + newId +'.comfytemp', {
-                    type: 'state',
-                    common: {
-                        "name":  "Comfort Temp",
-                        "type": "number",
-                        "unit": "°C",                    
-                        "read": true,
-                        "write": false,
-                        "role": "value.temperature",                    
-                        "desc":  "Comfort Temp"
-                    },
-                    native: {
-                    }
-                });
-                adapter.setObject('Comet_' + newId +'.nighttemp', {
-                    type: 'state',
-                    common: {
-                        "name":  "Night Temp",
-                        "type": "number",
-                        "unit": "°C",                    
-                        "read": true,
-                        "write": false,
-                        "role": "value.temperature",
-                        "desc":  "Night Temp"
-                    },
-                    native: {
-                    }
-                });
-                adapter.setObject('Comet_' + newId +'.battery', {
-                    type: 'state',
-                    common: {
-                        "name":  "Battery", 
-                        "type": "number",
-                        "unit": "%",
-                        "read": true,
-                        "write": false,
-                        "role": "value.battery",
-                        "desc":  "Battery"
-                    },
-                    native: {
-                    }
-                });
-            });
-        }
+    function updateFritzGuest(){
+        fritz.getGuestWlan().then(function(listinfos){
+            adapter.log.debug("Guest WLAN: "+JSON.stringify(listinfos));
+        })
+        .catch(errorHandler);
     }
-    function insertDECT100(newId, name){
-        adapter.log.info('setting up Dect100 object '+ name);
-        adapter.setObject('DECT100_' + newId, {
+
+    function createBasic(typ,newId,name,role,id,fw,manuf){
+        adapter.log.debug('create Basic objects ');
+        adapter.setObject(typ + newId, {
             type: 'channel',
             common: {
-                name: 'FritzDECT100 ' + newId,
-                role: 'thermo'
+                name: name,
+                role: role
             },
             native: {
                 "aid": newId
             }
         });
-        adapter.setObject('DECT100_' + newId +'.name', {
+        adapter.setObject(typ + newId +'.id', {
+            type: 'state',
+            common: {
+                "name": "ID",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "ID"
+            },
+            native: {
+            }
+        });
+        adapter.setState(typ + newId +'.id', {val: id, ack: true});
+        adapter.setObject(typ + newId +'.name', {
             type: 'state',
             common: {
                 "name": "Name",
@@ -474,9 +307,7 @@ function main() {
             native: {
             }
         });
-        adapter.setState('DECT100_'+ newId +'.name', {val: name, ack: true});
-
-        adapter.setObject('DECT100_' + newId +'.present', {
+        adapter.setObject(typ + newId +'.present', {
             type: 'state',
             common: {
                 "name":  "Switch present",
@@ -489,63 +320,57 @@ function main() {
             native: {
             }
         });
-        adapter.setObject('DECT100_' + newId +'.temp', {
+        adapter.setObject(typ + newId +'.fwversion', {
             type: 'state',
             common: {
-                "name":  "Switch Temp",
-                "type": "number",
-                "unit": "°C",
-                "read": true,
-                "write": false,
-                "role": "value.temperature",
-                "desc":  "Switch Temp"
-            },
-            native: {
-            }
-        });
-    }
-
-    function insertContact(newId, name){
-        adapter.log.info('setting up Contact object '+ name);
-        adapter.setObject('Contact_' + newId, {
-            type: 'channel',
-            common: {
-                name: 'Contact ' + newId,
-                role: 'sensor'
-            },
-            native: {
-                "aid": newId
-            }
-        });
-        adapter.setObject('Contact_' + newId +'.name', {
-            type: 'state',
-            common: {
-                "name": "Name",
+                "name":  "FW version",
                 "type": "string",
                 "read": true,
                 "write": false,
                 "role": "text",
-                "desc":  "Name"
+                "desc":  "firmware version"
             },
             native: {
             }
         });
-        adapter.setState('Contact_'+ newId +'.name', {val: name, ack: true});
-
-        adapter.setObject('Contact_' + newId +'.present', {
+        adapter.setState(typ + newId +'.fwversion',{val: fw, ack: true});
+        adapter.setObject(typ + newId +'.manufacturer', {
             type: 'state',
             common: {
-                "name":  "Contact present",
-                "type": "boolean",
+                "name":  "Manufacturer",
+                "type": "string",
                 "read": true,
                 "write": false,
-                "role": "indicator.connected",
-                "desc":  "Contact present"
+                "role": "text",
+                "desc":  "Manufacturer"
             },
             native: {
             }
         });
-        adapter.setObject('Contact_' + newId +'.state', {
+        adapter.setState(typ + newId +'.manufacturer', {val: manuf, ack: true});
+    }
+
+    function createProductName(typ,newId,prod){
+        adapter.log.debug('create Prodname object');
+        adapter.setObject(typ + newId +'.prodname', {
+            type: 'state',
+            common: {
+                "name":  "Product Name",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "Product Name"
+            },
+            native: {
+            }
+        });
+        adapter.setState(typ + newId +'.prodname', {val: prod, ack: true});
+    }
+
+    function createAlert(typ,newId){
+        adapter.log.debug('create Alert object');
+        adapter.setObject(typ + newId +'.state', {
             type: 'state',
             common: {
                 "name":  "Contact OFF/ON",
@@ -559,215 +384,682 @@ function main() {
             }
         });
     }
-    
-    function getSwitchInfo(switches, i){
-        fritz.getSwitchName(switches[i]).then(function(name){
-            adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'name :' + name);
-            adapter.setState('DECT200_'+ switches[i] +'.name', {val: name, ack: true});
-        })
-        .catch(errorHandler);
-        fritz.getSwitchState(switches[i]).then(function(state){
-            adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'state :' + state);
-            adapter.setState('DECT200_'+ switches[i] +'.state', {val: state, ack: true});
+    function createTemperature(typ,newId){
+        adapter.log.debug('create Temperature object');
+        adapter.setObject(typ + newId +'.temp', {
+            type: 'state',
+            common: {
+                "name":  "actual Temp",
+                "type": "number",
+                "unit": "°C",
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "actual Temp"
+            },
+            native: {
+            }
         });
-        fritz.getSwitchPresence(switches[i]).then(function(presence){
-            adapter.log.debug('DECT200_'+ switches[i] + ' : ' +'present :' + presence);
-            adapter.setState('DECT200_'+ switches[i] +'.present', {val: presence, ack: true});
-        })
-        .catch(errorHandler);
-        /* verschoben nach updateObjects
-        if( adapter.config.dect200temp_en === 'true' || adapter.config.dect200temp_en  === true || adapter.config.dect200temp_en  === 1) {            
-            fritz.getTemperature(switches[i]).then(function(temp){
-                adapter.log.debug('DECT200_'+ switches[i] + ' : '  +'temp :' + temp);
-                adapter.setState('DECT200_'+ switches[i] +'.temp', {val: temp, ack: true});
-            })
-            .catch(errorHandler);
-        }
-        */
-        fritz.getSwitchPower(switches[i]).then(function(power){
-            adapter.log.debug('DECT200_'+ switches[i]+ ' : '  +'power :' + power);
-            adapter.setState('DECT200_'+ switches[i] +'.power', {val: power, ack: true});
-        })
-        .catch(errorHandler);
-        fritz.getSwitchEnergy(switches[i]).then(function(energy){
-            adapter.log.debug('DECT200_'+ switches[i]+ ' : '  +'energy :' + energy);
-            adapter.setState('DECT200_'+ switches[i] +'.energy', {val: energy, ack: true});
-        })
-        .catch(errorHandler);
     }
-    function getCometInfo(comets, i){
-        fritz.getTemperature(comets[i]).then(function(temp){
-            adapter.log.debug('Comet_'+ comets[i] + ' : '  +'temp :' + temp);
-            adapter.setState('Comet_'+ comets[i] +'.temp', {val: temp, ack: true});
-        })
-        .catch(errorHandler);
-        fritz.getTempTarget(comets[i]).then(function(targettemp){
-            if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'targettemp :' + targettemp);
-                adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: targettemp, ack: true});
-                adapter.setState('Comet_'+ comets[i] +'.lasttarget', {val: targettemp, ack: true}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-                adapter.setState('Comet_'+ comets[i] +'.mode', {val: 0, ack: true});
-            } else
-            if (targettemp == 'off'){
-                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode: Closed');
-                // adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-                adapter.setState('Comet_'+ comets[i] +'.mode', {val: 1, ack: true});
-            } else
-            if (targettemp == 'on'){
-                adapter.log.debug('Comet_'+ comets[i] + ' : '  +'mode : Opened');
-                // adapter.setState('Comet_'+ comets[i] +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-                adapter.setState('Comet_'+ comets[i] +'.mode', {val: 2, ack: true});
+    function createSwitch(typ,newId){
+        adapter.log.debug('create Switch objects');
+        adapter.setObject(typ + newId +'.state', {
+            type: 'state',
+            common: {
+                "name":  "Switch on/off",
+                "type": "boolean",
+                "read": true,
+                "write": true,
+                "role": "switch",
+                "desc":  "Switch on/off"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.mode', {
+            type: 'state',
+            common: {
+                "name":  "Switch mode", //auto or man
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "Switch mode"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.lock', {
+            type: 'state',
+            common: {
+                "name":  "Switch UI/API lock", //switch lock 0=unlocked, 1=locked
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+    }
+    function createDeviceLock(typ,newId){
+        adapter.log.debug('create devicelock object');
+        adapter.setObject(typ + newId +'.devicelock', {
+            type: 'state',
+            common: {
+                "name":  "Switch Button lock", //switch lock 0=unlocked, 1=locked
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+    }
+    function createEnergy(typ,newId){
+        adapter.log.debug('create Energy objects ');
+        adapter.setObject(typ + newId +'.power', {
+            type: 'state',
+            common: {
+                "name":  "Switch act power",
+                "type": "number",
+                "unit": "W",
+                "min": 0,
+                "max": 4000,
+                "read": true,
+                "write": false,
+                "role": "value.power",
+                "desc":  "Switch act power"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.energy', {
+            type: 'state',
+            common: {
+                "name":  "Switch total energy",
+                "type": "number",
+                "unit": "Wh",
+                "min": 0,
+                "read": true,
+                "write": false,
+                "role": "value.power.consumption",
+                "desc":  "Switch total energy"
+            },
+            native: {
+            }
+        });
+    }
+
+    function createVoltage(typ,newId){
+        adapter.log.debug('create Voltage object');
+        adapter.setObject(typ + newId +'.voltage', {
+            type: 'state',
+            common: {
+                "name":  "Switch act voltage",
+                "type": "number",
+                "unit": "V",
+                "min": 0,
+                "max": 250,
+                "read": true,
+                "write": false,
+                "role": "value.voltage",
+                "desc":  "Switch act voltage"
+            },
+            native: {
+            }
+        });
+    }    
+    function createThermostat(typ,newId){
+        adapter.log.debug('create Thermostat objects');
+        adapter.setObject(typ + newId +'.mode', {
+            type:'state',
+            common:{
+                "name":  "Thermostat operation mode (0=auto, 1=closed, 2=open)",
+                "type":  "number",
+                "read":  true,
+                "write": true,
+                "role":  "value",
+                "min": 0,
+                "max": 2,
+                "desc": "Thermostat operation mode (0=auto, 1=closed, 2=open)"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.targettemp', {
+            type: 'state',
+            common: {
+                "name":  "Target Temp",
+                "type": "number",
+                "unit": "°C",
+                "read": true,
+                "write": true,
+                "role": "value.temperature",
+                "desc":  "Target Temp"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.lasttarget', {
+            type: 'state',
+            common: {
+                "name":  "last setting of target temp",
+                "type": "number",
+                "unit": "°C",
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "last setting of target temp"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.comfytemp', {
+            type: 'state',
+            common: {
+                "name":  "Comfort Temp",
+                "type": "number",
+                "unit": "°C",                    
+                "read": true,
+                "write": false,
+                "role": "value.temperature",                    
+                "desc":  "Comfort Temp"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.nighttemp', {
+            type: 'state',
+            common: {
+                "name":  "Night Temp",
+                "type": "number",
+                "unit": "°C",                    
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "Night Temp"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.lock', {
+            type: 'state',
+            common: {
+                "name":  "Thermostat UI/API lock", //thermostat lock 0=unlocked, 1=locked
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.devicelock', {
+            type: 'state',
+            common: {
+                "name":  "Thermostat Button lock",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.batterylow', {
+            type: 'state',
+            common: {
+                "name":  "low Battery",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.errorcode', {
+            type: 'state',
+            common: {
+                "name":  "errorcode",
+                "type": "number",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+    }
+    function createThermostatProg(typ,newId){
+        adapter.log.debug('create Thermostat Prog objects');
+        adapter.setObject(typ + newId +'.summeractive', {
+            type: 'state',
+            common: {
+                "name":  "Product Name",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "Product Name"
+            },
+            native: {
+            }
+        });
+        adapter.setObject(typ + newId +'.holidayactive', {
+            type: 'state',
+            common: {
+                "name":  "Product Name",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "Product Name"
+            },
+            native: {
+            }
+        });
+    }
+    function createBattery(typ,newId){
+        adapter.log.debug('create Battery object');
+        adapter.setObject(typ + newId +'.battery', {
+            type: 'state',
+            common: {
+                "name":  "Battery", 
+                "type": "number",
+                "unit": "%",
+                "read": true,
+                "write": false,
+                "role": "value.battery",
+                "desc":  "Battery"
+            },
+            native: {
+            }
+        });
+    }     
+    function createGroupInfo(typ,newId,mid,member){
+        adapter.log.debug('create Group objects');
+        adapter.setObject(typ + newId +'.masterdeviceid', {
+            type: 'state',
+            common: {
+                "name":  "masterdeviceid",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "masterdeviceid"
+            },
+            native: {
+            }
+        });
+        adapter.setState(typ + newId +'.masterdeviceid',{val: mid, ack: true});
+        adapter.setObject(typ + newId +'.members', {
+            type: 'state',
+            common: {
+                "name":  "members",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "members"
+            },
+            native: {
+            }
+        });
+        adapter.setState(typ + newId +'.members',{val: member, ack: true});
+    }
+    function createDevices(){
+        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+            var typ = "";
+            var role = "";
+            var devices = parser.xml2json(devicelistinfos);
+            devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+              // remove spaces in AINs
+              device.identifier = device.identifier.replace(/\s/g, '');
+              return device;
+            });
+            adapter.log.debug("devices\n");
+            adapter.log.debug(JSON.stringify(devices));
+            if (devices.length){
+                adapter.log.info('create Devices ' + devices.length);
+                devices.forEach(function (device){
+                    if((device.functionbitmask & 1024) == 1024){ //repeater
+                        typ = "DECT100_";
+                        role = "thermo";
+                        adapter.log.info('setting up Repeater/DECT100 object '+ device.name);
+                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                        createProductName(typ,device.identifier,device.productname);
+                        if (device.temperature.celsius){
+                            createTemperature(typ,device.identifier);
+                        }
+                    }
+                    else if((device.functionbitmask & 512) == 512 ){ //switch
+                        typ = "DECT200_";
+                        role = "switch";
+                        adapter.log.info('setting up Switch/DECT2xx object '+ device.name);                    
+                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                        createProductName(typ,device.identifier,device.productname);
+                        createSwitch(typ,device.identifier);
+                        createEnergy(typ,device.identifier);
+                        if (device.temperature.celsius){
+                            createTemperature(typ,device.identifier);
+                        }
+                        if (device.switch.devicelock){
+                            createDeviceLock(typ,device.identifier);
+                        }
+                        if (device.powermeter.voltage){
+                            createVoltage(typ,device.identifier);
+                        }
+                    }
+                    else if((device.functionbitmask & 64) == 64 ){ //thermostat
+                        typ = "Comet_";
+                        role = "thermo.heat";
+                        adapter.log.info('setting up Thermostat/DECT3xx object '+ device.name);   
+                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                        createProductName(typ,device.identifier,device.productname);
+                        createTemperature(typ,device.identifier);
+                        createThermostat(typ,device.identifier);
+                        if (device.hkr.summeractive){
+                            createThermostatProg(typ,device.identifier);
+                        }
+                        if (device.hkr.battery){
+                            createBattery(typ,device.identifier);
+                        }                    
+                    }
+                    else if((device.functionbitmask & 16) == 16){ //contact
+                        typ = "Contact_";
+                        role = "sensor";
+                        adapter.log.info('setting up Alert/Sensor object '+ device.name);                    
+                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                        createProductName(typ,device.identifier,device.productname);
+                        createAlert(typ,device.identifier);
+                    }
+                    else {
+                        adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
+                    }                                
+                })
             }
         })
-        .catch(errorHandler);
-        fritz.getTempComfort(comets[i]).then(function(comfytemp){
-            adapter.log.debug('Comet_'+ comets[i] + ' : '  +'comfytemp :' + comfytemp);
-            adapter.setState('Comet_'+ comets[i] +'.comfytemp', {val: comfytemp, ack: true});
-        })
-        .catch(errorHandler);
-        fritz.getTempNight(comets[i]).then(function(nighttemp){
-            adapter.log.debug('Comet_'+ comets[i]+ ' : '  +'nighttemp :' + nighttemp);
-            adapter.setState('Comet_'+ comets[i] +'.nighttemp', {val: nighttemp, ack: true});
-        })
-        .catch(errorHandler);
-        fritz.getBatteryCharge(comets[i]).then(function(battery){
-            adapter.log.debug('Comet_'+ comets[i]+ ' : '  +'battery :' + battery);
-            adapter.setState('Comet_'+ comets[i] +'.battery', {val: battery, ack: true});
-        })
+        //.catch(errorHandler);
+    }
+
+    function createGroups(){
+        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+            var typ = "";
+            var role = "";
+            var groups = parser.xml2json(devicelistinfos);
+            groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+              // remove spaces in AINs
+              group.identifier = group.identifier.replace(/\s/g, '');
+              return group;
+            });
+            adapter.log.debug("groups\n");
+            adapter.log.debug(JSON.stringify(groups));
+            if (groups.length){
+                adapter.log.info('create Groups ' + groups.length);
+                groups.forEach(function (group){
+                    if ((group.functionbitmask & 512) == 512){ //sgroup
+                        typ = "Sgroup_";
+                        role = "switch";
+                        adapter.log.info('setting up Switch Group '+ group.name);  
+                        createBasic(typ,group.identifier,group.name,role,group.id,group.fwversion,group.manufacturer);
+                        createSwitch(typ,group.identifier);
+                        createEnergy(typ,group.identifier);
+                        createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);
+                    }
+                    else if ((group.functionbitmask & 64) == 64){ //hgroup
+                        typ = "Hgroup_";
+                        role = "thermo.heat";
+                        adapter.log.info('setting up Heater Group '+ group.name);  
+                        createBasic(typ,group.identifier,group.name,role,group.id,group.fwversion,group.manufacturer);
+                        createThermostat(typ,group.identifier);
+                        createGroupInfo(typ,group.identifier);    
+                    }
+                    else {
+                        adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
+                    }
+                })
+            }
+
+          })
         .catch(errorHandler);
     }
-    function insertDectObj(){
-        fritz.getSwitchList().then(function(switches){
-            if (switches.length){
-            adapter.log.info("Switches AINs: "+switches);
-            insertDECT200(switches);}
-            else{adapter.log.info("no switches found");}   
-        })
-        .catch(errorHandler);
-    }
-    function insertCometObj(){
-        fritz.getThermostatList().then(function(comets){
-            if (comets.length){
-                adapter.log.info("Comet AINs: "+comets);
-                insertComet(comets);}
-            else{adapter.log.info("no thermostats found");}
-        })
-        .catch(errorHandler);
-    }
+
+    function updateDevices(){       
+        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+            var devices = parser.xml2json(devicelistinfos);
+            devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+                // remove spaces in AINs
+                device.identifier = device.identifier.replace(/\s/g, '');
+                return device;
+            });
+            if (devices.length){
+                adapter.log.info('update Devices');
+                devices.forEach(function (device){
+                    if(device.functionbitmask == '1280'){ //Repeater
     
-    function insertDect100Obj(){
-        fritz.getDeviceList().then(function(devices){
-            if (devices.length){
-                devices.forEach( function (device){
-                    if(device.functionbitmask == '1280'){
-                        adapter.log.info("DECT100 AIN: "+ device.identifier.replace(/\s/g, ''));
-                        insertDECT100(device.identifier.replace(/\s/g, ''),device.name);
+                        adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
+                        adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+                        
+                        adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
+                        adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
+                        
+                        adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
+                        adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});                    
                     }
-                })
+                    if(device.functionbitmask == '8208'){ //contact
+                        
+                        adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
+                        adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+                        
+                        adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'state : ' + device.alert.state);
+                        adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.state', {val: device.alert.state, ack: true});
+                        
+                        adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
+                        adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+                        
+                    }
+                    if(device.functionbitmask == '2944'){ //switch
+    
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+                                           
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+            
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'state :' + device.switch.state);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.state', {val: device.switch.state, ack: true});
+            
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'power :' + device.powermeter.power);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.power', {val: device.powermeter.power, ack: true});
+            
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'energy :' + device.powermeter.energy);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.energy', {val: device.powermeter.energy, ack: true});  
+                        
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : ' + device.switch.mode);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: device.switch.mode, ack: true});
+                        
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock : ' + device.switch.lock);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
+    
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'devicelock : ' + device.switch.devicelock);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: device.switch.devicelock, ack: true});
+                        
+                        if(device.temperature.celsius){ //Hier temperatur, da manchmal nicht über getTemp eingelesen
+                            adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + parseFloat(device.temperature.celsius)/10);
+                            adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true});
+                        }
+                        
+                        if(device.powermeter.voltage){
+                        //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
+                            adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.powermeter.voltage / 1000);
+                            adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
+                        }  
+                    }
+                    if(device.functionbitmask == '64'){ //thermostat
+    
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+    
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+    
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp :' + parseFloat(device.temperature.celsius)/10);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true});
+    
+                        var targettemp = device.hkr.tsoll;
+            
+                        if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'targettemp :' + targettemp);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: parseFloat(targettemp)/2, ack: true});
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lasttarget', {val: parseFloat(targettemp)/2, ack: true}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 0, ack: true});
+                        } else
+                        if (targettemp == 253){
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
+                            // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
+                        } else
+                        if (targettemp == 254){
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
+                            // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
+                        }
+            
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + device.hkr.komfort);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(device.hkr.komfort)/2, ack: true});
+            
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
+    
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.batterylow);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.batterylow, ack: true});
+    
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + device.hkr.errorcode);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.errorcode', {val: device.hkr.errorcode, ack: true});
+    
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock :' + device.hkr.lock);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.hkr.lock, ack: true});
+    
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + device.hkr.devicelock);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: device.hkr.devicelock, ack: true});
+    
+                        if(device.hkr.battery){        
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
+                        }
+                        if(device.hkr.summeractive){
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.hkr.summeractive);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.hkr.summeractive, ack: true});
+                        }
+                        if(device.hkr.holidayactive){
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.hkr.holidayactive);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.hkr.holidayactive, ack: true});
+                        } 
+                    }
+                });
             }
         })
         .catch(errorHandler);
-    }   
+    }
 
-    function insertContactObj(){
-        fritz.getDeviceList().then(function(devices){
-            if (devices.length){
-               devices.forEach( function (device){
-                    if(device.functionbitmask == '8208'){
-                        adapter.log.info("Contact AIN: "+ device.identifier.replace(/\s/g, ''));
-                        insertContact(device.identifier.replace(/\s/g, ''),device.name);
+    function updateGroups(){
+        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+            var groups = parser.xml2json(devicelistinfos);
+            groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+                // remove spaces in AINs
+                group.identifier = group.identifier.replace(/\s/g, '');
+                return group;
+            });
+            if (groups.length){
+                adapter.log.info('update Groups');
+                groups.forEach(function (group){
+                    if(group.functionbitmask == '6784'){ //switch
+    
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'name : ' + group.name);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.name', {val: group.name, ack: true});
+                                           
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + group.present);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: group.present, ack: true});
+            
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'state :' + group.switch.state);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.state', {val: group.switch.state, ack: true});
+    
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode :' + group.switch.mode);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: group.switch.mode, ack: true});
+    
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'lock :' + group.switch.lock);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.lock', {val: group.switch.lock, ack: true});
+    
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + group.switch.devicelock);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: group.switch.devicelock, ack: true});
+            
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'power :' + group.powermeter.power);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.power', {val: group.powermeter.power, ack: true});
+            
+                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'energy :' + group.powermeter.energy);
+                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.energy', {val: group.powermeter.energy, ack: true});  
                     }
-                })
+                    if(group.functionbitmask == '4160'){ //thermostat
+    
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'name : ' + group.name);
+                        adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.name', {val: group.name, ack: true});
+    
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + group.present);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: group.present, ack: true});
+    
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'temp :' + group.hkr.tist);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.temp', {val: group.hkr.tist, ack: true});
+    
+                        var targettemp = group.hkr.tsoll;
+            
+                        if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'targettemp :' + targettemp);
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.targettemp', {val: parseFloat(targettemp)/2, ack: true});
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.lasttarget', {val: parseFloat(targettemp)/2, ack: true}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: 0, ack: true});
+                        } else
+                        if (targettemp == '253'){
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
+                            // adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
+                        } else
+                        if (targettemp == '254'){
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
+                            // adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
+                        }
+            
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + parseFloat(group.hkr.komfort)/2);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(group.hkr.komfort)/2, ack: true});
+            
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + parseFloat(group.hkr.absenk)/2);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(group.hkr.absenk)/2, ack: true});
+    
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'battery :' + group.hkr.batterylow);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.battery', {val: group.hkr.batterylow, ack: true});
+    
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + group.hkr.errorcode);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.errorcode', {val: group.hkr.errorcode, ack: true});
+    
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'lock :' + group.hkr.lock);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.lock', {val: group.hkr.lock, ack: true});
+    
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + group.hkr.devicelock);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: group.hkr.devicelock, ack: true});
+                    }
+                });
             }
         })
         .catch(errorHandler);
-    }      
-    function updateFritzGuest(){
-        fritz.getGuestWlan().then(function(listinfos){
-            adapter.log.debug("Guest WLAN: "+JSON.stringify(listinfos));
-        })
-        .catch(errorHandler);
     }
-    function updateFritzDect(){
-        fritz.getSwitchList().then(function(switches){
-            if (switches.length){
-                var i=0;
-                for (i;i<switches.length;i++){
-                    adapter.log.debug("looping through switch status i= "+i);
-                    getSwitchInfo(switches,i);       
-                }
-            }
-        })
-        .catch(errorHandler);
-    }
-    function updateFritzComet(){
-        fritz.getThermostatList().then(function(comets){
-            if (comets.length){
-                var i=0;
-                for (i;i<comets.length;i++){
-                    adapter.log.debug("looping through comet status i= "+i);
-                    getCometInfo(comets,i);       
-                }
-            }
-        })
-        .catch(errorHandler);
-    }
-    function updateObjects(){
-        fritz.getDeviceList().then(function(devices){
-            devices.forEach(function (device){
-                if(device.functionbitmask == '1280'){
 
-                    adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
-                    adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
-                    
-                    adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
-                    adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
-                    
-                    adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
-                    adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
-                    
-                }
-                if(device.functionbitmask == '8208'){
-                    
-                    adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
-                    adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
-                    
-                    adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'state : ' + device.alert.state);
-                    adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.state', {val: device.alert.state, ack: true});
-                    
-                    adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
-                    adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
-                    
-                }
-                if(device.functionbitmask == '2944'){
-                    
-                    adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : ' + device.switch.mode);
-                    adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: device.switch.mode, ack: true});
-                    
-                    adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock : ' + device.switch.lock);
-                    adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
-                    
-                    if(device.temperature.celsius){ //Hier temperatur, da manchmal nicht über getTemp eingelesen
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + parseFloat(device.temperature.celsius)/10);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true}); //json string enthält schon die korrgierte Temperatur
-                    }
-                    
-                    if(device.powermeter.voltage){
-                    //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.powermeter.voltage/1000);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
-                    }
-                    
-                }
-            })
-        })
-        .catch(errorHandler);
-    } 
     function pollFritzData() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
-        updateFritzDect();
-        updateFritzComet();
-        updateObjects(); // für Kontakte und DECT100 und non-standard Werte aus DECT200
+        updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
+        updateGroups();
         updateFritzGuest();
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
@@ -780,10 +1072,8 @@ function main() {
     }
 
     logVersion();
-    insertDectObj();
-    insertCometObj();
-    insertDect100Obj();
-    insertContactObj();
+    createDevices();
+    createGroups();
     pollFritzData();
 
     // in this template all states changes inside the adapters namespace are subscribed

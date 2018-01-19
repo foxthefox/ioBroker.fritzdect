@@ -20,23 +20,21 @@ var adapter = utils.Adapter('fritzdect');
 function errorHandler(error) {
     if (error == "0000000000000000")
         adapter.log.debug("Did not get session id- invalid username or password?")
-    else {
-
-        if (error.response.statusCode == 403){
+    else if (error.response.statusCode == 403){
             adapter.log.error("no permission for this call (403), has user all the rights and access to fritzbox?")
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
-        else if (error.response.statusCode == 404){
+    else if (error.response.statusCode == 404){
             adapter.log.error("call to API does not exist! (404)");
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
-        else if (error.response.statusCode == 400){
+    else if (error.response.statusCode == 400){
             adapter.log.error("bad request (400), ain correct?");
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
-        else
-        adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
-    }
+    else {
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
 }
 
 // is called when adapter shuts down - callback has to be called under any circumstances!
@@ -384,6 +382,7 @@ function main() {
             }
         });
     }
+
     function createTemperature(typ,newId){
         adapter.log.debug('create Temperature object');
         adapter.setObject(typ + newId +'.temp', {
@@ -815,15 +814,14 @@ function main() {
                         adapter.log.info('setting up Heater Group '+ group.name);  
                         createBasic(typ,group.identifier,group.name,role,group.id,group.fwversion,group.manufacturer);
                         createThermostat(typ,group.identifier);
-                        createGroupInfo(typ,group.identifier);    
+                        createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);    
                     }
                     else {
                         adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
                     }
                 })
             }
-
-          })
+        })
         .catch(errorHandler);
     }
 
@@ -835,11 +833,13 @@ function main() {
                 device.identifier = device.identifier.replace(/\s/g, '');
                 return device;
             });
+            adapter.log.debug("devices\n");
+            adapter.log.debug(JSON.stringify(devices));           
             if (devices.length){
-                adapter.log.info('update Devices');
+                adapter.log.debug('update Devices '  + devices.length);
                 devices.forEach(function (device){
-                    if(device.functionbitmask == '1280'){ //Repeater
-    
+                    if((device.functionbitmask & 1024) == 1024){ //Repeater
+                        adapter.log.debug('updating Repeater '+ device.name); 
                         adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
                         adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
                         
@@ -849,57 +849,57 @@ function main() {
                         adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
                         adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});                    
                     }
-                    if(device.functionbitmask == '8208'){ //contact
+                    else if((device.functionbitmask & 16) == 16){ //contact
+                        adapter.log.debug('updating Sensor '+ device.name); 
+                        adapter.log.debug('Contact_'+ device.identifier + ' : '  +'name : ' + device.name);
+                        adapter.setState('Contact_'+ device.identifier +'.name', {val: device.name, ack: true});
                         
-                        adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
-                        adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+                        adapter.log.debug('Contact_'+ device.identifier + ' : '  +'state : ' + device.alert.state);
+                        adapter.setState('Contact_'+ device.identifier +'.state', {val: device.alert.state, ack: true});
                         
-                        adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : '  +'state : ' + device.alert.state);
-                        adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.state', {val: device.alert.state, ack: true});
-                        
-                        adapter.log.debug('Contact_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
-                        adapter.setState('Contact_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+                        adapter.log.debug('Contact_'+ device.identifier + ' : ' +'present : ' + device.present);
+                        adapter.setState('Contact_'+ device.identifier +'.present', {val: device.present, ack: true});
                         
                     }
-                    if(device.functionbitmask == '2944'){ //switch
-    
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
+                    else if((device.functionbitmask & 512) == 512){ //switch
+                        adapter.log.debug('updating Switch '+ device.name); 
+                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'name : ' + device.name);
+                        adapter.setState('DECT200_'+ device.identifier +'.name', {val: device.name, ack: true});
                                            
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+                        adapter.log.debug('DECT200_'+ device.identifier+ ' : ' +'present : ' + device.present);
+                        adapter.setState('DECT200_'+ device.identifier +'.present', {val: device.present, ack: true});
             
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'state :' + device.switch.state);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.state', {val: device.switch.state, ack: true});
+                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'state :' + device.switch.state);
+                        adapter.setState('DECT200_'+ device.identifier +'.state', {val: device.switch.state, ack: true});
             
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'power :' + device.powermeter.power / 1000);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.power', {val: device.powermeter.power / 1000, ack: true});
+                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'power :' + parseFloat(device.powermeter.power)/1000);
+                        adapter.setState('DECT200_'+ device.identifier +'.power', {val: parseFloat(device.powermeter.power)/1000, ack: true});
             
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'energy :' + device.powermeter.energy);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.energy', {val: device.powermeter.energy, ack: true});  
+                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'energy :' + device.powermeter.energy);
+                        adapter.setState('DECT200_'+ device.identifier +'.energy', {val: device.powermeter.energy, ack: true});  
                         
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : ' + device.switch.mode);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: device.switch.mode, ack: true});
+                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'mode : ' + device.switch.mode);
+                        adapter.setState('DECT200_'+ device.identifier +'.mode', {val: device.switch.mode, ack: true});
                         
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock : ' + device.switch.lock);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.switch.lock, ack: true});
+                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'lock : ' + device.switch.lock);
+                        adapter.setState('DECT200_'+ device.identifier +'.lock', {val: device.switch.lock, ack: true});
     
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'devicelock : ' + device.switch.devicelock);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: device.switch.devicelock, ack: true});
+                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'devicelock : ' + device.switch.devicelock);
+                        adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
                         
-                        if(device.temperature.celsius){ //Hier temperatur, da manchmal nicht über getTemp eingelesen
-                            adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + parseFloat(device.temperature.celsius)/10);
-                            adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true});
+                        if(device.temperature.celsius){ 
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + parseFloat(device.temperature.celsius)/10);
+                            adapter.setState('DECT200_'+ device.identifier +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true});
                         }
                         
                         if(device.powermeter.voltage){
                         //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
-                            adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.powermeter.voltage / 1000);
-                            adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : ' +'voltage : ' + device.powermeter.voltage / 1000);
+                            adapter.setState('DECT200_'+ device.identifier +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
                         }  
                     }
-                    if(device.functionbitmask == '64'){ //thermostat
-    
+                    else if((device.functionbitmask & 64) == 64){ //thermostat
+                        adapter.log.debug('updating Thermostat '+ device.name); 
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
     
@@ -959,7 +959,10 @@ function main() {
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.hkr.holidayactive, ack: true});
                         } 
                     }
-                });
+                    else{
+                        adapter.log.debug('nix vorbereitet für diese Art von device update');
+                    }
+                })
             }
         })
         .catch(errorHandler);
@@ -973,45 +976,47 @@ function main() {
                 group.identifier = group.identifier.replace(/\s/g, '');
                 return group;
             });
+            adapter.log.debug("groups\n");
+            adapter.log.debug(JSON.stringify(groups));
             if (groups.length){
-                adapter.log.info('update Groups');
+                adapter.log.debug('update Groups ' + groups.length);
                 groups.forEach(function (group){
-                    if(group.functionbitmask == '6784'){ //switch
-    
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'name : ' + group.name);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.name', {val: group.name, ack: true});
+                    if((group.functionbitmask & 512) == 512){ //switch
+                        adapter.log.debug('updating SwitchGroup '+ group.name); 
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'name : ' + group.name);
+                        adapter.setState('Sgroup_'+ group.identifier +'.name', {val: group.name, ack: true});
                                            
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + group.present);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: group.present, ack: true});
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : ' +'present : ' + group.present);
+                        adapter.setState('Sgroup_'+ group.identifier +'.present', {val: group.present, ack: true});
             
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'state :' + group.switch.state);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.state', {val: group.switch.state, ack: true});
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'state :' + group.switch.state);
+                        adapter.setState('Sgroup_'+ group.identifier +'.state', {val: group.switch.state, ack: true});
     
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode :' + group.switch.mode);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: group.switch.mode, ack: true});
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'mode :' + group.switch.mode);
+                        adapter.setState('Sgroup_'+ group.identifier +'.mode', {val: group.switch.mode, ack: true});
     
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'lock :' + group.switch.lock);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.lock', {val: group.switch.lock, ack: true});
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'lock :' + group.switch.lock);
+                        adapter.setState('Sgroup_'+ group.identifier +'.lock', {val: group.switch.lock, ack: true});
     
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + group.switch.devicelock);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: group.switch.devicelock, ack: true});
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'devicelock :' + group.switch.devicelock);
+                        adapter.setState('Sgroup_'+ group.identifier +'.devicelock', {val: group.switch.devicelock, ack: true});
             
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'power :' + group.powermeter.power);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.power', {val: group.powermeter.power, ack: true});
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'power :' + parseFloat(group.powermeter.power)/1000);
+                        adapter.setState('Sgroup_'+ group.identifier +'.power', {val: parseFloat(group.powermeter.power)/1000, ack: true});
             
-                        adapter.log.debug('Sgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'energy :' + group.powermeter.energy);
-                        adapter.setState('Sgroup_'+ group.identifier.replace(/\s/g, '') +'.energy', {val: group.powermeter.energy, ack: true});  
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'energy :' + group.powermeter.energy);
+                        adapter.setState('Sgroup_'+ group.identifier +'.energy', {val: group.powermeter.energy, ack: true});  
                     }
-                    if(group.functionbitmask == '4160'){ //thermostat
-    
+                    else if((group.functionbitmask & 64) == 64){ //thermostat
+                        adapter.log.debug('updating HeaterGroup '+ group.name); 
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'name : ' + group.name);
-                        adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.name', {val: group.name, ack: true});
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.name', {val: group.name, ack: true});
     
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + group.present);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: group.present, ack: true});
     
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'temp :' + group.hkr.tist);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.temp', {val: group.hkr.tist, ack: true});
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'temp :' + parsefloat(group.hkr.tist)/2);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.temp', {val: parsefloat(group.hkr.tist)/2, ack: true});
     
                         var targettemp = group.hkr.tsoll;
             
@@ -1050,7 +1055,10 @@ function main() {
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + group.hkr.devicelock);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: group.hkr.devicelock, ack: true});
                     }
-                });
+                    else{
+                        adapter.log.debug('nix vorbereitet für diese Art von group update');
+                    }
+                })
             }
         })
         .catch(errorHandler);
@@ -1070,6 +1078,37 @@ function main() {
         })
         .catch(errorHandler);
     }
+
+    /*
+    function mydevices() {
+        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+            console.log("List devices\n");
+            console.log(devicelistinfos);
+            var devices = parser.xml2json(devicelistinfos);
+            devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+                // remove spaces in AINs
+                device.identifier = device.identifier.replace(/\s/g, '');
+                return device;
+            });
+            console.log("devices\n");
+            console.log(devices);
+            var groups = parser.xml2json(devicelistinfos);
+            groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+                // remove spaces in AINs
+                group.identifier = group.identifier.replace(/\s/g, '');
+                return group;
+            });
+            console.log("groups\n");
+            console.log(groups);
+            var all = devices.concat(groups);
+            console.log("all\n");
+            console.log(all);
+            console.log(JSON.stringify(all));
+            return all;
+        });
+    }
+    */
+
 
     logVersion();
     createDevices();

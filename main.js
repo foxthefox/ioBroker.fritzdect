@@ -872,8 +872,8 @@ function main() {
                         adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'state :' + device.switch.state);
                         adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.state', {val: device.switch.state, ack: true});
             
-                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'power :' + device.powermeter.power);
-                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.power', {val: device.powermeter.power, ack: true});
+                        adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'power :' + device.powermeter.power / 1000);
+                        adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.power', {val: device.powermeter.power / 1000, ack: true});
             
                         adapter.log.debug('DECT200_'+ device.identifier.replace(/\s/g, '') + ' : '  +'energy :' + device.powermeter.energy);
                         adapter.setState('DECT200_'+ device.identifier.replace(/\s/g, '') +'.energy', {val: device.powermeter.energy, ack: true});  

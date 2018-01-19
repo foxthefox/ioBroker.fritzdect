@@ -189,7 +189,7 @@ adapter.on('stateChange', function (id, state) {
             adapter.log.info('SWITCH ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
             if (dp == 'state') {
                 if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.setSwitchOff(id+1).then(function (sid) {
+                    fritz.setSwitchOff(id).then(function (sid) {
                         adapter.log.debug('Turned switch ' + id + ' off');
                     })
                     .catch(errorHandler);

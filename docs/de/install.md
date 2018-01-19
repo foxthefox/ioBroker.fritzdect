@@ -41,6 +41,8 @@ Zusätzlich kann das Ventil komplett geschlossen werden und die entspricht dem Z
 Die andere Richtung kann mit ON auch vorgewählt werden und würde einem BOOST oder Saunamodus entsprechen (nicht vergessen es wieder regeln zu lassen ;-) ).
 
 Diese derzeitig 3 Betriebsarten sind mit 0, 1 oder 2 im Datenpunkt mode vorwählbar.
-Bei der Vorwahl von AUTO wird die letzte Solltemperatur angewählt.
+Bei der Vorwahl von 0-AUTO wird die letzte Solltemperatur angewählt.
 
+## Troubleshooting
 
+Es ist ratsam das log anzuschauen, sofern nicht aussagekräftig oder zu wenig Information ist der debug modus über die Experteneinstellung der Instanz vorzuwählen.

@@ -13,8 +13,8 @@ es muß ein Benutzer angelegt sein, der Zugriff auf die DECT Objecte hat
 
 * IP mit vorangestellten "http://" eingeben
 * Polling Intervall kann beliebig gewählt werden (Voreinstellung 5min=300sec). Dies ist notwendig um Bedienung ausserhalb von ioBroker nachzuführen, da die FritzBox keine automatischen Updates liefert.
-![Logo](fritzdect_admin.PNG)
-![Logo](fritzdect_adminv3.PNG)
+(fritzdect_admin.PNG)
+
 
 ## Adapter Start
 

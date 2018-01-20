@@ -946,6 +946,13 @@ function main() {
                         }
                         else {
                         //getBatteryCharge
+                            /*
+                                    fritz.getBatteryCharge().then(function(value){
+                                        adapter.log.debug("Thermostat Battery: "+ value );
+                                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: value, ack: true});
+                                     })
+                                    .catch(errorHandler);
+                                    */
                         }
                         if(device.hkr.summeractive){
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.hkr.summeractive);

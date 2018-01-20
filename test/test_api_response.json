@@ -20,6 +20,17 @@
                     "state": "0"
                 }
             },
+            { "identifier": "34:31:C1:AB:68:53",
+                "id": "20001",
+                "functionbitmask": "640",
+                "fwversion": "06.92",
+                "manufacturer": "AVM",
+                "productname": "FRITZ!Powerline 546E",
+                "present": "1",
+                "name": "FRITZ!Powerline",
+                "switch": { "state": "0", "mode": "manuell", "lock": "0", "devicelock": "0" },
+                "powermeter": { "power": "0", "energy": "19331" } 
+            },
             {
                 "identifier": "08761 0006161",
                 "id": "16",

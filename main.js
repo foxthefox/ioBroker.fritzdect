@@ -778,7 +778,7 @@ function main() {
                     else {
                         adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
                     }                                
-                })
+                });
             }
         })
         .catch(errorHandler);
@@ -819,7 +819,7 @@ function main() {
                     else {
                         adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
                     }
-                })
+                });
             }
         })
         .catch(errorHandler);
@@ -962,7 +962,7 @@ function main() {
                     else{
                         adapter.log.debug('nix vorbereitet für diese Art von device update');
                     }
-                })
+                });
             }
         })
         .catch(errorHandler);
@@ -1058,7 +1058,7 @@ function main() {
                     else{
                         adapter.log.debug('nix vorbereitet für diese Art von group update');
                     }
-                })
+                });
             }
         })
         .catch(errorHandler);

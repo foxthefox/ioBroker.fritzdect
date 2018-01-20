@@ -31,6 +31,30 @@
                 "switch": { "state": "0", "mode": "manuell", "lock": "0", "devicelock": "0" },
                 "powermeter": { "power": "0", "energy": "19331" } 
             },
+            { "identifier": "11960 0642220",
+                "id": "17",
+                "functionbitmask": "320",
+                "fwversion": "03.54",
+                "manufacturer": "AVM",
+                "productname": "Comet DECT",
+                "present": "1",
+                "name": "Comet DECT ohne battery und summer/holiday",
+                "temperature": { "celsius": "200", "offset": "-50" },
+                "hkr": 
+                 { "tist": "40",
+                   "tsoll": "42",
+                   "absenk": "32",
+                   "komfort": "42",
+                   "lock": "0",
+                   "devicelock": "0",
+                   "errorcode": "0",
+                   "batterylow": "0",
+                   "nextchange":  {
+                       "endperiod": "2019970800",
+                        "tchange": "44" 
+                    }
+                }
+            },
             {
                 "identifier": "08761 0006161",
                 "id": "16",

@@ -619,6 +619,20 @@ function main() {
             native: {
             }
         });
+        adapter.setObject(typ + newId +'.battery', {
+            type: 'state',
+            common: {
+                "name":  "Battery", 
+                "type": "number",
+                "unit": "%",
+                "read": true,
+                "write": false,
+                "role": "value.battery",
+                "desc":  "Battery"
+            },
+            native: {
+            }
+        });
         adapter.setObject(typ + newId +'.errorcode', {
             type: 'state',
             common: {
@@ -660,24 +674,7 @@ function main() {
             native: {
             }
         });
-    }
-    function createBattery(typ,newId){
-        adapter.log.debug('create Battery object');
-        adapter.setObject(typ + newId +'.battery', {
-            type: 'state',
-            common: {
-                "name":  "Battery", 
-                "type": "number",
-                "unit": "%",
-                "read": true,
-                "write": false,
-                "role": "value.battery",
-                "desc":  "Battery"
-            },
-            native: {
-            }
-        });
-    }     
+    }    
     function createGroupInfo(typ,newId,mid,member){
         adapter.log.debug('create Group objects');
         adapter.setObject(typ + newId +'.masterdeviceid', {
@@ -762,10 +759,7 @@ function main() {
                         createThermostat(typ,device.identifier);
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
-                        }
-                        if (device.hkr.battery){
-                            createBattery(typ,device.identifier);
-                        }                    
+                        }                   
                     }
                     else if((device.functionbitmask & 16) == 16){ //contact
                         typ = "Contact_";
@@ -949,6 +943,9 @@ function main() {
                         if(device.hkr.battery){        
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
+                        }
+                        else {
+                        //getBatteryCharge
                         }
                         if(device.hkr.summeractive){
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.hkr.summeractive);

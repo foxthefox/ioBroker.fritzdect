@@ -619,6 +619,22 @@ function main() {
             native: {
             }
         });
+        adapter.setObject(typ + newId +'.errorcode', {
+            type: 'state',
+            common: {
+                "name":  "errorcode",
+                "type": "number",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+    }
+    
+    function createBattery(typ,newId){
+        adapter.log.debug('create Battery object');
         adapter.setObject(typ + newId +'.battery', {
             type: 'state',
             common: {
@@ -633,19 +649,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.errorcode', {
-            type: 'state',
-            common: {
-                "name":  "errorcode",
-                "type": "number",
-                "read": true,
-                "write": false,
-                "role": "indicator"
-            },
-            native: {
-            }
-        });
-    }
+    } 
     function createThermostatProg(typ,newId){
         adapter.log.debug('create Thermostat Prog objects');
         adapter.setObject(typ + newId +'.summeractive', {
@@ -757,6 +761,7 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createTemperature(typ,device.identifier);
                         createThermostat(typ,device.identifier);
+                        createBattery(typ,device.identifier); //we create it in all cases, even its not json and getBatteryCharge must be called
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
                         }                   

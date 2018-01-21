@@ -951,21 +951,19 @@ function main() {
                         }
                         else {
                         //getBatteryCharge
-                            /*
-                                    fritz.getBatteryCharge().then(function(value){
-                                        adapter.log.debug("Thermostat Battery: "+ value );
-                                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: value, ack: true});
-                                     })
-                                    .catch(errorHandler);
-                                    */
+                            fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ value );
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});
+                             })
+                            .catch(errorHandler);
                         }
                         if(device.hkr.summeractive){
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.hkr.summeractive);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.hkr.summeractive, ack: true});
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + device.hkr.summeractive);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.summeractive', {val: device.hkr.summeractive, ack: true});
                         }
                         if(device.hkr.holidayactive){
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'voltage : ' + device.hkr.holidayactive);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.voltage', {val: device.hkr.holidayactive, ack: true});
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + device.hkr.holidayactive);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: device.hkr.holidayactive, ack: true});
                         } 
                     }
                     else{

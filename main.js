@@ -18,20 +18,31 @@ var adapter = utils.Adapter('fritzdect');
 
 
 function errorHandler(error) {
-    if (error == "0000000000000000")
-        adapter.log.debug("Did not get session id- invalid username or password?")
-    else if (error.response.statusCode == 403){
+    if (error == "0000000000000000"){
+        adapter.log.debug("Did not get session id- invalid username or password?");
+    }
+    else if (error.response.statusCode){
+        if (error.response.statusCode == 403){
             adapter.log.error("no permission for this call (403), has user all the rights and access to fritzbox?")
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
-    else if (error.response.statusCode == 404){
+        else if (error.response.statusCode == 404){
             adapter.log.error("call to API does not exist! (404)");
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
-    else if (error.response.statusCode == 400){
+        else if (error.response.statusCode == 400){
             adapter.log.error("bad request (400), ain correct?");
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
+        else if (error.response.statusCode == 500){
+            adapter.log.error("internal fritzbox error");
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
+        else{
+            adapter.log.error("statuscode not in errorhandler");
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
+    }
     else {
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }

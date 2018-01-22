@@ -118,7 +118,7 @@
         "icon":                 "fritzdect_logo.png",
 	"extIcon":          	"https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
 	"readme":           	"https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
-	"loglevel":		"info",
+	"loglevel":		"debug",
 	"materialize": true,
 	"restartAdapters":          [
 		"vis"

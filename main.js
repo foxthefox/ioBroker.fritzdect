@@ -944,8 +944,8 @@ function main() {
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
     
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.batterylow);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.batterylow, ack: true});
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + device.hkr.batterylow);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.batterylow', {val: device.hkr.batterylow, ack: true});
     
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + device.hkr.errorcode);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.errorcode', {val: device.hkr.errorcode, ack: true});
@@ -963,7 +963,7 @@ function main() {
                         else {
                         //getBatteryCharge
                             fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ value );
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});
                              })
                             .catch(errorHandler);
@@ -1061,8 +1061,8 @@ function main() {
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + parseFloat(group.hkr.absenk)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(group.hkr.absenk)/2, ack: true});
     
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'battery :' + group.hkr.batterylow);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.battery', {val: group.hkr.batterylow, ack: true});
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + group.hkr.batterylow);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.batterylow', {val: group.hkr.batterylow, ack: true});
     
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + group.hkr.errorcode);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.errorcode', {val: group.hkr.errorcode, ack: true});

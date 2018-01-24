@@ -1033,8 +1033,8 @@ function main() {
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + group.present);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: group.present, ack: true});
     
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'temp :' + parsefloat(group.hkr.tist)/2);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.temp', {val: parsefloat(group.hkr.tist)/2, ack: true});
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'temp :' + parseFloat(group.hkr.tist)/2);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(group.hkr.tist)/2, ack: true});
     
                         var targettemp = group.hkr.tsoll;
             

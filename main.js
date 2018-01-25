@@ -754,7 +754,7 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createSwitch(typ,device.identifier);
                         createEnergy(typ,device.identifier);
-                        if (device.temperature.celsius){
+                        if (device.temperature){
                             createTemperature(typ,device.identifier);
                         }
                         if (device.switch.devicelock){

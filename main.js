@@ -897,7 +897,7 @@ function main() {
                         adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'devicelock : ' + device.switch.devicelock);
                         adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
                         
-                        if(device.temperature.celsius){ 
+                        if(device.temperature){ 
                             adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + parseFloat(device.temperature.celsius)/10);
                             adapter.setState('DECT200_'+ device.identifier +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true});
                         }

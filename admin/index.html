@@ -31,7 +31,7 @@
             return;
         }
         sendTo(null, 'devices', null, function (result) {
-            showMessage(_('Result: ') + _(JSON.stringify(result)));
+            showMessage(_('Result: ') + JSON.stringify(result));
         });
     }
 

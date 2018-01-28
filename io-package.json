@@ -120,7 +120,7 @@
 	"readme":           	"https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
 	"loglevel":		"debug",
 	"materialize": true,
-	"messagebox: true,
+	"messagebox": true,
 	"restartAdapters":          [
 		"vis"
 	],

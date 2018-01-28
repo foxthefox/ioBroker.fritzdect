@@ -20,6 +20,40 @@
 	"on save adapter restarts with new config immediately": {            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.", 	"ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"},
 	"include GuestWLAN in adapter": {"de": "GästeWLAN in Adapter einbeziehen", "en": "include GuestWLAN in adapter", "ru": "включить гуествлан в адаптацию"}
     };
+    function test() {
+        // var newValue = JSON.stringify(getSettings());
+        if (!common.enabled) {
+            showMessage(_('Enable first the adapter to test client.'));
+            return;
+        }
+        if (changed) {
+            showMessage(_('First save the adapter'));
+            return;
+        }
+        sendTo('fritzdect.' + instance, 'myDevices', {}, function (result) {
+            showMessage(_('Result: ') + _(JSON.stringify(result)));
+        });
+    }
+
+    function getSettings() {
+        var obj = {};
+        $('.value').each(function () {
+            var $this = $(this);
+            var id = $this.attr('id');
+            if ($this.attr('type') === 'checkbox') {
+                obj = saveHelper(obj, id, $this.prop('checked'))
+            } else {
+                obj = saveHelper(obj, id, $this.val())
+            }
+        });
+        return obj;
+    }	
+    function init() {
+        //showHideSettings();
+        //$('#type').change(showHideSettings);
+        //$('#ssl').change(showHideSettings);
+        $('#myDevices').button().click(test);
+    }
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
         // example: select elements with id=key and class=value and insert value        
@@ -37,8 +71,16 @@
 				});
             }
         }
+	
+	init();
+	    
         // Signal to admin, that no changes yet
         onChange(false);
+	sendTo(null, "myDevices", function (result) {
+	    if (result && result.error) {
+		showMessage(result.error, _('Error'), 'alert');
+	    }
+	});
     }
     // ... and the function save has to exist.
     // you have to make sure the callback is called with the settings object as first param!
@@ -83,6 +125,9 @@
 	    <td><label class="translate">include GuestWLAN in adapter</label></td>
             <td><input class="value" id="GuestWLANactive" type="checkbox"/></td>
 	</tr>
+	<tr>
+            <td><button class="translate" id="myDevices">my Devices</button></td>
+        </tr>
      </table>
 	
 

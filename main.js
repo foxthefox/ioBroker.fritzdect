@@ -267,6 +267,8 @@ function main() {
     var username = adapter.config.fritz_user;
     var password = adapter.config.fritz_pw;
     var moreParam = adapter.config.fritz_ip;
+    var gwlanpoll = adapter.config.GuestWLANactive;
+    adapter.log.debug("WLAN poll :" +gwlanpoll);
     
     var fritz = new Fritz(username, password||"", moreParam||"");
     
@@ -1086,7 +1088,9 @@ function main() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
         updateGroups();
-        updateFritzGuest();
+        if (gwlanpoll){
+            updateFritzGuest();
+        }
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
     }

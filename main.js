@@ -257,7 +257,40 @@ adapter.on('ready', function () {
     adapter.log.info('entered ready');
     main();
 });
-
+// Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
+adapter.on('message', (obj) => {
+    
+        // responds to the adapter that sent the original message
+        function respond(response) {
+            if (obj.callback)
+                adapter.sendTo(obj.from, obj.command, response, obj.callback);
+        }
+        // some predefined responses so we only have to define them once
+        const predefinedResponses = {
+            ACK: { error: null },
+            OK: { error: null, result: 'ok' },
+            ERROR_UNKNOWN_COMMAND: { error: 'Unknown command!' },
+            COMMAND_RUNNING: { error: 'command running' }
+        };
+        adapter.log.debug('sendto received  '+ obj.command );
+        // handle the message
+        if (obj) {
+            switch (obj.command) {
+                case 'myDevices':
+                    // calls api and take fritzbox response
+                    try {
+                        const ports = myDevices();
+                        respond({ error: null, result: devices });
+                    } catch (e) {
+                        respond({ error: e, result: ['Not available'] });
+                    }
+                    break;
+                default:
+                    adapter.log.info("Received unhandled message: " + obj.command);
+                    break;
+            }
+        }
+    });
 process.on('SIGINT', function () {
     if (fritzTimeout) clearTimeout(fritzTimeout);
 });

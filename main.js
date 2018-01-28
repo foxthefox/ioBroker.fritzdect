@@ -257,78 +257,69 @@ adapter.on('ready', function () {
     adapter.log.info('entered ready');
     main();
 });
+
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
-adapter.on('message', (obj) => {
-    
-        // responds to the adapter that sent the original message
-        function respond(response) {
-            if (obj.callback)
-                adapter.sendTo(obj.from, obj.command, response, obj.callback);
+adapter.on('message', function (obj) {    
+    var wait = false;
+    // handle the message
+    if (obj) {
+        switch (obj.command) {
+            case 'devices':
+                var result = [];
+
+                var username = adapter.config.fritz_user;
+                var password = adapter.config.fritz_pw;
+                var moreParam = adapter.config.fritz_ip;
+                
+                var fritz = new Fritz(username, password||"", moreParam||"");
+                fritz.getDeviceListInfos().then(function(devicelistinfos) {
+                    var devices = parser.xml2json(devicelistinfos);
+                    devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+                        // remove spaces in AINs
+                        device.identifier = device.identifier.replace(/\s/g, '');
+                        return device;
+                    });
+                    result = devices;
+                }).done(function (devicelistinfos){
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                    });
+                wait = true;
+                break;
+            case 'groups':
+                var result = [];
+
+                var username = adapter.config.fritz_user;
+                var password = adapter.config.fritz_pw;
+                var moreParam = adapter.config.fritz_ip;
+                
+                var fritz = new Fritz(username, password||"", moreParam||"");
+                fritz.getDeviceListInfos().then(function(devicelistinfos) {
+                    var groups = parser.xml2json(devicelistinfos);
+                    groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+                        // remove spaces in AINs
+                        group.identifier = group.identifier.replace(/\s/g, '');
+                        return group;
+                    });
+                    result = groups;
+                }).done(function (devicelistinfos){
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                    });
+                wait = true;
+                break;
+            default:
+                adapter.log.warn("Received unhandled message: " + obj.command);
+                break;
         }
-        // some predefined responses so we only have to define them once
-        const predefinedResponses = {
-            ACK: { error: null },
-            OK: { error: null, result: 'ok' },
-            ERROR_UNKNOWN_COMMAND: { error: 'Unknown command!' },
-            COMMAND_RUNNING: { error: 'command running' }
-        };
-        adapter.log.debug('sendto received  '+ obj.command );
-        // handle the message
-        if (obj) {
-            switch (obj.command) {
-                case 'myDevices':
-                    // calls api and take fritzbox response
-                    try {
-                        const ports = myDevices();
-                        respond({ error: null, result: devices });
-                    } catch (e) {
-                        respond({ error: e, result: ['Not available'] });
-                    }
-                    break;
-                default:
-                    adapter.log.info("Received unhandled message: " + obj.command);
-                    break;
-            }
-        }
-    });
+    }
+    if (!wait && obj.callback) {
+        adapter.sendTo(obj.from, obj.command, obj.message, obj.callback);
+    }
+
+    return true;
+});
 process.on('SIGINT', function () {
     if (fritzTimeout) clearTimeout(fritzTimeout);
 });
-
-    function myDevices() {
-                
-        var username = adapter.config.fritz_user;
-        var password = adapter.config.fritz_pw;
-        var moreParam = adapter.config.fritz_ip;
-        
-        var fritz = new Fritz(username, password||"", moreParam||"");
-
-        fritz.getDeviceListInfos().then(function(devicelistinfos) {
-            console.log("List devices\n");
-            console.log(devicelistinfos);
-            var devices = parser.xml2json(devicelistinfos);
-            devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
-                // remove spaces in AINs
-                device.identifier = device.identifier.replace(/\s/g, '');
-                return device;
-            });
-            console.log("devices\n");
-            console.log(devices);
-            var groups = parser.xml2json(devicelistinfos);
-            groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
-                // remove spaces in AINs
-                group.identifier = group.identifier.replace(/\s/g, '');
-                return group;
-            });
-            console.log("groups\n");
-            console.log(groups);
-            var all = devices.concat(groups);
-            console.log("all\n");
-            console.log(all);
-            console.log(JSON.stringify(all));
-            return all;
-        });
-    }
 
 function main() {
     

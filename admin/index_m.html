@@ -4,7 +4,7 @@
 <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
 <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
 
-<script type="text/javascript" src="../../lib/js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
 
 <!-- these files always have to be included -->
@@ -15,6 +15,11 @@
 
 <!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
+	
+   function init() {
+        $('#testd').on('click', testd());
+        $('#testg').on('click', testg());
+    }
 
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
@@ -37,7 +42,40 @@
                 });
             }
         });
+	init();
         onChange(false);
+    }
+    function testg() {
+        if (!common.enabled) {
+            showToast(null, _('Enable first the adapter to test client.'));
+            return;
+        }
+        if (changed) {
+            showToast(null, _('First save the adapter'));
+            return;
+        }
+        $('#testg').addClass('disabled');
+        sendTo(null, 'groups', null, function (result) {
+            $('#testg').removeClass('disabled');
+            console.log("result is "+ JSON.stringify(result));
+            showMessage(JSON.stringify(result), _('Result: '));
+        });
+    }
+    function testd() {
+        if (!common.enabled) {
+            showToast(null, _('Enable first the adapter to test client.'));
+            return;
+        }
+        if (changed) {
+            showToast(null, _('First save the adapter'));
+            return;
+        }
+        $('#testd').addClass('disabled');
+        sendTo(null, 'devices', null, function (result) {
+            $('#testd').removeClass('disabled');
+            console.log("result is "+ JSON.stringify(result));
+            showMessage(JSON.stringify(result), _('Result: '));
+        });            
     }
     // ... and the function save has to exist.
     // you have to make sure the callback is called with the settings object as first param!
@@ -127,11 +165,14 @@
             </div>
         </div>
         <div class="row">
-                <div class="col s12">
-                    <a id="myDevices" class="btn"><span class="translate">My Devices</span></a>
-                </div>
+            <div class="col s6">
+                <a id="testd" class="btn"><span class="translate">My Devices</span></a>
             </div>
-        </div>		
+            <div class="col s6">
+                <a id="testg" class="btn"><span class="translate">My Groups</span></a>
+            </div>
+        </div>
+    </div>		
 </div>
 </body>
 </html>

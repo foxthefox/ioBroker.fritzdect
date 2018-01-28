@@ -132,8 +132,7 @@
         "fritz_ip": "http://192.x.x.x",
         "fritz_user": "admin",
         "fritz_pw": "password",
-        "fritz_interval": "300",
-	"GuestWLANactive": true
+        "fritz_interval": "300"
     },
     "objects": [],
     "instanceObjects": [

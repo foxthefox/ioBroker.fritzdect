@@ -103,6 +103,12 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 
 ## Changelog
 
+
+### 0.1.1
+* switch for GuestWLAN when no access is granted and polling creates an error
+* check for devices in admin page for better access to the xml/json stream from fritzbox
+* enhanced automatic testing
+
 ### 0.1.0
 * major code change to use the xml stream instead the dedicated API-commands for the dedicated values
 * creation of objects according the feedback from fritzbox

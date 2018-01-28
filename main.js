@@ -295,6 +295,41 @@ process.on('SIGINT', function () {
     if (fritzTimeout) clearTimeout(fritzTimeout);
 });
 
+    function myDevices() {
+                
+        var username = adapter.config.fritz_user;
+        var password = adapter.config.fritz_pw;
+        var moreParam = adapter.config.fritz_ip;
+        
+        var fritz = new Fritz(username, password||"", moreParam||"");
+
+        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+            console.log("List devices\n");
+            console.log(devicelistinfos);
+            var devices = parser.xml2json(devicelistinfos);
+            devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+                // remove spaces in AINs
+                device.identifier = device.identifier.replace(/\s/g, '');
+                return device;
+            });
+            console.log("devices\n");
+            console.log(devices);
+            var groups = parser.xml2json(devicelistinfos);
+            groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+                // remove spaces in AINs
+                group.identifier = group.identifier.replace(/\s/g, '');
+                return group;
+            });
+            console.log("groups\n");
+            console.log(groups);
+            var all = devices.concat(groups);
+            console.log("all\n");
+            console.log(all);
+            console.log(JSON.stringify(all));
+            return all;
+        });
+    }
+
 function main() {
     
     var username = adapter.config.fritz_user;

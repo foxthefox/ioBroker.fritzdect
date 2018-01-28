@@ -42,20 +42,24 @@
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
         // example: select elements with id=key and class=value and insert value        
-	  for (var key in settings) {
-            // example: select elements with id=key and class=value and insert value
-            if ($('#' + key + '.value').attr('type') == 'checkbox') {
-                $('#' + key + '.value').prop('checked', settings[key]).change(function () {
-					onChange();
-				});
+        if (!settings) return;
+        $('.value').each(function () {
+            var $key = $(this);
+            var id = $key.attr('id');
+            if ($key.attr('type') === 'checkbox') {
+		        // do not call onChange direct, because onChange could expect some arguments
+                $key.prop('checked', settings[id]).change(function() {
+                    onChange();
+                });
             } else {
-                $('#' + key + '.value').val(settings[key]).change(function () {
-					onChange();
-				}).keyup(function () {
-					$(this).trigger('change');
-				});
+		        // do not call onChange direct, because onChange could expect some arguments
+                $key.val(settings[id]).change(function() {
+                    onChange();
+                }).keyup(function() {
+                    onChange();
+                });
             }
-        }
+        }); 
 	
 	init();
 	    
@@ -68,8 +72,12 @@
         // example: select elements with class=value and build settings object
         var obj = {};
         $('.value').each(function () {
-            var $this = $(this);
-            obj[$this.attr('id')] = $this.val();
+    		var $this = $(this);
+		if ($this.attr('type') === 'checkbox') {
+			obj[$this.attr('id')] = $this.prop('checked');
+		} else {
+			obj[$this.attr('id')] = $this.val();
+		}
         });
         callback(obj);
     }

@@ -17,9 +17,8 @@
         "fritzdect adapter settings": {"de": "fritzdect Adapter Einstellung", "en": "fritzdect adapter setup", "ru": "Настройки fritzdect Драйвера"},
 	"enable DECT200 temp reading": {"de": "DECT200 Temp einlesen", "en": "enable DECT200 temp reading", "ru": "enable DECT200 temp reading"},
 	"enable DECT200 voltage reading": {"de": "DECT200 Spannung einlesen", "en": "enable DECT200 voltage reading", "ru": "enable DECT200 voltage reading"},
-	"on save adapter restarts with new config immediately": {            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.",
-								 	"ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"
-        }
+	"on save adapter restarts with new config immediately": {            "de": "Beim Speichern von Einstellungen der Adapter wird sofort neu gestartet.", 	"ru": "Сразу после сохранения настроек драйвер перезапуститься с новыми значениями"},
+	"include GuestWLAN in adapter": {"de": "GästeWLAN in Adapter einbeziehen", "en": "include GuestWLAN in adapter", "ru": "включить гуествлан в адаптацию"}
     };
     // the function loadSettings has to exist ...
     function load(settings, onChange) {
@@ -80,6 +79,10 @@
             <td class="translate">Fritzbox Polling Interval</td>
             <td><input type="text" id="fritz_interval" class="value"/></td>
         </tr>
+	<tr>
+	    <td><label class="translate">include GuestWLAN in adapter</label></td>
+            <td><input class="value" id="GuestWLANactive" type="checkbox"/></td>
+	</tr>
      </table>
 	
 

@@ -3,6 +3,17 @@
         "name":                 "fritzdect",
         "version":              "0.1.1",
 	"news": {
+	 "0.1.1": {
+	    "en": "adminv3 implementation, debug push-buttons in admin page, Guest WLAN switch in admin page",
+	    "de": "adminv3-Implementierung, Debug-Schaltflächen in der Admin-Seite, Gast-WLAN-Wechsel in der Admin-Seite",
+	    "ru": "adminv3, отладка кнопок на странице администратора, гостевой WLAN-переключатель на странице администратора",
+	    "pt": "Implementação de adminv3, botões de depuração na página de administração, Alternativa de WLAN convidado na página de administração",
+	    "nl": "adminv3-implementatie, foutopsporingstoetsen in beheerpagina, Gast WLAN-schakelaar op beheerderspagina",
+	    "fr": "Implémentation adminv3, boutons-poussoirs de débogage dans la page d'administration, commutateur WLAN invité dans la page d'administration",
+	    "it": "implementazione adminv3, pulsanti di debug nella pagina di amministrazione, switch WLAN ospite nella pagina di amministrazione",
+	    "es": "Implementación de adminv3, botones de depuración en la página de administración, interruptor WLAN invitado en la página de administración",
+	    "pl": "implementacja administrv3, przyciski debugowania na stronie administratora, Przełącznik Gość WLAN na stronie administratora"
+	  },
 	 "0.1.0": {
 	    "en": "Major Change, Groups added",
 	    "de": "Hauptänderung, Gruppen hinzugefügt",

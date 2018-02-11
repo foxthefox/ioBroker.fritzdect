@@ -100,8 +100,15 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * universal object names
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 * widget for thermostat
+* enhanced automated testing
 
 ## Changelog
+
+
+### 0.1.1
+* switch for GuestWLAN when no access is granted and polling creates an error
+* check for devices in admin page for better access to the xml/json stream from fritzbox
+* admin v3 implemented
 
 ### 0.1.0
 * major code change to use the xml stream instead the dedicated API-commands for the dedicated values

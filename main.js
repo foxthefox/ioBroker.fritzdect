@@ -258,6 +258,65 @@ adapter.on('ready', function () {
     main();
 });
 
+// Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
+adapter.on('message', function (obj) {    
+    var wait = false;
+    // handle the message
+    if (obj) {
+        switch (obj.command) {
+            case 'devices':
+                var result = [];
+
+                var username = adapter.config.fritz_user;
+                var password = adapter.config.fritz_pw;
+                var moreParam = adapter.config.fritz_ip;
+                
+                var fritz = new Fritz(username, password||"", moreParam||"");
+                fritz.getDeviceListInfos().then(function(devicelistinfos) {
+                    var devices = parser.xml2json(devicelistinfos);
+                    devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+                        // remove spaces in AINs
+                        device.identifier = device.identifier.replace(/\s/g, '');
+                        return device;
+                    });
+                    result = devices;
+                }).done(function (devicelistinfos){
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                    });
+                wait = true;
+                break;
+            case 'groups':
+                var result = [];
+
+                var username = adapter.config.fritz_user;
+                var password = adapter.config.fritz_pw;
+                var moreParam = adapter.config.fritz_ip;
+                
+                var fritz = new Fritz(username, password||"", moreParam||"");
+                fritz.getDeviceListInfos().then(function(devicelistinfos) {
+                    var groups = parser.xml2json(devicelistinfos);
+                    groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+                        // remove spaces in AINs
+                        group.identifier = group.identifier.replace(/\s/g, '');
+                        return group;
+                    });
+                    result = groups;
+                }).done(function (devicelistinfos){
+                    if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                    });
+                wait = true;
+                break;
+            default:
+                adapter.log.warn("Received unhandled message: " + obj.command);
+                break;
+        }
+    }
+    if (!wait && obj.callback) {
+        adapter.sendTo(obj.from, obj.command, obj.message, obj.callback);
+    }
+
+    return true;
+});
 process.on('SIGINT', function () {
     if (fritzTimeout) clearTimeout(fritzTimeout);
 });
@@ -267,6 +326,8 @@ function main() {
     var username = adapter.config.fritz_user;
     var password = adapter.config.fritz_pw;
     var moreParam = adapter.config.fritz_ip;
+    var gwlanpoll = adapter.config.GuestWLANactive;
+    adapter.log.debug("WLAN poll :" +gwlanpoll);
     
     var fritz = new Fritz(username, password||"", moreParam||"");
     
@@ -1086,7 +1147,9 @@ function main() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
         updateGroups();
-        updateFritzGuest();
+        if(gwlanpoll){
+            updateFritzGuest();
+        }
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
     }

@@ -9,6 +9,13 @@ es muß ein Benutzer angelegt sein, der Zugriff auf die DECT Objecte hat
 ![fritzbox](fritzdect_einstellung.PNG)
 
 
+falls ein spezieller user angelegt wurde (also nicht admin für iobroker benutzt wird), dann sind die Berechtigungen zu setzen und die Voreinstellung das sich nur admin anmeldet, muß auf Benutzer umgestellt werden.
+
+![fritzbox](fritz_iobroker_user.PNG)
+
+![fritzbox](fritz_user.PNG)
+
+
 ## Adapter Einstellungen
 
 * IP mit vorangestellten "http://" eingeben

@@ -1004,12 +1004,13 @@ function main() {
             
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
-    
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + device.hkr.batterylow);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.batterylow', {val: device.hkr.batterylow, ack: true});
+                        var batt;
+                        if (device.hkr.batterylow == 0){ batt = false} else { batt = true } 
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + batt);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.batterylow', {val: batt, ack: true});
     
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + parseInt(device.hkr.errorcode));
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.errorcode', {val: parseInt(device.hkr.errorcode, ack: true)});
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.errorcode', {val: parseInt(device.hkr.errorcode), ack: true});
     
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock :' + device.hkr.lock);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.hkr.lock, ack: true});
@@ -1018,18 +1019,14 @@ function main() {
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: device.hkr.devicelock, ack: true});
     
                         if(device.hkr.battery){
-                            var batt;
-                            if (device.hkr.battery == 0){ batt = false} else { batt = true } 
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + batt);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: batt, ack: true});
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
                         }
                         else {
                         //getBatteryCharge
                             fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
-                                var batt;
-                                if (battery == 0){ batt = false} else { batt = true } 
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ batt);
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: batt, ack: true});
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});
                              })
                             .catch(errorHandler);
                         }

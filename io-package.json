@@ -3,6 +3,17 @@
         "name":                 "fritzdect",
         "version":              "0.1.2",
 	"news": {
+	 "0.1.2": {
+            "en": "update",
+	    "de": "aktualisieren",
+	    "ru": "Обновить",
+	    "pt": "atualizar",
+	    "nl": "bijwerken",
+	    "fr": "mettre à jour",
+	    "it": "aggiornare",
+	    "es": "actualizar",
+	    "pl": "aktualizacja"
+	 },
 	 "0.1.1": {
 	    "en": "adminv3 implementation, debug push-buttons in admin page, Guest WLAN switch in admin page",
 	    "de": "adminv3-Implementierung, Debug-Schaltflächen in der Admin-Seite, Gast-WLAN-Wechsel in der Admin-Seite",
@@ -88,7 +99,7 @@
                 "de": "Erste Version in npm"
             }
         },
-        "title":                "fritzbox dect adapter",
+        "title":                "fritzbox DECT",
 	"titleLang": {
 	    "en": "fritzbox dect adapter",
 	    "de": "fritzbox dect Adapter",

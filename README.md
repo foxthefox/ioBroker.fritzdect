@@ -174,3 +174,9 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 
 ### 0.0.1
 * running version, tested with 1x DECT200 and Fritzbox FW=6.30
+
+## License
+
+The MIT License (MIT)
+
+Copyright (c) 2018 foxthefox <foxthefox@wysiwis.net>

@@ -50,5 +50,16 @@ systemDictionary = {
 		  "it": "includere GuestWLAN nell'adattatore",
 		  "es": "incluir GuestWLAN en el adaptador",
 		  "pl": "dołączyć GuestWLAN do adaptera"
-		}
+		},
+		"include non native api call (ui scraping)": {
+		    "en": "include non native api call (ui scraping)",
+		    "de": "nicht-native API-Aufrufe einschließen (ui scraping)",
+		    "ru": "включают неароматический вызов api (ui scraping)",
+		    "pt": "incluem chamada api não nativa (raspagem de interface do usuário)",
+		    "nl": "include non native api call (ui scraping)",
+		    "fr": "inclure un appel api non natif (grattage ui)",
+		    "it": "include la chiamata api non nativa (ui scraping)",
+		    "es": "incluye una llamada api no nativa (ui scraping)",
+		    "pl": "zawierają nie natywne wywołanie api (skrobanie ui)"
+		  }
 };

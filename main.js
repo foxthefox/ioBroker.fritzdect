@@ -1023,7 +1023,7 @@ function main() {
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
                         }
-                        elseif(battchargepoll) {
+                        else if(battchargepoll) {
                         //getBatteryCharge non native api call, depending adapter setting
                             fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);

@@ -327,6 +327,7 @@ function main() {
     var password = adapter.config.fritz_pw;
     var moreParam = adapter.config.fritz_ip;
     var gwlanpoll = adapter.config.GuestWLANactive;
+    var battchargepoll = adapter.config.NonNativeApi;
     adapter.log.debug("WLAN poll :" +gwlanpoll);
     
     var fritz = new Fritz(username, password||"", moreParam||"");
@@ -1022,8 +1023,8 @@ function main() {
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
                         }
-                        else {
-                        //getBatteryCharge
+                        elseif(battchargepoll) {
+                        //getBatteryCharge non native api call, depending adapter setting
                             fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});

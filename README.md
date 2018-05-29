@@ -106,6 +106,7 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 ### 0.1.2
 * errorcode string->number
 * batterylow -> boolean
+* switch in admin for non native API call for battery charge in % (shall prevent 403 message logs)
 
 ### 0.1.1
 * switch for GuestWLAN when no access is granted and polling creates an error

@@ -156,7 +156,8 @@
         "fritz_user": "admin",
         "fritz_pw": "password",
         "fritz_interval": "300",
-	"GuestWLANactive": true
+	"GuestWLANactive": true,
+	"NonNativeApi": true,
     },
     "objects": [],
     "instanceObjects": [

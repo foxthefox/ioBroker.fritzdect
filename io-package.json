@@ -4,16 +4,16 @@
         "version":              "0.1.2",
 	"news": {
 	 "0.1.2": {
-            "en": "update",
-	    "de": "aktualisieren",
-	    "ru": "Обновить",
-	    "pt": "atualizar",
-	    "nl": "bijwerken",
-	    "fr": "mettre à jour",
-	    "it": "aggiornare",
-	    "es": "actualizar",
-	    "pl": "aktualizacja"
-	 },
+	    "en": "object type correction, switch for non-native API calls",
+	    "de": "Objekttypkorrektur, Wechsel für nicht-native API-Aufrufe",
+	    "ru": "коррекция типа объекта, переключение для вызовов, не связанных с API",
+	    "pt": "correção de tipo de objeto, alternar para chamadas de API não nativas",
+	    "nl": "objecttypecorrectie, overschakelen voor niet-native API-aanroepen",
+	    "fr": "correction du type d'objet, basculer pour les appels d'API non natifs",
+	    "it": "correzione del tipo di oggetto, switch per chiamate API non native",
+	    "es": "corrección de tipo de objeto, cambio para llamadas API no nativas",
+	    "pl": "korekcja typu obiektu, przełączanie dla nienatywnych wywołań API"
+	  },
 	 "0.1.1": {
 	    "en": "adminv3 implementation, debug push-buttons in admin page, Guest WLAN switch in admin page",
 	    "de": "adminv3-Implementierung, Debug-Schaltflächen in der Admin-Seite, Gast-WLAN-Wechsel in der Admin-Seite",

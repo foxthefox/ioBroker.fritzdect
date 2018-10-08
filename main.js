@@ -16,6 +16,16 @@ var fritzTimeout;
 
 var adapter = utils.Adapter('fritzdect');
 
+/* errorcodes hkr
+0: kein Fehler
+1: Keine Adaptierung möglich. Gerät korrekt am Heizkörper montiert?
+2: Ventilhub zu kurz oder Batterieleistung zu schwach. Ventilstößel per Hand mehrmals öfnen und schließen oder neue Batterien einsetzen.
+3: Keine Ventilbewegung möglich. Ventilstößel frei?
+4: Die Installation wird gerade vorbereitet.
+5: Der Heizkörperregler ist im Installationsmodus und kann auf das Heizungsventil montiert werden.
+6: Der Heizkörperregler passt sich nun an den Hub des Heizungsventils an.
+*/
+
 
 function errorHandler(error) {
     if (error == "0000000000000000"){
@@ -751,7 +761,23 @@ function main() {
             native: {
             }
         });
-    }    
+    }
+    function createThermostatWindow(typ,newId){
+        adapter.log.debug('create Thermostat Window object');
+        adapter.setObject(typ + newId +'.windowopenactiv', {
+            type: 'state',
+            common: {
+                "name":  "Window open",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "Window open"
+            },
+            native: {
+            }
+        });
+    } 
     function createGroupInfo(typ,newId,mid,member){
         adapter.log.debug('create Group objects');
         adapter.setObject(typ + newId +'.masterdeviceid', {
@@ -837,7 +863,10 @@ function main() {
                         createBattery(typ,device.identifier); //we create it in all cases, even its not json and getBatteryCharge must be called
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
-                        }                   
+                        }
+                        if (device.hkr.windowopenactiv){
+                            createThermostatWindow(typ,device.identifier);
+                        } 
                     }
                     else if((device.functionbitmask & 16) == 16){ //contact
                         typ = "Contact_";
@@ -1038,7 +1067,13 @@ function main() {
                         if(device.hkr.holidayactive){
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + device.hkr.holidayactive);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: device.hkr.holidayactive, ack: true});
-                        } 
+                        }
+                        if(device.hkr.windowopenactiv){
+                            var window;
+                            if (device.hkr.windowopenactiv == 0){ window = false} else { window = true } 
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + window);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: window, ack: true});
+                        }
                     }
                     else{
                         adapter.log.debug('nix vorbereitet für diese Art von device update');

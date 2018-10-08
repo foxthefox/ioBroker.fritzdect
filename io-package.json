@@ -1,8 +1,19 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.1.2",
+        "version":              "0.1.3",
 	"news": {
+	 "0.1.3": {
+	    "en": "added windowopenactiv to thermostat",
+	    "de": "windowopenactiv zum Thermostat hinzugefügt",
+	    "ru": "добавлен оконный вентиль к термостату",
+	    "pt": "adicionou windowopenactiv ao termostato",
+	    "nl": "windowopenactiv toegevoegd aan thermostaat",
+	    "fr": "ajouté windowopenactiv au thermostat",
+	    "it": "aggiunto windowopenactiv al termostato",
+	    "es": "ventana añadidaopenactiv al termostato",
+	    "pl": "dodano windowopenactiv do termostatu"
+	  },
 	 "0.1.2": {
 	    "en": "object type correction, switch for non-native API calls",
 	    "de": "Objekttypkorrektur, Wechsel für nicht-native API-Aufrufe",

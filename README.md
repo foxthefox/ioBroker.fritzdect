@@ -88,6 +88,11 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |Contact.state|boolean|-|true/false -> ON/OFF|
 
+### button
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|Button.lastclick|number|-|timestamp|
+
 ### guest WLAN
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
@@ -104,6 +109,9 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * enhanced automated testing
 
 ## Changelog
+### 0.1.3
+* button added, only send the timestamp of last click
+
 ### 0.1.3
 * windowopenactiv added to thermostat
 

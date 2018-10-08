@@ -2,6 +2,23 @@
     "devicelist": {
         "version": "1",
         "device": [
+            {   "identifier":"119XXXXXXX-2",
+                "id":"2000",
+                "functionbitmask":"8200",
+                "fwversion":"0.0",
+                "manufacturer":"0x0feb",
+                "productname":"HAN-FUN",
+                "present":"1",
+                "name":"DectTaster_F1",
+                "etsiunitinfo":{
+                    "etsideviceid":"406",
+                    "unittype":"273",
+                    "interfaces":"772"
+                },
+                "button":{
+                    "lastpressedtimestamp":"1538426492"
+                }
+            },
             {
                 "identifier": "11224 0205290-1",
                 "id": "2001",

@@ -481,6 +481,23 @@ function main() {
             }
         });
     }
+    
+    function createButton(typ,newId){
+        adapter.log.debug('create Button object');
+        adapter.setObject(typ + newId +'.lastclick', {
+            type: 'state',
+            common: {
+                "name":  "Button Clicktime",
+                "type": "number",
+                "read": true,
+                "write": false,
+                "role": "date",
+                "desc":  "Button Clicktime"
+            },
+            native: {
+            }
+        });
+    }
 
     function createTemperature(typ,newId){
         adapter.log.debug('create Temperature object');
@@ -892,6 +909,14 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createAlert(typ,device.identifier);
                     }
+                    else if((device.functionbitmask & 8) == 8){ //button
+                        typ = "Button_";
+                        role = "sensor";
+                        adapter.log.info('setting up Button object '+ device.name);                    
+                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                        createProductName(typ,device.identifier,device.productname);
+                        createButton(typ,device.identifier);
+                    }
                     else {
                         adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
                     }                                
@@ -976,6 +1001,18 @@ function main() {
                         
                         adapter.log.debug('Contact_'+ device.identifier + ' : ' +'present : ' + device.present);
                         adapter.setState('Contact_'+ device.identifier +'.present', {val: device.present, ack: true});
+                        
+                    }
+                    else if((device.functionbitmask & 8) == 8){ //button
+                        adapter.log.debug('updating Button '+ device.name); 
+                        adapter.log.debug('Button_'+ device.identifier + ' : '  +'name : ' + device.name);
+                        adapter.setState('Button_'+ device.identifier +'.name', {val: device.name, ack: true});
+                        
+                        adapter.log.debug('Button_'+ device.identifier + ' : '  +'lastclick: ' + device.button.lastpressedtimestamp);
+                        adapter.setState('Button_'+ device.identifier +'.lastclick', {val: device.button.lastpressedtimestamp, ack: true});
+                        
+                        adapter.log.debug('Button_'+ device.identifier + ' : ' +'present : ' + device.present);
+                        adapter.setState('Button_'+ device.identifier +'.present', {val: device.present, ack: true});
                         
                     }
                     else if((device.functionbitmask & 512) == 512){ //switch

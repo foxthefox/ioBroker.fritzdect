@@ -26,6 +26,22 @@ var adapter = utils.Adapter('fritzdect');
 6: Der Heizkörperregler passt sich nun an den Hub des Heizungsventils an.
 */
 
+/* HANFUN unittypes
+273 = SIMPLE_BUTTON
+512 = SIMPLE_DETECTOR
+513 = DOOR_OPEN_CLOSE_DETECTOR
+514 = WINDOW_OPEN_CLOSE_DETECTOR
+515 = MOTION_DETECTOR
+518 = FLOOD_DETECTOR
+519 = GLAS_BREAK_DETECTOR
+520 = VIBRATION_DETECTOR
+*/
+
+/* HANFUN interfaces
+277 = KEEP_ALIVE
+256 = ALERT
+772 = SIMPLE_BUTTON
+*/
 
 function errorHandler(error) {
     if (error == "0000000000000000"){

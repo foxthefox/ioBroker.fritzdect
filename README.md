@@ -76,6 +76,7 @@ objects in *italic* are not part of all fritz.box configurations
 |*COMET.battery*|value|-|actual capacity in %|
 |*COMET.summeractive*|boolean|-|summer program status|
 |*COMET.holidayactive*|boolean|-|holiday program status|
+|*COMET.windowopenactiv*|boolean|-|status of window open detection|
 
 ### repeater e.g. DECT100
 |Object|Value|settable|Description|
@@ -103,6 +104,9 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * enhanced automated testing
 
 ## Changelog
+### 0.1.3
+* windowopenactiv added to thermostat
+
 ### 0.1.2
 * errorcode string->number
 * batterylow -> boolean

@@ -857,6 +857,7 @@ function main() {
             if (devices.length){
                 adapter.log.info('create Devices ' + devices.length);
                 devices.forEach(function (device){
+                    adapter.log.debug('trying on : ' + JSON.stringify(device));
                     if((device.functionbitmask & 1024) == 1024){ //repeater
                         typ = "DECT100_";
                         role = "thermo";
@@ -917,8 +918,15 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createButton(typ,device.identifier);
                     }
+                    else if((device.functionbitmask & 1) == 1){ //HAN-FUN
+                        typ = "HAN-FUN_";
+                        role = "sensor";
+                        adapter.log.info('setting up HAN-FUN object '+ device.name);                    
+                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                        createProductName(typ,device.identifier,device.productname);
+                    }
                     else {
-                        adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
+                        adapter.log.debug('nix vorbereitet für diese Art von Gerät');
                     }                                
                 });
             }

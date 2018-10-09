@@ -109,7 +109,7 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * enhanced automated testing
 
 ## Changelog
-### 0.1.3
+### 0.1.4
 * button added, only send the timestamp of last click
 
 ### 0.1.3

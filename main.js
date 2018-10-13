@@ -918,6 +918,7 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createButton(typ,device.identifier);
                     }
+                    /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen
                     else if((device.functionbitmask & 1) == 1){ //HAN-FUN
                         typ = "HAN-FUN_";
                         role = "sensor";
@@ -925,6 +926,7 @@ function main() {
                         createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         createProductName(typ,device.identifier,device.productname);
                     }
+                    */
                     else {
                         adapter.log.debug('nix vorbereitet für diese Art von Gerät');
                     }                                

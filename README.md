@@ -22,11 +22,16 @@ npm install https://github.com/foxthefox/ioBroker.fritzdect/tarball/master --pro
 ```
 ## Setup
 
-IP-address and password of Fritzbox should be defined in io-package.json or via admin page, before the first start of the instance.
+IP-address and password of Fritzbox should be defined via admin page, before the first start of the instance.
+The IP-address must be written with leading 'http://'
 
-The devices are detected automatically during startup of fritzdect instance.
+The devices are detected automatically during startup of fritzdect instance. If devices are added to the fritzbox during a running adapter instance, then please restart the adapter for object creation.
 
-the widget requires that also vis-metro and vis-jqui-mfd are installed
+Several permissions have to be set in the fritzbox in order to interact with the adapter!
+
+A german explanatory doc is available here: [install_de] (./doc/de/install)
+
+The widget requires that also vis-metro and vis-jqui-mfd are installed
 
 ## ioBroker objects
 

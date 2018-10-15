@@ -29,7 +29,7 @@ The devices are detected automatically during startup of fritzdect instance. If 
 
 Several permissions have to be set in the fritzbox in order to interact with the adapter!
 
-A german explanatory doc is available here: [install_de](../../docs/de/install)
+A german explanatory doc is available here: [install_de](./docs/de/install.md)
 
 The widget requires that also vis-metro and vis-jqui-mfd are installed
 

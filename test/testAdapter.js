@@ -149,7 +149,6 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 
             //config.native.dbtype   = 'sqlite';
             
-            {
         config.native = {"fritz_ip": "http://localhost:8080", "fritz_user": "admin", "fritz_pw": "password", "fritz_interval": "300", "GuestWLANactive": true, "NonNativeApi": true };
 
             setup.setAdapterConfig(config.common, config.native);

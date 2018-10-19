@@ -2,6 +2,8 @@
 /*jslint node: true */
 var expect = require('chai').expect;
 var setup  = require(__dirname + '/lib/setup');
+var http = require('http');
+var fs = require('fs');
 
 var objects = null;
 var states  = null;
@@ -96,7 +98,7 @@ var challenge2 = '3148720a';
 var password = 'password';
 var challengeResponse = challenge +'-'+require('crypto').createHash('md5').update(Buffer(challenge+'-'+password, 'UTF-16LE')).digest('hex');
 var sid = 'e3e154790a412aec';
-
+var content = fs.readFileSync('../test_api_response.xml');
 
 function handleHttpRequest(request, response) {
     console.log('HTTP-Server: Request: ' + request.method + ' ' + request.url);

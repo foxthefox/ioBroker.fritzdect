@@ -367,7 +367,7 @@ function main() {
 
     function createBasic(typ,newId,name,role,id,fw,manuf){
         adapter.log.debug('create Basic objects ');
-        adapter.setObject(typ + newId, {
+        adapter.setObjectNotExists(typ + newId, {
             type: 'channel',
             common: {
                 name: name,
@@ -377,7 +377,7 @@ function main() {
                 "aid": newId
             }
         });
-        adapter.setObject(typ + newId +'.id', {
+        adapter.setObjectNotExists(typ + newId +'.id', {
             type: 'state',
             common: {
                 "name": "ID",
@@ -391,7 +391,7 @@ function main() {
             }
         });
         adapter.setState(typ + newId +'.id', {val: id, ack: true});
-        adapter.setObject(typ + newId +'.name', {
+        adapter.setObjectNotExists(typ + newId +'.name', {
             type: 'state',
             common: {
                 "name": "Name",
@@ -404,7 +404,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.present', {
+        adapter.setObjectNotExists(typ + newId +'.present', {
             type: 'state',
             common: {
                 "name":  "Switch present",
@@ -417,7 +417,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.fwversion', {
+        adapter.setObjectNotExists(typ + newId +'.fwversion', {
             type: 'state',
             common: {
                 "name":  "FW version",
@@ -431,7 +431,7 @@ function main() {
             }
         });
         adapter.setState(typ + newId +'.fwversion',{val: fw, ack: true});
-        adapter.setObject(typ + newId +'.manufacturer', {
+        adapter.setObjectNotExists(typ + newId +'.manufacturer', {
             type: 'state',
             common: {
                 "name":  "Manufacturer",
@@ -449,7 +449,7 @@ function main() {
 
     function createProductName(typ,newId,prod){
         adapter.log.debug('create Prodname object');
-        adapter.setObject(typ + newId +'.prodname', {
+        adapter.setObjectNotExists(typ + newId +'.prodname', {
             type: 'state',
             common: {
                 "name":  "Product Name",
@@ -467,7 +467,7 @@ function main() {
 
     function createAlert(typ,newId){
         adapter.log.debug('create Alert object');
-        adapter.setObject(typ + newId +'.state', {
+        adapter.setObjectNotExists(typ + newId +'.state', {
             type: 'state',
             common: {
                 "name":  "Contact OFF/ON",
@@ -484,7 +484,7 @@ function main() {
     
     function createButton(typ,newId){
         adapter.log.debug('create Button object');
-        adapter.setObject(typ + newId +'.lastclick', {
+        adapter.setObjectNotExists(typ + newId +'.lastclick', {
             type: 'state',
             common: {
                 "name":  "Button Clicktime",
@@ -501,7 +501,7 @@ function main() {
 
     function createTemperature(typ,newId){
         adapter.log.debug('create Temperature object');
-        adapter.setObject(typ + newId +'.temp', {
+        adapter.setObjectNotExists(typ + newId +'.temp', {
             type: 'state',
             common: {
                 "name":  "actual Temp",
@@ -518,7 +518,7 @@ function main() {
     }
     function createSwitch(typ,newId){
         adapter.log.debug('create Switch objects');
-        adapter.setObject(typ + newId +'.state', {
+        adapter.setObjectNotExists(typ + newId +'.state', {
             type: 'state',
             common: {
                 "name":  "Switch on/off",
@@ -531,7 +531,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.mode', {
+        adapter.setObjectNotExists(typ + newId +'.mode', {
             type: 'state',
             common: {
                 "name":  "Switch mode", //auto or man
@@ -544,7 +544,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.lock', {
+        adapter.setObjectNotExists(typ + newId +'.lock', {
             type: 'state',
             common: {
                 "name":  "Switch UI/API lock", //switch lock 0=unlocked, 1=locked
@@ -559,7 +559,7 @@ function main() {
     }
     function createDeviceLock(typ,newId){
         adapter.log.debug('create devicelock object');
-        adapter.setObject(typ + newId +'.devicelock', {
+        adapter.setObjectNotExists(typ + newId +'.devicelock', {
             type: 'state',
             common: {
                 "name":  "Switch Button lock", //switch lock 0=unlocked, 1=locked
@@ -574,7 +574,7 @@ function main() {
     }
     function createEnergy(typ,newId){
         adapter.log.debug('create Energy objects ');
-        adapter.setObject(typ + newId +'.power', {
+        adapter.setObjectNotExists(typ + newId +'.power', {
             type: 'state',
             common: {
                 "name":  "Switch act power",
@@ -590,7 +590,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.energy', {
+        adapter.setObjectNotExists(typ + newId +'.energy', {
             type: 'state',
             common: {
                 "name":  "Switch total energy",
@@ -609,7 +609,7 @@ function main() {
 
     function createVoltage(typ,newId){
         adapter.log.debug('create Voltage object');
-        adapter.setObject(typ + newId +'.voltage', {
+        adapter.setObjectNotExists(typ + newId +'.voltage', {
             type: 'state',
             common: {
                 "name":  "Switch act voltage",
@@ -628,7 +628,7 @@ function main() {
     }    
     function createThermostat(typ,newId){
         adapter.log.debug('create Thermostat objects');
-        adapter.setObject(typ + newId +'.mode', {
+        adapter.setObjectNotExists(typ + newId +'.mode', {
             type:'state',
             common:{
                 "name":  "Thermostat operation mode (0=auto, 1=closed, 2=open)",
@@ -643,7 +643,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.targettemp', {
+        adapter.setObjectNotExists(typ + newId +'.targettemp', {
             type: 'state',
             common: {
                 "name":  "Target Temp",
@@ -657,7 +657,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.lasttarget', {
+        adapter.setObjectNotExists(typ + newId +'.lasttarget', {
             type: 'state',
             common: {
                 "name":  "last setting of target temp",
@@ -671,7 +671,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.comfytemp', {
+        adapter.setObjectNotExists(typ + newId +'.comfytemp', {
             type: 'state',
             common: {
                 "name":  "Comfort Temp",
@@ -685,7 +685,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.nighttemp', {
+        adapter.setObjectNotExists(typ + newId +'.nighttemp', {
             type: 'state',
             common: {
                 "name":  "Night Temp",
@@ -699,7 +699,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.lock', {
+        adapter.setObjectNotExists(typ + newId +'.lock', {
             type: 'state',
             common: {
                 "name":  "Thermostat UI/API lock", //thermostat lock 0=unlocked, 1=locked
@@ -711,7 +711,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.devicelock', {
+        adapter.setObjectNotExists(typ + newId +'.devicelock', {
             type: 'state',
             common: {
                 "name":  "Thermostat Button lock",
@@ -723,7 +723,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.batterylow', {
+        adapter.setObjectNotExists(typ + newId +'.batterylow', {
             type: 'state',
             common: {
                 "name":  "low Battery",
@@ -735,7 +735,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.errorcode', {
+        adapter.setObjectNotExists(typ + newId +'.errorcode', {
             type: 'state',
             common: {
                 "name":  "errorcode",
@@ -751,7 +751,7 @@ function main() {
     
     function createBattery(typ,newId){
         adapter.log.debug('create Battery object');
-        adapter.setObject(typ + newId +'.battery', {
+        adapter.setObjectNotExists(typ + newId +'.battery', {
             type: 'state',
             common: {
                 "name":  "Battery", 
@@ -768,7 +768,7 @@ function main() {
     } 
     function createThermostatProg(typ,newId){
         adapter.log.debug('create Thermostat Prog objects');
-        adapter.setObject(typ + newId +'.summeractive', {
+        adapter.setObjectNotExists(typ + newId +'.summeractive', {
             type: 'state',
             common: {
                 "name":  "Product Name",
@@ -781,7 +781,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObject(typ + newId +'.holidayactive', {
+        adapter.setObjectNotExists(typ + newId +'.holidayactive', {
             type: 'state',
             common: {
                 "name":  "Product Name",
@@ -797,7 +797,7 @@ function main() {
     }
     function createThermostatWindow(typ,newId){
         adapter.log.debug('create Thermostat Window object');
-        adapter.setObject(typ + newId +'.windowopenactiv', {
+        adapter.setObjectNotExists(typ + newId +'.windowopenactiv', {
             type: 'state',
             common: {
                 "name":  "Window open",
@@ -813,7 +813,7 @@ function main() {
     } 
     function createGroupInfo(typ,newId,mid,member){
         adapter.log.debug('create Group objects');
-        adapter.setObject(typ + newId +'.masterdeviceid', {
+        adapter.setObjectNotExists(typ + newId +'.masterdeviceid', {
             type: 'state',
             common: {
                 "name":  "masterdeviceid",
@@ -827,7 +827,7 @@ function main() {
             }
         });
         adapter.setState(typ + newId +'.masterdeviceid',{val: mid, ack: true});
-        adapter.setObject(typ + newId +'.members', {
+        adapter.setObjectNotExists(typ + newId +'.members', {
             type: 'state',
             common: {
                 "name":  "members",

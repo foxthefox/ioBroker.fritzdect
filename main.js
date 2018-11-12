@@ -257,6 +257,26 @@ adapter.on('stateChange', function (id, state) {
                 }
             }           
         }
+        else if (idx.startsWith("template_")) { //must be fritzbox template
+            id = idx.replace(/template_/g,''); //template
+            adapter.log.info('Template ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+            if (dp == 'toggle') {
+                /**
+                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                    fritz.setSwitchOff(id).then(function (sid) {
+                        adapter.log.debug('Turned group ' + id + ' off');
+                    })
+                    .catch(errorHandler);
+                }
+                */
+                if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                    fritz.applyTemplate(id).then(function (sid) {
+                        adapter.log.debug('cmd Toggle to template ' + id + ' on');
+                    })
+                    .catch(errorHandler);
+                }
+            }           
+        }
         else { //must be GuestWLAN
             adapter.log.info('GuestWLAN identified for command (' + dp + ') : ' + state.val);
             if (dp == 'state') {
@@ -464,7 +484,60 @@ function main() {
         });
         adapter.setState(typ + newId +'.prodname', {val: prod, ack: true});
     }
-
+    
+    function createTemplate(typ,newId,name,role,id){
+        adapter.log.debug('create Template objects ');
+        adapter.setObjectNotExists(typ + newId, {
+            type: 'channel',
+            common: {
+                name: name,
+                role: role
+            },
+            native: {
+                "aid": newId
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.id', {
+            type: 'state',
+            common: {
+                "name": "ID",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "ID"
+            },
+            native: {
+            }
+        });
+        adapter.setState(typ + newId +'.id', {val: id, ack: true});
+        adapter.setObjectNotExists(typ + newId +'.name', {
+            type: 'state',
+            common: {
+                "name": "Name",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "text",
+                "desc":  "Name"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.toggle', {
+            type: 'state',
+            common: {
+                "name": "Toggle template",
+                "type": "boolean",
+                "read": true,
+                "write": true,
+                "role": "switch",
+                "desc": "Toggle template"
+            },
+            native: {
+            }
+        });
+    }
     function createAlert(typ,newId){
         adapter.log.debug('create Alert object');
         adapter.setObjectNotExists(typ + newId +'.state', {
@@ -977,6 +1050,34 @@ function main() {
         .catch(errorHandler);
     }
 
+    function createTemplates(){
+        fritz.getTemplateListInfos().then(function(templatelistinfos) {
+            var typ = "";
+            var role = "";
+            var templates = parser.xml2json(templatelistinfos);
+            templates = [].concat((templates.templatelist || {}).template || []).map(function(template) {
+              return template;
+            });
+            adapter.log.debug("templates\n");
+            adapter.log.debug(JSON.stringify(templates));
+            if (templates.length){
+                adapter.log.info('create Templates ' + templates.length);
+                templates.forEach(function (template){
+                    if ((template.functionbitmask & 320) == 320){ //heating template
+                        typ = "template_";
+                        role = "switch";
+                        adapter.log.info('setting up Template '+ template.name);  
+                        createTemplate(typ,template.identifier,template.name,role,template.id);
+                    }
+                    else {
+                        adapter.log.debug('nix vorbereitet für diese Art von Template' + template.functionbitmask);
+                    }
+                });
+            }
+        })
+        .catch(errorHandler);
+    }
+    
     function updateDevices(){       
         fritz.getDeviceListInfos().then(function(devicelistinfos) {
             var devices = parser.xml2json(devicelistinfos);
@@ -1294,6 +1395,7 @@ function main() {
     logVersion();
     createDevices();
     createGroups();
+    // createTemplates();
     pollFritzData();
 
     // in this template all states changes inside the adapters namespace are subscribed

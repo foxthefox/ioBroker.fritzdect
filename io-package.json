@@ -1,8 +1,19 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.1.4",
+        "version":              "0.1.5",
 	"news": {
+	  "0.1.5": {
+	    "en": "activation of templates added",
+	    "de": "Aktivierung von Vorlagen hinzugefügt",
+	    "ru": "активация добавленных шаблонов",
+	    "pt": "ativação de modelos adicionados",
+	    "nl": "activering van toegevoegde sjablonen",
+	    "fr": "activation des modèles ajoutés",
+	    "it": "attivazione di modelli aggiunti",
+	    "es": "activación de plantillas añadidas",
+	    "pl": "aktywacja dodanych szablonów"
+	  },
 	"0.1.4": {
 	    "en": "button added",
 	    "de": "Taster hinzugefügt",

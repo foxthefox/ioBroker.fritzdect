@@ -54,6 +54,11 @@ objects in *italic* are not part of all fritz.box configurations
 |group.masterdeviceid|text|-|internal id of group|
 |group.members|text|-|member id's of group|
 
+### templates
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|template.toggle|boolean|-|toggle switch for template activation|
+
 ### switch e.g DECT200/DECT210
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
@@ -111,11 +116,15 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * universal object names
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 * widget for thermostat
-* enhanced automated testing
 
 ## Changelog
+### 0.1.5
+* reading and activation of templates added
+* fritzapi ??
+
 ### 0.1.4
 * button added, only send the timestamp of last click
+* fritzapi 0.10.4
 
 ### 0.1.3
 * windowopenactiv added to thermostat

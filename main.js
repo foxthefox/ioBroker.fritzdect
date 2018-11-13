@@ -263,8 +263,8 @@ adapter.on('stateChange', function (id, state) {
             if (dp == 'toggle') {
                 /**
                 if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.setSwitchOff(id).then(function (sid) {
-                        adapter.log.debug('Turned group ' + id + ' off');
+                    fritz.applyTemplate(id).then(function (sid) {
+                        adapter.log.debug('cmd Toggle to template ' + id + ' off');
                     })
                     .catch(errorHandler);
                 }
@@ -531,7 +531,7 @@ function main() {
                 "type": "boolean",
                 "read": true,
                 "write": true,
-                "role": "switch",
+                "role": "button",
                 "desc": "Toggle template"
             },
             native: {

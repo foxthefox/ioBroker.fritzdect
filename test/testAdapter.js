@@ -211,17 +211,6 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         });
     });
     */
-    it('Test ' + adapterShortName + ' adapter: Check values', function (done) {
-        console.log('START CHECK VALUES');
-        this.timeout(90000);
-        setTimeout(function() {
-            checkValueOfState('fritzdect.0.DECT200_087610006161.energy', 104560, function() {
-                checkValueOfState('fritzdect.0.DECT200_087610006161.voltage', 224645, function() {
-                    done();
-                });
-            });
-        }, 70000);
-    });
     it('Test ' + adapterShortName + ' adapter: Check value of switch energy', function (done) {
         this.timeout(30000);
         setTimeout(function() {
@@ -252,7 +241,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                 else {
                     console.log('check fritzdect.0.Comet_117951022222.battery ... ' + state.val);
                     expect(state.val).to.exist;
-                    expect(state.val).to.be.equal(80);
+                    expect(state.val).to.be.equal('80');
                     done();
                 }
             });

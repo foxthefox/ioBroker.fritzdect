@@ -198,30 +198,30 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     You can also use "sendTo" method to send messages to the started adapter
 */
    // anfang von eigenen Tests
-    /*
+    
     it('Test ' + adapterShortName + ' adapter: Check values', function (done) {
         console.log('START CHECK VALUES');
         this.timeout(90000);
         checkValueOfState('fritzdect.0.DECT200_087610006161.energy', 104560, function() {
             setTimeout(function() {
-                checkValueOfState('musiccast.0.DECT200_087610006161.energy', 104560, function() {
+                checkValueOfState('fritzdect.0.DECT200_087610006161.energy', 104560, function() {
                     done();
                 });
             }, 70000);
         });
     });
-    */
-    it('Test ' + adapterShortName + ' adapter: Check number of switch energy', function (done) {
+    
+    it('Test ' + adapterShortName + ' adapter: Check value of switch energy', function (done) {
         this.timeout(30000);
         setTimeout(function() {
-            states.getState('musiccast.0.DECT200_087610006161.energy', function (err, state) {
+            states.getState('fritzdect.0.DECT200_087610006161.energy', function (err, state) {
                 if (err) console.error(err);
                 expect(state).to.exist;
                 if (!state) {
-                    console.error('state "musiccast.0.DECT200_087610006161.energy" not set');
+                    console.error('state "fritzdect.0.DECT200_087610006161.energy" not set');
                 }
                 else {
-                    console.log('check musiccast.0.DECT200_087610006161.energy ... ' + state.val);
+                    console.log('check fritzdect.0.DECT200_087610006161.energy ... ' + state.val);
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal(104560);
                     done();

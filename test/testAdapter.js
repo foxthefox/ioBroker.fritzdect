@@ -223,13 +223,13 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                 else {
                     console.log('check fritzdect.0.DECT200_087610006161.energy ... ' + state.val);
                     expect(state.val).to.exist;
-                    expect(state.val).to.be.equal(104560);
+                    expect(state.val).to.be.equal('104560');
                     done();
                 }
             });
         }, 17000);
     });
-    it('Test ' + adapterShortName + ' adapter: Check number of products found', function (done) {
+    it('Test ' + adapterShortName + ' adapter: Check value of Comet battery', function (done) {
         this.timeout(30000);
         setTimeout(function() {
             states.getState('fritzdect.0.Comet_117951022222.battery', function (err, state) {

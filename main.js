@@ -1395,7 +1395,7 @@ function main() {
     logVersion();
     createDevices();
     createGroups();
-    // createTemplates();
+    createTemplates();
     pollFritzData();
 
     // in this template all states changes inside the adapters namespace are subscribed

@@ -198,7 +198,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     You can also use "sendTo" method to send messages to the started adapter
 */
    // anfang von eigenen Tests
-    
+    /*
     it('Test ' + adapterShortName + ' adapter: Check values', function (done) {
         console.log('START CHECK VALUES');
         this.timeout(90000);
@@ -210,7 +210,18 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             }, 70000);
         });
     });
-    
+    */
+    it('Test ' + adapterShortName + ' adapter: Check values', function (done) {
+        console.log('START CHECK VALUES');
+        this.timeout(90000);
+        setTimeout(function() {
+            checkValueOfState('fritzdect.0.DECT200_087610006161.energy', 104560, function() {
+                checkValueOfState('fritzdect.0.DECT200_087610006161.voltage', 224645, function() {
+                    done();
+                });
+            });
+        }, 70000);
+    });
     it('Test ' + adapterShortName + ' adapter: Check value of switch energy', function (done) {
         this.timeout(30000);
         setTimeout(function() {
@@ -224,6 +235,24 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.log('check fritzdect.0.DECT200_087610006161.energy ... ' + state.val);
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal(104560);
+                    done();
+                }
+            });
+        }, 17000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check number of products found', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.Comet_117951022222.battery', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.Comet_117951022222.battery" not set');
+                }
+                else {
+                    console.log('check fritzdect.0.Comet_117951022222.battery ... ' + state.val);
+                    expect(state.val).to.exist;
+                    expect(state.val).to.be.equal(80);
                     done();
                 }
             });

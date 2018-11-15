@@ -24,7 +24,7 @@
     "url": "https://github.com/foxthefox/ioBroker.fritzdect"
   },
   "dependencies": {
-    "fritzapi": "^0.10.4",
+    "fritzapi": "andig/fritzapi#master",
     "xml2json-light": "^1.0.4"
   },
   "devDependencies": {

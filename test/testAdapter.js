@@ -198,6 +198,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     You can also use "sendTo" method to send messages to the started adapter
 */
    // anfang von eigenen Tests
+    /*
     it('Test ' + adapterShortName + ' adapter: Check values', function (done) {
         console.log('START CHECK VALUES');
         this.timeout(90000);
@@ -209,7 +210,25 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             }, 70000);
         });
     });
-
+    */
+    it('Test ' + adapterShortName + ' adapter: Check number of switch energy', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('musiccast.0.DECT200_087610006161.energy', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "musiccast.0.DECT200_087610006161.energy" not set');
+                }
+                else {
+                    console.log('check musiccast.0.DECT200_087610006161.energy ... ' + state.val);
+                    expect(state.val).to.exist;
+                    expect(state.val).to.be.equal(104560);
+                    done();
+                }
+            });
+        }, 17000);
+    });
     /*
     it('Test ' + adapterShortName + ' adapter: Set values', function (done) {
         console.log('START SET VALUES');

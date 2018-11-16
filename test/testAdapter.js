@@ -224,7 +224,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.log('fritzdect.0.DECT200_087610006161.voltage ... ' + state.val);
                 }
                 expect(state.val).to.exist;
-                expect(state.val).to.be.equal('224645');
+                expect(state.val).to.be.equal('224.645');
                     states.getState('fritzdect.0.DECT200_087610006161.energy', function (err, state) {
                         if (err) console.error(err);
                         expect(state).to.exist;

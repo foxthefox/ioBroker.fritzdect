@@ -145,7 +145,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             var config = setup.getAdapterConfig();
             // enable adapter
             config.common.enabled  = true;
-            config.common.loglevel = 'debug';
+            config.common.loglevel = 'info';
 
             //config.native.dbtype   = 'sqlite';
             
@@ -207,29 +207,41 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                 checkValueOfState('fritzdect.0.DECT200_087610006161.energy', 104560, function() {
                     done();
                 });
-            }, 70000);
+            }, 10000);
         });
     });
     */
-    it('Test ' + adapterShortName + ' adapter: Check value of switch energy', function (done) {
+    it('Test ' + adapterShortName + ' adapter: Check values of switch', function (done) {
         this.timeout(30000);
         setTimeout(function() {
-            states.getState('fritzdect.0.DECT200_087610006161.energy', function (err, state) {
+            states.getState('fritzdect.0.DECT200_087610006161.voltage', function (err, state) {
                 if (err) console.error(err);
                 expect(state).to.exist;
                 if (!state) {
-                    console.error('state "fritzdect.0.DECT200_087610006161.energy" not set');
+                    console.error('state "fritzdect.0.DECT200_087610006161.voltage" not set');
                 }
                 else {
-                    console.log('check fritzdect.0.DECT200_087610006161.energy ... ' + state.val);
-                    expect(state.val).to.exist;
-                    expect(state.val).to.be.equal('104560');
-                    done();
+                    console.log('fritzdect.0.DECT200_087610006161.voltage ... ' + state.val);
                 }
-            });
-        }, 17000);
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('224645');
+                    states.getState('fritzdect.0.DECT200_087610006161.energy', function (err, state) {
+                        if (err) console.error(err);
+                        expect(state).to.exist;
+                        if (!state) {
+                            console.error('state "fritzdect.0.DECT200_087610006161.energy" not set');
+                        }
+                        else {
+                            console.log('check fritzdect.0.DECT200_087610006161.energy ... ' + state.val);
+                            expect(state.val).to.exist;
+                            expect(state.val).to.be.equal('104560');
+                            done();
+                        }
+                    });
+              });
+        }, 1000);
     });
-    it('Test ' + adapterShortName + ' adapter: Check value of Comet battery', function (done) {
+    it('Test ' + adapterShortName + ' adapter: Check values of Comet', function (done) {
         this.timeout(30000);
         setTimeout(function() {
             states.getState('fritzdect.0.Comet_117951022222.battery', function (err, state) {
@@ -245,7 +257,25 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     done();
                 }
             });
-        }, 17000);
+        }, 1000);
+    });
+        it('Test ' + adapterShortName + ' adapter: Check values of Contact', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.Contact_112240205290-1.state', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.Contact_112240205290-1.state" not set');
+                }
+                else {
+                    console.log('check fritzdect.0.Contact_112240205290-1.state ... ' + state.val);
+                    expect(state.val).to.exist;
+                    expect(state.val).to.be.equal('0');
+                    done();
+                }
+            });
+        }, 1000);
     });
     /*
     it('Test ' + adapterShortName + ' adapter: Set values', function (done) {

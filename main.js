@@ -498,7 +498,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObjectNotExists(typ + newId +'template.lasttemplate', {
+        adapter.setObjectNotExists('template.lasttemplate', {
             type: 'state',
             common: {
                 "name": "template set",

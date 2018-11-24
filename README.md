@@ -59,7 +59,8 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |template.id|text|-|internal id of template|
 |template.name|text|-|name of template|
-|template.toggle|boolean|-|toggle switch for template activation|
+|template.toggle|boolean|x|toggle switch for template activation|
+|template.lasttemplate|text|-|last confirmed template|
 
 ### switch e.g DECT200/DECT210
 |Object|Value|settable|Description|

@@ -215,6 +215,7 @@ adapter.on('stateChange', function (id, state) {
                 } else if (state.val === 2) {
                     fritz.setTempTarget(id, 'on').then(function (sid) {
                         adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                        
                     })
                     .catch(errorHandler);
    
@@ -272,6 +273,8 @@ adapter.on('stateChange', function (id, state) {
                 if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
                     fritz.applyTemplate(id).then(function (sid) {
                         adapter.log.debug('cmd Toggle to template ' + id + ' on');
+                        adapter.log.debug('response ' + sid);
+                        adapter.setState('template.lasttemplate',{val: sid, ack: true}); //when successfull toggle, the API returns the id of the template
                     })
                     .catch(errorHandler);
                 }
@@ -484,7 +487,31 @@ function main() {
         });
         adapter.setState(typ + newId +'.prodname', {val: prod, ack: true});
     }
-    
+    function createTemplateResponse(){
+        adapter.log.debug('create template.lasttemplate for response ');
+        adapter.setObjectNotExists('template', {
+            type: 'channel',
+            common: {
+                name: 'template response',
+                role: 'switch'
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'template.lasttemplate', {
+            type: 'state',
+            common: {
+                "name": "template set",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "template set",
+                "desc":  
+            },
+            native: {
+            }
+        });
+    } 
     function createTemplate(typ,newId,name,role,id){
         adapter.log.debug('create Template objects ');
         adapter.setObjectNotExists(typ + newId, {
@@ -524,7 +551,6 @@ function main() {
             native: {
             }
         });
-        adapter.setState(typ + newId +'.name', {val: name, ack: true});
         adapter.setObjectNotExists(typ + newId +'.toggle', {
             type: 'state',
             common: {
@@ -1063,6 +1089,7 @@ function main() {
             adapter.log.debug(JSON.stringify(templates));
             if (templates.length){
                 adapter.log.info('create Templates ' + templates.length);
+                createTemplateResponse();
                 templates.forEach(function (template){
                     if ((template.functionbitmask & 320) == 320){ //heating template
                         typ = "template_";

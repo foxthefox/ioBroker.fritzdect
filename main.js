@@ -551,6 +551,7 @@ function main() {
             native: {
             }
         });
+        adapter.setState(typ + newId +'.name', {val: name, ack: true});
         adapter.setObjectNotExists(typ + newId +'.toggle', {
             type: 'state',
             common: {

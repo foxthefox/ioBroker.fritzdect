@@ -123,6 +123,7 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 ## Changelog
 ### 0.1.5
 * reading and activation of templates added
+* correction of actual temperature in DECT200 and COMET (now offset recognized)
 * fritzapi ??
 
 ### 0.1.4

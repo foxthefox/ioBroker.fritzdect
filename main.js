@@ -505,8 +505,8 @@ function main() {
                 "type": "string",
                 "read": true,
                 "write": false,
-                "role": "template set",
-                "desc":  
+                "role": "text",
+                "desc": "template set"
             },
             native: {
             }

@@ -291,18 +291,30 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     it('Test ' + adapterShortName + ' adapter: Check values of Comet', function (done) {
         this.timeout(30000);
         setTimeout(function() {
-            states.getState('fritzdect.0.Comet_117951022222.battery', function (err, state) {
+            states.getState('fritzdect.0.Comet_117951022222.temp', function (err, state) {
                 if (err) console.error(err);
                 expect(state).to.exist;
                 if (!state) {
-                    console.error('state "fritzdect.0.Comet_117951022222.battery" not set');
+                    console.error('state "fritzdect.0.Comet_117951022222.temp" not set');
                 }
                 else {
-                    console.log('check fritzdect.0.Comet_117951022222.battery ... ' + state.val);
-                    expect(state.val).to.exist;
-                    expect(state.val).to.be.equal('80');
-                    done();
+                    console.log('fritzdect.0.Comet_117951022222.temp ... ' + state.val);
                 }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal(18);
+                states.getState('fritzdect.0.Comet_117951022222.battery', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.Comet_117951022222.battery" not set');
+                    }
+                    else {
+                        console.log('check fritzdect.0.Comet_117951022222.battery ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('80');
+                        done();
+                    }
+                });
             });
         }, 1000);
     });

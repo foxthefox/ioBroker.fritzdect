@@ -402,17 +402,17 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         }
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('0');
-                        states.getState('fritzdect.0.DECT200_34:31:C1:AB:68:53.voltage', function (err, state) {
+                        states.getState('fritzdect.0.DECT200_34:31:C1:AB:68:53.present', function (err, state) {
                             if (err) console.error(err);
                             expect(state).to.exist;
                             if (!state) {
-                                console.error('state "fritzdect.0.DECT200_34:31:C1:AB:68:53.voltage" not set');
+                                console.error('state "fritzdect.0.DECT200_34:31:C1:AB:68:53.present not set');
                             }
                             else {
-                                console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.voltage ... ' + state.val);
+                                console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.present ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal(224.645);
+                            expect(state.val).to.be.equal('1');
                             states.getState('fritzdect.0.DECT200_34:31:C1:AB:68:53.power', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;
@@ -511,7 +511,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     else {
                                         console.log('check fritzdect.0.DECT100_087611016969.temp ... ' + state.val);
                                         expect(state.val).to.exist;
-                                        expect(state.val).to.be.equal('17.0');
+                                        expect(state.val).to.be.equal(17);
                                         done();
                                     }
                                 });

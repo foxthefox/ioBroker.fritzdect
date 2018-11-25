@@ -498,15 +498,15 @@ function main() {
             native: {
             }
         });
-        adapter.setObjectNotExists('template.lasttemplate', {
+        adapter.setObjectNotExists(typ + newId +'template.lasttemplate', {
             type: 'state',
             common: {
                 "name": "template set",
                 "type": "string",
                 "read": true,
                 "write": false,
-                "role": "text",
-                "desc": "template set"
+                "role": "template set",
+                "desc":  
             },
             native: {
             }
@@ -551,7 +551,6 @@ function main() {
             native: {
             }
         });
-        adapter.setState(typ + newId +'.name', {val: name, ack: true});
         adapter.setObjectNotExists(typ + newId +'.toggle', {
             type: 'state',
             common: {
@@ -1182,8 +1181,8 @@ function main() {
                         adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
                         
                         if(device.temperature){ 
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + parseFloat(device.temperature.celsius)/10);
-                            adapter.setState('DECT200_'+ device.identifier +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true});
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
+                            adapter.setState('DECT200_'+ device.identifier +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
                         }
                         
                         if(device.powermeter.voltage){
@@ -1200,8 +1199,8 @@ function main() {
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
     
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp :' + parseFloat(device.temperature.celsius)/10);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(device.temperature.celsius)/10, ack: true});
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp :' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
     
                         var targettemp = device.hkr.tsoll;
             

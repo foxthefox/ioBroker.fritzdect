@@ -423,7 +423,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.power ... ' + state.val);
                                 }
                                 expect(state.val).to.exist;
-                                expect(state.val).to.be.equal('0');
+                                expect(state.val).to.be.equal(0);
                                 states.getState('fritzdect.0.DECT200_34:31:C1:AB:68:53.energy', function (err, state) {
                                     if (err) console.error(err);
                                     expect(state).to.exist;

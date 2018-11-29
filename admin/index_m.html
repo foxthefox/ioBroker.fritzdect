@@ -15,6 +15,21 @@
 
 <!-- you have to define 2 functions in the global scope: -->
 <script type="text/javascript">
+    var secret;
+    function encrypt(key, value) {
+        var result = '';
+        for(var i = 0; i < value.length; ++i) {
+            result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+        }
+        return result;
+    }
+    function decrypt(key, value) {
+        var result = '';
+        for(var i = 0; i < value.length; ++i) {
+            result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+        }
+        return result;
+    }
 	
    function init() {
         $('#testd').click(testd);
@@ -22,12 +37,15 @@
     }
 
     // the function loadSettings has to exist ...
-    function load(settings, onChange) {
+    function loadHelper(settings, onChange) {
         // example: select elements with id=key and class=value and insert value
        if (!settings) return;
         $('.value').each(function () {
             var $key = $(this);
             var id = $key.attr('id');
+            if (id === 'fritz_pw') {
+                settings[id] = decrypt(secret, settings[id]);
+            }
             if ($key.attr('type') === 'checkbox') {
 		        // do not call onChange direct, because onChange could expect some arguments
                 $key.prop('checked', settings[id]).change(function() {
@@ -43,6 +61,14 @@
             }
         });
 	init();
+        onChange(false);
+    }
+    // ehemalige load wird zu loadHelper um secrect mit aufzunehmen, wie meross
+    function load(settings, onChange) {
+        socket.emit('getObject', 'system.config', function (err, obj) {
+            secret = (obj.native ? obj.native.secret : '') || 'Zgfr56gFe87jJOM';
+            loadHelper(settings, onChange);
+        });
         onChange(false);
     }
     function testg() {
@@ -84,11 +110,16 @@
         var obj = {};
         $('.value').each(function () {
             var $this = $(this);
-			if ($this.attr('type') === 'checkbox') {
-				obj[$this.attr('id')] = $this.prop('checked');
-			} else {
-				obj[$this.attr('id')] = $this.val();
+		if ($this.attr('type') === 'checkbox') {
+			obj[$this.attr('id')] = $this.prop('checked');
+		} else {
+			//obj[$this.attr('id')] = $this.val();
+			var value = $this.val();
+			if ($this.attr('id') === 'fritz_pw') {
+			    value = encrypt(secret, value);
 			}
+			obj[$this.attr('id')] = value;
+		}
         });
         callback(obj);
     }
@@ -131,7 +162,7 @@
                 <input class="value" id="fritz_user"/><label for="fritz_user" class="translate">Fritzbox User</label>
             </div>
             <div class="col s6">
-                <input class="value" id="fritz_pw"/><label for="fritz_pw" class="translate">Fritzbox Password</label>
+                <input class="value" id="fritz_pw" type="password"/><label for="fritz_pw" class="translate">Fritzbox Password</label>
             </div>
         </div>
     </div>

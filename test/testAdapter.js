@@ -13,6 +13,22 @@ var sendToID = 1;
 
 var adapterShortName = setup.adapterName.substring(setup.adapterName.indexOf('.')+1);
 
+function decrypt(key, value) {
+  var result = '';
+  for(var i = 0; i < value.length; ++i) {
+      result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+  }
+  return result;
+}
+function encrypt(key, value) {
+  var result = '';
+  for(var i = 0; i < value.length; ++i) {
+      result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+  }
+  return result;
+}
+var secret='Zgfr56gFe87jJOM';
+
 function checkConnectionOfAdapter(cb, counter) {
     counter = counter || 0;
     console.log('Try check #' + counter);
@@ -149,7 +165,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 
             //config.native.dbtype   = 'sqlite';
             
-        config.native = {"fritz_ip": "http://localhost:8080", "fritz_user": "admin", "fritz_pw": '*═╔BY"', "fritz_interval": "300", "GuestWLANactive": false, "NonNativeApi": false };
+        config.native = {"fritz_ip": "http://localhost:8080", "fritz_user": "admin", "fritz_pw": encrypt(secret,password), "fritz_interval": "300", "GuestWLANactive": false, "NonNativeApi": false };
 
             setup.setAdapterConfig(config.common, config.native);
 

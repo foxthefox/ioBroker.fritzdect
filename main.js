@@ -43,6 +43,14 @@ var adapter = utils.Adapter('fritzdect');
 772 = SIMPLE_BUTTON
 */
 
+function decrypt(key, value) {
+    let result = '';
+    for (let i = 0; i < value.length; ++i) {
+        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+    }
+    return result;
+}
+
 function errorHandler(error) {
     if (error == "0000000000000000"){
         adapter.log.debug("Did not get session id- invalid username or password?");
@@ -304,7 +312,16 @@ adapter.on('stateChange', function (id, state) {
 // start here!
 adapter.on('ready', function () {
     adapter.log.info('entered ready');
-    main();
+    adapter.getForeignObject('system.config', (err, obj) => {
+        if (obj && obj.native && obj.native.secret) {
+            //noinspection JSUnresolvedVariable
+            adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
+        } else {
+            //noinspection JSUnresolvedVariable
+            adapter.config.fritz_pw = decrypt('Zgfr56gFe87jJOM', adapter.config.fritz_pw);
+        }
+        main();
+    });
 });
 
 // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...

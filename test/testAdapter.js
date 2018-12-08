@@ -159,7 +159,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     before('Test ' + adapterShortName + ' adapter: Start js-controller', function (_done) {
         this.timeout(600000); // because of first install from npm
 
-        setup.setupController(function () {
+        setup.setupController(systemConfig => {
             var config = setup.getAdapterConfig();
             // enable adapter
             config.common.enabled  = true;

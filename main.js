@@ -322,6 +322,7 @@ adapter.on('ready', function () {
     adapter.getForeignObject('system.config', (err, obj) => {
         if (obj && obj.native && obj.native.secret) {
             //noinspection JSUnresolvedVariable
+            console.log('m0 '+ obj.native.secret);
             adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
             console.log('m1 '+ adapter.config.fritz_pw);
         } else {

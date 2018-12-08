@@ -27,7 +27,6 @@ function encrypt(key, value) {
   }
   return result;
 }
-var secret='Zgfr56gFe87jJOM';
 
 function checkConnectionOfAdapter(cb, counter) {
     counter = counter || 0;
@@ -113,8 +112,13 @@ var challenge = '0a355ee5';
 var challenge2 = '3148720a';
 var password = 'password';
 var challengeResponse = challenge +'-'+require('crypto').createHash('md5').update(Buffer(challenge+'-'+password, 'UTF-16LE')).digest('hex');
+console.log('cR1: '+ challengeResponse);
 var sid = 'e3e154790a412aec';
 var content = fs.readFileSync(__dirname + '/../test/test_api_response.xml');
+var secret='Zgfr56gFe87jJOM';
+var crypt = encrypt(secret,password);
+console.log('encrypt: '+ crypt);
+console.log('decrypt: '+ decrypt(secret, crypt));
 
 function handleHttpRequest(request, response) {
     console.log('HTTP-Server: Request: ' + request.method + ' ' + request.url);
@@ -165,7 +169,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 
             //config.native.dbtype   = 'sqlite';
             
-        config.native = {"fritz_ip": "http://localhost:8080", "fritz_user": "admin", "fritz_pw": encrypt(secret,password), "fritz_interval": "300", "GuestWLANactive": false, "NonNativeApi": false };
+        config.native = {"fritz_ip": "http://localhost:8080", "fritz_user": "admin", "fritz_pw": crypt, "fritz_interval": "300", "GuestWLANactive": false, "NonNativeApi": false };
 
             setup.setAdapterConfig(config.common, config.native);
 

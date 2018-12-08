@@ -76,7 +76,8 @@ objects in *italic* are not part of all fritz.box configurations
 ### thermostat eg. COMET/DECT300/ Heater group
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
-|COMET.temp|value|-|actual temperature in °C|
+|COMET.temp|value|-|actual temperature in °C including offset|
+|COMET.actualtemp|value|x|actual temperature in °C|
 |COMET.targettemp|value|x|target temperature in °C|
 |COMET.comfytemp|value|-|comfort temperature in °C|
 |COMET.nighttemp|value|-|night temperature in °C|
@@ -125,6 +126,7 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * reading and activation of templates added
 * correction of actual temperature in DECT200 and COMET (now offset recognized)
 * password now hidden typed and encrypted
+* new datapoint actualtemp for Comet
 * fritzapi ??
 
 ### 0.1.4

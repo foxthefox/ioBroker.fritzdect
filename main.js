@@ -323,7 +323,8 @@ adapter.on('ready', function () {
         if (obj && obj.native && obj.native.secret) {
             //noinspection JSUnresolvedVariable
             console.log('m0 '+ obj.native.secret);
-            adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
+            //adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
+            adapter.config.fritz_pw = decrypt('Zgfr56gFe87jJOM', adapter.config.fritz_pw);
             console.log('m1 '+ adapter.config.fritz_pw);
         } else {
             //noinspection JSUnresolvedVariable

@@ -52,8 +52,8 @@ Bei der Vorwahl von 0-AUTO wird die letzte Solltemperatur angewählt.
 
 ### Temperatur mit Offset
 Es besteht die Möglichkeit die gemessene Temperatur in der FritzBox zu korrigieren, dazu gibt man die gemessene Temperatur an und es ergibt sich ein Offset. Dieser Offset wird für den Datenpunkt .temp mit berücksichtigt. Hier erhält man also die hoffentlich richtig vorherrschende Temperatur.
-Die intern im Heizkörperregler benutzte Ist-Temperatur (.tist), ist durch den Offset nicht verändert. D.h. der HKR regelt intern auf dem unkorrigierten zu hohen oder zu niedrigen Wert. Dies ist bei der Vorgabe der Solltemperatur entprchend zu berücksichtigen!
-Vergleichbar für den Soll-/Istverlaufs ist demnach tist und tsoll.
+Die intern im Heizkörperregler benutzte Ist-Temperatur (actualtemp), ist durch den Offset nicht verändert. D.h. der HKR regelt intern auf dem unkorrigierten zu hohen oder zu niedrigen Wert. Dies ist bei der Vorgabe der Solltemperatur entprchend zu berücksichtigen!
+Vergleichbar für den Soll-/Istverlaufs ist demnach atualtemp und targettemp.
 
 ## Troubleshooting
 

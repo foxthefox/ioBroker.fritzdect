@@ -402,7 +402,7 @@ function main() {
     var gwlanpoll = adapter.config.GuestWLANactive;
     var battchargepoll = adapter.config.NonNativeApi;
     adapter.log.debug("WLAN poll :" +gwlanpoll);
-    
+    console.log('zumteufelnochmal '+password);
     var fritz = new Fritz(username, password||"", moreParam||"");
     
     function updateFritzGuest(){

@@ -323,10 +323,13 @@ adapter.on('ready', function () {
         if (obj && obj.native && obj.native.secret) {
             //noinspection JSUnresolvedVariable
             adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
+            console.log('m1 '+ adapter.config.fritz_pw);
         } else {
             //noinspection JSUnresolvedVariable
             adapter.config.fritz_pw = decrypt('Zgfr56gFe87jJOM', adapter.config.fritz_pw);
+            console.log('m2 '+ adapter.config.fritz_pw);
         }
+        console.log('m3 '+ adapter.config.fritz_pw);
         main();
     });
 });

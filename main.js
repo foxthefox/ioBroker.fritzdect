@@ -322,16 +322,11 @@ adapter.on('ready', function () {
     adapter.getForeignObject('system.config', (err, obj) => {
         if (obj && obj.native && obj.native.secret) {
             //noinspection JSUnresolvedVariable
-            console.log('m0 '+ obj.native.secret);
-            //adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
-            adapter.config.fritz_pw = decrypt('Zgfr56gFe87jJOM', adapter.config.fritz_pw);
-            console.log('m1 '+ adapter.config.fritz_pw);
+            adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
         } else {
             //noinspection JSUnresolvedVariable
             adapter.config.fritz_pw = decrypt('Zgfr56gFe87jJOM', adapter.config.fritz_pw);
-            console.log('m2 '+ adapter.config.fritz_pw);
         }
-        console.log('m3 '+ adapter.config.fritz_pw);
         main();
     });
 });
@@ -407,7 +402,7 @@ function main() {
     var gwlanpoll = adapter.config.GuestWLANactive;
     var battchargepoll = adapter.config.NonNativeApi;
     adapter.log.debug("WLAN poll :" +gwlanpoll);
-    console.log('zumteufelnochmal '+password);
+
     var fritz = new Fritz(username, password||"", moreParam||"");
     
     function updateFritzGuest(){

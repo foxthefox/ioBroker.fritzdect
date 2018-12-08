@@ -823,6 +823,20 @@ function main() {
             native: {
             }
         });
+        adapter.setObjectNotExists(typ + newId +'.actualtemp', {
+            type: 'state',
+            common: {
+                "name":  "Actual Temp",
+                "type": "number",
+                "unit": "°C",                    
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "Actual Temp"
+            },
+            native: {
+            }
+        });
         adapter.setObjectNotExists(typ + newId +'.lock', {
             type: 'state',
             common: {
@@ -1250,6 +1264,10 @@ function main() {
             
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
+                        
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'actualtemp :' + device.hkr.tist);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(device.hkr.tist)/2, ack: true});
+                        
                         var batt;
                         if (device.hkr.batterylow == 0){ batt = false} else { batt = true } 
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + batt);

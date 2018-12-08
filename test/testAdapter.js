@@ -116,9 +116,7 @@ console.log('cR1: '+ challengeResponse);
 var sid = 'e3e154790a412aec';
 var content = fs.readFileSync(__dirname + '/../test/test_api_response.xml');
 var secret='Zgfr56gFe87jJOM';
-var crypt = encrypt(secret,password);
-console.log('encrypt: '+ crypt);
-console.log('decrypt: '+ decrypt(secret, crypt));
+
 
 function handleHttpRequest(request, response) {
     console.log('HTTP-Server: Request: ' + request.method + ' ' + request.url);
@@ -166,10 +164,15 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             // enable adapter
             config.common.enabled  = true;
             config.common.loglevel = 'info';
-
             //config.native.dbtype   = 'sqlite';
-        console.log('cryptisch' +crypt);    
-        config.native = {"fritz_ip": "http://localhost:8080", "fritz_user": "admin", "fritz_pw": crypt, "fritz_interval": "300", "GuestWLANactive": false, "NonNativeApi": false };
+   
+            config.native = {"fritz_ip": "http://localhost:8080", 
+                             "fritz_user": "admin", 
+                             "fritz_pw": encrypt(systemConfig.native.secret, 'password'), 
+                             "fritz_interval": "300", 
+                             "GuestWLANactive": false, 
+                             "NonNativeApi": false 
+                            };
 
             setup.setAdapterConfig(config.common, config.native);
 

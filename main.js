@@ -136,6 +136,7 @@ adapter.on('stateChange', function (id, state) {
                     fritz.setTempTarget(id, state.val).then(function (sid) {
                         adapter.log.debug('Set target temp ' + id + state.val +' °C');
                         adapter.setState('Comet_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
+                        adapter.setState('Comet_'+ id +'.targettemp', {val: state.val, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                     })
                     .catch(errorHandler);
 
@@ -151,9 +152,9 @@ adapter.on('stateChange', function (id, state) {
                             adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
                             setTemp = 28;
                         }
-
                         fritz.setTempTarget(id, setTemp).then(function (sid) {
                             adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
+                            adapter.setState('Comet_'+ id +'.targettemp', {val: setTemp, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                         })
                         .catch(errorHandler);
 
@@ -191,8 +192,9 @@ adapter.on('stateChange', function (id, state) {
                 } else {
                     adapter.setState('Hgroup_'+ id +'.mode', {val: 0, ack: false});
                     fritz.setTempTarget(id, state.val).then(function (sid) {
-                        adapter.log.debug('Set target temp ' + id + state.val +' °C');
+                        adapter.log.debug('Set Hgroup target temp ' + id + state.val +' °C');
                         adapter.setState('Hgroup_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
+                        adapter.setState('Hgroup_'+ id +'.targettemp', {val: state.val, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                     })
                     .catch(errorHandler);
 
@@ -210,19 +212,20 @@ adapter.on('stateChange', function (id, state) {
                         }
 
                         fritz.setTempTarget(id, setTemp).then(function (sid) {
-                            adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
+                            adapter.log.debug('Set Hgroup target temp ' + id + ' ' + setTemp +' °C');
+                            //hier noch ack=true in state?
                         })
                         .catch(errorHandler);
 
                     });
                 } else if (state.val === 1) {
                     fritz.setTempTarget(id, 'off').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to closed.');
+                        adapter.log.debug('Switched Hgroup Mode' + id + ' to closed.');
                     })
                     .catch(errorHandler); 
                 } else if (state.val === 2) {
                     fritz.setTempTarget(id, 'on').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                        adapter.log.debug('Switched Hgroup Mode' + id + ' to opened permanently');
                         
                     })
                     .catch(errorHandler);
@@ -237,12 +240,14 @@ adapter.on('stateChange', function (id, state) {
                 if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
                     fritz.setSwitchOff(id).then(function (sid) {
                         adapter.log.debug('Turned switch ' + id + ' off');
+                        adapter.setState('DECT200_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                     })
                     .catch(errorHandler);
                 }
                 else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
                     fritz.setSwitchOn(id).then(function (sid) {
                         adapter.log.debug('Turned switch ' + id + ' on');
+                        adapter.setState('DECT200_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                     })
                     .catch(errorHandler);
                 }
@@ -255,12 +260,14 @@ adapter.on('stateChange', function (id, state) {
                 if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
                     fritz.setSwitchOff(id).then(function (sid) {
                         adapter.log.debug('Turned group ' + id + ' off');
+                        adapter.setState('Sgroup_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                     })
                     .catch(errorHandler);
                 }
                 else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
                     fritz.setSwitchOn(id).then(function (sid) {
                         adapter.log.debug('Turned group ' + id + ' on');
+                        adapter.setState('Sgroup_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                     })
                     .catch(errorHandler);
                 }

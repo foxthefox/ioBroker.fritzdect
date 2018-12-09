@@ -365,7 +365,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.DECT200_087610006161.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.DECT200_087610006161.prodname            ... ' + state.val);
+                    console.log('fritzdect.0.DECT200_087610006161.prodname      ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('FRITZ!DECT 200');
@@ -376,7 +376,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.DECT200_087610006161.manufacturer" not set');
                     }
                     else {
-                        console.log('fritzdect.0.DECT200_087610006161.manufacturer             ... ' + state.val);
+                        console.log('fritzdect.0.DECT200_087610006161.manufacturer  ... ' + state.val);
                     }
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal('AVM');
@@ -387,7 +387,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             console.error('state "fritzdect.0.DECT200_087610006161.fwversion" not set');
                         }
                         else {
-                            console.log('fritzdect.0.DECT200_087610006161.fwversion             ... ' + state.val);
+                            console.log('fritzdect.0.DECT200_087610006161.fwversion     ... ' + state.val);
                         }
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('03.87');
@@ -398,10 +398,10 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.error('state "fritzdect.0.DECT200_087610006161.id" not set');
                             }
                             else {
-                                console.log('fritzdect.0.DECT200_087610006161.id             ... ' + state.val);
+                                console.log('fritzdect.0.DECT200_087610006161.id            ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal(16);
+                            expect(state.val).to.be.equal('16');
                             states.getState('fritzdect.0.DECT200_087610006161.name', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;
@@ -491,7 +491,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.Comet_117951022222.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.Comet_117951022222.prodname            ... ' + state.val);
+                    console.log('fritzdect.0.Comet_117951022222.prodname    ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('Comet DECT');
@@ -502,7 +502,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.Comet_117951022222.manufacturer" not set');
                     }
                     else {
-                        console.log('fritzdect.0.Comet_117951022222.manufacturer             ... ' + state.val);
+                        console.log('fritzdect.0.Comet_117951022222.manufacturer    ... ' + state.val);
                     }
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal('AVM');
@@ -513,7 +513,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             console.error('state "fritzdect.0.Comet_117951022222.fwversion" not set');
                         }
                         else {
-                            console.log('fritzdect.0.Comet_117951022222.fwversion             ... ' + state.val);
+                            console.log('fritzdect.0.Comet_117951022222.fwversion       ... ' + state.val);
                         }
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('03.54');
@@ -527,7 +527,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.log('fritzdect.0.Comet_117951022222.id             ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal(18);
+                            expect(state.val).to.be.equal('18');
                             states.getState('fritzdect.0.Comet_117951022222.devicelock', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;
@@ -641,7 +641,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.Comet_119600642220.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.Comet_119600642220.prodname            ... ' + state.val);
+                    console.log('fritzdect.0.Comet_119600642220.prodname    ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('Comet DECT');
@@ -652,7 +652,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.Comet_119600642220.manufacturer" not set');
                     }
                     else {
-                        console.log('fritzdect.0.Comet_119600642220.manufacturer             ... ' + state.val);
+                        console.log('fritzdect.0.Comet_119600642220.manufacturer    ... ' + state.val);
                     }
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal('AVM');
@@ -663,7 +663,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             console.error('state "fritzdect.0.Comet_119600642220.fwversion" not set');
                         }
                         else {
-                            console.log('fritzdect.0.Comet_119600642220.fwversion             ... ' + state.val);
+                            console.log('fritzdect.0.Comet_119600642220.fwversion       ... ' + state.val);
                         }
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('03.54');
@@ -677,7 +677,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.log('fritzdect.0.Comet_119600642220.id             ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal(17);
+                            expect(state.val).to.be.equal('17');
                             states.getState('fritzdect.0.Comet_119600642220.devicelock', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;
@@ -791,7 +791,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.Contact_112240205290-1.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.Contact_112240205290-1.prodname            ... ' + state.val);
+                    console.log('fritzdect.0.Contact_112240205290-1.prodname    ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('HAN-FUN');
@@ -802,7 +802,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.Contact_112240205290-1.manufacturer" not set');
                     }
                     else {
-                        console.log('fritzdect.0.Contact_112240205290-1.manufacturer             ... ' + state.val);
+                        console.log('fritzdect.0.Contact_112240205290-1.manufacturer    ... ' + state.val);
                     }
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal('0x2c3c');
@@ -813,7 +813,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             console.error('state "fritzdect.0.Contact_112240205290-1.fwversion" not set');
                         }
                         else {
-                            console.log('fritzdect.0.Contact_112240205290-1.fwversion             ... ' + state.val);
+                            console.log('fritzdect.0.Contact_112240205290-1.fwversion       ... ' + state.val);
                         }
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('0.0');
@@ -827,7 +827,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.log('fritzdect.0.Contact_112240205290-1.id             ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal(2001);
+                            expect(state.val).to.be.equal('2001');
                             states.getState('fritzdect.0.Contact_112240205290-1.name', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;
@@ -869,7 +869,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.Button_119340141058-2.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.Button_119340141058-2.prodname            ... ' + state.val);
+                    console.log('fritzdect.0.Button_119340141058-2.prodname ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('HAN-FUN');
@@ -880,7 +880,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.Button_119340141058-2.manufacturer" not set');
                     }
                     else {
-                        console.log('fritzdect.0.Button_119340141058-2.manufacturer             ... ' + state.val);
+                        console.log('fritzdect.0.Button_119340141058-2.manufacturer ... ' + state.val);
                     }
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal('0x0feb');
@@ -891,7 +891,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             console.error('state "fritzdect.0.Button_119340141058-2.fwversion" not set');
                         }
                         else {
-                            console.log('fritzdect.0.Button_119340141058-2.fwversion             ... ' + state.val);
+                            console.log('fritzdect.0.Button_119340141058-2.fwversion    ... ' + state.val);
                         }
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('0.0');
@@ -902,10 +902,10 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.error('state "fritzdect.0.Button_119340141058-2.id" not set');
                             }
                             else {
-                                console.log('fritzdect.0.Button_119340141058-2.id             ... ' + state.val);
+                                console.log('fritzdect.0.Button_119340141058-2.id           ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal(2000);
+                            expect(state.val).to.be.equal('2000');
                             states.getState('fritzdect.0.Button_119340141058-2.name', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;
@@ -913,7 +913,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     console.error('state "fritzdect.0.Button_119340141058-2.name" not set');
                                 }
                                 else {
-                                    console.log('fritzdect.0.Button_119340141058-2.name     ... ' + state.val);
+                                    console.log('fritzdect.0.Button_119340141058-2.name         ... ' + state.val);
                                 }
                                 expect(state.val).to.exist;
                                 expect(state.val).to.be.equal('DectTaster_F1');
@@ -947,7 +947,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.DECT200_34:31:C1:AB:68:53.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.prodname            ... ' + state.val);
+                    console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.prodname     ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('FRITZ!Powerline 546E');
@@ -958,7 +958,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.DECT200_34:31:C1:AB:68:53.manufacturer" not set');
                     }
                     else {
-                        console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.manufacturer             ... ' + state.val);
+                        console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.manufacturer ... ' + state.val);
                     }
                     expect(state.val).to.exist;
                     expect(state.val).to.be.equal('AVM');
@@ -969,7 +969,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             console.error('state "fritzdect.0.DECT200_34:31:C1:AB:68:53.fwversion" not set');
                         }
                         else {
-                            console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.fwversion             ... ' + state.val);
+                            console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.fwversion    ... ' + state.val);
                         }
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('06.92');
@@ -983,7 +983,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.id             ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal(20001);
+                            expect(state.val).to.be.equal('20001');
                             states.getState('fritzdect.0.DECT200_34:31:C1:AB:68:53.name', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;
@@ -1073,7 +1073,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.DECT100_087611016969.name" not set');
                 }
                 else {
-                    console.log('fritzdect.0.DECT100_087611016969.name      ... ' + state.val);
+                    console.log('fritzdect.0.DECT100_087611016969.name          ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('Repeater');

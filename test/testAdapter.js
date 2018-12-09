@@ -491,7 +491,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.Comet_117951022222.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.Comet_117951022222.prodname    ... ' + state.val);
+                    console.log('fritzdect.0.Comet_117951022222.prodname        ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('Comet DECT');
@@ -524,7 +524,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.error('state "fritzdect.0.Comet_117951022222.id" not set');
                             }
                             else {
-                                console.log('fritzdect.0.Comet_117951022222.id             ... ' + state.val);
+                                console.log('fritzdect.0.Comet_117951022222.id              ... ' + state.val);
                             }
                             expect(state.val).to.exist;
                             expect(state.val).to.be.equal('20');
@@ -546,7 +546,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                         console.error('state "fritzdect.0.Comet_117951022222.present" not set');
                                     }
                                     else {
-                                        console.log('fritzdect.0.Comet_117951022222.present        ... ' + state.val);
+                                        console.log('fritzdect.0.Comet_117951022222.present         ... ' + state.val);
                                     }
                                     expect(state.val).to.exist;
                                     expect(state.val).to.be.equal('1');
@@ -557,7 +557,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                             console.error('state "fritzdect.0.Comet_117951022222.lock" not set');
                                         }
                                         else {
-                                            console.log('fritzdect.0.Comet_117951022222.lock        ... ' + state.val);
+                                            console.log('fritzdect.0.Comet_117951022222.lock            ... ' + state.val);
                                         }
                                         expect(state.val).to.exist;
                                         expect(state.val).to.be.equal('0');
@@ -601,7 +601,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                             console.error('state "fritzdect.0.Comet_117951022222.temp" not set');
                                                         }
                                                         else {
-                                                            console.log('fritzdect.0.Comet_117951022222.temp        ... ' + state.val);
+                                                            console.log('fritzdect.0.Comet_117951022222.temp            ... ' + state.val);
                                                         }
                                                         expect(state.val).to.exist;
                                                         expect(state.val).to.be.equal(18);
@@ -612,7 +612,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                 console.error('state "fritzdect.0.Comet_117951022222.battery" not set');
                                                             }
                                                             else {
-                                                                console.log('fritzdect.0.Comet_117951022222.battery     ... ' + state.val);
+                                                                console.log('fritzdect.0.Comet_117951022222.battery          ... ' + state.val);
                                                                 expect(state.val).to.exist;
                                                                 expect(state.val).to.be.equal('80');
                                                                 done();
@@ -641,7 +641,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.error('state "fritzdect.0.Comet_119600642220.prodname" not set');
                 }
                 else {
-                    console.log('fritzdect.0.Comet_119600642220.prodname    ... ' + state.val);
+                    console.log('fritzdect.0.Comet_119600642220.prodname        ... ' + state.val);
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('Comet DECT');
@@ -674,7 +674,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.error('state "fritzdect.0.Comet_119600642220.id" not set');
                             }
                             else {
-                                console.log('fritzdect.0.Comet_119600642220.id             ... ' + state.val);
+                                console.log('fritzdect.0.Comet_119600642220.id              ... ' + state.val);
                             }
                             expect(state.val).to.exist;
                             expect(state.val).to.be.equal('17');
@@ -685,7 +685,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     console.error('state "fritzdect.0.Comet_119600642220.devicelock" not set');
                                 }
                                 else {
-                                    console.log('fritzdect.0.Comet_119600642220.devicelock        ... ' + state.val);
+                                    console.log('fritzdect.0.Comet_119600642220.devicelock      ... ' + state.val);
                                 }
                                 expect(state.val).to.exist;
                                 expect(state.val).to.be.equal('0');
@@ -696,7 +696,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                         console.error('state "fritzdect.0.Comet_119600642220.present" not set');
                                     }
                                     else {
-                                        console.log('fritzdect.0.Comet_119600642220.present        ... ' + state.val);
+                                        console.log('fritzdect.0.Comet_119600642220.present          ... ' + state.val);
                                     }
                                     expect(state.val).to.exist;
                                     expect(state.val).to.be.equal('1');
@@ -707,7 +707,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                             console.error('state "fritzdect.0.Comet_119600642220.lock" not set');
                                         }
                                         else {
-                                            console.log('fritzdect.0.Comet_119600642220.lock        ... ' + state.val);
+                                            console.log('fritzdect.0.Comet_119600642220.lock            ... ' + state.val);
                                         }
                                         expect(state.val).to.exist;
                                         expect(state.val).to.be.equal('0');
@@ -751,10 +751,10 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                             console.error('state "fritzdect.0.Comet_119600642220.temp" not set');
                                                         }
                                                         else {
-                                                            console.log('fritzdect.0.Comet_119600642220.temp        ... ' + state.val);
+                                                            console.log('fritzdect.0.Comet_119600642220.temp                ... ' + state.val);
                                                         }
                                                         expect(state.val).to.exist;
-                                                        expect(state.val).to.be.equal(18);
+                                                        expect(state.val).to.be.equal(15);
                                                         states.getState('fritzdect.0.Comet_119600642220.battery', function (err, state) {
                                                             if (err) console.error(err);
                                                             expect(state).to.exist;
@@ -762,7 +762,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                 console.error('state "fritzdect.0.Comet_119600642220.battery" not set');
                                                             }
                                                             else {
-                                                                console.log('fritzdect.0.Comet_119600642220.battery     ... ' + state.val);
+                                                                console.log('fritzdect.0.Comet_119600642220.battery             ... ' + state.val);
                                                                 expect(state.val).to.exist;
                                                                 expect(state.val).to.be.equal('55');
                                                                 done();

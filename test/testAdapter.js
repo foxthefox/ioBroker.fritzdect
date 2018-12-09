@@ -107,15 +107,15 @@ function setupHttpServer(callback) {
 
 //Antworten der fritzbox Gerätes
 
-// challange dynamisch machen und sid evtl auch
-var challenge = (4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8));
-var challenge2 = (4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8));
+var secret='Zgfr56gFe87jJOM';
+var challenge = (4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8);
+var challenge2 = (4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8);
 var password = 'password';
 var challengeResponse = challenge +'-'+require('crypto').createHash('md5').update(Buffer(challenge+'-'+password, 'UTF-16LE')).digest('hex');
-console.log('cR1: '+ challengeResponse);
-var sid = (4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8))+(4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8));
-var content = fs.readFileSync(__dirname + '/../test/test_api_response.xml');
-var secret='Zgfr56gFe87jJOM';
+var sid = (4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8)+(4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8);
+
+//xml Antworten
+var content = fs.readFileSync(__dirname + '/../test/test_api_response.xml'); //getdevicelistinfos
 
 
 function handleHttpRequest(request, response) {

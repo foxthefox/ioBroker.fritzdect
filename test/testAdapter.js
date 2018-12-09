@@ -764,7 +764,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                             else {
                                                                 console.log('fritzdect.0.Comet_119600642220.battery             ... ' + state.val);
                                                                 expect(state.val).to.exist;
-                                                                expect(state.val).to.be.equal('55');
+                                                                expect(state.val).to.be.equal(undefined); //55 wird es erst durch das update
                                                                 done();
                                                             }
                                                         });

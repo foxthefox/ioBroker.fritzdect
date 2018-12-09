@@ -142,7 +142,7 @@ function handleHttpRequest(request, response) {
     }
     else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getswitchlist') { //check the URL of the current request
         response.writeHead(200, { 'Content-Type': 'application/json' });
-        response.write(JSON.stringify([ '087610006161', '34:31:C1:AB:68:53', '119600642220', 'EF:C4:CC-900' ]));
+        response.write(JSON.stringify([ '087610006161', '34:31:C1:AB:68:53', 'EF:C4:CC-900' ]));
         response.end(); 
     }   
     else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getdevicelistinfos') { //check the URL of the current request
@@ -163,6 +163,77 @@ function handleHttpRequest(request, response) {
     else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=087610006161&switchcmd=getbasicdevicestats') { //check the URL of the current request
         response.writeHead(200, { 'Content-Type': 'application/json' });
         response.write( String(power_stats) );   
+        response.end(); 
+    }
+      else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getswitchstate&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '1' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=gettemperature&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '240' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=gettemperature&ain=117951022222') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '220' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getswitchpower&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '1234' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getswitchenergy&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '128308' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getswitchpresent&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '1' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getswitchname&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ 'FRITZ!DECT 200 #1' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=gethkrtsoll&ain=117951022222') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '44' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=gethkrabsenk&ain=117951022222') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '253' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=gethkrkomfort&ain=117951022222') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '48' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=setswitchoff&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '0' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=setswitchon&ain=087610006102') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '1' ]));
+        response.end(); 
+    }
+    //wie auf egal welche temp reagieren? regex?
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=sethkrtsoll&param=36&ain=117951022222') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '36' ]));
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=applytemplate&ain=tmp6F0093-391363146') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(JSON.stringify([ '601' ]));
         response.end(); 
     }
     else {

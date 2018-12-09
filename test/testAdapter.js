@@ -752,9 +752,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                         }
                                                         else {
                                                             console.log('fritzdect.0.Comet_119600642220.temp                ... ' + state.val);
+                                                            expect(state.val).to.exist;
+                                                            expect(state.val).to.be.equal(15);
+                                                            done();
                                                         }
-                                                        expect(state.val).to.exist;
-                                                        expect(state.val).to.be.equal(15);
+                                                        /* für später, wenn der batteryaufruf schon beim init kommt
                                                         states.getState('fritzdect.0.Comet_119600642220.battery', function (err, state) {
                                                             if (err) console.error(err);
                                                             expect(state).to.exist;
@@ -764,10 +766,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                             else {
                                                                 console.log('fritzdect.0.Comet_119600642220.battery             ... ' + state.val);
                                                                 expect(state.val).to.exist;
-                                                                expect(state.val).to.be.equal(undefined); //55 wird es erst durch das update
+                                                                expect(state.val).to.be.equal('55');
                                                                 done();
                                                             }
                                                         });
+                                                        */
                                                     });
                                                 });
                                             });
@@ -1137,6 +1140,216 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                             });
                         });
                     });
+                });
+            });
+        }, 1000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check values of template 1', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp6F0093-39091EED0.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp6F0093-39091EED0.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp6F0093-39091EED0.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Alle aus (Sommer)');
+                states.getState('fritzdect.0.template_tmp6F0093-39091EED0.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp6F0093-39091EED0.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp6F0093-39091EED0.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60010');
+                        done();
+                    }
+                });
+            });
+        }, 1000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check values of template 2', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp6F0093-390920878.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp6F0093-390920878.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp6F0093-390920878.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Normal Bad ');
+                states.getState('fritzdect.0.template_tmp6F0093-390920878.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp6F0093-390920878.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp6F0093-390920878.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60011');
+                        done();
+                    }
+                });
+            });
+        }, 1000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check values of template 3', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp6F0093-390920F4A.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp6F0093-390920F4A.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp6F0093-390920F4A.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Normal Schlafzimmer');
+                states.getState('fritzdect.0.template_tmp6F0093-390920F4A.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp6F0093-390920F4A.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp6F0093-390920F4A.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60005');
+                        done();
+                    }
+                });
+            });
+        }, 1000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check values of template 4', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp6F0093-39091E943.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp6F0093-39091E943.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp6F0093-39091E943.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Urlaub Anfang');
+                states.getState('fritzdect.0.template_tmp6F0093-39091E943.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp6F0093-39091E943.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp6F0093-39091E943.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60009');
+                        done();
+                    }
+                });
+            });
+        }, 1000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check values of template 5', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp6F0093-391363146.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp6F0093-391363146.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp6F0093-391363146.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Urlaub Ende');
+                states.getState('fritzdect.0.template_tmp6F0093-391363146.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp6F0093-391363146.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp6F0093-391363146.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60008');
+                        done();
+                    }
+                });
+            });
+        }, 1000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check values of template 6', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp6F0093-39091E733.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp6F0093-39091E733.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp6F0093-39091E733.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Wohnen Home');
+                states.getState('fritzdect.0.template_tmp6F0093-39091E733.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp6F0093-39091E733.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp6F0093-39091E733.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60006');
+                        done();
+                    }
+                });
+            });
+        }, 1000);
+    });
+    it('Test ' + adapterShortName + ' adapter: Check values of template 6', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp6F0093-39091E428.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp6F0093-39091E428.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp6F0093-39091E428.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Wohnen Work');
+                states.getState('fritzdect.0.template_tmp6F0093-39091E428.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp6F0093-39091E428.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp6F0093-39091E428.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60007');
+                        done();
+                    }
                 });
             });
         }, 1000);

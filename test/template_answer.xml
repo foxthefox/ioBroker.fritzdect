@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<templatelist version="1">
+    <template applymask="2" functionbitmask="320" id="60010" identifier="tmp6F0093-39091EED0">
+        <name>Alle aus (Sommer)</name>
+        <devices>
+            <device identifier="11795 0308608"/>
+            <device identifier="10971 0671592"/>
+            <device identifier="10971 0667624"/>
+            <device identifier="11795 0187840"/>
+        </devices>
+        <applymask>
+            <hkr_summer/>
+        </applymask>
+    </template>
+    <template applymask="26" functionbitmask="320" id="60011" identifier="tmp6F0093-390920878">
+        <name>Normal Bad </name>
+        <devices>
+            <device identifier="10971 0671592"/>
+        </devices>
+        <applymask>
+            <hkr_summer/>
+            <hkr_holidays/>
+            <hkr_time_table/>
+        </applymask>
+    </template>
+    <template applymask="26" functionbitmask="320" id="60005" identifier="tmp6F0093-390920F4A">
+        <name>Normal Schlafzimmer</name>
+        <devices>
+            <device identifier="11795 0187840"/>
+        </devices>
+        <applymask>
+            <hkr_summer/>
+            <hkr_holidays/>
+            <hkr_time_table/>
+        </applymask>
+    </template>
+    <template applymask="8" functionbitmask="320" id="60009" identifier="tmp6F0093-39091E943">
+        <name>Urlaub Anfang</name>
+        <devices>
+            <device identifier="11795 0308608"/>
+            <device identifier="10971 0671592"/>
+            <device identifier="10971 0667624"/>
+            <device identifier="11795 0187840"/>
+        </devices>
+        <applymask>
+            <hkr_holidays/>
+        </applymask>
+    </template>
+    <template applymask="8" functionbitmask="320" id="60008" identifier="tmp6F0093-391363146">
+        <name>Urlaub Ende</name>
+        <devices>
+            <device identifier="11795 0308608"/>
+            <device identifier="10971 0671592"/>
+            <device identifier="10971 0667624"/>
+            <device identifier="11795 0187840"/>
+        </devices>
+        <applymask>
+            <hkr_holidays/>
+        </applymask>
+    </template>
+    <template applymask="26" functionbitmask="320" id="60006" identifier="tmp6F0093-39091E733">
+        <name>Wohnen Home</name>
+        <devices>
+            <device identifier="11795 0308608"/>
+            <device identifier="10971 0667624"/>
+        </devices>
+        <applymask>
+            <hkr_summer/>
+            <hkr_holidays/>
+            <hkr_time_table/>
+        </applymask>
+    </template>
+    <template applymask="26" functionbitmask="320" id="60007" identifier="tmp6F0093-39091E428">
+        <name>Wohnen Work</name>
+        <devices>
+            <device identifier="11795 0308608"/>
+            <device identifier="10971 0667624"/>
+        </devices>
+        <applymask>
+            <hkr_summer/>
+            <hkr_holidays/>
+            <hkr_time_table/>
+        </applymask>
+    </template>
+</templatelist>

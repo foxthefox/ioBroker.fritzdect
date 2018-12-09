@@ -298,7 +298,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                         console.error('state "fritzdect.0.DECT200_087610006161.energy" not set');
                                     }
                                     else {
-                                        console.log('check fritzdect.0.DECT200_087610006161.energy ... ' + state.val);
+                                        console.log('fritzdect.0.DECT200_087610006161.energy ... ' + state.val);
                                         expect(state.val).to.exist;
                                         expect(state.val).to.be.equal('104560');
                                         done();
@@ -332,7 +332,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.Comet_117951022222.battery" not set');
                     }
                     else {
-                        console.log('check fritzdect.0.Comet_117951022222.battery ... ' + state.val);
+                        console.log('fritzdect.0.Comet_117951022222.battery ... ' + state.val);
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('80');
                         done();
@@ -362,7 +362,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.error('state "fritzdect.0.Contact_112240205290-1.state" not set');
                     }
                     else {
-                        console.log('check fritzdect.0.Contact_112240205290-1.state ... ' + state.val);
+                        console.log('fritzdect.0.Contact_112240205290-1.state ... ' + state.val);
                         expect(state.val).to.exist;
                         expect(state.val).to.be.equal('0');
                         done();
@@ -466,7 +466,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                         console.error('state "fritzdect.0.DECT200_34:31:C1:AB:68:53.energy" not set');
                                     }
                                     else {
-                                        console.log('check fritzdect.0.DECT200_34:31:C1:AB:68:53.energy ... ' + state.val);
+                                        console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.energy ... ' + state.val);
                                         expect(state.val).to.exist;
                                         expect(state.val).to.be.equal('19331');
                                         done();
@@ -544,7 +544,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                         console.error('state "fritzdect.0.DECT100_087611016969.temp" not set');
                                     }
                                     else {
-                                        console.log('check fritzdect.0.DECT100_087611016969.temp ... ' + state.val);
+                                        console.log('fritzdect.0.DECT100_087611016969.temp ... ' + state.val);
                                         expect(state.val).to.exist;
                                         expect(state.val).to.be.equal(17);
                                         done();

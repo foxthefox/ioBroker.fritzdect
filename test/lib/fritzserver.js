@@ -1,19 +1,20 @@
-//server to emulate the musiccast resonses
+//server to emulate the fritzbox responses
 var http = require('http');
 var fs = require('fs');
+const { parse } = require('querystring');
 
 // var content = fs.readFileSync('../test_api_response.xml');
 var content = fs.readFileSync('./test.xml');
-console.log(String(content));
 
 var templates = fs.readFileSync('./template_answer.xml');
-console.log(String(templates));
 
 var temp_stats = fs.readFileSync('./devicestat_temp_answer.xml');
-console.log(String(temp_stats));
 
 var power_stats = fs.readFileSync('./devicestat_power_answer.xml');
-console.log(String(power_stats));
+
+var hkr_batt = fs.readFileSync('./hkr_response.xml');
+
+var guestWlan = fs.readFileSync('./guest_wlan_form.xml');
 
 var server;
 
@@ -153,11 +154,57 @@ function handleHttpRequest(request, response) {
         response.write(JSON.stringify([ '601' ]));
         response.end(); 
     }
+    else if (request.url == '/wlan/guest_access.lua?0=0&sid='+sid) { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write(String(guestWlan));
+        response.end(); 
+    }
+    else if (request.url == '/data.lua'  && request.method === 'POST') { //check the URL of the current request
+        let body = '';
+        request.on('data', chunk => {
+            body += chunk.toString(); // convert Buffer to string
+        });
+        request.on('end', () => {
+            form = parse(body)
+            console.log(form);
+            if(form.sid === sid && form.xhr === '1' && form.page === 'overview'){
+                response.writeHead(200, { 'Content-Type': 'application/xml' });
+                response.write(JSON.stringify(
+                    {
+                        "data": {
+                            "naslink": "nas",
+                            "SERVICEPORTAL_URL": "https:\/\/www.avm.de\/fritzbox-service-portal.php?hardware=156&oem=avm&language=de&country=049&version=84.06.85&subversion=",
+                            "fritzos": {
+                                "Productname": "FRITZ!Box Fon WLAN 7390",
+                                "NoPwd": false,
+                                "ShowDefaults": false,
+                                "expert_mode": "1",
+                                "nspver_lnk": "\/home\/pp_fbos.lua?sid="+sid,
+                                "nspver": "06.85",
+                                "isLabor": false,
+                                "FirmwareSigned": false,
+                                "fb_name": "",
+                                "isUpdateAvail": false,
+                                "energy": "40",
+                                "boxDate": "13:22:00 09.12.2018"
+                            }
+                        }}
+                ));
+                response.end(); 
+            }
+            else if(form.sid === sid && form.xhr === '1' && form.device === '20' && form.oldpage === '/net/home_auto_hkr_edit.lua' &&  form.back_to_page === '/net/network.lua'){
+                response.writeHead(200, { 'Content-Type': 'application/xml' });
+                response.write(String(hkr_batt));
+                response.end(); 
+            }
+        });
+    }
     else {
         console.log(' not supported call ' + request.url);
         response.statusCode = 403;
         response.end();
     }    
 }
+
 
 setupHttpServer(function() {});

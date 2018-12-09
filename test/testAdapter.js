@@ -1144,6 +1144,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
+  /**
     it('Test ' + adapterShortName + ' adapter: Check values of template 1', function (done) {
         this.timeout(30000);
         setTimeout(function() {
@@ -1324,7 +1325,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
-    it('Test ' + adapterShortName + ' adapter: Check values of template 6', function (done) {
+    it('Test ' + adapterShortName + ' adapter: Check values of template 7', function (done) {
         this.timeout(30000);
         setTimeout(function() {
             states.getState('fritzdect.0.template_tmp6F0093-39091E428.name', function (err, state) {
@@ -1354,6 +1355,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
+  */
     /*
     it('Test ' + adapterShortName + ' adapter: Set values', function (done) {
         console.log('START SET VALUES');

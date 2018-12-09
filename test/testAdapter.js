@@ -115,8 +115,10 @@ var challengeResponse = challenge +'-'+require('crypto').createHash('md5').updat
 var sid = (4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8)+(4294967295 + Math.floor(Math.random()*4294967295)).toString(16).slice(-8);
 
 //xml Antworten
-var content = fs.readFileSync(__dirname + '/../test/test_api_response.xml'); //getdevicelistinfos
-
+var content     = fs.readFileSync(__dirname + '/../test/test_api_response.xml'); //getdevicelistinfos
+var templates   = fs.readFileSync(__dirname + '/../test/template_answer.xml'); //gettemplate
+var temp_stats  = fs.readFileSync(__dirname + '/../test/devicestat_temp_answer.xml'); //getbasicdevicestats temp
+var power_stats = fs.readFileSync(__dirname + '/../test/devicestat_power_answer.xml'); //getbasicdevicestats power/voltage
 
 function handleHttpRequest(request, response) {
     console.log('HTTP-Server: Request: ' + request.method + ' ' + request.url);
@@ -146,6 +148,21 @@ function handleHttpRequest(request, response) {
     else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getdevicelistinfos') { //check the URL of the current request
         response.writeHead(200, { 'Content-Type': 'application/json' });
         response.write( String(content) );
+        response.end(); 
+    }
+      else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=gettemplatelistinfos') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write( String(templates) );
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=119600642220&switchcmd=getbasicdevicestats') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write( String(temp_stats) );   
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=087610006161&switchcmd=getbasicdevicestats') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write( String(power_stats) );   
         response.end(); 
     }
     else {

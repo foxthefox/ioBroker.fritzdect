@@ -251,7 +251,6 @@ function handleHttpRequest(request, response) {
         });
         request.on('end', () => {
             form = parse(body)
-            console.log(form);
             if(form.sid === sid && form.xhr === '1' && form.page === 'overview'){
                 response.writeHead(200, { 'Content-Type': 'application/xml' });
                 response.write(JSON.stringify(

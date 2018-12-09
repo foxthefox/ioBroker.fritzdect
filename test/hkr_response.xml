@@ -1,6 +1,6 @@
 <h4>Heizkörperregler</h4>
 <div class="formular widetext"><label>Modell</label><span class="fakeTextInput">FRITZ!DECT 300</span></div>
-<div class="formular widetext"><label>Identifikationsnummer (IPEI)</label><span class="fakeTextInput">11795 1022222</span></div>
+<div class="formular widetext"><label>Identifikationsnummer (IPEI)</label><span class="fakeTextInput">11960 0642220</span></div>
 <div class="formular widetext"><label>Versionsnummer</label><span class="fakeTextInput">04.85</span></div>
 <div id="uiShow_Description" class="formular widetext"><label for="uiULEDeviceName">Name</label><input type="text" name="ule_device_name" id="uiULEDeviceName" maxlength="29" value="Heizung"></div>
 <div class="formular widetext"><label>Verbindungszustand zur FRITZ!Box</label><span class="iconwithtext"><img id="uiDeviceConnectState_18"

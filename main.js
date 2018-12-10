@@ -1237,8 +1237,8 @@ function main() {
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
     
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp :' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp :' + (parseFloat(device.temperature.celsius)-parseFloat(device.temperature.offset))/10);
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius)-parseFloat(device.temperature.offset))/10, ack: true});
     
                         var targettemp = device.hkr.tsoll;
             

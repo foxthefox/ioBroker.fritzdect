@@ -7,14 +7,12 @@
 var Fritz = require('fritzapi').Fritz,
     parser = require('xml2json-light');
 // you have to require the utils module and call adapter function
-var utils =    require(__dirname + '/lib/utils'); // Get common adapter utils
+var utils = require('@iobroker/adapter-core'); // Get common adapter utils
 // you have to call the adapter function and pass a options object
 // name has to be set and has to be equal to adapters folder name and main file name excluding extension
 // adapter will be restarted automatically every time as the configuration changed, e.g system.adapter.template.0
 
 var fritzTimeout;
-
-var adapter = utils.Adapter('fritzdect');
 
 /* errorcodes hkr
 0: kein Fehler
@@ -42,6 +40,329 @@ var adapter = utils.Adapter('fritzdect');
 256 = ALERT
 772 = SIMPLE_BUTTON
 */
+
+let adapter;
+function startAdapter(options) {
+     options = options || {};
+     Object.assign(options, {
+        name: 'fritzdect',
+
+        // is called when adapter shuts down - callback has to be called under any circumstances!
+        unload: function (callback) {
+            if (fritzTimeout) clearTimeout(fritzTimeout);
+            try {
+                adapter.log.info('cleaned everything up...');
+                callback();
+            } catch (e) {
+                callback();
+            }
+        },
+
+        // is called if a subscribed object changes
+        objectChange: function (id, obj) {
+            // Warning, obj can be null if it was deleted
+            adapter.log.debug('objectChange ' + id + ' ' + JSON.stringify(obj));
+        },
+
+        // is called if a subscribed state changes
+        stateChange: function (id, state) {
+            // Warning, state can be null if it was deleted
+            adapter.log.debug('stateChange ' + id + ' ' + JSON.stringify(state));
+            var username = adapter.config.fritz_user;
+            var password = adapter.config.fritz_pw;
+            var moreParam = adapter.config.fritz_ip;
+        
+            var fritz = new Fritz(username, password||"", moreParam||"");
+        
+            // you can use the ack flag to detect if it is status (true) or command (false)
+            if (state && !state.ack) {
+                adapter.log.debug('ack is not set! -> command');
+                var tmp = id.split('.');
+                var dp = tmp.pop(); //should always be "state"
+                var idx = tmp.pop(); //is the name after fritzdect.x.
+                if (idx.startsWith("Comet_")){ //must be comet
+                    id = idx.replace(/Comet_/g,''); //Thermostat
+                    adapter.log.info('Comet ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+                    if (dp === 'targettemp'){
+                        if (state.val < 8) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+                            adapter.setState('Comet_'+ id +'.mode', {val: 1, ack: false});
+                            fritz.setTempTarget(id, 'off').then(function (sid) {
+                                adapter.log.debug('Switched Mode' + id + ' to closed');
+                            })
+                            .catch(errorHandler);
+                        } else if (state.val > 28) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+                            adapter.setState('Comet_'+ id +'.mode', {val: 2, ack: false});
+                            fritz.setTempTarget(id, 'on').then(function (sid) {
+                                adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                            })
+                            .catch(errorHandler);
+                        } else {
+                            adapter.setState('Comet_'+ id +'.mode', {val: 0, ack: false});
+                            fritz.setTempTarget(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set target temp ' + id + state.val +' °C');
+                                adapter.setState('Comet_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
+                                adapter.setState('Comet_'+ id +'.targettemp', {val: state.val, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+        
+                        }
+                    } else if (dp === 'mode') {
+                        if (state.val === 0) {
+                            adapter.getState('Comet_' + id + '.targettemp', function (err, targettemp) { // oder hier die Verwendung von lasttarget
+                                var setTemp = targettemp.val;
+                                if (setTemp < 8) {
+                                    adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
+                                    setTemp = 8;
+                                } else if (setTemp > 28) {
+                                    adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
+                                    setTemp = 28;
+                                }
+                                fritz.setTempTarget(id, setTemp).then(function (sid) {
+                                    adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
+                                    adapter.setState('Comet_'+ id +'.targettemp', {val: setTemp, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                                })
+                                .catch(errorHandler);
+        
+                            });
+                        } else if (state.val === 1) {
+                            fritz.setTempTarget(id, 'off').then(function (sid) {
+                                adapter.log.debug('Switched Mode' + id + ' to closed.');
+                            })
+                            .catch(errorHandler); 
+                        } else if (state.val === 2) {
+                            fritz.setTempTarget(id, 'on').then(function (sid) {
+                                adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                            })
+                            .catch(errorHandler);
+           
+                        }
+                    }
+                }
+                else if (idx.startsWith("Hgroup_")){ //must be comet group
+                    id = idx.replace(/Hgroup_/g,''); //Thermostat
+                    adapter.log.info('HGROUP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+                    if (dp === 'targettemp'){
+                        if (state.val < 8) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+                            adapter.setState('Hgroup_'+ id +'.mode', {val: 1, ack: false});
+                            fritz.setTempTarget(id, 'off').then(function (sid) {
+                                adapter.log.debug('Switched Mode' + id + ' to closed');
+                            })
+                            .catch(errorHandler);
+                        } else if (state.val > 28) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+                            adapter.setState('Hgroup_'+ id +'.mode', {val: 2, ack: false});
+                            fritz.setTempTarget(id, 'on').then(function (sid) {
+                                adapter.log.debug('Switched Mode' + id + ' to opened permanently');
+                            })
+                            .catch(errorHandler);
+                        } else {
+                            adapter.setState('Hgroup_'+ id +'.mode', {val: 0, ack: false});
+                            fritz.setTempTarget(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set Hgroup target temp ' + id + state.val +' °C');
+                                adapter.setState('Hgroup_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
+                                adapter.setState('Hgroup_'+ id +'.targettemp', {val: state.val, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+        
+                        }
+                    } else if (dp === 'mode') {
+                        if (state.val === 0) {
+                            adapter.getState('Hgroup_' + id + '.targettemp', function (err, targettemp) { // oder hier die Verwendung von lasttarget
+                                var setTemp = targettemp.val;
+                                if (setTemp < 8) {
+                                    adapter.setState('Hgroup_' + id + '.targettemp', {val: 8, ack:true});
+                                    setTemp = 8;
+                                } else if (setTemp > 28) {
+                                    adapter.setState('Hgroup_' + id + '.targettemp', {val: 28, ack:true});
+                                    setTemp = 28;
+                                }
+        
+                                fritz.setTempTarget(id, setTemp).then(function (sid) {
+                                    adapter.log.debug('Set Hgroup target temp ' + id + ' ' + setTemp +' °C');
+                                    //hier noch ack=true in state?
+                                })
+                                .catch(errorHandler);
+        
+                            });
+                        } else if (state.val === 1) {
+                            fritz.setTempTarget(id, 'off').then(function (sid) {
+                                adapter.log.debug('Switched Hgroup Mode' + id + ' to closed.');
+                            })
+                            .catch(errorHandler); 
+                        } else if (state.val === 2) {
+                            fritz.setTempTarget(id, 'on').then(function (sid) {
+                                adapter.log.debug('Switched Hgroup Mode' + id + ' to opened permanently');
+                                
+                            })
+                            .catch(errorHandler);
+           
+                        }
+                    }
+                }
+                else if (idx.startsWith("DECT200_")) { //must be DECT
+                    id = idx.replace(/DECT200_/g,''); //Switch
+                    adapter.log.info('SWITCH ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+                    if (dp == 'state') {
+                        if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                            fritz.setSwitchOff(id).then(function (sid) {
+                                adapter.log.debug('Turned switch ' + id + ' off');
+                                adapter.setState('DECT200_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                        else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                            fritz.setSwitchOn(id).then(function (sid) {
+                                adapter.log.debug('Turned switch ' + id + ' on');
+                                adapter.setState('DECT200_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                    }           
+                }
+                else if (idx.startsWith("Sgroup_")) { //must be DECT switch group
+                    id = idx.replace(/Sgroup_/g,''); //Switch
+                    adapter.log.info('GROUP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+                    if (dp == 'state') {
+                        if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                            fritz.setSwitchOff(id).then(function (sid) {
+                                adapter.log.debug('Turned group ' + id + ' off');
+                                adapter.setState('Sgroup_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                        else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                            fritz.setSwitchOn(id).then(function (sid) {
+                                adapter.log.debug('Turned group ' + id + ' on');
+                                adapter.setState('Sgroup_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                    }           
+                }
+                else if (idx.startsWith("template_")) { //must be fritzbox template
+                    id = idx.replace(/template_/g,''); //template
+                    adapter.log.info('Template ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+                    if (dp == 'toggle') {
+                        /**
+                        if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                            fritz.applyTemplate(id).then(function (sid) {
+                                adapter.log.debug('cmd Toggle to template ' + id + ' off');
+                            })
+                            .catch(errorHandler);
+                        }
+                        */
+                        if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                            fritz.applyTemplate(id).then(function (sid) {
+                                adapter.log.debug('cmd Toggle to template ' + id + ' on');
+                                adapter.log.debug('response ' + sid);
+                                adapter.setState('template.lasttemplate',{val: sid, ack: true}); //when successfull toggle, the API returns the id of the template
+                            })
+                            .catch(errorHandler);
+                        }
+                    }           
+                }
+                else { //must be GuestWLAN
+                    adapter.log.info('GuestWLAN identified for command (' + dp + ') : ' + state.val);
+                    if (dp == 'state') {
+                        if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                            fritz.setGuestWlan(state.val).then(function (sid) {
+                                adapter.log.debug('Turned WLAN off');
+                            })
+                            .catch(errorHandler);
+                        }    
+                        else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                            fritz.setGuestWlan(state.val).then(function (sid) {
+                                adapter.log.debug('Turned WLAN on');
+                            })
+                            .catch(errorHandler);
+                        }
+                    }
+                }     
+            } //from if state&ack
+        },
+
+        // Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
+        message: function (obj) {    
+            var wait = false;
+            // handle the message
+            if (obj) {
+                switch (obj.command) {
+                    case 'devices':
+                        var result = [];
+        
+                        var username = adapter.config.fritz_user;
+                        var password = adapter.config.fritz_pw;
+                        var moreParam = adapter.config.fritz_ip;
+                        
+                        var fritz = new Fritz(username, password||"", moreParam||"");
+                        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+                            var devices = parser.xml2json(devicelistinfos);
+                            devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+                                // remove spaces in AINs
+                                device.identifier = device.identifier.replace(/\s/g, '');
+                                return device;
+                            });
+                            result = devices;
+                        }).done(function (devicelistinfos){
+                            if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                            });
+                        wait = true;
+                        break;
+                    case 'groups':
+                        var result = [];
+        
+                        var username = adapter.config.fritz_user;
+                        var password = adapter.config.fritz_pw;
+                        var moreParam = adapter.config.fritz_ip;
+                        
+                        var fritz = new Fritz(username, password||"", moreParam||"");
+                        fritz.getDeviceListInfos().then(function(devicelistinfos) {
+                            var groups = parser.xml2json(devicelistinfos);
+                            groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+                                // remove spaces in AINs
+                                group.identifier = group.identifier.replace(/\s/g, '');
+                                return group;
+                            });
+                            result = groups;
+                        }).done(function (devicelistinfos){
+                            if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                            });
+                        wait = true;
+                        break;
+                    default:
+                        adapter.log.warn("Received unhandled message: " + obj.command);
+                        break;
+                }
+            }
+            if (!wait && obj.callback) {
+                adapter.sendTo(obj.from, obj.command, obj.message, obj.callback);
+            }
+        
+            return true;
+        },
+
+        // is called when databases are connected and adapter received configuration.
+        // start here!
+        ready: function () {
+            adapter.log.info('entered ready');
+            adapter.getForeignObject('system.config', (err, obj) => {
+                if (obj && obj.native && obj.native.secret) {
+                    //noinspection JSUnresolvedVariable
+                    adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
+                } else {
+                    //noinspection JSUnresolvedVariable
+                    adapter.config.fritz_pw = decrypt('Zgfr56gFe87jJOM', adapter.config.fritz_pw);
+                }
+                main();
+            });
+        }
+
+     });
+     adapter = new utils.Adapter(options);
+     
+     return adapter;
+};
+
+
 
 function decrypt(key, value) {
     let result = '';
@@ -82,314 +403,7 @@ function errorHandler(error) {
         }
 }
 
-// is called when adapter shuts down - callback has to be called under any circumstances!
-adapter.on('unload', function (callback) {
-    if (fritzTimeout) clearTimeout(fritzTimeout);
-    try {
-        adapter.log.info('cleaned everything up...');
-        callback();
-    } catch (e) {
-        callback();
-    }
-});
 
-// is called if a subscribed object changes
-adapter.on('objectChange', function (id, obj) {
-    // Warning, obj can be null if it was deleted
-    adapter.log.debug('objectChange ' + id + ' ' + JSON.stringify(obj));
-});
-
-// is called if a subscribed state changes
-adapter.on('stateChange', function (id, state) {
-    // Warning, state can be null if it was deleted
-    adapter.log.debug('stateChange ' + id + ' ' + JSON.stringify(state));
-    var username = adapter.config.fritz_user;
-    var password = adapter.config.fritz_pw;
-    var moreParam = adapter.config.fritz_ip;
-
-    var fritz = new Fritz(username, password||"", moreParam||"");
-
-    // you can use the ack flag to detect if it is status (true) or command (false)
-    if (state && !state.ack) {
-        adapter.log.debug('ack is not set! -> command');
-        var tmp = id.split('.');
-        var dp = tmp.pop(); //should always be "state"
-        var idx = tmp.pop(); //is the name after fritzdect.x.
-        if (idx.startsWith("Comet_")){ //must be comet
-            id = idx.replace(/Comet_/g,''); //Thermostat
-            adapter.log.info('Comet ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
-            if (dp === 'targettemp'){
-                if (state.val < 8) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-                    adapter.setState('Comet_'+ id +'.mode', {val: 1, ack: false});
-                    fritz.setTempTarget(id, 'off').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to closed');
-                    })
-                    .catch(errorHandler);
-                } else if (state.val > 28) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-                    adapter.setState('Comet_'+ id +'.mode', {val: 2, ack: false});
-                    fritz.setTempTarget(id, 'on').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
-                    })
-                    .catch(errorHandler);
-                } else {
-                    adapter.setState('Comet_'+ id +'.mode', {val: 0, ack: false});
-                    fritz.setTempTarget(id, state.val).then(function (sid) {
-                        adapter.log.debug('Set target temp ' + id + state.val +' °C');
-                        adapter.setState('Comet_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
-                        adapter.setState('Comet_'+ id +'.targettemp', {val: state.val, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                    })
-                    .catch(errorHandler);
-
-                }
-            } else if (dp === 'mode') {
-                if (state.val === 0) {
-                    adapter.getState('Comet_' + id + '.targettemp', function (err, targettemp) { // oder hier die Verwendung von lasttarget
-                        var setTemp = targettemp.val;
-                        if (setTemp < 8) {
-                            adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
-                            setTemp = 8;
-                        } else if (setTemp > 28) {
-                            adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
-                            setTemp = 28;
-                        }
-                        fritz.setTempTarget(id, setTemp).then(function (sid) {
-                            adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
-                            adapter.setState('Comet_'+ id +'.targettemp', {val: setTemp, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                        })
-                        .catch(errorHandler);
-
-                    });
-                } else if (state.val === 1) {
-                    fritz.setTempTarget(id, 'off').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to closed.');
-                    })
-                    .catch(errorHandler); 
-                } else if (state.val === 2) {
-                    fritz.setTempTarget(id, 'on').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
-                    })
-                    .catch(errorHandler);
-   
-                }
-            }
-        }
-        else if (idx.startsWith("Hgroup_")){ //must be comet group
-            id = idx.replace(/Hgroup_/g,''); //Thermostat
-            adapter.log.info('HGROUP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
-            if (dp === 'targettemp'){
-                if (state.val < 8) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-                    adapter.setState('Hgroup_'+ id +'.mode', {val: 1, ack: false});
-                    fritz.setTempTarget(id, 'off').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to closed');
-                    })
-                    .catch(errorHandler);
-                } else if (state.val > 28) { //kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-                    adapter.setState('Hgroup_'+ id +'.mode', {val: 2, ack: false});
-                    fritz.setTempTarget(id, 'on').then(function (sid) {
-                        adapter.log.debug('Switched Mode' + id + ' to opened permanently');
-                    })
-                    .catch(errorHandler);
-                } else {
-                    adapter.setState('Hgroup_'+ id +'.mode', {val: 0, ack: false});
-                    fritz.setTempTarget(id, state.val).then(function (sid) {
-                        adapter.log.debug('Set Hgroup target temp ' + id + state.val +' °C');
-                        adapter.setState('Hgroup_'+ id +'.lasttarget', {val: state.val, ack: true}); //iobroker Tempwahl wird zum letzten Wert gespeichert
-                        adapter.setState('Hgroup_'+ id +'.targettemp', {val: state.val, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                    })
-                    .catch(errorHandler);
-
-                }
-            } else if (dp === 'mode') {
-                if (state.val === 0) {
-                    adapter.getState('Hgroup_' + id + '.targettemp', function (err, targettemp) { // oder hier die Verwendung von lasttarget
-                        var setTemp = targettemp.val;
-                        if (setTemp < 8) {
-                            adapter.setState('Hgroup_' + id + '.targettemp', {val: 8, ack:true});
-                            setTemp = 8;
-                        } else if (setTemp > 28) {
-                            adapter.setState('Hgroup_' + id + '.targettemp', {val: 28, ack:true});
-                            setTemp = 28;
-                        }
-
-                        fritz.setTempTarget(id, setTemp).then(function (sid) {
-                            adapter.log.debug('Set Hgroup target temp ' + id + ' ' + setTemp +' °C');
-                            //hier noch ack=true in state?
-                        })
-                        .catch(errorHandler);
-
-                    });
-                } else if (state.val === 1) {
-                    fritz.setTempTarget(id, 'off').then(function (sid) {
-                        adapter.log.debug('Switched Hgroup Mode' + id + ' to closed.');
-                    })
-                    .catch(errorHandler); 
-                } else if (state.val === 2) {
-                    fritz.setTempTarget(id, 'on').then(function (sid) {
-                        adapter.log.debug('Switched Hgroup Mode' + id + ' to opened permanently');
-                        
-                    })
-                    .catch(errorHandler);
-   
-                }
-            }
-        }
-        else if (idx.startsWith("DECT200_")) { //must be DECT
-            id = idx.replace(/DECT200_/g,''); //Switch
-            adapter.log.info('SWITCH ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
-            if (dp == 'state') {
-                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.setSwitchOff(id).then(function (sid) {
-                        adapter.log.debug('Turned switch ' + id + ' off');
-                        adapter.setState('DECT200_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                    })
-                    .catch(errorHandler);
-                }
-                else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                    fritz.setSwitchOn(id).then(function (sid) {
-                        adapter.log.debug('Turned switch ' + id + ' on');
-                        adapter.setState('DECT200_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                    })
-                    .catch(errorHandler);
-                }
-            }           
-        }
-        else if (idx.startsWith("Sgroup_")) { //must be DECT switch group
-            id = idx.replace(/Sgroup_/g,''); //Switch
-            adapter.log.info('GROUP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
-            if (dp == 'state') {
-                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.setSwitchOff(id).then(function (sid) {
-                        adapter.log.debug('Turned group ' + id + ' off');
-                        adapter.setState('Sgroup_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                    })
-                    .catch(errorHandler);
-                }
-                else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                    fritz.setSwitchOn(id).then(function (sid) {
-                        adapter.log.debug('Turned group ' + id + ' on');
-                        adapter.setState('Sgroup_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                    })
-                    .catch(errorHandler);
-                }
-            }           
-        }
-        else if (idx.startsWith("template_")) { //must be fritzbox template
-            id = idx.replace(/template_/g,''); //template
-            adapter.log.info('Template ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
-            if (dp == 'toggle') {
-                /**
-                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.applyTemplate(id).then(function (sid) {
-                        adapter.log.debug('cmd Toggle to template ' + id + ' off');
-                    })
-                    .catch(errorHandler);
-                }
-                */
-                if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                    fritz.applyTemplate(id).then(function (sid) {
-                        adapter.log.debug('cmd Toggle to template ' + id + ' on');
-                        adapter.log.debug('response ' + sid);
-                        adapter.setState('template.lasttemplate',{val: sid, ack: true}); //when successfull toggle, the API returns the id of the template
-                    })
-                    .catch(errorHandler);
-                }
-            }           
-        }
-        else { //must be GuestWLAN
-            adapter.log.info('GuestWLAN identified for command (' + dp + ') : ' + state.val);
-            if (dp == 'state') {
-                if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                    fritz.setGuestWlan(state.val).then(function (sid) {
-                        adapter.log.debug('Turned WLAN off');
-                    })
-                    .catch(errorHandler);
-                }    
-                else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                    fritz.setGuestWlan(state.val).then(function (sid) {
-                        adapter.log.debug('Turned WLAN on');
-                    })
-                    .catch(errorHandler);
-                }
-            }
-        }     
-    } //from if state&ack
-}); //from adapter on
-
-// is called when databases are connected and adapter received configuration.
-// start here!
-adapter.on('ready', function () {
-    adapter.log.info('entered ready');
-    adapter.getForeignObject('system.config', (err, obj) => {
-        if (obj && obj.native && obj.native.secret) {
-            //noinspection JSUnresolvedVariable
-            adapter.config.fritz_pw = decrypt(obj.native.secret, adapter.config.fritz_pw);
-        } else {
-            //noinspection JSUnresolvedVariable
-            adapter.config.fritz_pw = decrypt('Zgfr56gFe87jJOM', adapter.config.fritz_pw);
-        }
-        main();
-    });
-});
-
-// Some message was sent to adapter instance over message box. Used by email, pushover, text2speech, ...
-adapter.on('message', function (obj) {    
-    var wait = false;
-    // handle the message
-    if (obj) {
-        switch (obj.command) {
-            case 'devices':
-                var result = [];
-
-                var username = adapter.config.fritz_user;
-                var password = adapter.config.fritz_pw;
-                var moreParam = adapter.config.fritz_ip;
-                
-                var fritz = new Fritz(username, password||"", moreParam||"");
-                fritz.getDeviceListInfos().then(function(devicelistinfos) {
-                    var devices = parser.xml2json(devicelistinfos);
-                    devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
-                        // remove spaces in AINs
-                        device.identifier = device.identifier.replace(/\s/g, '');
-                        return device;
-                    });
-                    result = devices;
-                }).done(function (devicelistinfos){
-                    if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
-                    });
-                wait = true;
-                break;
-            case 'groups':
-                var result = [];
-
-                var username = adapter.config.fritz_user;
-                var password = adapter.config.fritz_pw;
-                var moreParam = adapter.config.fritz_ip;
-                
-                var fritz = new Fritz(username, password||"", moreParam||"");
-                fritz.getDeviceListInfos().then(function(devicelistinfos) {
-                    var groups = parser.xml2json(devicelistinfos);
-                    groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
-                        // remove spaces in AINs
-                        group.identifier = group.identifier.replace(/\s/g, '');
-                        return group;
-                    });
-                    result = groups;
-                }).done(function (devicelistinfos){
-                    if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
-                    });
-                wait = true;
-                break;
-            default:
-                adapter.log.warn("Received unhandled message: " + obj.command);
-                break;
-        }
-    }
-    if (!wait && obj.callback) {
-        adapter.sendTo(obj.from, obj.command, obj.message, obj.callback);
-    }
-
-    return true;
-});
 process.on('SIGINT', function () {
     if (fritzTimeout) clearTimeout(fritzTimeout);
 });
@@ -1471,4 +1485,12 @@ function main() {
     // in this template all states changes inside the adapters namespace are subscribed
     adapter.subscribeStates('*');
 
+}
+
+// If started as allInOne/compact mode => return function to create instance
+if (module && module.parent) {
+    module.exports = startAdapter;
+} else {
+    // or start the instance directly
+    startAdapter();
 }

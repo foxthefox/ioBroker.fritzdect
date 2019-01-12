@@ -1,8 +1,19 @@
 {
     "common": {
         "name":                 "fritzdect",
-        "version":              "0.1.5",
+        "version":              "0.2.0",
 	"news": {
+	  "0.2.0": {
+	    "en": "change tp compact mode",
+	    "de": "Wechseln Sie in den Kompaktmodus",
+	    "ru": "перейти в компактный режим",
+	    "pt": "mudar para o modo compacto",
+	    "nl": "verander naar compacte modus",
+	    "fr": "passer en mode compact",
+	    "it": "passare alla modalità compatta",
+	    "es": "cambiar al modo compacto",
+	    "pl": "przejdź do trybu kompaktowego"
+	  },
 	  "0.1.5": {
 	    "en": "activation of templates added",
 	    "de": "Aktivierung von Vorlagen hinzugefügt",
@@ -175,6 +186,7 @@
 	"readme":           	"https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
 	"loglevel":		"info",
 	"materialize": true,
+	"compact": true,
 	"messagebox": true,
 	"restartAdapters":          [
 		"vis"

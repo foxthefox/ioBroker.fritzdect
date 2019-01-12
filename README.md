@@ -127,7 +127,7 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * correction of actual temperature in DECT200 and COMET (now offset recognized)
 * password now hidden typed and encrypted
 * new datapoint actualtemp for Comet
-* fritzapi ??
+* fritzapi 0.10.5
 
 ### 0.1.4
 * button added, only send the timestamp of last click

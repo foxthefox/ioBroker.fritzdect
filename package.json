@@ -25,7 +25,8 @@
   },
   "dependencies": {
     "fritzapi": "^0.10.5",
-    "xml2json-light": "^1.0.4"
+    "xml2json-light": "^1.0.4",
+    "@iobroker/adapter-core": "^1.0.3"
   },
   "devDependencies": {
       "gulp": "^3.9.1",

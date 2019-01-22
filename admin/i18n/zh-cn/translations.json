@@ -1,0 +1,12 @@
+{
+    "FritzBox Adapter Debugging": "FritzBox适配器调试",
+    "Fritzbox IP": "Fritzbox IP",
+    "Fritzbox Password": "Fritzbox密码",
+    "Fritzbox Polling Interval (sek.)": "Fritzbox轮询间隔（sek。）",
+    "Fritzbox User": "Fritzbox用户",
+    "My Devices": "我的设备",
+    "My Groups": "我的团队",
+    "fritzdect adapter settings": "fritzdect适配器设置",
+    "include GuestWLAN in adapter": "在适配器中包含GuestWLAN",
+    "include non native api call (ui scraping)": "包括非本地api调用（ui scraping）"
+}

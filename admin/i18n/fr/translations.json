@@ -1,0 +1,12 @@
+{
+    "FritzBox Adapter Debugging": "Débogage de l'adaptateur FritzBox",
+    "Fritzbox IP": "Fritzbox IP",
+    "Fritzbox Password": "Mot de passe Fritzbox",
+    "Fritzbox Polling Interval (sek.)": "Fritzbox Intervalle d'interrogation (sek.)",
+    "Fritzbox User": "Utilisateur de Fritzbox",
+    "My Devices": "Mes appareils",
+    "My Groups": "Mes groupes",
+    "fritzdect adapter settings": "configuration de l'adaptateur fritzdect",
+    "include GuestWLAN in adapter": "inclure GuestWLAN dans l'adaptateur",
+    "include non native api call (ui scraping)": "inclure un appel api non natif (grattage ui)"
+}

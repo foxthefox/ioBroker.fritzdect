@@ -1,0 +1,12 @@
+{
+    "FritzBox Adapter Debugging": "FritzBox Adapter Debugging",
+    "Fritzbox IP": "Fritzbox IP",
+    "Fritzbox Password": "Fritzbox wachtwoord",
+    "Fritzbox Polling Interval (sek.)": "Fritzbox Polling Interval (sek.)",
+    "Fritzbox User": "Fritzbox - gebruiker",
+    "My Devices": "Mijn apparaten",
+    "My Groups": "Mijn groepen",
+    "fritzdect adapter settings": "fritzdect adapter instellen",
+    "include GuestWLAN in adapter": "inclusief GuestWLAN in adapter",
+    "include non native api call (ui scraping)": "include non native api call (ui scraping)"
+}

@@ -538,7 +538,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     console.log('fritzdect.0.Comet_117951022222.devicelock        ... ' + state.val);
                                 }
                                 expect(state.val).to.exist;
-                                expect(state.val).to.be.equal('0');
+                                expect(state.val).to.be.equal('1');
                                 states.getState('fritzdect.0.Comet_117951022222.present', function (err, state) {
                                     if (err) console.error(err);
                                     expect(state).to.exist;

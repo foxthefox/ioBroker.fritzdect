@@ -1016,7 +1016,7 @@ function main() {
                         adapter.log.info('setting up Repeater/DECT100 object '+ device.name);
                         createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         createProductName(typ,device.identifier,device.productname);
-                        if (device.temperature.celsius){
+                        if (device.temperature){
                             createTemperature(typ,device.identifier);
                         }
                     }

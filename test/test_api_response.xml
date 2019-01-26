@@ -126,7 +126,7 @@
 		</device>
 		<device>
 			<identifier>08555 1016969</identifier>
-			<id>23</id>
+			<id>33</id>
 			<functionbitmask>1280</functionbitmask>
 			<fwversion>03.86</fwversion>
 			<manufacturer>AVM</manufacturer>

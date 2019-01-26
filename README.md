@@ -121,8 +121,13 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
+### 0.2.1
+* gulp added
+* correction for DECT100 without temperature (caused a stop in creation of objects)
+
 ### 0.2.0
 * compact mode
+
 ### 0.1.5
 * reading and activation of templates added
 * correction of actual temperature in DECT200 and COMET (now offset recognized)

@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "news": {
+            "0.2.1": {
+                "en": "gulp, translation added, correction for DECT100 without temperature",
+                "de": "Schluck, Übersetzung hinzugefügt, Korrektur für DECT100 ohne Temperatur",
+                "ru": "глоток, добавлен перевод, исправление для DECT100 без температуры",
+                "pt": "gulp, tradução adicionada, correção para DECT100 sem temperatura",
+                "nl": "slok, vertaling toegevoegd, correctie voor DECT100 zonder temperatuur",
+                "fr": "gulp, traduction ajoutée, correction pour DECT100 sans température",
+                "it": "gulp, traduzione aggiunta, correzione per DECT100 senza temperatura",
+                "es": "Trago, traducción añadida, corrección para DECT100 sin temperatura",
+                "pl": "łyk, tłumaczenie dodane, korekta dla DECT100 bez temperatury",
+                "zh-cn": "gulp，翻译补充，校正DECT100无温度"
+            },
             "0.2.0": {
                 "en": "change tp compact mode",
                 "de": "Wechseln Sie in den Kompaktmodus",

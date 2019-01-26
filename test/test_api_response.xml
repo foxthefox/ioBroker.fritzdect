@@ -125,6 +125,16 @@
 			</temperature>
 		</device>
 		<device>
+			<identifier>08555 1016969</identifier>
+			<id>23</id>
+			<functionbitmask>1280</functionbitmask>
+			<fwversion>03.86</fwversion>
+			<manufacturer>AVM</manufacturer>
+			<productname>FRITZ!DECT Repeater 100</productname>
+			<present>1</present>
+			<name>Repeater ohne Temp</name>
+		</device>
+		<device>
 			<identifier>11795 1022222</identifier>
 			<id>20</id>
 			<functionbitmask>320</functionbitmask>

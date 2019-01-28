@@ -373,8 +373,9 @@ function decrypt(key, value) {
 }
 
 function errorHandler(error) {
+    adapter.log.error('fritzbox returned this '+JSON.stringify(error));
     if (error == "0000000000000000"){
-        adapter.log.debug("Did not get session id- invalid username or password?");
+        adapter.log.error("Did not get session id- invalid username or password?");
     }
     else if (error.response.statusCode){
         if (error.response.statusCode == 403){

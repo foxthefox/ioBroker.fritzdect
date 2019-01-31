@@ -1134,10 +1134,10 @@ function main() {
         fritz.getTemplateListInfos().then(function(templatelistinfos) {
             var typ = "";
             var role = "";
-            var templates = parser.xml2json(templatelistinfos);
-            templates = [].concat((templates.templatelist || {}).template || []).map(function(template) {
-              return template;
-            });
+            var templates = templatelistinfos; // = parser.xml2json(templatelistinfos);
+            //templates = [].concat((templates.templatelist || {}).template || []).map(function(template) {
+            //  return template;
+            //});
             adapter.log.debug("templates\n");
             adapter.log.debug(JSON.stringify(templates));
             if (templates.length){

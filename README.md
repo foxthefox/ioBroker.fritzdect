@@ -124,6 +124,8 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 ### 0.2.1
 * gulp added
 * correction for DECT100 without temperature (caused a stop in creation of objects)
+* template creation corrected
+* my templates added in admin page
 
 ### 0.2.0
 * compact mode

@@ -34,6 +34,7 @@
    function init() {
         $('#testd').click(testd);
         $('#testg').click(testg);
+	$('#testt').click(testt);
     }
 
     // the function loadSettings has to exist ...
@@ -99,6 +100,22 @@
         $('#testd').addClass('disabled');
         sendTo(null, 'devices', null, function (result) {
             $('#testd').removeClass('disabled');
+            console.log("result is "+ JSON.stringify(result));
+            showMessage(JSON.stringify(result), _('Result: '));
+        });            
+    }
+    function testt() {
+        if (!common.enabled) {
+            showToast(null, _('Enable first the adapter to test client.'));
+            return;
+        }
+        if (changed) {
+            showToast(null, _('First save the adapter'));
+            return;
+        }
+        $('#testt').addClass('disabled');
+        sendTo(null, 'templates', null, function (result) {
+            $('#testt').removeClass('disabled');
             console.log("result is "+ JSON.stringify(result));
             showMessage(JSON.stringify(result), _('Result: '));
         });            
@@ -195,11 +212,14 @@
             </div>
         </div>
         <div class="row">
-            <div class="col s6">
+            <div class="col s4">
                 <a id="testd" class="btn"><span class="translate">My Devices</span></a>
             </div>
-            <div class="col s6">
+            <div class="col s4">
                 <a id="testg" class="btn"><span class="translate">My Groups</span></a>
+            </div>
+	    <div class="col s4">
+                <a id="testt" class="btn"><span class="translate">My Templates</span></a>
             </div>
         </div>
 

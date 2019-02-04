@@ -398,6 +398,9 @@ function errorHandler(error) {
     if (error == "0000000000000000"){
         adapter.log.error("Did not get session id- invalid username or password?");
     }
+    else if (!error.response){
+        adapter.log.error('no response part in returned message');
+    }
     else if (error.response.statusCode){
         if (error.response.statusCode == 403){
             adapter.log.error("no permission for this call (403), has user all the rights and access to fritzbox?")

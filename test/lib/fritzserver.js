@@ -3,18 +3,18 @@ var http = require('http');
 var fs = require('fs');
 const { parse } = require('querystring');
 
-// var content = fs.readFileSync('../test_api_response.xml');
-var content = fs.readFileSync('./test.xml');
+var content = fs.readFileSync('../test_api_response.xml');
+//var content = fs.readFileSync('./test.xml');
 
-var templates = fs.readFileSync('./template_answer.xml');
+var templates = fs.readFileSync('../template_answer.xml');
 
-var temp_stats = fs.readFileSync('./devicestat_temp_answer.xml');
+var temp_stats = fs.readFileSync('../devicestat_temp_answer.xml');
 
-var power_stats = fs.readFileSync('./devicestat_power_answer.xml');
+var power_stats = fs.readFileSync('../devicestat_power_answer.xml');
 
-var hkr_batt = fs.readFileSync('./hkr_response.xml');
+var hkr_batt = fs.readFileSync('../hkr_response.xml');
 
-var guestWlan = fs.readFileSync('./guest_wlan_form.xml');
+var guestWlan = fs.readFileSync('../guest_wlan_form.xml');
 
 var server;
 

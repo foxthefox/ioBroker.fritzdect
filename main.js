@@ -328,6 +328,27 @@ function startAdapter(options) {
                             });
                         wait = true;
                         break;
+                    case 'templates':
+                        var result = [];
+        
+                        var username = adapter.config.fritz_user;
+                        var password = adapter.config.fritz_pw;
+                        var moreParam = adapter.config.fritz_ip;
+                        
+                        var fritz = new Fritz(username, password||"", moreParam||"");
+                        fritz.getTemplateListInfos().then(function(templatelistinfos) {
+                            var templates = parser.xml2json(templatelistinfos);
+                            templates = [].concat((templates.templatelist || {}).template || []).map(function(template) {
+                                // remove spaces in AINs
+                                // template.identifier = group.identifier.replace(/\s/g, '');
+                                return template;
+                            });
+                            result = templates;
+                        }).done(function (devicelistinfos){
+                            if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                            });
+                        wait = true;
+                        break;
                     default:
                         adapter.log.warn("Received unhandled message: " + obj.command);
                         break;

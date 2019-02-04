@@ -537,7 +537,7 @@ function main() {
             native: {
             }
         });
-        adapter.setObjectNotExists(typ + newId +'template.lasttemplate', {
+        adapter.setObjectNotExists('template.lasttemplate', {
             type: 'state',
             common: {
                 "name": "template set",
@@ -590,6 +590,7 @@ function main() {
             native: {
             }
         });
+        adapter.setState(typ + newId +'.name', {val: name, ack: true});
         adapter.setObjectNotExists(typ + newId +'.toggle', {
             type: 'state',
             common: {
@@ -1134,10 +1135,10 @@ function main() {
         fritz.getTemplateListInfos().then(function(templatelistinfos) {
             var typ = "";
             var role = "";
-            var templates = templatelistinfos; // = parser.xml2json(templatelistinfos);
-            //templates = [].concat((templates.templatelist || {}).template || []).map(function(template) {
-            //  return template;
-            //});
+            var templates = parser.xml2json(templatelistinfos);
+            templates = [].concat((templates.templatelist || {}).template || []).map(function(template) {
+              return template;
+            });
             adapter.log.debug("templates\n");
             adapter.log.debug(JSON.stringify(templates));
             if (templates.length){

@@ -109,19 +109,22 @@ function startAdapter(options) {
                     } else if (dp === 'mode') {
                         if (state.val === 0) {
                             adapter.getState('Comet_' + id + '.targettemp', function (err, targettemp) { // oder hier die Verwendung von lasttarget
-                                var setTemp = targettemp.val;
-                                if (setTemp < 8) {
-                                    adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
-                                    setTemp = 8;
-                                } else if (setTemp > 28) {
-                                    adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
-                                    setTemp = 28;
+                                if(targettemp.val){
+                                    var setTemp = targettemp.val;
+                                    if (setTemp < 8) {
+                                        adapter.setState('Comet_' + id + '.targettemp', {val: 8, ack:true});
+                                        setTemp = 8;
+                                    } else if (setTemp > 28) {
+                                        adapter.setState('Comet_' + id + '.targettemp', {val: 28, ack:true});
+                                        setTemp = 28;
+                                    }
+                                    fritz.setTempTarget(id, setTemp).then(function (sid) {
+                                        adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
+                                        adapter.setState('Comet_'+ id +'.targettemp', {val: setTemp, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                                    })
+                                    .catch(errorHandler);
                                 }
-                                fritz.setTempTarget(id, setTemp).then(function (sid) {
-                                    adapter.log.debug('Set target temp ' + id + ' ' + setTemp +' °C');
-                                    adapter.setState('Comet_'+ id +'.targettemp', {val: setTemp, ack: true}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                                })
-                                .catch(errorHandler);
+                                else{adapter-log.error('no data in targettemp for setting mode')}
         
                             });
                         } else if (state.val === 1) {

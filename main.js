@@ -1169,7 +1169,7 @@ function main() {
                 adapter.log.info('create Templates ' + templates.length);
                 createTemplateResponse();
                 templates.forEach(function (template){
-                    if ((template.functionbitmask & 320) == 320){ //heating template
+                    if ((template.functionbitmask & 320) == 320 || (template.functionbitmask & 4160) == 4160 ){ //heating template
                         typ = "template_";
                         role = "switch";
                         adapter.log.info('setting up Template '+ template.name);  

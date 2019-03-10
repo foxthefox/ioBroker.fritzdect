@@ -1,7 +1,7 @@
 ![Logo](admin/fritzdect_logo.png)
 # ioBroker.fritzdect
 
-[![NPM version](http://img.shields.io/npm/v/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
+![Number of Installations](http://iobroker.live/badges/fritzdect-installed.svg) ![Number of Installations](http://iobroker.live/badges/fritzdect-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
 [![Build Status](https://travis-ci.org/foxthefox/ioBroker.fritzdect.svg?branch=master)](https://travis-ci.org/foxthefox/ioBroker.fritzdect)
 

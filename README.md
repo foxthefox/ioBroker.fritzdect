@@ -221,4 +221,4 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 
 The MIT License (MIT)
 
-Copyright (c) 2018 foxthefox <foxthefox@wysiwis.net>
+Copyright (c) 2018 - 2019 foxthefox <foxthefox@wysiwis.net>

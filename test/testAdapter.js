@@ -954,7 +954,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                 }
                 expect(state.val).to.exist;
                 expect(state.val).to.be.equal('FRITZ!DECT 400');
-                states.getState('fritzdect.0.Button_119340141058-2.manufacturer', function (err, state) {
+                states.getState('fritzdect.0.Button_13096321567-9.manufacturer', function (err, state) {
                     if (err) console.error(err);
                     expect(state).to.exist;
                     if (!state) {

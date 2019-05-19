@@ -1102,13 +1102,11 @@ function main() {
                     else if((device.functionbitmask & 32) == 32){ //buttons from fritzdect 400
                         typ = "Button_";
                         role = "sensor";
-                        console.log('FD400' + device.button.length);
-                        console.log('FD400' + button.length);
-                        device.forEach(function (button){
+                        device.button.forEach(function (button){
                             adapter.log.info('setting up FD400 Button object '+ button.name);                    
-                            //createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
-                            //createProductName(typ,device.identifier,device.productname);
-                            //createButton(typ,button.identifier);
+                            createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
+                            createProductName(typ,device.identifier,device.productname);
+                            createButton(typ,button.identifier);
                         });
                     }
                     /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen

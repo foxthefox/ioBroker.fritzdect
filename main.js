@@ -1105,7 +1105,7 @@ function main() {
                         device.button.forEach(function (button){
                             adapter.log.info('setting up FD400 Button object '+ button.name);                    
                             createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
-                            createProductName(typ,device.identifier,device.productname);
+                            createProductName(typ,button.identifier,device.productname);
                             createButton(typ,button.identifier);
                         });
                     }

@@ -1099,6 +1099,16 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createButton(typ,device.identifier);
                     }
+                    else if((device.functionbitmask & 32) == 32){ //buttons from fritzdect 400
+                        typ = "Button_";
+                        role = "sensor";
+                        device.forEach(function (button){
+                            adapter.log.info('setting up FD400 Button object '+ device.name);                    
+                            createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
+                            createProductName(typ,device.identifier,device.productname);
+                            createButton(typ,button.identifier);
+                        }
+                    }
                     /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen
                     else if((device.functionbitmask & 1) == 1){ //HAN-FUN
                         typ = "HAN-FUN_";

@@ -940,6 +940,84 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
+      it('Test ' + adapterShortName + ' adapter: Check values of 2nd Button from FD400', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.Button_13096321567-9.prodname', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.Button_13096321567-9.prodname" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_13096321567-9.prodname     ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('FRITZ!DECT 400');
+                states.getState('fritzdect.0.Button_119340141058-2.manufacturer', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.Button_13096321567-9.manufacturer" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.Button_13096321567-9.manufacturer ... ' + state.val);
+                    }
+                    expect(state.val).to.exist;
+                    expect(state.val).to.be.equal('AVM');
+                    states.getState('fritzdect.0.Button_13096321567-9.fwversion', function (err, state) {
+                        if (err) console.error(err);
+                        expect(state).to.exist;
+                        if (!state) {
+                            console.error('state "fritzdect.0.Button_13096321567-9.fwversion" not set');
+                        }
+                        else {
+                            console.log('fritzdect.0.Button_13096321567-9.fwversion    ... ' + state.val);
+                        }
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('04.90');
+                        states.getState('fritzdect.0.Button_13096321567-9.id', function (err, state) {
+                            if (err) console.error(err);
+                            expect(state).to.exist;
+                            if (!state) {
+                                console.error('state "fritzdect.0.Button_13096321567-9.id" not set');
+                            }
+                            else {
+                                console.log('fritzdect.0.Button_13096321567-9.id           ... ' + state.val);
+                            }
+                            expect(state.val).to.exist;
+                            expect(state.val).to.be.equal('5001');
+                            states.getState('fritzdect.0.Button_13096321567-9.name', function (err, state) {
+                                if (err) console.error(err);
+                                expect(state).to.exist;
+                                if (!state) {
+                                    console.error('state "fritzdect.0.Button_13096321567-9.name" not set');
+                                }
+                                else {
+                                    console.log('fritzdect.0.Button_13096321567-9.name         ... ' + state.val);
+                                }
+                                expect(state.val).to.exist;
+                                expect(state.val).to.be.equal('FRITZ!DECT 400 #14: lang');
+                                states.getState('fritzdect.0.Button_13096321567-9.lastclick', function (err, state) {
+                                    if (err) console.error(err);
+                                    expect(state).to.exist;
+                                    if (!state) {
+                                        console.error('state "fritzdect.0.Button_13096321567-9.lastclick" not set');
+                                    }
+                                    else {
+                                        console.log('fritzdect.0.Button_13096321567-9.lastclick  ... ' + state.val);
+                                        expect(state.val).to.exist;
+                                        expect(state.val).to.be.equal('1549195595');
+                                        done();
+                                    }
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }, 1000);
+    });
     it('Test ' + adapterShortName + ' adapter: Check values of Powerline', function (done) {
         this.timeout(30000);
         setTimeout(function() {

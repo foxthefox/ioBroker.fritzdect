@@ -1245,6 +1245,19 @@ function main() {
                         adapter.setState('Button_'+ device.identifier +'.present', {val: device.present, ack: true});
                         
                     }
+                    else if((device.functionbitmask & 32) == 32){ //button FD400
+                        device.button.forEach(function (button){
+                            adapter.log.debug('updating Button '+ button.name); 
+                            adapter.log.debug('Button_'+ button.identifier + ' : '  +'name : ' + button.name);
+                            adapter.setState('Button_'+ button.identifier +'.name', {val: button.name, ack: true});
+
+                            adapter.log.debug('Button_'+ button.identifier + ' : '  +'lastclick: ' + button.lastpressedtimestamp);
+                            adapter.setState('Button_'+ button.identifier +'.lastclick', {val: button.lastpressedtimestamp, ack: true});
+
+                            adapter.log.debug('Button_'+ button.identifier + ' : ' +'present : ' + device.present);
+                            adapter.setState('Button_'+ button.identifier +'.present', {val: device.present, ack: true});
+                        });
+                    }
                     else if((device.functionbitmask & 512) == 512){ //switch
                         adapter.log.debug('updating Switch '+ device.name); 
                         adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'name : ' + device.name);

@@ -30,11 +30,15 @@
     			<name>FRITZ!DECT 400 #14</name>
     			<battery>100</battery>
     			<batterylow>0</batterylow>
-    			<button identifier="13096 XXX-0" id="5000">
+    			<button>
+				<identifier>13096 321567-0</identifier> 
+				<id>5000</id>
        				<name>FRITZ!DECT 400 #14: kurz</name>
         			<lastpressedtimestamp>1549195586</lastpressedtimestamp>
     			</button>
-    			<button identifier="13096 XXX-9" id="5001">
+    			<button>
+				<identifier>13096 321567-9</identifier>
+				<id>5001</id>
         			<name>FRITZ!DECT 400 #14: lang</name>
         			<lastpressedtimestamp>1549195595</lastpressedtimestamp>
     			</button>

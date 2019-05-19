@@ -1107,7 +1107,7 @@ function main() {
                             createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
                             createProductName(typ,device.identifier,device.productname);
                             createButton(typ,button.identifier);
-                        }
+                        });
                     }
                     /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen
                     else if((device.functionbitmask & 1) == 1){ //HAN-FUN

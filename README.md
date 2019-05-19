@@ -102,7 +102,7 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |Contact.state|boolean|-|true/false -> ON/OFF|
 
-### button
+### button (HAN-FUN, DECT400)
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |Button.lastclick|number|-|timestamp|
@@ -121,6 +121,9 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
+### 0.2.2
+* added FritzDECT400 incl. testing
+
 ### 0.2.1
 * gulp added
 * correction for DECT100 without temperature (caused a stop in creation of objects)

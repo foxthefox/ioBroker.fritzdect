@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "news": {
+            "0.2.2": {
+                "en": "testing nodejs12, added FritzDECT400",
+                "de": "Testknoten js 12, Fritz DECT 400 hinzugefügt",
+                "ru": "тестовый узел js 12, добавлен Fritz DECT 400",
+                "pt": "nó de teste js 12, adicionado Fritz DECT 400",
+                "nl": "testknoop js 12, toegevoegd Fritz DECT 400",
+                "fr": "noeud de test js 12, ajout de Fritz DECT 400",
+                "it": "testing node js 12, aggiunto Fritz DECT 400",
+                "es": "prueba de nodo js 12, agregó Fritz DECT 400",
+                "pl": "testowanie węzła js 12, dodano Fritz DECT 400",
+                "zh-cn": "测试节点js 12，添加了Fritz DECT 400"
+              },
             "0.2.1": {
                 "en": "gulp, translation added, correction for DECT100 without temperature",
                 "de": "Schluck, Übersetzung hinzugefügt, Korrektur für DECT100 ohne Temperatur",

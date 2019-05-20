@@ -604,7 +604,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                             console.log('fritzdect.0.Comet_117951022222.temp            ... ' + state.val);
                                                         }
                                                         expect(state.val).to.exist;
-                                                        expect(state.val).to.be.equal(22);
+                                                        expect(state.val).to.be.equal(20);
                                                         states.getState('fritzdect.0.Comet_117951022222.battery', function (err, state) {
                                                             if (err) console.error(err);
                                                             expect(state).to.exist;
@@ -753,7 +753,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                         else {
                                                             console.log('fritzdect.0.Comet_119600642220.temp                ... ' + state.val);
                                                             expect(state.val).to.exist;
-                                                            expect(state.val).to.be.equal(25);
+                                                            expect(state.val).to.be.equal(20);
                                                             done();
                                                         }
                                                         /* für später, wenn der batteryaufruf schon beim init kommt
@@ -1211,7 +1211,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     else {
                                         console.log('fritzdect.0.DECT100_087611016969.temp          ... ' + state.val);
                                         expect(state.val).to.exist;
-                                        expect(state.val).to.be.equal(17);
+                                        expect(state.val).to.be.equal(17.5);
                                         done();
                                     }
                                 });

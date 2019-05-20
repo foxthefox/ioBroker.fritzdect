@@ -682,6 +682,20 @@ function main() {
             native: {
             }
         });
+        adapter.setObjectNotExists(typ + newId +'.temp_offset', {
+            type: 'state',
+            common: {
+                "name":  "Temp Offset",
+                "type": "number",
+                "unit": "°C",
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "Temp Offset"
+            },
+            native: {
+            }
+        });
     }
     function createSwitch(typ,newId){
         adapter.log.debug('create Switch objects');
@@ -1285,8 +1299,10 @@ function main() {
                         adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
                         
                         if(device.temperature){ 
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10);
-                            adapter.setState('DECT200_'+ device.identifier +'.temp', {val: (parseFloat(device.temperature.celsius)+parseFloat(device.temperature.offset))/10, ack: true});
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius))/10);
+                            adapter.setState('DECT200_'+ device.identifier +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp offset: ' + (parseFloat(device.temperature.offset))/10);
+                            adapter.setState('DECT200_'+ device.identifier +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
                         }
                         
                         if(device.powermeter.voltage){

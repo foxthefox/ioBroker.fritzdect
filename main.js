@@ -1202,6 +1202,19 @@ function main() {
                         adapter.log.info('setting up Template '+ template.name);  
                         createTemplate(typ,template.identifier,template.name,role,template.id);
                     }
+                    else if ((template.functionbitmask & 2688) == 2688 || (template.functionbitmask & 2944) == 2944 ){ //switch template
+                        // bit 7: energy
+                        // bit 8: temperature
+                        // bit 9: switch
+                        // bit 11: microfone
+                        // 2688 = 7, 9, 11
+                        // 2944 = 7, 8, 9, 11
+
+                        typ = "template_";
+                        role = "switch";
+                        adapter.log.info('setting up Template '+ template.name);  
+                        createTemplate(typ,template.identifier,template.name,role,template.id);
+                    }
                     else {
                         adapter.log.debug('nix vorbereitet für diese Art von Template' + template.functionbitmask);
                     }

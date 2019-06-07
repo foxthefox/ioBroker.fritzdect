@@ -82,4 +82,14 @@
             <hkr_time_table/>
         </applymask>
     </template>
+    <template  applymask="2" functionbitmask="2944" identifier="tmp5665DB-3A1C9EE0B" id="60201" > 
+        <name>vorlage 210</name>
+        <devices>
+            <device identifier="11657 0074380">
+            </device>
+        </devices>
+        <applymask>
+            <relay_automatic/>
+        </applymask>
+    </template >
 </templatelist>

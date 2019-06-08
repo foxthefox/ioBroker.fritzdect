@@ -1222,9 +1222,25 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
-  /**
+    it('Test ' + adapterShortName + ' adapter: Objects must exist for template_tmp6F0093-39091EED0', done => {
+        setTimeout(function(){
+            objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.name, (err, obj) => {
+                if (err) console.error('template_tmp6F0093-39091EED0.name '+err);
+                expect(obj).to.exist;
+                expect(obj).to.be.ok;
+                    objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.id', (err, obj) => {
+                        if (err) console.error('template_tmp6F0093-39091EED0.name ' + err);
+                        expect(obj).to.exist;    
+                        expect(obj).to.be.ok;
+                        done();
+                    });
+                    });
+                }, 1000);
+     }).timeout(5000);
+  
+
     it('Test ' + adapterShortName + ' adapter: Check values of template 1', function (done) {
-        this.timeout(30000);
+        this.timeout(5000);
         setTimeout(function() {
             states.getState('fritzdect.0.template_tmp6F0093-39091EED0.name', function (err, state) {
                 if (err) console.error(err);
@@ -1253,6 +1269,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
+    /**
     it('Test ' + adapterShortName + ' adapter: Check values of template 2', function (done) {
         this.timeout(30000);
         setTimeout(function() {

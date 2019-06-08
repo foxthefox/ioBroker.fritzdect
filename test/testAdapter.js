@@ -1224,7 +1224,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     });
     it('Test ' + adapterShortName + ' adapter: Objects must exist for template_tmp6F0093-39091EED0', done => {
         setTimeout(function(){
-            objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.name, (err, obj) => {
+            objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.name', (err, obj) => {
                 if (err) console.error('template_tmp6F0093-39091EED0.name '+err);
                 expect(obj).to.exist;
                 expect(obj).to.be.ok;

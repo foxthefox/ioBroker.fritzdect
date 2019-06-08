@@ -450,6 +450,7 @@ function main() {
     function updateFritzGuest(){
         fritz.getGuestWlan().then(function(listinfos){
             adapter.log.debug("Guest WLAN: "+JSON.stringify(listinfos));
+            //adapter.setState('GuestWLAN', {val: listinfos, ack: true}); //wenn denn etwas zurückkommt bei V7.0
         })
         .catch(errorHandler);
     }

@@ -1283,7 +1283,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.log('fritzdect.0.Button_template_tmp6F0093-390920878.name         ... ' + state.val);
                 }
                 expect(state.val).to.exist;
-                expect(state.val).to.be.equal('Normal Bad ');
+                expect(state.val).to.be.equal('Normal Bad');
                 states.getState('fritzdect.0.template_tmp6F0093-390920878.id', function (err, state) {
                     if (err) console.error(err);
                     expect(state).to.exist;

@@ -1269,9 +1269,9 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
-    /**
+
     it('Test ' + adapterShortName + ' adapter: Check values of template 2', function (done) {
-        this.timeout(30000);
+        this.timeout(5000);
         setTimeout(function() {
             states.getState('fritzdect.0.template_tmp6F0093-390920878.name', function (err, state) {
                 if (err) console.error(err);
@@ -1301,7 +1301,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         }, 1000);
     });
     it('Test ' + adapterShortName + ' adapter: Check values of template 3', function (done) {
-        this.timeout(30000);
+        this.timeout(5000);
         setTimeout(function() {
             states.getState('fritzdect.0.template_tmp6F0093-390920F4A.name', function (err, state) {
                 if (err) console.error(err);
@@ -1331,7 +1331,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         }, 1000);
     });
     it('Test ' + adapterShortName + ' adapter: Check values of template 4', function (done) {
-        this.timeout(30000);
+        this.timeout(5000);
         setTimeout(function() {
             states.getState('fritzdect.0.template_tmp6F0093-39091E943.name', function (err, state) {
                 if (err) console.error(err);
@@ -1361,7 +1361,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         }, 1000);
     });
     it('Test ' + adapterShortName + ' adapter: Check values of template 5', function (done) {
-        this.timeout(30000);
+        this.timeout(5000);
         setTimeout(function() {
             states.getState('fritzdect.0.template_tmp6F0093-391363146.name', function (err, state) {
                 if (err) console.error(err);
@@ -1450,7 +1450,36 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
-  */
+    it('Test ' + adapterShortName + ' adapter: Check values of template 8', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.template_tmp5665DB-3A1C9EC6F.name', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.template_tmp5665DB-3A1C9EC6F.name" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Button_template_tmp5665DB-3A1C9EC6F.name         ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('vorlage_dect200');
+                states.getState('fritzdect.0.template_tmp5665DB-3A1C9EC6F.id', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.template_tmp5665DB-3A1C9EC6F.id" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.template_tmp5665DB-3A1C9EC6F.id ... ' + state.val);
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('60101');
+                        done();
+                    }
+                });
+            });
+        }, 1000);
+    });
     /*
     it('Test ' + adapterShortName + ' adapter: Set values', function (done) {
         console.log('START SET VALUES');

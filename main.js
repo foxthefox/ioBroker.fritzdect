@@ -352,6 +352,34 @@ function startAdapter(options) {
                             });
                         wait = true;
                         break;
+                     case 'statistic':
+                        var result = [];
+        
+                        var username = adapter.config.fritz_user;
+                        var password = adapter.config.fritz_pw;
+                        var moreParam = adapter.config.fritz_ip;
+                        
+                        var fritz = new Fritz(username, password||"", moreParam||"");
+                        fritz.getBasicDeviceStats(obj.message).then(function(statisticinfos) { //obj.message should be ain of device requested
+                            var devicestats = parser.xml2json(statisticinfos);
+                            result = devicestats;
+                        }).done(function (statisticinfos){
+                            if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                            });
+                        wait = true;
+                        break;
+                        /** necessary adjustments in fritzapi
+                        //new functions related to devices in version 7
+                            getBasicDeviceStats: function(ain) {
+                            return this.call(module.exports.getBasicDeviceStats, ain);
+                        },
+                        // get basic device info (XML)
+                        module.exports.getBasicDeviceStats  = function(sid, ain, options)
+                        {
+                            return executeCommand(sid, 'getbasicdevicestats', ain,  options);
+                        };
+                         */
+                        //idea for other statistics: call of message returns everything (loop over all devices)
                     default:
                         adapter.log.warn("Received unhandled message: " + obj.command);
                         break;

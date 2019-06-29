@@ -1314,9 +1314,14 @@ function main() {
             
                         adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'state :' + device.switch.state);
                         adapter.setState('DECT200_'+ device.identifier +'.state', {val: device.switch.state, ack: true});
-            
+                        
+                        if (device.powermeter.power === ""){
+                            adapter.log.error('DECT 200 device.powermeter.power value from fritzbox was null, please check fritbox or reboot it');
+                            }
+                        else{  
                         adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'power :' + parseFloat(device.powermeter.power)/1000);
                         adapter.setState('DECT200_'+ device.identifier +'.power', {val: parseFloat(device.powermeter.power)/1000, ack: true});
+                        }
             
                         adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'energy :' + device.powermeter.energy);
                         adapter.setState('DECT200_'+ device.identifier +'.energy', {val: device.powermeter.energy, ack: true});  
@@ -1330,17 +1335,32 @@ function main() {
                         adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'devicelock : ' + device.switch.devicelock);
                         adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
                         
-                        if(device.temperature){ 
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius))/10);
-                            adapter.setState('DECT200_'+ device.identifier +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
+                        if(device.temperature){
+                            if (device.temperature.celsius === ""){
+                                adapter.log.error('DECT 200 device.temperature.celsius value from fritzbox was null, please check fritbox or reboot it');
+                                }
+                            else{    
+                                adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius))/10);
+                                adapter.setState('DECT200_'+ device.identifier +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
+                            }
+                            if (device.temperature.offset === ""){
+                                adapter.log.error('DECT 200 device.temperature.offset value from fritzbox was null, please check fritbox or reboot it');
+                                }
+                            else{  
                             adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp offset: ' + (parseFloat(device.temperature.offset))/10);
                             adapter.setState('DECT200_'+ device.identifier +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
+                            }
                         }
                         
                         if(device.powermeter.voltage){
-                        //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) { 
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : ' +'voltage : ' + device.powermeter.voltage / 1000);
-                            adapter.setState('DECT200_'+ device.identifier +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
+                        //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) {
+                            if (device.powermeter.voltage === ""){
+                                adapter.log.error('DECT 200 device.powermeter.voltage value from fritzbox was null, please check fritbox or reboot it');
+                                }
+                            else{
+                                adapter.log.debug('DECT200_'+ device.identifier + ' : ' +'voltage : ' + device.powermeter.voltage / 1000);
+                                adapter.setState('DECT200_'+ device.identifier +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
+                            }
                         }  
                     }
                     else if((device.functionbitmask & 64) == 64){ //thermostat

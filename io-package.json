@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.2.2",
+        "version": "0.2.3",
         "news": {
+              "0.2.3": {
+                "en": "skip updating values, when device not present",
+                "de": "Aktualisierungswerte überspringen, wenn das Gerät nicht vorhanden ist",
+                "ru": "пропустить обновление значений, когда устройство отсутствует",
+                "pt": "pular valores de atualização, quando o dispositivo não está presente",
+                "nl": "sla de update-waarden over wanneer het apparaat niet aanwezig is",
+                "fr": "ignorer les valeurs de mise à jour lorsque le périphérique n'est pas présent",
+                "it": "saltare i valori di aggiornamento, quando il dispositivo non è presente",
+                "es": "Saltar los valores de actualización, cuando el dispositivo no está presente",
+                "pl": "pomiń aktualizację wartości, gdy urządzenie nie jest obecne",
+                "zh-cn": "当设备不存在时，跳过更新值"
+              },
             "0.2.2": {
                 "en": "testing nodejs12, added FritzDECT400",
                 "de": "Testknoten js 12, Fritz DECT 400 hinzugefügt",

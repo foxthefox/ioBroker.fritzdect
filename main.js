@@ -1259,7 +1259,7 @@ function main() {
                         adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
                         adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
                         adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});                        
-                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('DECT100_'+ device.identifier.replace(/\s/g, '') + ' is not present, check the device connection, no values are written');
                             }
                         else {
@@ -1277,7 +1277,7 @@ function main() {
                         adapter.setState('Contact_'+ device.identifier +'.name', {val: device.name, ack: true});
                         adapter.log.debug('Contact_'+ device.identifier + ' : ' +'present : ' + device.present);
                         adapter.setState('Contact_'+ device.identifier +'.present', {val: device.present, ack: true});
-                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('Contact_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {
@@ -1291,7 +1291,7 @@ function main() {
                         adapter.setState('Button_'+ device.identifier +'.name', {val: device.name, ack: true});
                         adapter.log.debug('Button_'+ device.identifier + ' : ' +'present : ' + device.present);
                         adapter.setState('Button_'+ device.identifier +'.present', {val: device.present, ack: true});
-                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {
@@ -1306,7 +1306,7 @@ function main() {
                             adapter.setState('Button_'+ button.identifier +'.name', {val: button.name, ack: true});
                             adapter.log.debug('Button_'+ button.identifier + ' : ' +'present : ' + device.present);
                             adapter.setState('Button_'+ button.identifier +'.present', {val: device.present, ack: true});
-                            if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                            if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                                 adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
                                 }
                             else {
@@ -1322,7 +1322,7 @@ function main() {
                                            
                         adapter.log.debug('DECT200_'+ device.identifier+ ' : ' +'present : ' + device.present);
                         adapter.setState('DECT200_'+ device.identifier +'.present', {val: device.present, ack: true});
-                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('DECT200_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {
@@ -1366,7 +1366,7 @@ function main() {
     
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
-                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('Comet_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {

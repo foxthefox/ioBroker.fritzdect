@@ -1257,51 +1257,62 @@ function main() {
                         adapter.log.debug('updating Repeater '+ device.name); 
                         adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
                         adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
-                        
-                        if(device.temperature){
-                            adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius))/10);
-                            adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
-                            adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp offset : ' + (parseFloat(device.temperature.offset))/10);
-                            adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
-                        }
                         adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
-                        adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});                    
+                        adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});                        
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                            adapter.log.warn('DECT100_'+ device.identifier.replace(/\s/g, '') + ' is not present, check the device connection, no values are written');
+                            }
+                        else {
+                            if(device.temperature){
+                                adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius))/10);
+                                adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
+                                adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'temp offset : ' + (parseFloat(device.temperature.offset))/10);
+                                adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
+                            }
+                        }
                     }
                     else if((device.functionbitmask & 16) == 16){ //contact
                         adapter.log.debug('updating Sensor '+ device.name); 
                         adapter.log.debug('Contact_'+ device.identifier + ' : '  +'name : ' + device.name);
                         adapter.setState('Contact_'+ device.identifier +'.name', {val: device.name, ack: true});
-                        
-                        adapter.log.debug('Contact_'+ device.identifier + ' : '  +'state : ' + device.alert.state);
-                        adapter.setState('Contact_'+ device.identifier +'.state', {val: device.alert.state, ack: true});
-                        
                         adapter.log.debug('Contact_'+ device.identifier + ' : ' +'present : ' + device.present);
                         adapter.setState('Contact_'+ device.identifier +'.present', {val: device.present, ack: true});
-                        
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                            adapter.log.warn('Contact_'+ device.identifier + ' is not present, check the device connection, no values are written');
+                            }
+                        else {
+                            adapter.log.debug('Contact_'+ device.identifier + ' : '  +'state : ' + device.alert.state);
+                            adapter.setState('Contact_'+ device.identifier +'.state', {val: device.alert.state, ack: true});
+                        }
                     }
                     else if((device.functionbitmask & 8) == 8){ //button
                         adapter.log.debug('updating Button '+ device.name); 
                         adapter.log.debug('Button_'+ device.identifier + ' : '  +'name : ' + device.name);
                         adapter.setState('Button_'+ device.identifier +'.name', {val: device.name, ack: true});
-                        
-                        adapter.log.debug('Button_'+ device.identifier + ' : '  +'lastclick: ' + device.button.lastpressedtimestamp);
-                        adapter.setState('Button_'+ device.identifier +'.lastclick', {val: device.button.lastpressedtimestamp, ack: true});
-                        
                         adapter.log.debug('Button_'+ device.identifier + ' : ' +'present : ' + device.present);
                         adapter.setState('Button_'+ device.identifier +'.present', {val: device.present, ack: true});
-                        
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                            adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
+                            }
+                        else {
+                            adapter.log.debug('Button_'+ device.identifier + ' : '  +'lastclick: ' + device.button.lastpressedtimestamp);
+                            adapter.setState('Button_'+ device.identifier +'.lastclick', {val: device.button.lastpressedtimestamp, ack: true});
+                        }
                     }
                     else if((device.functionbitmask & 32) == 32){ //button FD400
                         device.button.forEach(function (button){
                             adapter.log.debug('updating Button '+ button.name); 
                             adapter.log.debug('Button_'+ button.identifier + ' : '  +'name : ' + button.name);
                             adapter.setState('Button_'+ button.identifier +'.name', {val: button.name, ack: true});
-
-                            adapter.log.debug('Button_'+ button.identifier + ' : '  +'lastclick: ' + button.lastpressedtimestamp);
-                            adapter.setState('Button_'+ button.identifier +'.lastclick', {val: button.lastpressedtimestamp, ack: true});
-
                             adapter.log.debug('Button_'+ button.identifier + ' : ' +'present : ' + device.present);
                             adapter.setState('Button_'+ button.identifier +'.present', {val: device.present, ack: true});
+                            if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                                adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
+                                }
+                            else {
+                                adapter.log.debug('Button_'+ button.identifier + ' : '  +'lastclick: ' + button.lastpressedtimestamp);
+                                adapter.setState('Button_'+ button.identifier +'.lastclick', {val: button.lastpressedtimestamp, ack: true});
+                            }
                         });
                     }
                     else if((device.functionbitmask & 512) == 512){ //switch
@@ -1311,57 +1322,42 @@ function main() {
                                            
                         adapter.log.debug('DECT200_'+ device.identifier+ ' : ' +'present : ' + device.present);
                         adapter.setState('DECT200_'+ device.identifier +'.present', {val: device.present, ack: true});
-            
-                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'state :' + device.switch.state);
-                        adapter.setState('DECT200_'+ device.identifier +'.state', {val: device.switch.state, ack: true});
-                        
-                        if (device.powermeter.power === ""){
-                            adapter.log.error('DECT 200 device.powermeter.power value from fritzbox was null, please check fritbox or reboot it');
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                            adapter.log.warn('DECT200_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
-                        else{  
-                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'power :' + parseFloat(device.powermeter.power)/1000);
-                        adapter.setState('DECT200_'+ device.identifier +'.power', {val: parseFloat(device.powermeter.power)/1000, ack: true});
-                        }
-            
-                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'energy :' + device.powermeter.energy);
-                        adapter.setState('DECT200_'+ device.identifier +'.energy', {val: device.powermeter.energy, ack: true});  
-                        
-                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'mode : ' + device.switch.mode);
-                        adapter.setState('DECT200_'+ device.identifier +'.mode', {val: device.switch.mode, ack: true});
-                        
-                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'lock : ' + device.switch.lock);
-                        adapter.setState('DECT200_'+ device.identifier +'.lock', {val: device.switch.lock, ack: true});
-    
-                        adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'devicelock : ' + device.switch.devicelock);
-                        adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
-                        
-                        if(device.temperature){
-                            if (device.temperature.celsius === ""){
-                                adapter.log.error('DECT 200 device.temperature.celsius value from fritzbox was null, please check presence of device');
-                                }
-                            else{    
+                        else {
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'state :' + device.switch.state);
+                            adapter.setState('DECT200_'+ device.identifier +'.state', {val: device.switch.state, ack: true});
+
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'power :' + parseFloat(device.powermeter.power)/1000);
+                            adapter.setState('DECT200_'+ device.identifier +'.power', {val: parseFloat(device.powermeter.power)/1000, ack: true});
+
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'energy :' + device.powermeter.energy);
+                            adapter.setState('DECT200_'+ device.identifier +'.energy', {val: device.powermeter.energy, ack: true});  
+
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'mode : ' + device.switch.mode);
+                            adapter.setState('DECT200_'+ device.identifier +'.mode', {val: device.switch.mode, ack: true});
+
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'lock : ' + device.switch.lock);
+                            adapter.setState('DECT200_'+ device.identifier +'.lock', {val: device.switch.lock, ack: true});
+
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'devicelock : ' + device.switch.devicelock);
+                            adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
+
+                            if(device.temperature){
                                 adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius))/10);
                                 adapter.setState('DECT200_'+ device.identifier +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
+
+                                adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp offset: ' + (parseFloat(device.temperature.offset))/10);
+                                adapter.setState('DECT200_'+ device.identifier +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
                             }
-                            if (device.temperature.offset === ""){
-                                adapter.log.error('DECT 200 device.temperature.offset value from fritzbox was null, please check presence of device');
-                                }
-                            else{  
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp offset: ' + (parseFloat(device.temperature.offset))/10);
-                            adapter.setState('DECT200_'+ device.identifier +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
-                            }
-                        }
-                        
-                        if(device.powermeter.voltage){
-                        //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) {
-                            if (device.powermeter.voltage === ""){
-                                adapter.log.error('DECT 200 device.powermeter.voltage value from fritzbox was null, please check presence of device');
-                                }
-                            else{
+
+                            if(device.powermeter.voltage){
+                            //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) {
                                 adapter.log.debug('DECT200_'+ device.identifier + ' : ' +'voltage : ' + device.powermeter.voltage / 1000);
                                 adapter.setState('DECT200_'+ device.identifier +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
-                            }
-                        }  
+                            }  
+                        }
                     }
                     else if((device.functionbitmask & 64) == 64){ //thermostat
                         adapter.log.debug('updating Thermostat '+ device.name); 
@@ -1370,78 +1366,82 @@ function main() {
     
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
-    
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp :' + (parseFloat(device.temperature.celsius))/10);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp offset :' + (parseFloat(device.temperature.offset))/10);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
-                        var targettemp = device.hkr.tsoll;
-            
-                        if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'targettemp :' + targettemp);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: parseFloat(targettemp)/2, ack: true});
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lasttarget', {val: parseFloat(targettemp)/2, ack: true}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 0, ack: true});
-                        } else
-                        if (targettemp == 253){
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
-                            // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
-                        } else
-                        if (targettemp == 254){
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
-                            // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
-                        }
-            
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + device.hkr.komfort);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(device.hkr.komfort)/2, ack: true});
-            
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
-                        
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'actualtemp :' + device.hkr.tist);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(device.hkr.tist)/2, ack: true});
-                        
-                        var batt;
-                        if (device.hkr.batterylow == 0){ batt = false} else { batt = true } 
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + batt);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.batterylow', {val: batt, ack: true});
-    
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + parseInt(device.hkr.errorcode));
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.errorcode', {val: parseInt(device.hkr.errorcode), ack: true});
-    
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock :' + device.hkr.lock);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.hkr.lock, ack: true});
-    
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + device.hkr.devicelock);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: device.hkr.devicelock, ack: true});
-    
-                        if(device.hkr.battery){
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
-                        }
-                        else if(battchargepoll) {
-                        //getBatteryCharge non native api call, depending adapter setting
-                            fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});
-                             })
-                            .catch(errorHandler);
-                        }
-                        if(device.hkr.summeractive){
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + device.hkr.summeractive);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.summeractive', {val: device.hkr.summeractive, ack: true});
-                        }
-                        if(device.hkr.holidayactive){
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + device.hkr.holidayactive);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: device.hkr.holidayactive, ack: true});
-                        }
-                        if(device.hkr.windowopenactiv){
-                            var window;
-                            if (device.hkr.windowopenactiv == 0){ window = false} else { window = true } 
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + window);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: window, ack: true});
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false ){
+                            adapter.log.warn('Comet_'+ device.identifier + ' is not present, check the device connection, no values are written');
+                            }
+                        else {
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp :' + (parseFloat(device.temperature.celsius))/10);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp offset :' + (parseFloat(device.temperature.offset))/10);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
+                            var targettemp = device.hkr.tsoll;
+
+                            if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'targettemp :' + targettemp);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: parseFloat(targettemp)/2, ack: true});
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lasttarget', {val: parseFloat(targettemp)/2, ack: true}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 0, ack: true});
+                            } else
+                            if (targettemp == 253){
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
+                                // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
+                            } else
+                            if (targettemp == 254){
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
+                                // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
+                            }
+
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + device.hkr.komfort);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(device.hkr.komfort)/2, ack: true});
+
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
+
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'actualtemp :' + device.hkr.tist);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(device.hkr.tist)/2, ack: true});
+
+                            var batt;
+                            if (device.hkr.batterylow == 0){ batt = false} else { batt = true } 
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + batt);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.batterylow', {val: batt, ack: true});
+
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + parseInt(device.hkr.errorcode));
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.errorcode', {val: parseInt(device.hkr.errorcode), ack: true});
+
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock :' + device.hkr.lock);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.hkr.lock, ack: true});
+
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + device.hkr.devicelock);
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: device.hkr.devicelock, ack: true});
+
+                            if(device.hkr.battery){
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
+                            }
+                            else if(battchargepoll) {
+                            //getBatteryCharge non native api call, depending adapter setting
+                                fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
+                                    adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);
+                                    adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});
+                                 })
+                                .catch(errorHandler);
+                            }
+                            if(device.hkr.summeractive){
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + device.hkr.summeractive);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.summeractive', {val: device.hkr.summeractive, ack: true});
+                            }
+                            if(device.hkr.holidayactive){
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + device.hkr.holidayactive);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: device.hkr.holidayactive, ack: true});
+                            }
+                            if(device.hkr.windowopenactiv){
+                                var window;
+                                if (device.hkr.windowopenactiv == 0){ window = false} else { window = true } 
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + window);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: window, ack: true});
+                            }
                         }
                     }
                     else{
@@ -1452,7 +1452,8 @@ function main() {
         })
         .catch(errorHandler);
     }
-
+    //gibt es werte mit "" wenn Teile der Gruppe nicht vorhanden sind?
+    //ggf auch hier mit present das Schreiben von null verhindern
     function updateGroups(){
         fritz.getDeviceListInfos().then(function(devicelistinfos) {
             var groups = parser.xml2json(devicelistinfos);

@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.2.3",
+        "version": "0.2.4",
         "news": {
+             "0.2.4": {
+                    "en": "correction of type mismatch",
+                    "de": "Korrektur von Typinkongruenzen",
+                    "ru": "исправление несоответствия типов",
+                    "pt": "correção de incompatibilidade de tipo",
+                    "nl": "correctie van type mismatch",
+                    "fr": "correction de l'inadéquation des types",
+                    "it": "correzione del tipo non corrispondente",
+                    "es": "corrección de tipo no coincidente",
+                    "pl": "korekta niedopasowania typu",
+                    "zh-cn": "纠正类型不匹配"
+                  },
               "0.2.3": {
                 "en": "skip updating values, when device not present",
                 "de": "Aktualisierungswerte überspringen, wenn das Gerät nicht vorhanden ist",

@@ -1257,8 +1257,13 @@ function main() {
                         adapter.log.debug('updating Repeater '+ device.name); 
                         adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
                         adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
-                        adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
-                        adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});                        
+
+
+                        let convertPresent = device.present == 1 ? true: false;
+                        adapter.log.debug('DECT100_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
+                        adapter.setState('DECT100_'+ device.identifier.replace(/\s/g, '') +'.present', {val: convertPresent, ack: true});   
+                
+                        
                         if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('DECT100_'+ device.identifier.replace(/\s/g, '') + ' is not present, check the device connection, no values are written');
                             }
@@ -1275,8 +1280,11 @@ function main() {
                         adapter.log.debug('updating Sensor '+ device.name); 
                         adapter.log.debug('Contact_'+ device.identifier + ' : '  +'name : ' + device.name);
                         adapter.setState('Contact_'+ device.identifier +'.name', {val: device.name, ack: true});
-                        adapter.log.debug('Contact_'+ device.identifier + ' : ' +'present : ' + device.present);
-                        adapter.setState('Contact_'+ device.identifier +'.present', {val: device.present, ack: true});
+
+                        let convertPresent = device.present == 1 ? true: false;
+                        adapter.log.debug('Contact_'+ device.identifier + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
+                        adapter.setState('Contact_'+ device.identifier +'.present', {val: convertPresent, ack: true});
+
                         if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('Contact_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
@@ -1289,8 +1297,11 @@ function main() {
                         adapter.log.debug('updating Button '+ device.name); 
                         adapter.log.debug('Button_'+ device.identifier + ' : '  +'name : ' + device.name);
                         adapter.setState('Button_'+ device.identifier +'.name', {val: device.name, ack: true});
-                        adapter.log.debug('Button_'+ device.identifier + ' : ' +'present : ' + device.present);
-                        adapter.setState('Button_'+ device.identifier +'.present', {val: device.present, ack: true});
+
+                        let convertPresent = device.present == 1 ? true: false;
+                        adapter.log.debug('Button_'+ device.identifier + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
+                        adapter.setState('Button_'+ device.identifier +'.present', {val: convertPresent, ack: true});
+
                         if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
@@ -1304,8 +1315,11 @@ function main() {
                             adapter.log.debug('updating Button '+ button.name); 
                             adapter.log.debug('Button_'+ button.identifier + ' : '  +'name : ' + button.name);
                             adapter.setState('Button_'+ button.identifier +'.name', {val: button.name, ack: true});
-                            adapter.log.debug('Button_'+ button.identifier + ' : ' +'present : ' + device.present);
-                            adapter.setState('Button_'+ button.identifier +'.present', {val: device.present, ack: true});
+
+                            let convertPresent = device.present == 1 ? true: false;
+                            adapter.log.debug('Button_'+ button.identifier + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
+                            adapter.setState('Button_'+ button.identifier +'.present', {val: convertPresent, ack: true});
+
                             if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                                 adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
                                 }
@@ -1320,8 +1334,10 @@ function main() {
                         adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'name : ' + device.name);
                         adapter.setState('DECT200_'+ device.identifier +'.name', {val: device.name, ack: true});
                                            
-                        adapter.log.debug('DECT200_'+ device.identifier+ ' : ' +'present : ' + device.present);
-                        adapter.setState('DECT200_'+ device.identifier +'.present', {val: device.present, ack: true});
+                        let convertPresent = device.present == 1 ? true: false;                    
+                        adapter.log.debug('DECT200_'+ device.identifier+ ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
+                        adapter.setState('DECT200_'+ device.identifier +'.present', {val: convertPresent, ack: true});
+
                         if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('DECT200_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
@@ -1338,11 +1354,13 @@ function main() {
                             adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'mode : ' + device.switch.mode);
                             adapter.setState('DECT200_'+ device.identifier +'.mode', {val: device.switch.mode, ack: true});
 
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'lock : ' + device.switch.lock);
-                            adapter.setState('DECT200_'+ device.identifier +'.lock', {val: device.switch.lock, ack: true});
+                            let convertLock = device.switch.lock == 1 ? true: false;
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'lock : ' + convertLock + ' (' +  device.switch.lock + ')');
+                            adapter.setState('DECT200_'+ device.identifier +'.lock', {val: convertLock, ack: true});
 
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'devicelock : ' + device.switch.devicelock);
-                            adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: device.switch.devicelock, ack: true});
+                            let convertDeviceLock = device.switch.devicelock == 1 ? true: false;
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'devicelock : ' + convertDeviceLock + ' (' + device.switch.devicelock + ')');
+                            adapter.setState('DECT200_'+ device.identifier +'.devicelock', {val: convertDeviceLock, ack: true});
 
                             if(device.temperature){
                                 adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'temp : ' + (parseFloat(device.temperature.celsius))/10);
@@ -1364,8 +1382,10 @@ function main() {
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
     
-                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + device.present);
-                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: device.present, ack: true});
+                        let convertPresent = device.present == 1 ? true: false;
+                        adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: convertPresent, ack: true});
+
                         if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
                             adapter.log.warn('Comet_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
@@ -1410,11 +1430,13 @@ function main() {
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + parseInt(device.hkr.errorcode));
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.errorcode', {val: parseInt(device.hkr.errorcode), ack: true});
 
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock :' + device.hkr.lock);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: device.hkr.lock, ack: true});
+                            let convertLock = device.hkr.lock == 1 ? true: false;
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'lock :' + convertLock + ' (' + device.hkr.lock + ')');
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.lock', {val: convertLock, ack: true});
 
-                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + device.hkr.devicelock);
-                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: device.hkr.devicelock, ack: true});
+                            let convertDeviceLock = device.hkr.devicelock == 1 ? true: false;
+                            adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + convertDeviceLock + ' (' + device.hkr.devicelock + ')');
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.devicelock', {val: convertDeviceLock, ack: true});
 
                             if(device.hkr.battery){
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
@@ -1429,18 +1451,22 @@ function main() {
                                 .catch(errorHandler);
                             }
                             if(device.hkr.summeractive){
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + device.hkr.summeractive);
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.summeractive', {val: device.hkr.summeractive, ack: true});
+                                let convertValue = device.hkr.summeractive == 1 ? true : false;
+
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + convertValue + ' (' + device.hkr.summeractive + ')');
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.summeractive', {val: convertValue, ack: true});
                             }
                             if(device.hkr.holidayactive){
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + device.hkr.holidayactive);
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: device.hkr.holidayactive, ack: true});
+                                let convertValue = device.hkr.holidayactive == 1 ? true : false;
+
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + convertValue + ' (' + device.hkr.holidayactive + ')');
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: convertValue, ack: true});
                             }
                             if(device.hkr.windowopenactiv){
-                                var window;
-                                if (device.hkr.windowopenactiv == 0){ window = false} else { window = true } 
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + window);
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: window, ack: true});
+                                let convertValue = device.hkr.windowopenactiv == 1 ? true : false;
+
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + convertValue + ' (' + device.hkr.windowopenactiv + ')');
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: convertValue, ack: true});
                             }
                         }
                     }
@@ -1471,9 +1497,10 @@ function main() {
                         adapter.log.debug('updating SwitchGroup '+ group.name); 
                         adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'name : ' + group.name);
                         adapter.setState('Sgroup_'+ group.identifier +'.name', {val: group.name, ack: true});
-                                           
-                        adapter.log.debug('Sgroup_'+ group.identifier + ' : ' +'present : ' + group.present);
-                        adapter.setState('Sgroup_'+ group.identifier +'.present', {val: group.present, ack: true});
+
+                        let convertPresent = group.present == 1 ? true: false;
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : ' +'present : ' + convertPresent + '(' + group.present +')');
+                        adapter.setState('Sgroup_'+ group.identifier +'.present', {val: convertPresent, ack: true});
             
                         adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'state :' + group.switch.state);
                         adapter.setState('Sgroup_'+ group.identifier +'.state', {val: group.switch.state, ack: true});
@@ -1481,11 +1508,13 @@ function main() {
                         adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'mode :' + group.switch.mode);
                         adapter.setState('Sgroup_'+ group.identifier +'.mode', {val: group.switch.mode, ack: true});
     
-                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'lock :' + group.switch.lock);
-                        adapter.setState('Sgroup_'+ group.identifier +'.lock', {val: group.switch.lock, ack: true});
+                        let convertLock = group.switch.lock == 1 ? true: false;
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'lock :' + convertLock + ' (' + group.switch.lock + ')');
+                        adapter.setState('Sgroup_'+ group.identifier +'.lock', {val: convertLock, ack: true});
     
-                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'devicelock :' + group.switch.devicelock);
-                        adapter.setState('Sgroup_'+ group.identifier +'.devicelock', {val: group.switch.devicelock, ack: true});
+                        let convertDeviceLock = group.switch.devicelock == 1 ? true: false;
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'devicelock :' + convertDeviceLock + ' (' + group.switch.devicelock + ')');
+                        adapter.setState('Sgroup_'+ group.identifier +'.devicelock', {val: convertDeviceLock, ack: true});
             
                         adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'power :' + parseFloat(group.powermeter.power)/1000);
                         adapter.setState('Sgroup_'+ group.identifier +'.power', {val: parseFloat(group.powermeter.power)/1000, ack: true});
@@ -1498,8 +1527,9 @@ function main() {
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'name : ' + group.name);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.name', {val: group.name, ack: true});
     
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + group.present);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: group.present, ack: true});
+                        let convertPresent = group.present == 1 ? true: false;
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + convertPresent + ' (' + group.present + ')');
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: convertPresent, ack: true});
     
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'temp :' + parseFloat(group.hkr.tist)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(group.hkr.tist)/2, ack: true});
@@ -1535,11 +1565,13 @@ function main() {
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + group.hkr.errorcode);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.errorcode', {val: group.hkr.errorcode, ack: true});
     
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'lock :' + group.hkr.lock);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.lock', {val: group.hkr.lock, ack: true});
+                        let convertLock = group.hkr.lock == 1 ? true: false;
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'lock :' + convertLock + ' (' + group.hkr.lock + ')');
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.lock', {val: convertLock, ack: true});
     
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + group.hkr.devicelock);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: group.hkr.devicelock, ack: true});
+                        let convertDeviceLock = group.hkr.devicelock == 1 ? true: false;
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + convertDeviceLock + ' (' + group.hkr.devicelock + ')');
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: convertDeviceLock, ack: true});
                     }
                     else{
                         adapter.log.debug('nix vorbereitet für diese Art von group update');

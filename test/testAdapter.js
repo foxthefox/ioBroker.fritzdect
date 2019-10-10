@@ -538,7 +538,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     console.log('fritzdect.0.Comet_117951022222.devicelock        ... ' + state.val);
                                 }
                                 expect(state.val).to.exist;
-                                expect(state.val).to.be.equal('1');
+                                expect(state.val).to.be.equal(true);
                                 states.getState('fritzdect.0.Comet_117951022222.present', function (err, state) {
                                     if (err) console.error(err);
                                     expect(state).to.exist;
@@ -688,7 +688,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     console.log('fritzdect.0.Comet_119600642220.devicelock      ... ' + state.val);
                                 }
                                 expect(state.val).to.exist;
-                                expect(state.val).to.be.equal('0');
+                                expect(state.val).to.be.equal(false);
                                 states.getState('fritzdect.0.Comet_119600642220.present', function (err, state) {
                                     if (err) console.error(err);
                                     expect(state).to.exist;
@@ -1168,7 +1168,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                         console.log('fritzdect.0.DECT100_087611016969.present       ... ' + state.val);
                     }
                     expect(state.val).to.exist;
-                    expect(state.val).to.be.equal('1');
+                    expect(state.val).to.be.equal(true);
                     states.getState('fritzdect.0.DECT100_087611016969.id', function (err, state) {
                         if (err) console.error(err);
                         expect(state).to.exist;

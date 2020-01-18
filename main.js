@@ -1531,8 +1531,8 @@ function main() {
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'present : ' + convertPresent + ' (' + group.present + ')');
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.present', {val: convertPresent, ack: true});
     
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'temp :' + parseFloat(group.hkr.tist)/2);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.temp', {val: parseFloat(group.hkr.tist)/2, ack: true});
+                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'actualtemp :' + parseFloat(group.hkr.tist)/2);
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(group.hkr.tist)/2, ack: true});
     
                         var targettemp = group.hkr.tsoll;
             

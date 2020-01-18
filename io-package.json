@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.2.4",
+        "version": "0.2.5",
         "news": {
              "0.2.4": {
                     "en": "correction of type mismatch",

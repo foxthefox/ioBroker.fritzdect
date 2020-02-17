@@ -1130,7 +1130,8 @@ function main() {
             common: {
                 "name":  "Level",
                 "type": "number",
-                "unit": "%",
+                "min": 0,
+                "max": 255,
                 "read": true,
                 "write": false,
                 "role": "value.level",
@@ -1144,6 +1145,8 @@ function main() {
             common: {
                 "name":  "Level percentage",
                 "type": "number",
+                "min": 0,
+                "max": 100,
                 "unit": "%",
                 "read": true,
                 "write": false,
@@ -1158,11 +1161,23 @@ function main() {
             common: {
                 "name":  "color modes",
                 "type": "number",
-                "unit": "%",
                 "read": true,
                 "write": false,
                 "role": "value",
                 "desc":  "color modes"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.current_mode', {
+            type: 'state',
+            common: {
+                "name":  "current color mode",
+                "type": "number",
+                "read": true,
+                "write": false,
+                "role": "value",
+                "desc":  "current color modes"
             },
             native: {
             }
@@ -1647,6 +1662,8 @@ function main() {
                             adapter.setState('DECT500_'+ device.identifier +'.levelpercentage', {val: device.levelcontrol.levelpercentage, ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'colormodes: ' + device.color_control.supported_modes);
                             adapter.setState('DECT500_'+ device.identifier +'.colormodes', {val: device.colorcontrol.supported_modes, ack: true});
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'current_mode: ' + device.color_control.current_mode);
+                            adapter.setState('DECT500_'+ device.identifier +'.current_mode', {val: device.colorcontrol.current_mode, ack: true});
                             //evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color update machen
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'hue: ' + device.colorcontrol.hue);
                             adapter.setState('DECT500_'+ device.identifier +'.hue', {val: device.colorcontrol.hue, ack: true});

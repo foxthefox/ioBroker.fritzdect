@@ -94,6 +94,15 @@ objects in *italic* are not part of all fritz.box configurations
 |*COMET.holidayactive*|boolean|-|holiday program status|
 |*COMET.windowopenactiv*|boolean|-|status of window open detection|
 
+### switch e.g DECT500
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|DECT500.state|boolean|x|true/false -> ON/OFF|
+|DECT500.power|value|-|actual|
+|DECT500.|value|-|actual |
+|DECT500.|boolean|-|  |
+|DECT500.|boolean|-| |
+
 ### repeater e.g. DECT100
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|

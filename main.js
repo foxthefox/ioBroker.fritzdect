@@ -1096,6 +1096,7 @@ function main() {
         });
         adapter.setState(typ + newId +'.members',{val: member, ack: true});
     }
+    
     function createLamp(typ,newId){
         adapter.log.debug('create Lamp object');
         adapter.setObjectNotExists(typ + newId +'.txbusy', {
@@ -1103,7 +1104,6 @@ function main() {
             common: {
                 "name":  "txbusy",
                 "type": "number",
-                "unit": "°C",
                 "read": true,
                 "write": false,
                 "role": "value",
@@ -1119,7 +1119,7 @@ function main() {
                 "type": "boolean",
                 "read": true,
                 "write": true,
-                "role": "switch",
+                "role": "switch.power",
                 "desc":  "Switch on/off"
             },
             native: {
@@ -1133,8 +1133,8 @@ function main() {
                 "min": 0,
                 "max": 255,
                 "read": true,
-                "write": false,
-                "role": "value.level",
+                "write": true,
+                "role": "level.dimmer",
                 "desc":  "Level"
             },
             native: {
@@ -1149,8 +1149,8 @@ function main() {
                 "max": 100,
                 "unit": "%",
                 "read": true,
-                "write": false,
-                "role": "value.level",
+                "write": true,
+                "role": "level.dimmer",
                 "desc":  "Level percentage"
             },
             native: {
@@ -1159,12 +1159,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.colormodes', {
             type: 'state',
             common: {
-                "name":  "color modes",
+                "name":  "available color modes",
                 "type": "number",
                 "read": true,
                 "write": false,
                 "role": "value",
-                "desc":  "color modes"
+                "desc":  "available color modes"
             },
             native: {
             }
@@ -1175,7 +1175,7 @@ function main() {
                 "name":  "current color mode",
                 "type": "number",
                 "read": true,
-                "write": false,
+                "write": true,
                 "role": "value",
                 "desc":  "current color modes"
             },
@@ -1187,10 +1187,10 @@ function main() {
             common: {
                 "name":  "Hue",
                 "type": "number",
-                "unit": "%",
+                "unit": "°",
                 "read": true,
-                "write": false,
-                "role": "value.color.hue",
+                "write": true
+                "role": "level.color.hue",
                 "desc":  "hue"
             },
             native: {
@@ -1203,8 +1203,8 @@ function main() {
                 "type": "number",
                 "unit": "%",
                 "read": true,
-                "write": false,
-                "role": "value.color.saturation",
+                "write": true,
+                "role": "level.color.saturation",
                 "desc":  "Saturation"
             },
             native: {
@@ -1217,8 +1217,8 @@ function main() {
                 "type": "number",
                 "unit": "K",
                 "read": true,
-                "write": false,
-                "role": "value.color.temperature",
+                "write": true,
+                "role": "level.color.temperature",
                 "desc":  "Color temperature"
             },
             native: {

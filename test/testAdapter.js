@@ -423,7 +423,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                         console.log('fritzdect.0.DECT200_087610006161.state         ... ' + state.val);
                                     }
                                     expect(state.val).to.exist;
-                                    expect(state.val).to.be.equal('1');
+                                    expect(state.val).to.be.equal(true);
                                     states.getState('fritzdect.0.DECT200_087610006161.temp', function (err, state) {
                                         if (err) console.error(err);
                                         expect(state).to.exist;
@@ -851,7 +851,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     else {
                                         console.log('fritzdect.0.Contact_112240205290-1.state       ... ' + state.val);
                                         expect(state.val).to.exist;
-                                        expect(state.val).to.be.equal('0');
+                                        expect(state.val).to.be.equal(false);
                                         done();
                                     }
                                 });
@@ -1086,7 +1086,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                         console.log('fritzdect.0.DECT200_34:31:C1:AB:68:53.state    ... ' + state.val);
                                     }
                                     expect(state.val).to.exist;
-                                    expect(state.val).to.be.equal('0');
+                                    expect(state.val).to.be.equal(false);
                                     states.getState('fritzdect.0.DECT200_34:31:C1:AB:68:53.lock', function (err, state) {
                                         if (err) console.error(err);
                                         expect(state).to.exist;

@@ -26,6 +26,7 @@ var fritzTimeout;
 
 /* HANFUN unittypes
 273 = SIMPLE_BUTTON
+278 = 
 512 = SIMPLE_DETECTOR
 513 = DOOR_OPEN_CLOSE_DETECTOR
 514 = WINDOW_OPEN_CLOSE_DETECTOR
@@ -1653,8 +1654,9 @@ function main() {
                         adapter.log.debug('updating Lamp '+ device.name); 
                         adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'name : ' + device.name);
                         adapter.setState('DECT500_'+ device.identifier +'.name', {val: device.name, ack: true});
-                        adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'txbusy : ' + device.txbusy);
-                        adapter.setState('DECT500_'+ device.identifier +'.txbusy', {val: device.txbusy, ack: true});
+                        let convertTxBusy= device.txbusy == 1 ? true: false;
+                        adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'txbusy : ' + convertTxBusy + '(' + device.txbusy + ')');
+                        adapter.setState('DECT500_'+ device.identifier +'.txbusy', {val: convertTxBusy, ack: true});
 
                         let convertPresent = device.present == 1 ? true: false;
                         adapter.log.debug('DECT500_'+ device.identifier + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
@@ -1664,8 +1666,9 @@ function main() {
                             adapter.log.warn('DECT500_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {
-                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'state: ' + device.simpleonoff.state);
-                            adapter.setState('DECT500_'+ device.identifier +'.state', {val: device.simpleonoff.state, ack: true});
+                            let convertSimpleOnOff = device.simpleonoff.state == 1 ? true: false;
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'state: ' + convertSimpleOnOff + '(' + device.simpleonoff.state +')');
+                            adapter.setState('DECT500_'+ device.identifier +'.state', {val: convertSimpleOnOff, ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'level: ' + device.levelcontrol.level);
                             adapter.setState('DECT500_'+ device.identifier +'.level', {val: device.levelcontrol.level, ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'levelpercentage: ' + device.levelcontrol.levelperecentage);

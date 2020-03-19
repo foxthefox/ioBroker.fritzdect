@@ -1820,8 +1820,6 @@ function main() {
     }
     */
 
-
-    logVersion();
     createDevices();
     createGroups();
     createTemplates();

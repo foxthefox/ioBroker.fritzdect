@@ -135,10 +135,10 @@ Not all FW-versions support all objects.
 ### 0.x.0
 * merge of fritzapi into repo directly
 * no longer support of non-native API calls
-*Tabspace*  GuestWLAN
-*Tabspace*  BatteryCharge
-*Tabspace*  OS version
-*Tabspace*  power
+    * GuestWLAN
+    * BatteryCharge
+    * OS version
+    * power
 
 ### 0.3.0
 * new DECT500 supported (without commands)

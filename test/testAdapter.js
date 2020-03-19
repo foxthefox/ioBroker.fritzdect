@@ -1542,7 +1542,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                   console.log('fritzdect.0.DECT500_130770000415-1.current_mode    ... ' + state.val);
                                                               }
                                                               expect(state.val).to.exist;
-                                                              expect(state.val).to.be.equal('4');
+                                                              expect(state.val).to.be.equal('1');
                                                               states.getState('fritzdect.0.DECT500_130770000415-1.hue', function (err, state) {
                                                                   if (err) console.error(err);
                                                                   expect(state).to.exist;

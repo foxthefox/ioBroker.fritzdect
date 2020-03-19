@@ -122,14 +122,9 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |Button.lastclick|number|-|timestamp|
 
-### guest WLAN
-|Object|Value|settable|Description|
-|--------|-------|:-:|--------|
-|GuestWLAN.state|boolean|x|true/false -> ON/OFF|
-
 
 ## Known Issues:
-After startup of adapter the firmware version of fritzbox is requested, some models do not respond to this request and therefore an error is logged.
+Not all FW-versions support all objects.
 
 ## TODO:
 * universal object names

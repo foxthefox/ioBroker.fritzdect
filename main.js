@@ -304,23 +304,7 @@ function startAdapter(options) {
                         }     
                 }
                 */
-                else { //must be GuestWLAN
-                    adapter.log.info('GuestWLAN identified for command (' + dp + ') : ' + state.val);
-                    if (dp == 'state') {
-                        if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                            fritz.setGuestWlan(state.val).then(function (sid) {
-                                adapter.log.debug('Turned WLAN off');
-                            })
-                            .catch(errorHandler);
-                        }    
-                        else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                            fritz.setGuestWlan(state.val).then(function (sid) {
-                                adapter.log.debug('Turned WLAN on');
-                            })
-                            .catch(errorHandler);
-                        }
-                    }
-                }     
+    
             } //from if state&ack
         },
 
@@ -1624,14 +1608,7 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
                             }
-                            else if(battchargepoll) {
-                            //getBatteryCharge non native api call, depending adapter setting
-                                fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
-                                    adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);
-                                    adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});
-                                 })
-                                .catch(errorHandler);
-                            }
+
                             if(device.hkr.summeractive){
                                 let convertValue = device.hkr.summeractive == 1 ? true : false;
 
@@ -1811,12 +1788,6 @@ function main() {
         }
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
-    }
-    function logVersion(){
-        fritz.getOSVersion().then(function(version){
-            adapter.log.info('Talking to FritzBox with firmware: '  + version);
-        })
-        .catch(errorHandler);
     }
 
     /*

@@ -1335,14 +1335,14 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                   }
                                                   expect(state.val).to.exist;
                                                   expect(state.val).to.be.equal(100);
-                                                  states.getState('fritzdect.0.DECT500_123456789012-1.supported_modes', function (err, state) {
+                                                  states.getState('fritzdect.0.DECT500_123456789012-1.colormodes', function (err, state) {
                                                       if (err) console.error(err);
                                                       expect(state).to.exist;
                                                       if (!state) {
-                                                          console.error('state "fritzdect.0.DECT500_123456789012-1.supported_modes" not set');
+                                                          console.error('state "fritzdect.0.DECT500_123456789012-1.colormodes" not set');
                                                       }
                                                       else {
-                                                          console.log('fritzdect.0.DECT500_123456789012-1.supported_modes    ... ' + state.val);
+                                                          console.log('fritzdect.0.DECT500_123456789012-1.colormodes    ... ' + state.val);
                                                       }
                                                       expect(state.val).to.exist;
                                                       expect(state.val).to.be.equal(5);

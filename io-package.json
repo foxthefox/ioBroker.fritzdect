@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.2.5",
+        "version": "0.3.0",
         "news": {
+            "0.3.0": {
+                    "en": "new feature DECT500",
+                    "de": "neue Funktion DECT500",
+                    "ru": "новая функция DECT500",
+                    "pt": "novo recurso DECT500",
+                    "nl": "nieuwe functie DECT500",
+                    "fr": "nouvelle fonctionnalité DECT500",
+                    "it": "nuova funzione DECT500",
+                    "es": "nueva característica DECT500",
+                    "pl": "nowa funkcja DECT500",
+                    "zh-cn": "新功能DECT500"
+                  },
              "0.2.4": {
                     "en": "correction of type mismatch",
                     "de": "Korrektur von Typinkongruenzen",

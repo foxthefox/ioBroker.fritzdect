@@ -1223,167 +1223,191 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         }, 1000);
     });
     it('Test ' + adapterShortName + ' adapter: Check values of Lamp DECT500 white', function (done) {
-      this.timeout(30000);
-      setTimeout(function() {
-          states.getState('fritzdect.0.DECT500_123456789012-1.prodname', function (err, state) {
-              if (err) console.error(err);
-              expect(state).to.exist;
-              if (!state) {
-                  console.error('state "fritzdect.0.DECT500_123456789012-1.prodname" not set');
-              }
-              else {
-                  console.log('fritzdect.0.DECT500_123456789012-1.prodname     ... ' + state.val);
-              }
-              expect(state.val).to.exist;
-              expect(state.val).to.be.equal('FRITZ!DECT 500');
-              states.getState('fritzdect.0.DECT500_123456789012-1.manufacturer', function (err, state) {
-                  if (err) console.error(err);
-                  expect(state).to.exist;
-                  if (!state) {
-                      console.error('state "fritzdect.0.DECT500_123456789012-1.manufacturer" not set');
-                  }
-                  else {
-                      console.log('fritzdect.0.DECT500_123456789012-1.manufacturer ... ' + state.val);
-                  }
-                  expect(state.val).to.exist;
-                  expect(state.val).to.be.equal('AVM');
-                  states.getState('fritzdect.0.DECT500_123456789012-1.fwversion', function (err, state) {
-                      if (err) console.error(err);
-                      expect(state).to.exist;
-                      if (!state) {
-                          console.error('state "fritzdect.0.DECT500_123456789012-1.fwversion" not set');
-                      }
-                      else {
-                          console.log('fritzdect.0.DECT500_123456789012-1.fwversion    ... ' + state.val);
-                      }
-                      expect(state.val).to.exist;
-                      expect(state.val).to.be.equal('0.0');
-                      states.getState('fritzdect.0.DECT500_123456789012-1.id', function (err, state) {
-                          if (err) console.error(err);
-                          expect(state).to.exist;
-                          if (!state) {
-                              console.error('state "fritzdect.0.DECT500_123456789012-1.id" not set');
-                          }
-                          else {
-                              console.log('fritzdect.0.DECT500_123456789012-1.id             ... ' + state.val);
-                          }
-                          expect(state.val).to.exist;
-                          expect(state.val).to.be.equal('2000');
-                          states.getState('fritzdect.0.DECT500_123456789012-1.name', function (err, state) {
-                              if (err) console.error(err);
-                              expect(state).to.exist;
-                              if (!state) {
-                                  console.error('state "fritzdect.0.DECT500_123456789012-1.name" not set');
-                              }
-                              else {
-                                  console.log('fritzdect.0.DECT500_123456789012-1.name     ... ' + state.val);
-                              }
-                              expect(state.val).to.exist;
-                              expect(state.val).to.be.equal('FRITZ!DECT 500');
-                              states.getState('fritzdect.0.DECT500_123456789012-1.state', function (err, state) {
-                                  if (err) console.error(err);
-                                  expect(state).to.exist;
-                                  if (!state) {
-                                      console.error('state "fritzdect.0.DECT500_123456789012-1.state" not set');
-                                  }
-                                  else {
-                                      console.log('fritzdect.0.DECT500_123456789012-1.state    ... ' + state.val);
-                                  }
-                                  expect(state.val).to.exist;
-                                  expect(state.val).to.be.equal(true);
-                                  states.getState('fritzdect.0.DECT500_123456789012-1.txbusy', function (err, state) {
-                                      if (err) console.error(err);
-                                      expect(state).to.exist;
-                                      if (!state) {
-                                          console.error('state "fritzdect.0.DECT500_123456789012-1.txbusy" not set');
-                                      }
-                                      else {
-                                          console.log('fritzdect.0.DECT500_123456789012-1.txbusy     ... ' + state.val);
-                                      }
-                                      expect(state.val).to.exist;
-                                      expect(state.val).to.be.equal(false);
-                                      states.getState('fritzdect.0.DECT500_123456789012-1.present', function (err, state) {
-                                          if (err) console.error(err);
-                                          expect(state).to.exist;
-                                          if (!state) {
-                                              console.error('state "fritzdect.0.DECT500_123456789012-1.present not set');
-                                          }
-                                          else {
-                                              console.log('fritzdect.0.DECT500_123456789012-1.present  ... ' + state.val);
-                                          }
-                                          expect(state.val).to.exist;
-                                          expect(state.val).to.be.equal(true);
-                                          states.getState('fritzdect.0.DECT500_123456789012-1.level', function (err, state) {
-                                              if (err) console.error(err);
-                                              expect(state).to.exist;
-                                              if (!state) {
-                                                  console.error('state "fritzdect.0.DECT500_123456789012-1.level" not set');
-                                              }
-                                              else {
-                                                  console.log('fritzdect.0.DECT500_123456789012-1.level    ... ' + state.val);
-                                              }
-                                              expect(state.val).to.exist;
-                                              expect(state.val).to.be.equal(255);
-                                              states.getState('fritzdect.0.DECT500_123456789012-1.levelpercentage', function (err, state) {
-                                                  if (err) console.error(err);
-                                                  expect(state).to.exist;
-                                                  if (!state) {
-                                                      console.error('state "fritzdect.0.DECT500_123456789012-1.levelpercentage" not set');
-                                                  }
-                                                  else {
-                                                      console.log('fritzdect.0.DECT500_123456789012-1.levelpercentage    ... ' + state.val);
-                                                  }
-                                                  expect(state.val).to.exist;
-                                                  expect(state.val).to.be.equal(100);
-                                                  states.getState('fritzdect.0.DECT500_123456789012-1.colormodes', function (err, state) {
-                                                      if (err) console.error(err);
-                                                      expect(state).to.exist;
-                                                      if (!state) {
-                                                          console.error('state "fritzdect.0.DECT500_123456789012-1.colormodes" not set');
-                                                      }
-                                                      else {
-                                                          console.log('fritzdect.0.DECT500_123456789012-1.colormodes    ... ' + state.val);
-                                                      }
-                                                      expect(state.val).to.exist;
-                                                      expect(state.val).to.be.equal(5);
-                                                      states.getState('fritzdect.0.DECT500_123456789012-1.current_mode', function (err, state) {
-                                                          if (err) console.error(err);
-                                                          expect(state).to.exist;
-                                                          if (!state) {
-                                                              console.error('state "fritzdect.0.DECT500_123456789012-1.current_mode" not set');
-                                                          }
-                                                          else {
-                                                              console.log('fritzdect.0.DECT500_123456789012-1.current_mode    ... ' + state.val);
-                                                          }
-                                                          expect(state.val).to.exist;
-                                                          expect(state.val).to.be.equal(4);
-                                                          states.getState('fritzdect.0.DECT500_123456789012-1.temperature', function (err, state) {
-                                                              if (err) console.error(err);
-                                                              expect(state).to.exist;
-                                                              if (!state) {
-                                                                  console.error('state "fritzdect.0.DECT500_123456789012-1.temperature" not set');
-                                                              }
-                                                              else {
-                                                                  console.log('fritzdect.0.DECT500_123456789012-1.temperature   ... ' + state.val);
-                                                                  expect(state.val).to.exist;
-                                                                  expect(state.val).to.be.equal('3400');
-                                                                  done();
-                                                              }
-                                                          });
-                                                      });
-                                                  });
-                                              });
-                                          });
-                                      });
-                                  });
-                              });
-                          });
-                      });
-                  });
-              });
-          });
-      }, 1000);
-  });
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.DECT500_123456789012-1.prodname', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.DECT500_123456789012-1.prodname" not set');
+                }
+                else {
+                    console.log('fritzdect.0.DECT500_123456789012-1.prodname     ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('FRITZ!DECT 500');
+                states.getState('fritzdect.0.DECT500_123456789012-1.manufacturer', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.DECT500_123456789012-1.manufacturer" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.DECT500_123456789012-1.manufacturer ... ' + state.val);
+                    }
+                    expect(state.val).to.exist;
+                    expect(state.val).to.be.equal('AVM');
+                    states.getState('fritzdect.0.DECT500_123456789012-1.fwversion', function (err, state) {
+                        if (err) console.error(err);
+                        expect(state).to.exist;
+                        if (!state) {
+                            console.error('state "fritzdect.0.DECT500_123456789012-1.fwversion" not set');
+                        }
+                        else {
+                            console.log('fritzdect.0.DECT500_123456789012-1.fwversion    ... ' + state.val);
+                        }
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('0.0');
+                        states.getState('fritzdect.0.DECT500_123456789012-1.id', function (err, state) {
+                            if (err) console.error(err);
+                            expect(state).to.exist;
+                            if (!state) {
+                                console.error('state "fritzdect.0.DECT500_123456789012-1.id" not set');
+                            }
+                            else {
+                                console.log('fritzdect.0.DECT500_123456789012-1.id             ... ' + state.val);
+                            }
+                            expect(state.val).to.exist;
+                            expect(state.val).to.be.equal('2000');
+                            states.getState('fritzdect.0.DECT500_123456789012-1.name', function (err, state) {
+                                if (err) console.error(err);
+                                expect(state).to.exist;
+                                if (!state) {
+                                    console.error('state "fritzdect.0.DECT500_123456789012-1.name" not set');
+                                }
+                                else {
+                                    console.log('fritzdect.0.DECT500_123456789012-1.name     ... ' + state.val);
+                                }
+                                expect(state.val).to.exist;
+                                expect(state.val).to.be.equal('FRITZ!DECT 500');
+                                states.getState('fritzdect.0.DECT500_123456789012-1.state', function (err, state) {
+                                    if (err) console.error(err);
+                                    expect(state).to.exist;
+                                    if (!state) {
+                                        console.error('state "fritzdect.0.DECT500_123456789012-1.state" not set');
+                                    }
+                                    else {
+                                        console.log('fritzdect.0.DECT500_123456789012-1.state    ... ' + state.val);
+                                    }
+                                    expect(state.val).to.exist;
+                                    expect(state.val).to.be.equal(true);
+                                    states.getState('fritzdect.0.DECT500_123456789012-1.txbusy', function (err, state) {
+                                        if (err) console.error(err);
+                                        expect(state).to.exist;
+                                        if (!state) {
+                                            console.error('state "fritzdect.0.DECT500_123456789012-1.txbusy" not set');
+                                        }
+                                        else {
+                                            console.log('fritzdect.0.DECT500_123456789012-1.txbusy     ... ' + state.val);
+                                        }
+                                        expect(state.val).to.exist;
+                                        expect(state.val).to.be.equal(false);
+                                        states.getState('fritzdect.0.DECT500_123456789012-1.present', function (err, state) {
+                                            if (err) console.error(err);
+                                            expect(state).to.exist;
+                                            if (!state) {
+                                                console.error('state "fritzdect.0.DECT500_123456789012-1.present not set');
+                                            }
+                                            else {
+                                                console.log('fritzdect.0.DECT500_123456789012-1.present  ... ' + state.val);
+                                            }
+                                            expect(state.val).to.exist;
+                                            expect(state.val).to.be.equal(true);
+                                            states.getState('fritzdect.0.DECT500_123456789012-1.level', function (err, state) {
+                                                if (err) console.error(err);
+                                                expect(state).to.exist;
+                                                if (!state) {
+                                                    console.error('state "fritzdect.0.DECT500_123456789012-1.level" not set');
+                                                }
+                                                else {
+                                                    console.log('fritzdect.0.DECT500_123456789012-1.level    ... ' + state.val);
+                                                }
+                                                expect(state.val).to.exist;
+                                                expect(state.val).to.be.equal('255');
+                                                states.getState('fritzdect.0.DECT500_123456789012-1.levelpercentage', function (err, state) {
+                                                    if (err) console.error(err);
+                                                    expect(state).to.exist;
+                                                    if (!state) {
+                                                        console.error('state "fritzdect.0.DECT500_123456789012-1.levelpercentage" not set');
+                                                    }
+                                                    else {
+                                                        console.log('fritzdect.0.DECT500_123456789012-1.levelpercentage    ... ' + state.val);
+                                                    }
+                                                    expect(state.val).to.exist;
+                                                    expect(state.val).to.be.equal('100');
+                                                    states.getState('fritzdect.0.DECT500_123456789012-1.colormodes', function (err, state) {
+                                                        if (err) console.error(err);
+                                                        expect(state).to.exist;
+                                                        if (!state) {
+                                                            console.error('state "fritzdect.0.DECT500_123456789012-1.colormodes" not set');
+                                                        }
+                                                        else {
+                                                            console.log('fritzdect.0.DECT500_123456789012-1.colormodes    ... ' + state.val);
+                                                        }
+                                                        expect(state.val).to.exist;
+                                                        expect(state.val).to.be.equal('5');
+                                                        states.getState('fritzdect.0.DECT500_123456789012-1.current_mode', function (err, state) {
+                                                            if (err) console.error(err);
+                                                            expect(state).to.exist;
+                                                            if (!state) {
+                                                                console.error('state "fritzdect.0.DECT500_123456789012-1.current_mode" not set');
+                                                            }
+                                                            else {
+                                                                console.log('fritzdect.0.DECT500_123456789012-1.current_mode    ... ' + state.val);
+                                                            }
+                                                            expect(state.val).to.exist;
+                                                            expect(state.val).to.be.equal('4');
+                                                            states.getState('fritzdect.0.DECT500_123456789012-1.hue', function (err, state) {
+                                                                if (err) console.error(err);
+                                                                expect(state).to.exist;
+                                                                if (!state) {
+                                                                    console.error('state "fritzdect.0.DECT500_123456789012-1.hue" not set');
+                                                                }
+                                                                else {
+                                                                    console.log('fritzdect.0.DECT500_123456789012-1.hue    ... ' + state.val);
+                                                                }
+                                                                expect(state.val).to.exist;
+                                                                expect(state.val).to.be.equal('');
+                                                                states.getState('fritzdect.0.DECT500_123456789012-1.saturation', function (err, state) {
+                                                                    if (err) console.error(err);
+                                                                    expect(state).to.exist;
+                                                                    if (!state) {
+                                                                        console.error('state "fritzdect.0.DECT500_123456789012-1.saturation" not set');
+                                                                    }
+                                                                    else {
+                                                                        console.log('fritzdect.0.DECT500_123456789012-1.saturation    ... ' + state.val);
+                                                                    }
+                                                                    expect(state.val).to.exist;
+                                                                    expect(state.val).to.be.equal('');
+                                                                    states.getState('fritzdect.0.DECT500_123456789012-1.temperature', function (err, state) {
+                                                                        if (err) console.error(err);
+                                                                        expect(state).to.exist;
+                                                                        if (!state) {
+                                                                            console.error('state "fritzdect.0.DECT500_123456789012-1.temperature" not set');
+                                                                        }
+                                                                        else {
+                                                                            console.log('fritzdect.0.DECT500_123456789012-1.temperature   ... ' + state.val);
+                                                                            expect(state.val).to.exist;
+                                                                            expect(state.val).to.be.equal('3400');
+                                                                            done();
+                                                                        }
+                                                                    });
+                                                                });
+                                                            });
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }, 1000);
+    });
   
     it('Test ' + adapterShortName + ' adapter: Objects must exist for template_tmp6F0093-39091EED0', done => {
         setTimeout(function(){

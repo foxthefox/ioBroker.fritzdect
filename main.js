@@ -1189,7 +1189,7 @@ function main() {
                 "type": "number",
                 "unit": "°",
                 "read": true,
-                "write": true
+                "write": true,
                 "role": "level.color.hue",
                 "desc":  "hue"
             },

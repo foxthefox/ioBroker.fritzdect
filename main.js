@@ -41,6 +41,16 @@ var fritzTimeout;
 772 = SIMPLE_BUTTON
 */
 
+/* modes of DECT500 supported/color_mode
+0 = nothing, because OFF or not present
+1 = RGB
+2 =
+3 =
+4 = color_temp
+5 = 
+
+*/
+
 let adapter;
 function startAdapter(options) {
      options = options || {};

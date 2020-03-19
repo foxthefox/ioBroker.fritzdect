@@ -280,14 +280,14 @@ function startAdapter(options) {
                     adapter.log.info('LAMP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
                     if (dp == 'state') {
                         if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                            fritz.setSwitchOff(id).then(function (sid) {
+                            fritz.setsimpleonoff(id).then(function (sid) {
                                 adapter.log.debug('Turned lamp ' + id + ' off');
                                 adapter.setState('DECT500_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
                             .catch(errorHandler);
                         }
                         else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                            fritz.setSwitchOn(id).then(function (sid) {
+                            fritz.setsimpleonoffn(id).then(function (sid) {
                                 adapter.log.debug('Turned lamp ' + id + ' on');
                                 adapter.setState('DECT500_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
@@ -301,7 +301,37 @@ function startAdapter(options) {
                                 adapter.setState('DECT500_'+ id +'.level', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
                             .catch(errorHandler);
-                        }     
+                        }
+                    if (dp == 'levelpercentage') {
+                            fritz.setLevel(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp level %' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.levelpercentage', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }   
+                    if (dp == 'hue') {
+                            fritz.setColor(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp color' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.hue', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        } 
+                    if (dp == 'saturation') {
+                            let typ = 'hue';
+                            fritz.setColor(id, typ, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp color saturation ' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.saturation', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                    if (dp == 'temperature') {
+                            let typ = 'saturation';
+                            fritz.setcolortemperature(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp color saturation ' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.temperature', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        } 
                 }
                 */
                 else { //must be GuestWLAN
@@ -409,17 +439,22 @@ function startAdapter(options) {
                             });
                         wait = true;
                         break;
-                        /** necessary adjustments in fritzapi
-                        //new functions related to devices in version 7
-                            getBasicDeviceStats: function(ain) {
-                            return this.call(module.exports.getBasicDeviceStats, ain);
-                        },
-                        // get basic device info (XML)
-                        module.exports.getBasicDeviceStats  = function(sid, ain, options)
-                        {
-                            return executeCommand(sid, 'getbasicdevicestats', ain,  options);
-                        };
-                         */
+                     case 'color':
+                        var result = [];
+        
+                        var username = adapter.config.fritz_user;
+                        var password = adapter.config.fritz_pw;
+                        var moreParam = adapter.config.fritz_ip;
+                        
+                        var fritz = new Fritz(username, password||"", moreParam||"");
+                        fritz.getColorDefaults(obj.message).then(function(statisticinfos) { //obj.message should be ain of device requested
+                            var devicestats = parser.xml2json(colorinfos);
+                            result = devicestats;
+                        }).done(function (colorinfos){
+                            if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                            });
+                        wait = true;
+                        break;
                         //idea for other statistics: call of message returns everything (loop over all devices)
                     default:
                         adapter.log.warn("Received unhandled message: " + obj.command);
@@ -1198,6 +1233,8 @@ function main() {
             common: {
                 "name":  "Hue",
                 "type": "number",
+                "min": 0,
+                "max": 359,
                 "unit": "°",
                 "read": true,
                 "write": true,
@@ -1212,7 +1249,8 @@ function main() {
             common: {
                 "name":  "Saturation",
                 "type": "number",
-                "unit": "%",
+                "min": 0,
+                "max": 255,
                 "read": true,
                 "write": true,
                 "role": "level.color.saturation",
@@ -1226,6 +1264,8 @@ function main() {
             common: {
                 "name":  "Color temperature",
                 "type": "number",
+                "min": 2700,
+                "max": 6500,
                 "unit": "K",
                 "read": true,
                 "write": true,

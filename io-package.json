@@ -14,6 +14,17 @@
                     "es": "nueva característica DECT500",
                     "pl": "nowa funkcja DECT500",
                     "zh-cn": "新功能DECT500"
+             "0.2.5": {
+                    "en": "correction for indication of actualtemp in heater groups",
+                    "de": "Korrektur zur Anzeige der Istzeit in Heizungsgruppen",
+                    "ru": "поправка для индикации фактической температуры в группах обогревателей",
+                    "pt": "correção para indicação de temperatura atual em grupos de aquecedores",
+                    "nl": "correctie voor indicatie van werkelijke temperatuur in verwarmingsgroepen",
+                    "fr": "correction pour l'indication de la température réelle dans les groupes de réchauffeurs",
+                    "it": "correzione per l'indicazione del temp effettivo nei gruppi di riscaldatori",
+                    "es": "corrección por indicación de temperatura actual en grupos de calentadores",
+                    "pl": "korekta wskazania aktualnej temperatury w grupach grzejników",
+                    "zh-cn": "校正加热器组中的实际温度"
                   },
              "0.2.4": {
                     "en": "correction of type mismatch",
@@ -142,6 +153,8 @@
         "extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
         "readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
         "loglevel": "info",
+        "connectionType": "local",
+        "dataSource": "poll",
         "materialize": true,
         "compact": true,
         "messagebox": true,

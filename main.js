@@ -1671,11 +1671,11 @@ function main() {
                             adapter.setState('DECT500_'+ device.identifier +'.state', {val: convertSimpleOnOff, ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'level: ' + device.levelcontrol.level);
                             adapter.setState('DECT500_'+ device.identifier +'.level', {val: device.levelcontrol.level, ack: true});
-                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'levelpercentage: ' + device.levelcontrol.levelperecentage);
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'levelpercentage: ' + device.levelcontrol.levelpercentage);
                             adapter.setState('DECT500_'+ device.identifier +'.levelpercentage', {val: device.levelcontrol.levelpercentage, ack: true});
-                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'colormodes: ' + device.color_control.supported_modes);
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'colormodes: ' + device.colorcontrol.supported_modes);
                             adapter.setState('DECT500_'+ device.identifier +'.colormodes', {val: device.colorcontrol.supported_modes, ack: true});
-                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'current_mode: ' + device.color_control.current_mode);
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'current_mode: ' + device.colorcontrol.current_mode);
                             adapter.setState('DECT500_'+ device.identifier +'.current_mode', {val: device.colorcontrol.current_mode, ack: true});
                             //evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color update machen
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'hue: ' + device.colorcontrol.hue);

@@ -26,6 +26,7 @@ var fritzTimeout;
 
 /* HANFUN unittypes
 273 = SIMPLE_BUTTON
+278 = 
 512 = SIMPLE_DETECTOR
 513 = DOOR_OPEN_CLOSE_DETECTOR
 514 = WINDOW_OPEN_CLOSE_DETECTOR
@@ -39,6 +40,16 @@ var fritzTimeout;
 277 = KEEP_ALIVE
 256 = ALERT
 772 = SIMPLE_BUTTON
+*/
+
+/* modes of DECT500 supported/color_mode
+0 = nothing, because OFF or not present
+1 = RGB
+2 =
+3 =
+4 = color_temp
+5 = 
+
 */
 
 let adapter;
@@ -263,6 +274,36 @@ function startAdapter(options) {
                         }
                     }           
                 }
+                /** Klärung welche API Aufrufe für DECT500 vorbereitet sind
+                else if (idx.startsWith("DECT500_")) { //must be DECT500
+                    id = idx.replace(/DECT500_/g,''); //Lamp
+                    adapter.log.info('LAMP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
+                    if (dp == 'state') {
+                        if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
+                            fritz.setSwitchOff(id).then(function (sid) {
+                                adapter.log.debug('Turned lamp ' + id + ' off');
+                                adapter.setState('DECT500_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                        else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
+                            fritz.setSwitchOn(id).then(function (sid) {
+                                adapter.log.debug('Turned lamp ' + id + ' on');
+                                adapter.setState('DECT500_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                    }
+                    //wie heißen die neuen Kommandos?
+                    if (dp == 'level') {
+                            fritz.setLevel(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp level' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.level', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }     
+                }
+                */
                 else { //must be GuestWLAN
                     adapter.log.info('GuestWLAN identified for command (' + dp + ') : ' + state.val);
                     if (dp == 'state') {
@@ -525,12 +566,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.present', {
             type: 'state',
             common: {
-                "name":  "Switch present",
+                "name":  "Device present",
                 "type": "boolean",
                 "read": true,
                 "write": false,
                 "role": "indicator.connected",
-                "desc":  "Switch present"
+                "desc":  "Device present"
             },
             native: {
             }
@@ -1066,6 +1107,136 @@ function main() {
         });
         adapter.setState(typ + newId +'.members',{val: member, ack: true});
     }
+    
+    function createLamp(typ,newId){
+        adapter.log.debug('create Lamp object');
+        adapter.setObjectNotExists(typ + newId +'.txbusy', {
+            type: 'state',
+            common: {
+                "name":  "txbusy",
+                "type": "number",
+                "read": true,
+                "write": false,
+                "role": "value",
+                "desc":  "txbusy"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.state', {
+            type: 'state',
+            common: {
+                "name":  "Switch on/off",
+                "type": "boolean",
+                "read": true,
+                "write": true,
+                "role": "switch.power",
+                "desc":  "Switch on/off"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.level', {
+            type: 'state',
+            common: {
+                "name":  "Level",
+                "type": "number",
+                "min": 0,
+                "max": 255,
+                "read": true,
+                "write": true,
+                "role": "level.dimmer",
+                "desc":  "Level"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.levelpercentage', {
+            type: 'state',
+            common: {
+                "name":  "Level percentage",
+                "type": "number",
+                "min": 0,
+                "max": 100,
+                "unit": "%",
+                "read": true,
+                "write": true,
+                "role": "level.dimmer",
+                "desc":  "Level percentage"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.colormodes', {
+            type: 'state',
+            common: {
+                "name":  "available color modes",
+                "type": "number",
+                "read": true,
+                "write": false,
+                "role": "value",
+                "desc":  "available color modes"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.current_mode', {
+            type: 'state',
+            common: {
+                "name":  "current color mode",
+                "type": "number",
+                "read": true,
+                "write": true,
+                "role": "value",
+                "desc":  "current color modes"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.hue', {
+            type: 'state',
+            common: {
+                "name":  "Hue",
+                "type": "number",
+                "unit": "°",
+                "read": true,
+                "write": true,
+                "role": "level.color.hue",
+                "desc":  "hue"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.saturation', {
+            type: 'state',
+            common: {
+                "name":  "Saturation",
+                "type": "number",
+                "unit": "%",
+                "read": true,
+                "write": true,
+                "role": "level.color.saturation",
+                "desc":  "Saturation"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.temperature', {
+            type: 'state',
+            common: {
+                "name":  "Color temperature",
+                "type": "number",
+                "unit": "K",
+                "read": true,
+                "write": true,
+                "role": "level.color.temperature",
+                "desc":  "Color temperature"
+            },
+            native: {
+            }
+        });
+    }
+    
     function createDevices(){
         fritz.getDeviceListInfos().then(function(devicelistinfos) {
             var typ = "";
@@ -1151,6 +1322,15 @@ function main() {
                             createProductName(typ,button.identifier,device.productname);
                             createButton(typ,button.identifier);
                         });
+                    }
+                    else if((device.functionbitmask & 237572) == 237572){ //lamp
+                        typ = "DECT500_";
+                        role = "lamp";
+                        adapter.log.info('setting up DECT500 object '+ device.name);                    
+                    createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                    createProductName(typ,device.identifier,device.productname);
+                    	//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color machen und somit createWhitelamp createColorLamp oder in in createLampe mit Übergabe supported_modes
+                        createLamp(typ,device.identifier);
                     }
                     /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen
                     else if((device.functionbitmask & 1) == 1){ //HAN-FUN
@@ -1470,6 +1650,43 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + convertValue + ' (' + device.hkr.windowopenactiv + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: convertValue, ack: true});
                             }
+                        }
+                    }
+                    else if((device.functionbitmask & 237572) == 237572){ //lamp
+                        adapter.log.debug('updating Lamp '+ device.name); 
+                        adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'name : ' + device.name);
+                        adapter.setState('DECT500_'+ device.identifier +'.name', {val: device.name, ack: true});
+                        let convertTxBusy= device.txbusy == 1 ? true: false;
+                        adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'txbusy : ' + convertTxBusy + '(' + device.txbusy + ')');
+                        adapter.setState('DECT500_'+ device.identifier +'.txbusy', {val: convertTxBusy, ack: true});
+
+                        let convertPresent = device.present == 1 ? true: false;
+                        adapter.log.debug('DECT500_'+ device.identifier + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
+                        adapter.setState('DECT500_'+ device.identifier +'.present', {val: convertPresent, ack: true});
+
+                        if ( (device.present === "0") ||  (device.present === 0) || (device.present === false )){
+                            adapter.log.warn('DECT500_'+ device.identifier + ' is not present, check the device connection, no values are written');
+                            }
+                        else {
+                            let convertSimpleOnOff = device.simpleonoff.state == 1 ? true: false;
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'state: ' + convertSimpleOnOff + '(' + device.simpleonoff.state +')');
+                            adapter.setState('DECT500_'+ device.identifier +'.state', {val: convertSimpleOnOff, ack: true});
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'level: ' + device.levelcontrol.level);
+                            adapter.setState('DECT500_'+ device.identifier +'.level', {val: device.levelcontrol.level, ack: true});
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'levelpercentage: ' + device.levelcontrol.levelpercentage);
+                            adapter.setState('DECT500_'+ device.identifier +'.levelpercentage', {val: device.levelcontrol.levelpercentage, ack: true});
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'colormodes: ' + device.colorcontrol.supported_modes);
+                            adapter.setState('DECT500_'+ device.identifier +'.colormodes', {val: device.colorcontrol.supported_modes, ack: true});
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'current_mode: ' + device.colorcontrol.current_mode);
+                            adapter.setState('DECT500_'+ device.identifier +'.current_mode', {val: device.colorcontrol.current_mode, ack: true});
+                            //evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color update machen
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'hue: ' + device.colorcontrol.hue);
+                            adapter.setState('DECT500_'+ device.identifier +'.hue', {val: device.colorcontrol.hue, ack: true});
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'saturation: ' + device.colorcontrol.saturation);
+                            adapter.setState('DECT500_'+ device.identifier +'.saturation', {val: device.colorcontrol.saturation, ack: true});
+                            adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'temperature: ' + device.colorcontrol.temperature);
+                            adapter.setState('DECT500_'+ device.identifier +'.temperature', {val: device.colorcontrol.temperature, ack: true});
+                            
                         }
                     }
                     else{

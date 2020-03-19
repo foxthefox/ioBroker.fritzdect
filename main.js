@@ -494,19 +494,8 @@ function main() {
     var username = adapter.config.fritz_user;
     var password = adapter.config.fritz_pw;
     var moreParam = adapter.config.fritz_ip;
-    var gwlanpoll = adapter.config.GuestWLANactive;
-    var battchargepoll = adapter.config.NonNativeApi;
-    adapter.log.debug("WLAN poll :" +gwlanpoll);
 
     var fritz = new Fritz(username, password||"", moreParam||"");
-    
-    function updateFritzGuest(){
-        fritz.getGuestWlan().then(function(listinfos){
-            adapter.log.debug("Guest WLAN: "+JSON.stringify(listinfos));
-            //adapter.setState('GuestWLAN', {val: listinfos, ack: true}); //wenn denn etwas zurückkommt bei V7.0
-        })
-        .catch(errorHandler);
-    }
 
     function createBasic(typ,newId,name,role,id,fw,manuf){
         adapter.log.debug('create Basic objects ');
@@ -1273,7 +1262,7 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createTemperature(typ,device.identifier);
                         createThermostat(typ,device.identifier);
-                        createBattery(typ,device.identifier); //we create it in all cases, even its not json and getBatteryCharge must be called
+                        createBattery(typ,device.identifier); //we create it in all cases, even its not json
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
                         }
@@ -1783,9 +1772,6 @@ function main() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
         updateGroups();
-        if(gwlanpoll){
-            updateFritzGuest();
-        }
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
     }

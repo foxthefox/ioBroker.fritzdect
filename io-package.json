@@ -175,28 +175,5 @@
         "NonNativeApi": true
     },
     "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "GuestWLAN",
-            "type": "channel",
-            "common": {
-                "name": "GuestWLAN",
-                "role": "switch"
-            },
-            "native": {}
-        },
-        {
-            "_id": "GuestWLAN.state",
-            "type": "state",
-            "common": {
-                "name": "GuestWLAN  on/off",
-                "type": "boolean",
-                "role": "switch",
-                "read": true,
-                "write": true,
-                "desc": "GuestWLAN  on/off"
-            },
-            "native": {}
-        }
-    ]
+    "instanceObjects": []
 }

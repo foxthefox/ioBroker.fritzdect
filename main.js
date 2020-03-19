@@ -25,8 +25,17 @@ var fritzTimeout;
 */
 
 /* HANFUN unittypes
+256 = SIMPLE_ON_OFF_SWITCHABLE
+257 = SIMPLE_ON_OFF_SWITCH
+262 = AC_OUTLET
+263 = AC_OUTLET_SIMPLE_POWER_METERING
+264 = SIMPLE_LIGHT 265 = DIMMABLE_LIGHT
+266 = DIMMER_SWITCH
 273 = SIMPLE_BUTTON
-278 = 
+277 = COLOR_BULB
+278 = DIMMABLE_COLOR_BULB
+281 = BLIND
+282 = LAMELLAR
 512 = SIMPLE_DETECTOR
 513 = DOOR_OPEN_CLOSE_DETECTOR
 514 = WINDOW_OPEN_CLOSE_DETECTOR
@@ -34,20 +43,25 @@ var fritzTimeout;
 518 = FLOOD_DETECTOR
 519 = GLAS_BREAK_DETECTOR
 520 = VIBRATION_DETECTOR
+640 = SIREN
 */
 
 /* HANFUN interfaces
-277 = KEEP_ALIVE
 256 = ALERT
-772 = SIMPLE_BUTTON
+277 = KEEP_ALIVE
+512 = ON_OFF
+513 = LEVEL_CTRL
+514 = COLOR_CTRL 
+772 = SIMPLE_BUTTON 
+1024 = SUOTA-Update
 */
 
 /* modes of DECT500 supported/color_mode
 0 = nothing, because OFF or not present
-1 = RGB
+1 = HueSaturation-Mode
 2 =
 3 =
-4 = color_temp
+4 = Colortemperature-Mode
 5 = 
 
 */
@@ -280,14 +294,14 @@ function startAdapter(options) {
                     adapter.log.info('LAMP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
                     if (dp == 'state') {
                         if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                            fritz.setsimpleonoff(id).then(function (sid) {
+                            fritz.setSimpleOff(id).then(function (sid) {
                                 adapter.log.debug('Turned lamp ' + id + ' off');
                                 adapter.setState('DECT500_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
                             .catch(errorHandler);
                         }
                         else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                            fritz.setsimpleonoffn(id).then(function (sid) {
+                            fritz.setSimpleOn(id).then(function (sid) {
                                 adapter.log.debug('Turned lamp ' + id + ' on');
                                 adapter.setState('DECT500_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })

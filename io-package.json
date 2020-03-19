@@ -14,6 +14,7 @@
                     "es": "nueva característica DECT500",
                     "pl": "nowa funkcja DECT500",
                     "zh-cn": "新功能DECT500"
+            },
              "0.2.5": {
                     "en": "correction for indication of actualtemp in heater groups",
                     "de": "Korrektur zur Anzeige der Istzeit in Heizungsgruppen",

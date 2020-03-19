@@ -1,6 +1,6 @@
 # decoding of functionbitmask
 
-||hanfun unit|group|microfon|repeater|steckdose|temp|energie|hkr|2xbutton?|alarm|button|not used|not used|hanfun device|
+|||hanfun unit|group|microfon|repeater|steckdose|temp|energie|hkr|2xbutton?|alarm|button|not used|not used|hanfun device|
 |:--------|:--------|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |device|functionbitmask|bit 13|bit 12|bit 11|bit 10|bit 9|bit 8|bit 7|bit 6|bit 5|bit 4|bit 3|bit 2|bit 1|bit 0|
 |dect 300|320|0|0|0|0|0|256|0|64|0|0|0|0|0|0|

@@ -1553,7 +1553,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                       console.log('fritzdect.0.DECT500_130770000415-1.hue    ... ' + state.val);
                                                                   }
                                                                   expect(state.val).to.exist;
-                                                                  expect(state.val).to.be.equal('358');
+                                                                  expect(state.val).to.be.equal('348');
                                                                   states.getState('fritzdect.0.DECT500_130770000415-1.saturation', function (err, state) {
                                                                       if (err) console.error(err);
                                                                       expect(state).to.exist;

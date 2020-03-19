@@ -94,14 +94,18 @@ objects in *italic* are not part of all fritz.box configurations
 |*COMET.holidayactive*|boolean|-|holiday program status|
 |*COMET.windowopenactiv*|boolean|-|status of window open detection|
 
-### switch e.g DECT500
+### lamp e.g DECT500
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |DECT500.state|boolean|x|true/false -> ON/OFF|
-|DECT500.power|value|-|actual|
-|DECT500.|value|-|actual |
-|DECT500.|boolean|-|  |
-|DECT500.|boolean|-| |
+|DECT500.txbusy|boolean|-|actual|
+|DECT500.colormodes|value|-|supported colormodes|
+|DECT500.current_mode|value|?|actual colormode|
+|DECT500.level|value|?|brightness 0-255 |
+|DECT500.levelpercentage|value|?|brightness 0-100% |
+|DECT500.hue|value|?|color 0-359 |
+|DECT500.saturation|value|?|saturation|
+|DECT500.temperature|value|?|color temperature (white mode)|
 
 ### repeater e.g. DECT100
 |Object|Value|settable|Description|
@@ -130,9 +134,12 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 ## TODO:
 * universal object names
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
-* FritzDECT500, FritzDECT440 after API release
+* FritzDECT500 commands, FritzDECT440 after API release
 
 ## Changelog
+### 0.3.0
+* new DECT500 supported (without commands)
+
 ### 0.2.5
 * fixed testing
 * correction for indication of actualtemp in heater groups

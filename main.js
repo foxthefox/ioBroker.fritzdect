@@ -1289,8 +1289,9 @@ function main() {
                             adapter.log.warn('Contact_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {
-                            adapter.log.debug('Contact_'+ device.identifier + ' : '  +'state : ' + device.alert.state);
-                            adapter.setState('Contact_'+ device.identifier +'.state', {val: device.alert.state, ack: true});
+                            let convertAlertState = device.alert.state == 1 ? true: false;
+                            adapter.log.debug('Contact_'+ device.identifier + ' : '  +'state : ' + convertAlertState + '(' +device.alert.state +')');
+                            adapter.setState('Contact_'+ device.identifier +'.state', {val: convertAlertState, ack: true});
                         }
                     }
                     else if((device.functionbitmask & 8) == 8){ //button
@@ -1342,8 +1343,9 @@ function main() {
                             adapter.log.warn('DECT200_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {
-                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'state :' + device.switch.state);
-                            adapter.setState('DECT200_'+ device.identifier +'.state', {val: device.switch.state, ack: true});
+                            let convertSwitchState = device.switch.state == 1 ? true: false;
+                            adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'state :' + convertSwitchState + '(' + device.switch.state+')');
+                            adapter.setState('DECT200_'+ device.identifier +'.state', {val: convertSwitchState, ack: true});
 
                             adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'power :' + parseFloat(device.powermeter.power)/1000);
                             adapter.setState('DECT200_'+ device.identifier +'.power', {val: parseFloat(device.powermeter.power)/1000, ack: true});
@@ -1502,8 +1504,9 @@ function main() {
                         adapter.log.debug('Sgroup_'+ group.identifier + ' : ' +'present : ' + convertPresent + '(' + group.present +')');
                         adapter.setState('Sgroup_'+ group.identifier +'.present', {val: convertPresent, ack: true});
             
-                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'state :' + group.switch.state);
-                        adapter.setState('Sgroup_'+ group.identifier +'.state', {val: group.switch.state, ack: true});
+                        let convertSwitchState = group.switch.state == 1 ? true: false;
+                        adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'state :' + convertSwitchState + '(' + group.switch.state + ')');
+                        adapter.setState('Sgroup_'+ group.identifier +'.state', {val: convertSwitchState, ack: true});
     
                         adapter.log.debug('Sgroup_'+ group.identifier + ' : '  +'mode :' + group.switch.mode);
                         adapter.setState('Sgroup_'+ group.identifier +'.mode', {val: group.switch.mode, ack: true});

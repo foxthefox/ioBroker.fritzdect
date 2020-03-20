@@ -124,26 +124,29 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |Button.lastclick|number|-|timestamp|
 
-### guest WLAN
-|Object|Value|settable|Description|
-|--------|-------|:-:|--------|
-|GuestWLAN.state|boolean|x|true/false -> ON/OFF|
-
 
 ## Known Issues:
-After startup of adapter the firmware version of fritzbox is requested, some models do not respond to this request and therefore an error is logged.
+Not all FW-versions support all objects.
 
 ## TODO:
 * universal object names
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
-* FritzDECT500 commands, FritzDECT440 after API release
+* FritzDECT440 after API release
 
 ## Changelog
+### 1.0.0 Breaking Change for non-native API objects
+* merge of fritzapi into repo directly including added DECT500 commands
+* **no longer support of non-native API calls (scraping of website)**
+    * GuestWLAN
+    * BatteryCharge
+    * OS version
+    
 ### 0.3.2
 * new states in heater group, operationList and operationMode
 
 ### 0.3.1
 * (scrounger) new states in COMET, operationList and operationMode
+
 
 ### 0.3.0
 * new DECT500 supported (without commands)

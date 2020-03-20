@@ -12,6 +12,8 @@ var temp_stats = fs.readFileSync('../devicestat_temp_answer.xml');
 
 var power_stats = fs.readFileSync('../devicestat_power_answer.xml');
 
+var color_defaults = fs.readFileSync('../color_defaults.xml');
+
 var hkr_batt = fs.readFileSync('../hkr_response.xml');
 
 var guestWlan = fs.readFileSync('../guest_wlan_form.xml');
@@ -73,14 +75,30 @@ function handleHttpRequest(request, response) {
         response.write( String(templates) );
         response.end(); 
     }
-    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=????&switchcmd=getbasicdevicestats') { //check the URL of the current request
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=087611016969&switchcmd=getbasicdevicestats') { //check the URL of the current request
         response.writeHead(200, { 'Content-Type': 'application/json' });
         response.write( String(temp_stats) );   
         response.end(); 
     }
-    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=????&switchcmd=getbasicdevicestats') { //check the URL of the current request
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=117951022222&switchcmd=getbasicdevicestats') { //check the URL of the current request
         response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write( String(temp_stats) );   
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=119600642220&switchcmd=getbasicdevicestats') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write( String(temp_stats) );   
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&ain=087610006161&switchcmd=getbasicdevicestats') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write( String(temp_stats) );
         response.write( String(power_stats) );   
+        response.end(); 
+    }
+    else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getcolordefaults') { //check the URL of the current request
+        response.writeHead(200, { 'Content-Type': 'application/json' });
+        response.write( String(color_defaults) );   
         response.end(); 
     }
     else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid='+sid+'&switchcmd=getswitchstate&ain=087610006102') { //check the URL of the current request

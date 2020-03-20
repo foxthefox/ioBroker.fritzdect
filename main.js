@@ -4,7 +4,7 @@
 
 "use strict";
 
-var Fritz = require('fritzapi').Fritz,
+var Fritz = require('./lib/fritzhttp.js').Fritz,
     parser = require('xml2json-light');
 // you have to require the utils module and call adapter function
 var utils = require('@iobroker/adapter-core'); // Get common adapter utils
@@ -348,23 +348,7 @@ function startAdapter(options) {
                         } 
                 }
                 */
-                else { //must be GuestWLAN
-                    adapter.log.info('GuestWLAN identified for command (' + dp + ') : ' + state.val);
-                    if (dp == 'state') {
-                        if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                            fritz.setGuestWlan(state.val).then(function (sid) {
-                                adapter.log.debug('Turned WLAN off');
-                            })
-                            .catch(errorHandler);
-                        }    
-                        else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                            fritz.setGuestWlan(state.val).then(function (sid) {
-                                adapter.log.debug('Turned WLAN on');
-                            })
-                            .catch(errorHandler);
-                        }
-                    }
-                }     
+    
             } //from if state&ack
         },
 
@@ -559,19 +543,8 @@ function main() {
     var username = adapter.config.fritz_user;
     var password = adapter.config.fritz_pw;
     var moreParam = adapter.config.fritz_ip;
-    var gwlanpoll = adapter.config.GuestWLANactive;
-    var battchargepoll = adapter.config.NonNativeApi;
-    adapter.log.debug("WLAN poll :" +gwlanpoll);
 
     var fritz = new Fritz(username, password||"", moreParam||"");
-    
-    function updateFritzGuest(){
-        fritz.getGuestWlan().then(function(listinfos){
-            adapter.log.debug("Guest WLAN: "+JSON.stringify(listinfos));
-            //adapter.setState('GuestWLAN', {val: listinfos, ack: true}); //wenn denn etwas zurückkommt bei V7.0
-        })
-        .catch(errorHandler);
-    }
 
     function createBasic(typ,newId,name,role,id,fw,manuf){
         adapter.log.debug('create Basic objects ');
@@ -1376,8 +1349,9 @@ function main() {
                         createProductName(typ,device.identifier,device.productname);
                         createTemperature(typ,device.identifier);
                         createThermostat(typ,device.identifier);
-                        createBattery(typ,device.identifier); //we create it in all cases, even its not json and getBatteryCharge must be called
+                        createBattery(typ,device.identifier); //we create it in all cases, even its not json
                         createThermostatModes(typ,device.identifier);
+
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
                         }
@@ -1729,14 +1703,7 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: parseInt(device.hkr.battery), ack: true});
                             }
-                            else if(battchargepoll) {
-                            //getBatteryCharge non native api call, depending adapter setting
-                                fritz.getBatteryCharge(device.identifier.replace(/\s/g, '')).then(function(battery){
-                                    adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'battery : '+ battery);
-                                    adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: battery, ack: true});
-                                 })
-                                .catch(errorHandler);
-                            }
+
                             if(device.hkr.summeractive){
                                 let convertValue = device.hkr.summeractive == 1 ? true : false;
 
@@ -1959,17 +1926,8 @@ function main() {
         var fritz_interval = parseInt(adapter.config.fritz_interval,10) || 300;
         updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
         updateGroups();
-        if(gwlanpoll){
-            updateFritzGuest();
-        }
         adapter.log.debug("polling! fritzdect is alive");
         fritzTimeout = setTimeout(pollFritzData, fritz_interval*1000);
-    }
-    function logVersion(){
-        fritz.getOSVersion().then(function(version){
-            adapter.log.info('Talking to FritzBox with firmware: '  + version);
-        })
-        .catch(errorHandler);
     }
 
     /*
@@ -2002,8 +1960,6 @@ function main() {
     }
     */
 
-
-    logVersion();
     createDevices();
     createGroups();
     createTemplates();

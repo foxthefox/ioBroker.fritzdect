@@ -25,8 +25,17 @@ var fritzTimeout;
 */
 
 /* HANFUN unittypes
+256 = SIMPLE_ON_OFF_SWITCHABLE
+257 = SIMPLE_ON_OFF_SWITCH
+262 = AC_OUTLET
+263 = AC_OUTLET_SIMPLE_POWER_METERING
+264 = SIMPLE_LIGHT 265 = DIMMABLE_LIGHT
+266 = DIMMER_SWITCH
 273 = SIMPLE_BUTTON
-278 = 
+277 = COLOR_BULB
+278 = DIMMABLE_COLOR_BULB
+281 = BLIND
+282 = LAMELLAR
 512 = SIMPLE_DETECTOR
 513 = DOOR_OPEN_CLOSE_DETECTOR
 514 = WINDOW_OPEN_CLOSE_DETECTOR
@@ -34,20 +43,25 @@ var fritzTimeout;
 518 = FLOOD_DETECTOR
 519 = GLAS_BREAK_DETECTOR
 520 = VIBRATION_DETECTOR
+640 = SIREN
 */
 
 /* HANFUN interfaces
-277 = KEEP_ALIVE
 256 = ALERT
-772 = SIMPLE_BUTTON
+277 = KEEP_ALIVE
+512 = ON_OFF
+513 = LEVEL_CTRL
+514 = COLOR_CTRL 
+772 = SIMPLE_BUTTON 
+1024 = SUOTA-Update
 */
 
 /* modes of DECT500 supported/color_mode
 0 = nothing, because OFF or not present
-1 = RGB
+1 = HueSaturation-Mode
 2 =
 3 =
-4 = color_temp
+4 = Colortemperature-Mode
 5 = 
 
 */
@@ -280,14 +294,14 @@ function startAdapter(options) {
                     adapter.log.info('LAMP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
                     if (dp == 'state') {
                         if (state.val === 0 || state.val === '0' || state.val === 'false' || state.val === false || state.val === 'off' || state.val === 'OFF') {
-                            fritz.setSwitchOff(id).then(function (sid) {
+                            fritz.setSimpleOff(id).then(function (sid) {
                                 adapter.log.debug('Turned lamp ' + id + ' off');
                                 adapter.setState('DECT500_'+ id +'.state', {val: false, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
                             .catch(errorHandler);
                         }
                         else if (state.val === 1 || state.val === '1' || state.val === 'true' || state.val === true || state.val === 'on' || state.val === 'ON') {
-                            fritz.setSwitchOn(id).then(function (sid) {
+                            fritz.setSimpleOn(id).then(function (sid) {
                                 adapter.log.debug('Turned lamp ' + id + ' on');
                                 adapter.setState('DECT500_'+ id +'.state', {val: true, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
@@ -301,7 +315,37 @@ function startAdapter(options) {
                                 adapter.setState('DECT500_'+ id +'.level', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
                             .catch(errorHandler);
-                        }     
+                        }
+                    if (dp == 'levelpercentage') {
+                            fritz.setLevel(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp level %' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.levelpercentage', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }   
+                    if (dp == 'hue') {
+                            fritz.setColor(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp color' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.hue', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        } 
+                    if (dp == 'saturation') {
+                            let typ = 'hue';
+                            fritz.setColor(id, typ, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp color saturation ' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.saturation', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        }
+                    if (dp == 'temperature') {
+                            let typ = 'saturation';
+                            fritz.setcolortemperature(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp color saturation ' + id + ' to '+ state.val);
+                                adapter.setState('DECT500_'+ id +'.temperature', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                            })
+                            .catch(errorHandler);
+                        } 
                 }
                 */
     
@@ -393,17 +437,22 @@ function startAdapter(options) {
                             });
                         wait = true;
                         break;
-                        /** necessary adjustments in fritzapi
-                        //new functions related to devices in version 7
-                            getBasicDeviceStats: function(ain) {
-                            return this.call(module.exports.getBasicDeviceStats, ain);
-                        },
-                        // get basic device info (XML)
-                        module.exports.getBasicDeviceStats  = function(sid, ain, options)
-                        {
-                            return executeCommand(sid, 'getbasicdevicestats', ain,  options);
-                        };
-                         */
+                     case 'color':
+                        var result = [];
+        
+                        var username = adapter.config.fritz_user;
+                        var password = adapter.config.fritz_pw;
+                        var moreParam = adapter.config.fritz_ip;
+                        
+                        var fritz = new Fritz(username, password||"", moreParam||"");
+                        fritz.getColorDefaults(obj.message).then(function(statisticinfos) { //obj.message should be ain of device requested
+                            var devicestats = parser.xml2json(colorinfos);
+                            result = devicestats;
+                        }).done(function (colorinfos){
+                            if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
+                            });
+                        wait = true;
+                        break;
                         //idea for other statistics: call of message returns everything (loop over all devices)
                     default:
                         adapter.log.warn("Received unhandled message: " + obj.command);
@@ -1032,7 +1081,40 @@ function main() {
             native: {
             }
         });
+
+
     }
+
+    function createThermostatModes(typ,newId){
+        adapter.log.debug('create Thermostat operation mode objects');
+        adapter.setObjectNotExists(typ + newId +'.operationList', {
+            type: 'state',
+            common: {
+                "name":  "List of operation modes",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "List of operation modes"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.operationMode', {
+            type: 'state',
+            common: {
+                "name":  "Current operation mode",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "Current operation mode"
+            },
+            native: {
+            }
+        });        
+    }
+
     function createThermostatWindow(typ,newId){
         adapter.log.debug('create Thermostat Window object');
         adapter.setObjectNotExists(typ + newId +'.windowopenactiv', {
@@ -1171,6 +1253,8 @@ function main() {
             common: {
                 "name":  "Hue",
                 "type": "number",
+                "min": 0,
+                "max": 359,
                 "unit": "°",
                 "read": true,
                 "write": true,
@@ -1185,7 +1269,8 @@ function main() {
             common: {
                 "name":  "Saturation",
                 "type": "number",
-                "unit": "%",
+                "min": 0,
+                "max": 255,
                 "read": true,
                 "write": true,
                 "role": "level.color.saturation",
@@ -1199,6 +1284,8 @@ function main() {
             common: {
                 "name":  "Color temperature",
                 "type": "number",
+                "min": 2700,
+                "max": 6500,
                 "unit": "K",
                 "read": true,
                 "write": true,
@@ -1263,6 +1350,8 @@ function main() {
                         createTemperature(typ,device.identifier);
                         createThermostat(typ,device.identifier);
                         createBattery(typ,device.identifier); //we create it in all cases, even its not json
+                        createThermostatModes(typ,device.identifier);
+
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
                         }
@@ -1353,6 +1442,10 @@ function main() {
                         adapter.log.info('setting up Heater Group '+ group.name);  
                         createBasic(typ,group.identifier,group.name,role,group.id,group.fwversion,group.manufacturer);
                         createThermostat(typ,group.identifier);
+                        createThermostatModes(typ,group.identifier);
+                        if (group.hkr.summeractive){
+                            createThermostatProg(typ,group.identifier);
+                        }
                         createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);    
                     }
                     else {
@@ -1536,7 +1629,10 @@ function main() {
                         adapter.log.debug('updating Thermostat '+ device.name); 
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
-    
+
+                        let currentMode = 'On';
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.operationList', {val: `On, Off, Holiday, Summer, Comfort, Night`, ack: true});                        
+
                         let convertPresent = device.present == 1 ? true: false;
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: convertPresent, ack: true});
@@ -1549,8 +1645,8 @@ function main() {
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp offset :' + (parseFloat(device.temperature.offset))/10);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
+                            
                             var targettemp = device.hkr.tsoll;
-
                             if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'targettemp :' + targettemp);
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: parseFloat(targettemp)/2, ack: true});
@@ -1561,18 +1657,28 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
                                 // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
+                                currentMode = "Off";
                             } else
                             if (targettemp == 254){
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
                                 // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
+                                currentMode = "On";
                             }
 
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + device.hkr.komfort);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(device.hkr.komfort)/2, ack: true});
 
+                            if(targettemp === device.hkr.komfort){
+                                currentMode = "Comfort";
+                            }
+
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
+
+                            if(targettemp === device.hkr.absenk){
+                                currentMode = "Night";
+                            }
 
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'actualtemp :' + device.hkr.tist);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(device.hkr.tist)/2, ack: true});
@@ -1595,7 +1701,7 @@ function main() {
 
                             if(device.hkr.battery){
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: parseInt(device.hkr.battery), ack: true});
                             }
 
                             if(device.hkr.summeractive){
@@ -1603,12 +1709,20 @@ function main() {
 
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + convertValue + ' (' + device.hkr.summeractive + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.summeractive', {val: convertValue, ack: true});
+
+                                if(convertValue){
+                                    currentMode = 'Summer';
+                                }
                             }
                             if(device.hkr.holidayactive){
                                 let convertValue = device.hkr.holidayactive == 1 ? true : false;
 
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + convertValue + ' (' + device.hkr.holidayactive + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: convertValue, ack: true});
+
+                                if(convertValue){
+                                    currentMode = 'Holiday';
+                                }
                             }
                             if(device.hkr.windowopenactiv){
                                 let convertValue = device.hkr.windowopenactiv == 1 ? true : false;
@@ -1616,6 +1730,8 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + convertValue + ' (' + device.hkr.windowopenactiv + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: convertValue, ack: true});
                             }
+
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.operationMode', {val: currentMode, ack: true});
                         }
                     }
                     else if((device.functionbitmask & 237572) == 237572){ //lamp
@@ -1719,7 +1835,12 @@ function main() {
     
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'actualtemp :' + parseFloat(group.hkr.tist)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(group.hkr.tist)/2, ack: true});
-    
+                        
+                        let currentMode = 'On';
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.operationList', {val: `On, Off, Holiday, Summer, Comfort, Night`, ack: true});                        
+
+                        
+                        
                         var targettemp = group.hkr.tsoll;
             
                         if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
@@ -1732,22 +1853,32 @@ function main() {
                             adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
                             // adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                             adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
+                            currentMode = "Off";
                         } else
                         if (targettemp == '254'){
                             adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
                             // adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                             adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
+                            currentMode = "On";
                         }
-            
+                        
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + parseFloat(group.hkr.komfort)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(group.hkr.komfort)/2, ack: true});
-            
+                        if(targettemp === group.hkr.komfort){
+                                currentMode = "Comfort";
+                        }
+                        
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + parseFloat(group.hkr.absenk)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(group.hkr.absenk)/2, ack: true});
-    
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + group.hkr.batterylow);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.batterylow', {val: group.hkr.batterylow, ack: true});
-    
+                        if(targettemp === group.hkr.komfort){
+                                currentMode = "Night";
+                        } 
+                        
+                        if(group.hkr.batterylow){
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + group.hkr.batterylow);
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.batterylow', {val: group.hkr.batterylow, ack: true});
+                        }
+                        
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + group.hkr.errorcode);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.errorcode', {val: group.hkr.errorcode, ack: true});
     
@@ -1758,6 +1889,29 @@ function main() {
                         let convertDeviceLock = group.hkr.devicelock == 1 ? true: false;
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + convertDeviceLock + ' (' + group.hkr.devicelock + ')');
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: convertDeviceLock, ack: true});
+                        
+                        if(group.hkr.summeractive){
+                            let convertValue = group.hkr.summeractive == 1 ? true : false;
+
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + convertValue + ' (' + group.hkr.summeractive + ')');
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.summeractive', {val: convertValue, ack: true});
+
+                            if(convertValue){
+                                currentMode = 'Summer';
+                            }
+                        }
+                        if(group.hkr.holidayactive){
+                            let convertValue = group.hkr.holidayactive == 1 ? true : false;
+
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + convertValue + ' (' + group.hkr.holidayactive + ')');
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.holidayactive', {val: convertValue, ack: true});
+
+                            if(convertValue){
+                                currentMode = 'Holiday';
+                            }
+                        }
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.operationMode', {val: currentMode, ack: true});
+
                     }
                     else{
                         adapter.log.debug('nix vorbereitet für diese Art von group update');

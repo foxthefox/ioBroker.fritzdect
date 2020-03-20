@@ -89,6 +89,8 @@ objects in *italic* are not part of all fritz.box configurations
 |COMET.errorcode|number|-|errorcode|
 |COMET.lock|boolean|-|UI/API lock|
 |COMET.devicelock|boolean|-|Button lock|
+|COMET.operationList|value|-|list of possible modes|
+|COMET.operationMode|value|-|actual mode|
 |*COMET.battery*|value|-|actual capacity in %|
 |*COMET.summeractive*|boolean|-|summer program status|
 |*COMET.holidayactive*|boolean|-|holiday program status|
@@ -138,6 +140,13 @@ Not all FW-versions support all objects.
     * GuestWLAN
     * BatteryCharge
     * OS version
+    
+### 0.3.2
+* new states in heater group, operationList and operationMode
+
+### 0.3.1
+* (scrounger) new states in COMET, operationList and operationMode
+
 
 ### 0.3.0
 * new DECT500 supported (without commands)

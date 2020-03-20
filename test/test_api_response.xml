@@ -301,6 +301,12 @@
 				<devicelock>1</devicelock>
 				<errorcode>0</errorcode>
 				<batterylow>0</batterylow>
+				<nextchange>
+					<endperiod>1584738000</endperiod>
+					<tchange>32</tchange>
+			      	</nextchange>
+			      	<summeractive>0</summeractive>
+			      	<holidayactive>0</holidayactive>
 			</hkr>
 			<groupinfo>
 				<masterdeviceid>0</masterdeviceid>

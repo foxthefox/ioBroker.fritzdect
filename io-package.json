@@ -15,6 +15,30 @@
                     "pl": "przełomowa zmiana, brak GuestWLAN! nowa obsługa DECT500",
                     "zh-cn": "零钱，没有GuestWLAN！ DECT500的新支持"
                   },
+            "0.3.2":{
+                    "en": "new mode list for heater group",
+                    "de": "neue Modusliste für Heizungsgruppe",
+                    "ru": "новый список режимов для группы обогревателей",
+                    "pt": "nova lista de modos para o grupo de aquecedores",
+                    "nl": "nieuwe moduslijst voor verwarmingsgroep",
+                    "fr": "nouvelle liste de modes pour le groupe de chauffage",
+                    "it": "nuovo elenco delle modalità per il gruppo di riscaldamento",
+                    "es": "nueva lista de modos para el grupo de calentadores",
+                    "pl": "nowa lista trybów dla grupy grzejników",
+                    "zh-cn": "加热器组的新模式列表"
+                  },
+            "0.3.1":{
+                    "en": "new mode list for thermostat",
+                    "de": "neue Modusliste für Thermostat",
+                    "ru": "новый список режимов для термостата",
+                    "pt": "nova lista de modos para termostato",
+                    "nl": "nieuwe moduslijst voor thermostaat",
+                    "fr": "nouvelle liste de modes pour thermostat",
+                    "it": "nuovo elenco modalità per termostato",
+                    "es": "nueva lista de modos para termostato",
+                    "pl": "nowa lista trybów dla termostatu",
+                    "zh-cn": "恒温器的新模式列表"
+                  },         
             "0.3.0": {
                     "en": "new feature DECT500",
                     "de": "neue Funktion DECT500",

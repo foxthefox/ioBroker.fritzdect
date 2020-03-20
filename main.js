@@ -1469,6 +1469,9 @@ function main() {
                         createBasic(typ,group.identifier,group.name,role,group.id,group.fwversion,group.manufacturer);
                         createThermostat(typ,group.identifier);
                         createThermostatModes(typ,group.identifier);
+                        if (group.hkr.summeractive){
+                            createThermostatProg(typ,group.identifier);
+                        }
                         createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);    
                     }
                     else {
@@ -1724,7 +1727,7 @@ function main() {
 
                             if(device.hkr.battery){
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'battery :' + device.hkr.battery);
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: device.hkr.battery, ack: true});
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.battery', {val: parseInt(device.hkr.battery), ack: true});
                             }
                             else if(battchargepoll) {
                             //getBatteryCharge non native api call, depending adapter setting
@@ -1904,7 +1907,7 @@ function main() {
                                 currentMode = "Night;
                         } 
                         
-                        if(device.hkr.batterylow){
+                        if(group.hkr.batterylow){
                             adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + group.hkr.batterylow);
                             adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.batterylow', {val: group.hkr.batterylow, ack: true});
                         }

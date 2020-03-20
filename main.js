@@ -1112,7 +1112,7 @@ function main() {
 
     }
 
-    function createcreateThermostatModes(typ,newId){
+    function createThermostatModes(typ,newId){
         adapter.log.debug('create Thermostat operation mode objects');
         adapter.setObjectNotExists(typ + newId +'.operationList', {
             type: 'state',
@@ -1377,7 +1377,7 @@ function main() {
                         createTemperature(typ,device.identifier);
                         createThermostat(typ,device.identifier);
                         createBattery(typ,device.identifier); //we create it in all cases, even its not json and getBatteryCharge must be called
-                        createcreateThermostatModes(typ,device.identifier);
+                        createThermostatModes(typ,device.identifier);
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
                         }

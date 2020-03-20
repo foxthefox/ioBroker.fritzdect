@@ -1468,6 +1468,7 @@ function main() {
                         adapter.log.info('setting up Heater Group '+ group.name);  
                         createBasic(typ,group.identifier,group.name,role,group.id,group.fwversion,group.manufacturer);
                         createThermostat(typ,group.identifier);
+                        createThermostatModes(typ,group.identifier);
                         createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);    
                     }
                     else {
@@ -1864,7 +1865,12 @@ function main() {
     
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ': '  +'actualtemp :' + parseFloat(group.hkr.tist)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(group.hkr.tist)/2, ack: true});
-    
+                        
+                        let currentMode = 'On';
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.operationList', {val: `On, Off, Holiday, Summer, Comfort, Night`, ack: true});                        
+
+                        
+                        
                         var targettemp = group.hkr.tsoll;
             
                         if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
@@ -1877,22 +1883,32 @@ function main() {
                             adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
                             // adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                             adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
+                            currentMode = "Off";
                         } else
                         if (targettemp == '254'){
                             adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
                             // adapter.setState('Hgroup_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                             adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
+                            currentMode = "ON";
                         }
-            
+                        
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + parseFloat(group.hkr.komfort)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(group.hkr.komfort)/2, ack: true});
-            
+                        if(targettemp === group.hkr.komfort){
+                                currentMode = "Comfort";
+                        }
+                        
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + parseFloat(group.hkr.absenk)/2);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(group.hkr.absenk)/2, ack: true});
-    
-                        adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + group.hkr.batterylow);
-                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.batterylow', {val: group.hkr.batterylow, ack: true});
-    
+                        if(targettemp === group.hkr.komfort){
+                                currentMode = "Night;
+                        } 
+                        
+                        if(device.hkr.batterylow){
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'batterylow :' + group.hkr.batterylow);
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.batterylow', {val: group.hkr.batterylow, ack: true});
+                        }
+                        
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'errorcode :' + group.hkr.errorcode);
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.errorcode', {val: group.hkr.errorcode, ack: true});
     
@@ -1903,6 +1919,29 @@ function main() {
                         let convertDeviceLock = group.hkr.devicelock == 1 ? true: false;
                         adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : '  +'devicelock :' + convertDeviceLock + ' (' + group.hkr.devicelock + ')');
                         adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.devicelock', {val: convertDeviceLock, ack: true});
+                        
+                        if(group.hkr.summeractive){
+                            let convertValue = group.hkr.summeractive == 1 ? true : false;
+
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + convertValue + ' (' + device.hkr.summeractive + ')');
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.summeractive', {val: convertValue, ack: true});
+
+                            if(convertValue){
+                                currentMode = 'Summer';
+                            }
+                        }
+                        if(group.hkr.holidayactive){
+                            let convertValue = group.hkr.holidayactive == 1 ? true : false;
+
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + convertValue + ' (' + device.hkr.holidayactive + ')');
+                            adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.holidayactive', {val: convertValue, ack: true});
+
+                            if(convertValue){
+                                currentMode = 'Holiday';
+                            }
+                        }
+                        adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.operationMode', {val: currentMode, ack: true});
+
                     }
                     else{
                         adapter.log.debug('nix vorbereitet für diese Art von group update');

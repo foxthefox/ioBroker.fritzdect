@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.3.0",
+        "version": "1.0.0",
         "news": {
+            "1.0.0": {
+                    "en": "breaking change, no GuestWLAN! new support of DECT500",
+                    "de": "Breaking Change, kein GuestWLAN! neue Unterstützung von DECT500",
+                    "ru": "без изменений, нет гостевой WLAN новая поддержка DECT500",
+                    "pt": "quebra de mudança, sem GuestWLAN! novo suporte do DECT500",
+                    "nl": "brekende verandering, geen GuestWLAN! nieuwe ondersteuning van DECT500",
+                    "fr": "rupture du changement, pas de GuestWLAN! nouveau support du DECT500",
+                    "it": "cambiamento di rottura, nessuna GuestWLAN! nuovo supporto di DECT500",
+                    "es": "cambio de última hora, no GuestWLAN! nuevo soporte de DECT500",
+                    "pl": "przełomowa zmiana, brak GuestWLAN! nowa obsługa DECT500",
+                    "zh-cn": "零钱，没有GuestWLAN！ DECT500的新支持"
+                  },
             "0.3.0": {
                     "en": "new feature DECT500",
                     "de": "neue Funktion DECT500",

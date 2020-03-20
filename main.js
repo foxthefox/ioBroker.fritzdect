@@ -1926,7 +1926,7 @@ function main() {
                         if(group.hkr.summeractive){
                             let convertValue = group.hkr.summeractive == 1 ? true : false;
 
-                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + convertValue + ' (' + device.hkr.summeractive + ')');
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + convertValue + ' (' + group.hkr.summeractive + ')');
                             adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.summeractive', {val: convertValue, ack: true});
 
                             if(convertValue){
@@ -1936,7 +1936,7 @@ function main() {
                         if(group.hkr.holidayactive){
                             let convertValue = group.hkr.holidayactive == 1 ? true : false;
 
-                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + convertValue + ' (' + device.hkr.holidayactive + ')');
+                            adapter.log.debug('Hgroup_'+ group.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + convertValue + ' (' + group.hkr.holidayactive + ')');
                             adapter.setState('Hgroup_'+ group.identifier.replace(/\s/g, '') +'.holidayactive', {val: convertValue, ack: true});
 
                             if(convertValue){

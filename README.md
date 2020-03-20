@@ -89,6 +89,8 @@ objects in *italic* are not part of all fritz.box configurations
 |COMET.errorcode|number|-|errorcode|
 |COMET.lock|boolean|-|UI/API lock|
 |COMET.devicelock|boolean|-|Button lock|
+|COMET.operationList|value|-|list of possible modes|
+|COMET.operationMode|value|-|actual mode|
 |*COMET.battery*|value|-|actual capacity in %|
 |*COMET.summeractive*|boolean|-|summer program status|
 |*COMET.holidayactive*|boolean|-|holiday program status|
@@ -137,6 +139,9 @@ After startup of adapter the firmware version of fritzbox is requested, some mod
 * FritzDECT500 commands, FritzDECT440 after API release
 
 ## Changelog
+### 0.3.1
+* (scrounger) new states in COMET, operationList and operationMode
+
 ### 0.3.0
 * new DECT500 supported (without commands)
 

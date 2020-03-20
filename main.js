@@ -1108,7 +1108,40 @@ function main() {
             native: {
             }
         });
+
+
     }
+
+    function createcreateThermostatModes(typ,newId){
+        adapter.log.debug('create Thermostat operation mode objects');
+        adapter.setObjectNotExists(typ + newId +'.operationList', {
+            type: 'state',
+            common: {
+                "name":  "List of operation modes",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "List of operation modes"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.operationMode', {
+            type: 'state',
+            common: {
+                "name":  "Current operation mode",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "Current operation mode"
+            },
+            native: {
+            }
+        });        
+    }
+
     function createThermostatWindow(typ,newId){
         adapter.log.debug('create Thermostat Window object');
         adapter.setObjectNotExists(typ + newId +'.windowopenactiv', {
@@ -1344,6 +1377,7 @@ function main() {
                         createTemperature(typ,device.identifier);
                         createThermostat(typ,device.identifier);
                         createBattery(typ,device.identifier); //we create it in all cases, even its not json and getBatteryCharge must be called
+                        createcreateThermostatModes(typ,device.identifier);
                         if (device.hkr.summeractive){
                             createThermostatProg(typ,device.identifier);
                         }
@@ -1617,7 +1651,10 @@ function main() {
                         adapter.log.debug('updating Thermostat '+ device.name); 
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'name : ' + device.name);
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.name', {val: device.name, ack: true});
-    
+
+                        let currentMode = 'On';
+                        adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.operationList', {val: `On, Off, Holiday, Summer, Comfort, Night`, ack: true});                        
+
                         let convertPresent = device.present == 1 ? true: false;
                         adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'present : ' + convertPresent + ' (' + device.present + ')');
                         adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.present', {val: convertPresent, ack: true});
@@ -1630,8 +1667,8 @@ function main() {
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp', {val: (parseFloat(device.temperature.celsius))/10, ack: true});
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ': '  +'temp offset :' + (parseFloat(device.temperature.offset))/10);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.temp_offset', {val: (parseFloat(device.temperature.offset))/10, ack: true});
+                            
                             var targettemp = device.hkr.tsoll;
-
                             if (targettemp < 57){ // die Abfrage auf <57 brauchen wir wahrscheinlich nicht
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'targettemp :' + targettemp);
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: parseFloat(targettemp)/2, ack: true});
@@ -1642,18 +1679,28 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode: Closed');
                                 // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 1, ack: true});
+                                currentMode = "Off";
                             } else
                             if (targettemp == 254){
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'mode : Opened');
                                 // adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.mode', {val: 2, ack: true});
+                                currentMode = "On";
                             }
 
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'comfytemp :' + device.hkr.komfort);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.comfytemp', {val: parseFloat(device.hkr.komfort)/2, ack: true});
 
+                            if(targettemp === device.hkr.komfort){
+                                currentMode = "Comfort";
+                            }
+
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nighttemp :' + device.hkr.absenk);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nighttemp', {val: parseFloat(device.hkr.absenk)/2, ack: true});
+
+                            if(targettemp === device.hkr.absenk){
+                                currentMode = "Night";
+                            }
 
                             adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'actualtemp :' + device.hkr.tist);
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.actualtemp', {val: parseFloat(device.hkr.tist)/2, ack: true});
@@ -1691,12 +1738,20 @@ function main() {
 
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'summeractive : ' + convertValue + ' (' + device.hkr.summeractive + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.summeractive', {val: convertValue, ack: true});
+
+                                if(convertValue){
+                                    currentMode = 'Summer';
+                                }
                             }
                             if(device.hkr.holidayactive){
                                 let convertValue = device.hkr.holidayactive == 1 ? true : false;
 
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : ' +'holidayactive : ' + convertValue + ' (' + device.hkr.holidayactive + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.holidayactive', {val: convertValue, ack: true});
+
+                                if(convertValue){
+                                    currentMode = 'Holiday';
+                                }
                             }
                             if(device.hkr.windowopenactiv){
                                 let convertValue = device.hkr.windowopenactiv == 1 ? true : false;
@@ -1704,6 +1759,8 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + convertValue + ' (' + device.hkr.windowopenactiv + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: convertValue, ack: true});
                             }
+
+                            adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.operationMode', {val: currentMode, ack: true});
                         }
                     }
                     else if((device.functionbitmask & 237572) == 237572){ //lamp

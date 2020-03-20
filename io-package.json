@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "0.3.0",
+        "version": "0.3.1",
         "news": {
+            "0.3.1":{
+                "en": "new mode list for thermostat",
+                "de": "neue Modusliste für Thermostat",
+                "ru": "новый список режимов для термостата",
+                "pt": "nova lista de modos para termostato",
+                "nl": "nieuwe moduslijst voor thermostaat",
+                "fr": "nouvelle liste de modes pour thermostat",
+                "it": "nuovo elenco modalità per termostato",
+                "es": "nueva lista de modos para termostato",
+                "pl": "nowa lista trybów dla termostatu",
+                "zh-cn": "恒温器的新模式列表"
+              },         
             "0.3.0": {
                     "en": "new feature DECT500",
                     "de": "neue Funktion DECT500",

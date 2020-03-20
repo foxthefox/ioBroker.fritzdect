@@ -288,7 +288,7 @@ function startAdapter(options) {
                         }
                     }           
                 }
-                /** Klärung welche API Aufrufe für DECT500 vorbereitet sind
+
                 else if (idx.startsWith("DECT500_")) { //must be DECT500
                     id = idx.replace(/DECT500_/g,''); //Lamp
                     adapter.log.info('LAMP ID: '+ id + ' identified for command (' + dp + ') : ' + state.val);
@@ -308,7 +308,6 @@ function startAdapter(options) {
                             .catch(errorHandler);
                         }
                     }
-                    //wie heißen die neuen Kommandos?
                     if (dp == 'level') {
                             fritz.setLevel(id, state.val).then(function (sid) {
                                 adapter.log.debug('Set lamp level' + id + ' to '+ state.val);
@@ -347,7 +346,6 @@ function startAdapter(options) {
                             .catch(errorHandler);
                         } 
                 }
-                */
     
             } //from if state&ack
         },

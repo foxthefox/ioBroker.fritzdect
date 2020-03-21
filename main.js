@@ -339,8 +339,8 @@ function startAdapter(options) {
                         }
                     if (dp == 'temperature') {
                             let typ = 'saturation';
-                            fritz.setcolortemperature(id, state.val).then(function (sid) {
-                                adapter.log.debug('Set lamp color saturation ' + id + ' to '+ state.val);
+                            fritz.setColorTemperature(id, state.val).then(function (sid) {
+                                adapter.log.debug('Set lamp color temperature ' + id + ' to '+ state.val);
                                 adapter.setState('DECT500_'+ id +'.temperature', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
                             .catch(errorHandler);

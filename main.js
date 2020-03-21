@@ -309,7 +309,7 @@ function startAdapter(options) {
                         }
                     }
                     if (dp == 'level') {
-                            fritz.setLevel(id, parseInt(state.val/100*255) ).then(function (sid) { //level is in 0...255
+                            fritz.setLevel(id, state.val) ).then(function (sid) { 
                                 
                                 adapter.log.debug('Set lamp level' + id + ' to '+ state.val);
                                 adapter.setState('DECT500_'+ id +'.level', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -317,7 +317,7 @@ function startAdapter(options) {
                             .catch(errorHandler);
                         }
                     if (dp == 'levelpercentage') {
-                            fritz.setLevel(id, state.val).then(function (sid) {
+                            fritz.setLevel(id, parseInt(state.val/100*255) ).then(function (sid) {//level is in 0...255
                                 adapter.log.debug('Set lamp level %' + id + ' to '+ state.val);
                                 adapter.setState('DECT500_'+ id +'.levelpercentage', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })

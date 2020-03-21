@@ -1752,20 +1752,20 @@ function main() {
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'state: ' + convertSimpleOnOff + '(' + device.simpleonoff.state +')');
                             adapter.setState('DECT500_'+ device.identifier +'.state', {val: convertSimpleOnOff, ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'level: ' + device.levelcontrol.level);
-                            adapter.setState('DECT500_'+ device.identifier +'.level', {val: device.levelcontrol.level, ack: true});
+                            adapter.setState('DECT500_'+ device.identifier +'.level', {val: parseInt(device.levelcontrol.level), ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'levelpercentage: ' + device.levelcontrol.levelpercentage);
-                            adapter.setState('DECT500_'+ device.identifier +'.levelpercentage', {val: device.levelcontrol.levelpercentage, ack: true});
+                            adapter.setState('DECT500_'+ device.identifier +'.levelpercentage', {val: parseInt(device.levelcontrol.levelpercentage), ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'colormodes: ' + device.colorcontrol.supported_modes);
                             adapter.setState('DECT500_'+ device.identifier +'.colormodes', {val: device.colorcontrol.supported_modes, ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'current_mode: ' + device.colorcontrol.current_mode);
                             adapter.setState('DECT500_'+ device.identifier +'.current_mode', {val: device.colorcontrol.current_mode, ack: true});
                             //evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color update machen
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'hue: ' + device.colorcontrol.hue);
-                            adapter.setState('DECT500_'+ device.identifier +'.hue', {val: device.colorcontrol.hue, ack: true});
+                            adapter.setState('DECT500_'+ device.identifier +'.hue', {val: parseInt(device.colorcontrol.hue), ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'saturation: ' + device.colorcontrol.saturation);
-                            adapter.setState('DECT500_'+ device.identifier +'.saturation', {val: device.colorcontrol.saturation, ack: true});
+                            adapter.setState('DECT500_'+ device.identifier +'.saturation', {val: parseInt(device.colorcontrol.saturation), ack: true});
                             adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'temperature: ' + device.colorcontrol.temperature);
-                            adapter.setState('DECT500_'+ device.identifier +'.temperature', {val: device.colorcontrol.temperature, ack: true});
+                            adapter.setState('DECT500_'+ device.identifier +'.temperature', {val: parseInt(device.colorcontrol.temperature), ack: true});
                             
                         }
                     }

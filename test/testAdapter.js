@@ -1366,7 +1366,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                 else {
                                                                     console.log('fritzdect.0.DECT500_123456789012-1.hue    ... ' + state.val);
                                                                 }
-                                                                expect(state.val).to.exist;
+                                                                //expect(state.val).to.exist;
                                                                 expect(state.val).to.be.equal(null);
                                                                 states.getState('fritzdect.0.DECT500_123456789012-1.saturation', function (err, state) {
                                                                     if (err) console.error(err);
@@ -1377,7 +1377,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                     else {
                                                                         console.log('fritzdect.0.DECT500_123456789012-1.saturation    ... ' + state.val);
                                                                     }
-                                                                    expect(state.val).to.exist;
+                                                                    //expect(state.val).to.exist;
                                                                     expect(state.val).to.be.equal(null);
                                                                     states.getState('fritzdect.0.DECT500_123456789012-1.temperature', function (err, state) {
                                                                         if (err) console.error(err);
@@ -1573,7 +1573,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                           }
                                                                           else {
                                                                               console.log('fritzdect.0.DECT500_130770000415-1.temperature   ... ' + state.val);
-                                                                              expect(state.val).to.exist;
+                                                                              //expect(state.val).to.exist;
                                                                               expect(state.val).to.be.equal(null);
                                                                               done();
                                                                           }

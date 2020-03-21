@@ -1323,7 +1323,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                     console.log('fritzdect.0.DECT500_123456789012-1.level    ... ' + state.val);
                                                 }
                                                 expect(state.val).to.exist;
-                                                expect(state.val).to.be.equal('255');
+                                                expect(state.val).to.be.equal(255);
                                                 states.getState('fritzdect.0.DECT500_123456789012-1.levelpercentage', function (err, state) {
                                                     if (err) console.error(err);
                                                     expect(state).to.exist;
@@ -1334,7 +1334,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                         console.log('fritzdect.0.DECT500_123456789012-1.levelpercentage    ... ' + state.val);
                                                     }
                                                     expect(state.val).to.exist;
-                                                    expect(state.val).to.be.equal('100');
+                                                    expect(state.val).to.be.equal(100);
                                                     states.getState('fritzdect.0.DECT500_123456789012-1.colormodes', function (err, state) {
                                                         if (err) console.error(err);
                                                         expect(state).to.exist;
@@ -1388,7 +1388,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                         else {
                                                                             console.log('fritzdect.0.DECT500_123456789012-1.temperature   ... ' + state.val);
                                                                             expect(state.val).to.exist;
-                                                                            expect(state.val).to.be.equal('3400');
+                                                                            expect(state.val).to.be.equal(3400);
                                                                             done();
                                                                         }
                                                                     });
@@ -1509,7 +1509,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                       console.log('fritzdect.0.DECT500_130770000415-1.level    ... ' + state.val);
                                                   }
                                                   expect(state.val).to.exist;
-                                                  expect(state.val).to.be.equal('255');
+                                                  expect(state.val).to.be.equal(255);
                                                   states.getState('fritzdect.0.DECT500_130770000415-1.levelpercentage', function (err, state) {
                                                       if (err) console.error(err);
                                                       expect(state).to.exist;
@@ -1520,7 +1520,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                           console.log('fritzdect.0.DECT500_130770000415-1.levelpercentage    ... ' + state.val);
                                                       }
                                                       expect(state.val).to.exist;
-                                                      expect(state.val).to.be.equal('100');
+                                                      expect(state.val).to.be.equal(100);
                                                       states.getState('fritzdect.0.DECT500_130770000415-1.colormodes', function (err, state) {
                                                           if (err) console.error(err);
                                                           expect(state).to.exist;
@@ -1553,7 +1553,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                       console.log('fritzdect.0.DECT500_130770000415-1.hue    ... ' + state.val);
                                                                   }
                                                                   expect(state.val).to.exist;
-                                                                  expect(state.val).to.be.equal('348');
+                                                                  expect(state.val).to.be.equal(348);
                                                                   states.getState('fritzdect.0.DECT500_130770000415-1.saturation', function (err, state) {
                                                                       if (err) console.error(err);
                                                                       expect(state).to.exist;
@@ -1564,7 +1564,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                                                           console.log('fritzdect.0.DECT500_130770000415-1.saturation    ... ' + state.val);
                                                                       }
                                                                       expect(state.val).to.exist;
-                                                                      expect(state.val).to.be.equal('179');
+                                                                      expect(state.val).to.be.equal(179);
                                                                       states.getState('fritzdect.0.DECT500_130770000415-1.temperature', function (err, state) {
                                                                           if (err) console.error(err);
                                                                           expect(state).to.exist;

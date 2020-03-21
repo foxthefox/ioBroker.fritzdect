@@ -134,6 +134,9 @@ Not all FW-versions support all objects.
 * FritzDECT440 after API release
 
 ## Changelog
+### 1.0.1
+* bugfixes in fritz API calls
+
 ### 1.0.0 Breaking Change for non-native API objects
 * merge of fritzapi into repo directly including added DECT500 commands
 * **no longer support of non-native API calls (scraping of website)**

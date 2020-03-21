@@ -218,9 +218,7 @@
         "fritz_ip": "http://192.x.x.x",
         "fritz_user": "admin",
         "fritz_pw": "pw",
-        "fritz_interval": "300",
-        "GuestWLANactive": true,
-        "NonNativeApi": true
+        "fritz_interval": "300"
     },
     "objects": [],
     "instanceObjects": []

@@ -309,8 +309,7 @@ function startAdapter(options) {
                         }
                     }
                     if (dp == 'level') {
-                            fritz.setLevel(id, state.val) ).then(function (sid) { 
-                                
+                            fritz.setLevel(id, state.val ).then(function (sid) {
                                 adapter.log.debug('Set lamp level' + id + ' to '+ state.val);
                                 adapter.setState('DECT500_'+ id +'.level', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })

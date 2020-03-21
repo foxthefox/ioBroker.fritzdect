@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "news": {
+            "1.0.1": {
+                    "en": "bugfixes in fritz API calls",
+                    "de": "Bugfixes in fritz API-Aufrufen",
+                    "ru": "исправления в вызовах fritz API",
+                    "pt": "correções de bugs em chamadas fritz API",
+                    "nl": "bugfixes in fritz API-aanroepen",
+                    "fr": "corrections de bugs dans les appels API fritz",
+                    "it": "correzioni di errori nelle chiamate API fritz",
+                    "es": "correcciones de errores en llamadas a la API de fritz",
+                    "pl": "poprawki błędów w wywołaniach API fritz",
+                    "zh-cn": "fritz API调用中的错误修正"
+                  },
             "1.0.0": {
                     "en": "breaking change, no GuestWLAN! new support of DECT500",
                     "de": "Breaking Change, kein GuestWLAN! neue Unterstützung von DECT500",

@@ -324,14 +324,15 @@ function startAdapter(options) {
                             .catch(errorHandler);
                         }   
                     if (dp == 'hue') {
-                            fritz.setColor(id, state.val).then(function (sid) {
+                        let typ = 'hue';
+                            fritz.setColor(id, typ, state.val).then(function (sid) {
                                 adapter.log.debug('Set lamp color' + id + ' to '+ state.val);
                                 adapter.setState('DECT500_'+ id +'.hue', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                             })
                             .catch(errorHandler);
                         } 
                     if (dp == 'saturation') {
-                            let typ = 'hue';
+                            let typ = 'saturation';
                             fritz.setColor(id, typ, state.val).then(function (sid) {
                                 adapter.log.debug('Set lamp color saturation ' + id + ' to '+ state.val);
                                 adapter.setState('DECT500_'+ id +'.saturation', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich

@@ -33,6 +33,16 @@ A german explanatory doc is available here: [install_de](./docs/de/install.md)
 
 The widget requires that also vis-metro and vis-jqui-mfd are installed
 
+## Common Issues / Frequently Asked Questions
+
+  1. no login to the FritzBox
+
+      Log messages if the form of:
+
+          { error: { [Error: self signed certificate] code: 'DEPTH_ZERO_SELF_SIGNED_CERT' }
+
+      indicate that there are SSL security problems. Use the `"strictSSL": false` option to disable the respective check.
+
 ## ioBroker objects
 
 objects in *italic* are not part of all fritz.box configurations

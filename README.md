@@ -41,7 +41,7 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 
           { error: { [Error: self signed certificate] code: 'DEPTH_ZERO_SELF_SIGNED_CERT' }
 
-      indicate that there are SSL security problems. Use the `"strictSSL": false` option to disable the respective check.
+      indicate that there are SSL security problems. Use the `"strictSSL": false` option (no tick in checkbox) in the admin page of adapter to disable the respective check.
 
 ## ioBroker objects
 

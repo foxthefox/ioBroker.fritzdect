@@ -1556,8 +1556,9 @@ function main() {
                             adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
                             }
                         else {
-                            adapter.log.debug('Button_'+ device.identifier + ' : '  +'lastclick: ' + device.button.lastpressedtimestamp);
-                            adapter.setState('Button_'+ device.identifier +'.lastclick', {val: device.button.lastpressedtimestamp, ack: true});
+                            let lastclick = new Date(device.button.lastpressedtimestamp*1000);
+                            adapter.log.debug('Button_'+ device.identifier + ' : '  +'lastclick: ' + lastclick +' ('+device.button.lastpressedtimestamp+')');
+                            adapter.setState('Button_'+ device.identifier +'.lastclick', {val: lastclick, ack: true});
                         }
                     }
                     else if((device.functionbitmask & 32) == 32){ //button FD400
@@ -1574,8 +1575,9 @@ function main() {
                                 adapter.log.warn('Button_'+ device.identifier + ' is not present, check the device connection, no values are written');
                                 }
                             else {
-                                adapter.log.debug('Button_'+ button.identifier + ' : '  +'lastclick: ' + button.lastpressedtimestamp);
-                                adapter.setState('Button_'+ button.identifier +'.lastclick', {val: button.lastpressedtimestamp, ack: true});
+                                let lastclick = new Date(button.lastpressedtimestamp*1000);
+                                adapter.log.debug('Button_'+ button.identifier + ' : '  +'lastclick: ' + lastclick +' ('+ button.lastpressedtimestamp+')');
+                                adapter.setState('Button_'+ button.identifier +'.lastclick', {val: lastclick, ack: true});
                             }
                         });
                     }

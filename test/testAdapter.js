@@ -929,7 +929,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     else {
                                         console.log('fritzdect.0.Button_119340141058-2.lastclick  ... ' + state.val);
                                         expect(state.val).to.exist;
-                                        expect(state.val).to.be.equal('1538426492');
+                                        expect(state.val).to.be.equal('2018-10-01T20:41:32.000Z');
                                         done();
                                     }
                                 });
@@ -1007,7 +1007,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                     else {
                                         console.log('fritzdect.0.Button_13096321567-9.lastclick  ... ' + state.val);
                                         expect(state.val).to.exist;
-                                        expect(state.val).to.be.equal('1549195595');
+                                        expect(state.val).to.be.equal('2019-02-03T12:06:35.000Z');
                                         done();
                                     }
                                 });

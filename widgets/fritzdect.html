@@ -37,7 +37,7 @@
 
 
     vis.binds.fritzdect = {
-        version: "0.0.1",
+        version: "0.0.2",
         tileDialogFritz: function (el, wid, switch_id, power_id, energy_id, temp_id, options, switchOptions) {
             var $this = $(el).parent().find('.tile');
 
@@ -90,7 +90,7 @@
                         if (val_energy_id === undefined || val_energy_id === null || val_energy_id === '') {
                             val_energy_id = '';
                         } else {
-                            val_energy_id = val_energy_id.toFixed(0);
+                            val_energy_id = parseFloat(val_energy_id).toFixed(0); //some weird toFixed() is not a function
                         }
                         
                         var content = _dialog.children('.content');

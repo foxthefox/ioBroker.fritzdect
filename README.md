@@ -144,6 +144,9 @@ Not all FW-versions support all objects.
 * FritzDECT440 after API release
 
 ## Changelog
+### 1.1.0
+* new API features of AVM
+
 ### 1.0.1
 * bugfixes in fritz API calls
 

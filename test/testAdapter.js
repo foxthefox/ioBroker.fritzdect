@@ -122,6 +122,7 @@ var temp_stats  = fs.readFileSync(__dirname + '/../test/devicestat_temp_answer.x
 var power_stats = fs.readFileSync(__dirname + '/../test/devicestat_power_answer.xml'); //getbasicdevicestats power/voltage
 var hkr_batt    = fs.readFileSync(__dirname + '/../test/hkr_response.xml'); // Anteil der Webseite für BatteriesLadung
 var guestWlan   = fs.readFileSync(__dirname + '/../test/guest_wlan_form.xml'); // Anteil der Webseite für GästeWLAN
+// es fehlt noch die gethue?
 
 function handleHttpRequest(request, response) {
     console.log('HTTP-Server: Request: ' + request.method + ' ' + request.url);
@@ -631,6 +632,156 @@ describe('Test ' + adapterShortName + ' adapter', function() {
             });
         }, 1000);
     });
+	it('Test ' + adapterShortName + ' adapter: Check values of Comet', function (done) {
+        this.timeout(30000);
+        setTimeout(function() {
+            states.getState('fritzdect.0.Comet_117951033333.prodname', function (err, state) {
+                if (err) console.error(err);
+                expect(state).to.exist;
+                if (!state) {
+                    console.error('state "fritzdect.0.Comet_117951033333.prodname" not set');
+                }
+                else {
+                    console.log('fritzdect.0.Comet_117951033333.prodname        ... ' + state.val);
+                }
+                expect(state.val).to.exist;
+                expect(state.val).to.be.equal('Comet DECT');
+                states.getState('fritzdect.0.Comet_117951033333.manufacturer', function (err, state) {
+                    if (err) console.error(err);
+                    expect(state).to.exist;
+                    if (!state) {
+                        console.error('state "fritzdect.0.Comet_117951033333.manufacturer" not set');
+                    }
+                    else {
+                        console.log('fritzdect.0.Comet_117951033333.manufacturer    ... ' + state.val);
+                    }
+                    expect(state.val).to.exist;
+                    expect(state.val).to.be.equal('AVM');
+                    states.getState('fritzdect.0.Comet_117951033333.fwversion', function (err, state) {
+                        if (err) console.error(err);
+                        expect(state).to.exist;
+                        if (!state) {
+                            console.error('state "fritzdect.0.Comet_117951033333.fwversion" not set');
+                        }
+                        else {
+                            console.log('fritzdect.0.Comet_11795103333.fwversion       ... ' + state.val);
+                        }
+                        expect(state.val).to.exist;
+                        expect(state.val).to.be.equal('03.54');
+                        states.getState('fritzdect.0.Comet_117951033333.id', function (err, state) {
+                            if (err) console.error(err);
+                            expect(state).to.exist;
+                            if (!state) {
+                                console.error('state "fritzdect.0.Comet_117951033333.id" not set');
+                            }
+                            else {
+                                console.log('fritzdect.0.Comet_117951033333.id              ... ' + state.val);
+                            }
+                            expect(state.val).to.exist;
+                            expect(state.val).to.be.equal('20');
+                            states.getState('fritzdect.0.Comet_117951033333.devicelock', function (err, state) {
+                                if (err) console.error(err);
+                                expect(state).to.exist;
+                                if (!state) {
+                                    console.error('state "fritzdect.0.Comet_117951033333.devicelock" not set');
+                                }
+                                else {
+                                    console.log('fritzdect.0.Comet_117951033333.devicelock        ... ' + state.val);
+                                }
+                                expect(state.val).to.exist;
+                                expect(state.val).to.be.equal(true);
+                                states.getState('fritzdect.0.Comet_117951033333.present', function (err, state) {
+                                    if (err) console.error(err);
+                                    expect(state).to.exist;
+                                    if (!state) {
+                                        console.error('state "fritzdect.0.Comet_117951033333.present" not set');
+                                    }
+                                    else {
+                                        console.log('fritzdect.0.Comet_117951033333.present         ... ' + state.val);
+                                    }
+                                    expect(state.val).to.exist;
+                                    expect(state.val).to.be.equal(true);
+                                    states.getState('fritzdect.0.Comet_117951033333.lock', function (err, state) {
+                                        if (err) console.error(err);
+                                        expect(state).to.exist;
+                                        if (!state) {
+                                            console.error('state "fritzdect.0.Comet_117951033333.lock" not set');
+                                        }
+                                        else {
+                                            console.log('fritzdect.0.Comet_117951033333.lock            ... ' + state.val);
+                                        }
+                                        expect(state.val).to.exist;
+                                        expect(state.val).to.be.equal(false);
+                                        states.getState('fritzdect.0.Comet_117951033333.comfytemp', function (err, state) {
+                                            if (err) console.error(err);
+                                            expect(state).to.exist;
+                                            if (!state) {
+                                                console.error('state "fritzdect.0.Comet_117951033333.comfytemp" not set');
+                                            }
+                                            else {
+                                                console.log('fritzdect.0.Comet_117951033333.comfytemp        ... ' + state.val);
+                                            }
+                                            expect(state.val).to.exist;
+                                            expect(state.val).to.be.equal(19);
+                                            states.getState('fritzdect.0.Comet_117951033333.nighttemp', function (err, state) {
+                                                if (err) console.error(err);
+                                                expect(state).to.exist;
+                                                if (!state) {
+                                                    console.error('state "fritzdect.0.Comet_117951033333.temp" not set');
+                                                }
+                                                else {
+                                                    console.log('fritzdect.0.Comet_117951033333.nightemp        ... ' + state.val);
+                                                }
+                                                expect(state.val).to.exist;
+                                                expect(state.val).to.be.equal(15);
+                                                states.getState('fritzdect.0.Comet_117951033333.actualtemp', function (err, state) {
+                                                    if (err) console.error(err);
+                                                    expect(state).to.exist;
+                                                    if (!state) {
+                                                        console.error('state "fritzdect.0.Comet_117951033333.actualtemp" not set');
+                                                    }
+                                                    else {
+                                                        console.log('fritzdect.0.Comet_117951033333.actualtemp        ... ' + state.val);
+                                                    }
+                                                    expect(state.val).to.exist;
+                                                    expect(state.val).to.be.equal(20);
+                                                    states.getState('fritzdect.0.Comet_117951033333.temp', function (err, state) {
+                                                        if (err) console.error(err);
+                                                        expect(state).to.exist;
+                                                        if (!state) {
+                                                            console.error('state "fritzdect.0.Comet_117951033333.temp" not set');
+                                                        }
+                                                        else {
+                                                            console.log('fritzdect.0.Comet_117951033333.temp            ... ' + state.val);
+                                                        }
+                                                        expect(state.val).to.exist;
+                                                        expect(state.val).to.be.equal(20);
+                                                        states.getState('fritzdect.0.Comet_117951033333.battery', function (err, state) {
+                                                            if (err) console.error(err);
+                                                            expect(state).to.exist;
+                                                            if (!state) {
+                                                                console.error('state "fritzdect.0.Comet_117951033333.battery" not set');
+                                                            }
+                                                            else {
+                                                                console.log('fritzdect.0.Comet_117951033333.battery          ... ' + state.val);
+                                                                expect(state.val).to.exist;
+                                                                expect(state.val).to.be.equal(80);
+                                                                done();
+                                                            }
+                                                        });
+                                                    });
+                                                });
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        }, 1000);
+	});
     it('Test ' + adapterShortName + ' adapter: Check values of Comet wo battcharge', function (done) {
         this.timeout(30000);
         setTimeout(function() {

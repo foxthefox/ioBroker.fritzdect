@@ -110,6 +110,42 @@
 			</hkr>
 		</device>
 		<device>
+			<identifier>11795 1033333</identifier>
+			<id>20</id>
+			<functionbitmask>320</functionbitmask>
+			<fwversion>03.54</fwversion>
+			<manufacturer>AVM</manufacturer>
+			<productname>Comet DECT window und boost</productname>
+			<present>1</present>
+			<txbusy>0</txbusy>
+			<name>Heizung</name>
+			<temperature>
+				<celsius>200</celsius>
+				<offset>-20</offset>
+			</temperature>
+			<hkr>
+				<tist>40</tist>
+				<tsoll>38</tsoll>
+				<absenk>30</absenk>
+				<komfort>38</komfort>
+				<lock>0</lock>
+				<devicelock>1</devicelock>
+				<errorcode>0</errorcode>
+				<batterylow>0</batterylow>
+				<battery>80</battery>
+				<nextchange>
+					<endperiod>2019970800</endperiod>
+					<tchange>44</tchange>
+				</nextchange>
+				<summeractive>0</summeractive>
+				<holidayactive>0</holidayactive>
+				<boostactive>1</boostactive>
+				<boostactiveendtime></boostactiveendtime>
+				<windowopenactiv>1</windowopenactiv>
+				<windowopenactiveendtime></windowopenactiveendtime>
+			</hkr>
+		</device>
+		<device>
 			<identifier>08761 0006161</identifier>
 			<id>16</id>
 			<functionbitmask>2944</functionbitmask>

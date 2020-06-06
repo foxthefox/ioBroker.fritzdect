@@ -162,7 +162,7 @@ Not all FW-versions of fritz.box support all objects.
 
 ## Changelog
 ### 1.1.0
-* new API features of AVM
+* new features of AVM API 1.33
     * setblind
 	* sethkrboost
 	* setwindowopen

@@ -133,7 +133,7 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |DECT100.temp|value|-|actual temperature in °C|
 
-### contact
+### contact/alert (HAN-FUN)
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |Contact.state|boolean|-|true/false -> ON/OFF|
@@ -143,7 +143,7 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |Button.lastclick|number|-|timestamp|
 
-### other (HAN-FUN)
+### blind (HAN-FUN)
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |Blind.blindtarget|string|x|target open/close/stop|

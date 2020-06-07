@@ -165,6 +165,20 @@ function startAdapter(options) {
            
                         }
                     }
+					if (dp == 'boost') {
+                        fritz.setHkrBoost(id, state.val ).then(function (sid) {
+                            adapter.log.debug('Set thermostat boost ' + id + ' to '+ state.val);
+                            adapter.setState('Comet_'+ id +'.boost', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                        })
+                        .catch(errorHandler);
+                    }
+					if (dp == 'windowopen') {
+                        fritz.setWindowopen(id, state.val ).then(function (sid) {
+                            adapter.log.debug('Set thermostat windowopen ' + id + ' to '+ state.val);
+                            adapter.setState('Comet_'+ id +'.windowopen', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                        })
+                        .catch(errorHandler);
+                    }
                 }
                 else if (idx.startsWith("Hgroup_")){ //must be comet group
                     id = idx.replace(/Hgroup_/g,''); //Thermostat
@@ -1251,22 +1265,8 @@ function main() {
         });
         adapter.setState(typ + newId +'.members',{val: member, ack: true});
     }
-    
-    function createLamp(typ,newId){
-        adapter.log.debug('create Lamp object');
-        adapter.setObjectNotExists(typ + newId +'.txbusy', {
-            type: 'state',
-            common: {
-                "name":  "txbusy",
-                "type": "number",
-                "read": true,
-                "write": false,
-                "role": "value",
-                "desc":  "txbusy"
-            },
-            native: {
-            }
-        });
+    function createSimpleOnOff(typ,newId){
+        adapter.log.debug('create SimpleOnOff object');
         adapter.setObjectNotExists(typ + newId +'.state', {
             type: 'state',
             common: {
@@ -1280,6 +1280,9 @@ function main() {
             native: {
             }
         });
+	}
+	function createLevel(typ,newId){
+        adapter.log.debug('create Level object');
         adapter.setObjectNotExists(typ + newId +'.level', {
             type: 'state',
             common: {
@@ -1311,6 +1314,10 @@ function main() {
             native: {
             }
         });
+	}
+	
+    function createLamp(typ,newId){
+        adapter.log.debug('create Lamp object');
         adapter.setObjectNotExists(typ + newId +'.colormodes', {
             type: 'state',
             common: {
@@ -1494,8 +1501,10 @@ function main() {
                         role = "lamp";
                         adapter.log.info('setting up DECT500 object '+ device.name);                    
                     createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
-                    createProductName(typ,device.identifier,device.productname);
+                        createProductName(typ,device.identifier,device.productname);
                     	//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color machen und somit createWhitelamp createColorLamp oder in in createLampe mit Übergabe supported_modes
+						createSimpleOnOff(typ,device.identifier);
+						createLevel(typ,device.identifier);
                         createLamp(typ,device.identifier);
 						if (device.txbusy){
                             createTxBusy(typ,device.identifier);

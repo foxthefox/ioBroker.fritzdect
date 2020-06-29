@@ -1268,7 +1268,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                                 console.log('fritzdect.0.DECT500_123456789012-1.id             ... ' + state.val);
                             }
                             expect(state.val).to.exist;
-                            expect(state.val).to.be.equal('2000');
+                            expect(state.val).to.be.equal('406');
                             states.getState('fritzdect.0.DECT500_123456789012-1.name', function (err, state) {
                                 if (err) console.error(err);
                                 expect(state).to.exist;

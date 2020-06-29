@@ -1392,18 +1392,16 @@ function main() {
                         typ = "DECT500_";
                         role = "lamp";
                         adapter.log.info('setting up DECT500 object '+ device.name);                    
-                    createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                    createBasic(typ,device.identifier,device.name,role,device.etsiunitinfo.etsideviceid,device.fwversion,device.manufacturer);
                     createProductName(typ,device.identifier,device.productname);
                     	//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color machen und somit createWhitelamp createColorLamp oder in in createLampe mit Übergabe supported_modes
                         createLamp(typ,device.identifier);
                     }
                     /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen
+                    besser die hier übermittelte FW Version an das eigentliche Objekt übergeben, ansonsten scheinen die anderen Informationen gedoppelt zu sein.
                     else if((device.functionbitmask & 1) == 1){ //HAN-FUN
-                        typ = "HAN-FUN_";
-                        role = "sensor";
-                        adapter.log.info('setting up HAN-FUN object '+ device.name);                    
-                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
-                        createProductName(typ,device.identifier,device.productname);
+                        search(etsideviceid, replaceFW(device.fwversion))
+                        adapter.log.info('merging HAN-FUN object to '+ device.name);                    
                     }
                     */
                     else {

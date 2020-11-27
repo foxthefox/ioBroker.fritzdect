@@ -1061,12 +1061,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.summeractive', {
             type: 'state',
             common: {
-                "name":  "Product Name",
+                "name":  "Summer active",
                 "type": "boolean",
                 "read": true,
                 "write": false,
                 "role": "indicator",
-                "desc":  "Product Name"
+                "desc":  "Summer active"
             },
             native: {
             }
@@ -1074,12 +1074,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.holidayactive', {
             type: 'state',
             common: {
-                "name":  "Product Name",
+                "name":  "Holiday active",
                 "type": "boolean",
                 "read": true,
                 "write": false,
                 "role": "indicator",
-                "desc":  "Product Name"
+                "desc":  "Holiday active"
             },
             native: {
             }

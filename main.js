@@ -1061,12 +1061,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.summeractive', {
             type: 'state',
             common: {
-                "name":  "Product Name",
+                "name":  "Summer active",
                 "type": "boolean",
                 "read": true,
                 "write": false,
                 "role": "indicator",
-                "desc":  "Product Name"
+                "desc":  "Summer active"
             },
             native: {
             }
@@ -1074,12 +1074,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.holidayactive', {
             type: 'state',
             common: {
-                "name":  "Product Name",
+                "name":  "Holiday active",
                 "type": "boolean",
                 "read": true,
                 "write": false,
                 "role": "indicator",
-                "desc":  "Product Name"
+                "desc":  "Holiday active"
             },
             native: {
             }
@@ -1133,7 +1133,35 @@ function main() {
             native: {
             }
         });
-    } 
+    }
+    function createThermostatNextChange(typ,newId){
+        adapter.setObjectNotExists(typ + newId +'.nextchangetime', {
+            type: 'state',
+            common: {
+                "name":  "next time for Temp change",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "value.time"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.nextchangetemp', {
+            type: 'state',
+            common: {
+                "name":  "Temp after next change",
+                "type": "number",
+                "unit": "°C",                    
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "Temp after next change"
+            },
+            native: {
+            }
+        });
+    }
     function createGroupInfo(typ,newId,mid,member){
         adapter.log.debug('create Group objects');
         adapter.setObjectNotExists(typ + newId +'.masterdeviceid', {
@@ -1360,6 +1388,9 @@ function main() {
                         }
                         if (device.hkr.windowopenactiv){
                             createThermostatWindow(typ,device.identifier);
+                        }
+                        if (device.hkr.nextchange){
+                            createThermostatNextChange(typ,device.identifier);
                         } 
                     }
                     else if((device.functionbitmask & 16) == 16){ //contact
@@ -1733,6 +1764,14 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + convertValue + ' (' + device.hkr.windowopenactiv + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: convertValue, ack: true});
                             }
+                            if (device.hkr.nextchange){
+                                var changetemp = device.hkr.nextchange.tchange;
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nextchangetemp :' + changetemp);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nextchangetemp', {val: parseFloat(changetemp)/2, ack: true});
+                                let changetime = new Date(device.hkr.nextchange.endperiod*1000);
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nextchangetime :' + changetime);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nextchangetime', {val: changetime, ack: true});
+                            } 
 
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.operationMode', {val: currentMode, ack: true});
                         }

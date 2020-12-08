@@ -128,6 +128,16 @@ objects in *italic* are not part of all fritz.box configurations
 |DECT500.saturation|value|x|saturation|
 |DECT500.temperature|value|x|color temperature (white mode)|
 
+### lamp e.g DECT400
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|DECT440.txbusy|boolean|-|cmd sending active|
+|DECT440.battery|value|-|battery level|
+|DECT440.batterylow|boolean|-|battery status|
+|DECT440.temperature|value|-|temperature |
+|DECT440.humidity|value|-|relative humidity % (not all FW versions |
+|DECT440.button|time|-|see DECT400 button (4x) |
+
 ### repeater e.g. DECT100
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
@@ -168,6 +178,8 @@ Not all FW-versions of fritz.box support all objects.
 	* setwindowopen
 	* txbusy, windowopenactiveendtime,  boostactiveendtime, boostactive
 * fade duration
+* DECT440
+* DECT500
 
 ### 1.0.1
 * bugfixes in fritz API calls

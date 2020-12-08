@@ -146,6 +146,7 @@ Not all FW-versions support all objects.
 ## Changelog
 ### 1.0.1
 * bugfixes in fritz API calls
+* error code 303 (but unknown what it means)
 
 ### 1.0.0 Breaking Change for non-native API objects
 * merge of fritzapi into repo directly including added DECT500 commands

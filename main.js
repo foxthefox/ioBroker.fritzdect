@@ -149,7 +149,7 @@ function startAdapter(options) {
                                     })
                                     .catch(errorHandler);
                                 }
-                                else{adapter-log.error('no data in targettemp for setting mode')}
+                                else{adapter.log.error('no data in targettemp for setting mode')}
         
                             });
                         } else if (state.val === 1) {

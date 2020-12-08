@@ -526,6 +526,10 @@ function errorHandler(error) {
             adapter.log.error("service unavailable");
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
+        else if (error.response.statusCode == 303){
+            adapter.log.error("unknwon error 303");
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
         else{
             adapter.log.error("statuscode not in errorhandler");
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));

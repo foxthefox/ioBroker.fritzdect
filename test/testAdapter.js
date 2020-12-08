@@ -645,7 +645,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
                     console.log('fritzdect.0.Comet_117951033333.prodname        ... ' + state.val);
                 }
                 expect(state.val).to.exist;
-                expect(state.val).to.be.equal('Comet DECT');
+                expect(state.val).to.be.equal('Comet DECT window and boost');
                 states.getState('fritzdect.0.Comet_117951033333.manufacturer', function (err, state) {
                     if (err) console.error(err);
                     expect(state).to.exist;

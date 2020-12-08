@@ -1440,7 +1440,7 @@ function main() {
                     }
                     */
                     else {
-                        adapter.log.debug('nix vorbereitet für diese Art von Gerät');
+                        adapter.log.debug('nix vorbereitet für diese Art von Gerät ' + device.functionbitmask + ' -> ' + device.name);
                     }                                
                 });
             }
@@ -1485,7 +1485,7 @@ function main() {
                         createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);    
                     }
                     else {
-                        adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
+                        adapter.log.debug('nix vorbereitet für diese Art von Gruppe ' + group.functionbitmask);
                     }
                 });
             }
@@ -1514,7 +1514,7 @@ function main() {
                         createTemplate(typ,template.identifier,template.name,role,template.id);
                     }
                     else {
-                        adapter.log.debug('nix vorbereitet für diese Art von Template' + template.functionbitmask);
+                        adapter.log.debug('nix vorbereitet für diese Art von Template' + template.functionbitmask + ' -> ' + template.name);
                     }
                 });
             }
@@ -1818,7 +1818,7 @@ function main() {
                         }
                     }
                     else{
-                        adapter.log.debug('nix vorbereitet für diese Art von device update');
+                        adapter.log.debug('nix vorbereitet für diese Art von device update ' + device.functionbitmask + ' -> ' + device.name);
                     }
                 });
             }
@@ -1960,7 +1960,7 @@ function main() {
 
                     }
                     else{
-                        adapter.log.debug('nix vorbereitet für diese Art von group update');
+                        adapter.log.debug('nix vorbereitet für diese Art von group update ' + group.functionbitmask + ' -> ' + group.name);
                     }
                 });
             }

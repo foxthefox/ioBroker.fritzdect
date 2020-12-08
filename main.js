@@ -1439,7 +1439,7 @@ function main() {
                         if (device.powermeter.voltage){
                             createVoltage(typ,device.identifier);
                         }
-						if (device.txbusy){
+			if (device.txbusy){
                             createTxBusy(typ,device.identifier);
                         }
                     }
@@ -1489,9 +1489,9 @@ function main() {
                     else if((device.functionbitmask & 32) == 32){ //buttons from fritzdect 400
                         typ = "Button_";
                         role = "sensor";
+			createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         device.button.forEach(function (button){
                             adapter.log.info('setting up FD400 Button object '+ button.name);                    
-                            createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
                             createProductName(typ,button.identifier,device.productname);
                             createButton(typ,button.identifier);
                         });
@@ -1503,10 +1503,10 @@ function main() {
                     createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         createProductName(typ,device.identifier,device.productname);
                     	//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color machen und somit createWhitelamp createColorLamp oder in in createLampe mit Übergabe supported_modes
-						createSimpleOnOff(typ,device.identifier);
-						createLevel(typ,device.identifier);
+			createSimpleOnOff(typ,device.identifier);
+			createLevel(typ,device.identifier);
                         createLamp(typ,device.identifier);
-						if (device.txbusy){
+			if (device.txbusy){
                             createTxBusy(typ,device.identifier);
                         }
                     }

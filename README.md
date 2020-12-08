@@ -168,7 +168,6 @@ Not all FW-versions of fritz.box support all objects.
 ## TODO:
 * universal object names
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
-* FritzDECT440 after API release
 
 ## Changelog
 ### 1.1.0

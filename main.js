@@ -1491,6 +1491,7 @@ function main() {
                         role = "sensor";
 			createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         device.button.forEach(function (button){
+			    createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
                             adapter.log.info('setting up FD400 Button object '+ button.name);                    
                             createProductName(typ,button.identifier,device.productname);
                             createButton(typ,button.identifier);

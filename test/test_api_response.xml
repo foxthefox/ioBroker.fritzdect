@@ -110,6 +110,42 @@
 			</hkr>
 		</device>
 		<device>
+			<identifier>11795 1033333</identifier>
+			<id>20</id>
+			<functionbitmask>320</functionbitmask>
+			<fwversion>03.54</fwversion>
+			<manufacturer>AVM</manufacturer>
+			<productname>Comet DECT window und boost</productname>
+			<present>1</present>
+			<txbusy>0</txbusy>
+			<name>Heizung</name>
+			<temperature>
+				<celsius>200</celsius>
+				<offset>-20</offset>
+			</temperature>
+			<hkr>
+				<tist>40</tist>
+				<tsoll>38</tsoll>
+				<absenk>30</absenk>
+				<komfort>38</komfort>
+				<lock>0</lock>
+				<devicelock>1</devicelock>
+				<errorcode>0</errorcode>
+				<batterylow>0</batterylow>
+				<battery>80</battery>
+				<nextchange>
+					<endperiod>2019970800</endperiod>
+					<tchange>44</tchange>
+				</nextchange>
+				<summeractive>0</summeractive>
+				<holidayactive>0</holidayactive>
+				<boostactive>1</boostactive>
+				<boostactiveendtime></boostactiveendtime>
+				<windowopenactiv>1</windowopenactiv>
+				<windowopenactiveendtime></windowopenactiveendtime>
+			</hkr>
+		</device>
+		<device>
 			<identifier>08761 0006161</identifier>
 			<id>16</id>
 			<functionbitmask>2944</functionbitmask>
@@ -313,5 +349,90 @@
 				<members>19,20</members>
 			</groupinfo>
 		</group>
+		<device>
+			  <identifier>099950403922</identifier>
+			  <id>56</id>
+			  <functionbitmask>1048864</functionbitmask>
+			  <fwversion>05.10</fwversion>
+			  <manufacturer>AVM</manufacturer>
+			  <productname>FRITZ!DECT 440</productname>
+			  <present>1</present>
+			  <txbusy>0</txbusy>
+			  <name>FT-Wohnzimmer</name>
+			  <battery>60</battery>
+			  <batterylow>0</batterylow>
+			  <temperature>
+			    <celsius>185</celsius>
+			    <offset>0</offset>
+			  </temperature>
+			  <humidity>
+			    <rel_humidity>52</rel_humidity>
+			  </humidity>
+			  <button>
+			    <identifier>09995 0403922-1</identifier>
+			    <id>5012</id>
+			    <name>FT-Wohnzimmer: Oben rechts</name>
+			    <lastpressedtimestamp></lastpressedtimestamp>
+			  </button>
+			  <button>
+			    <identifier>09995 0403922-3</identifier>
+			    <id>5013</id>
+			    <name>FT-Wohnzimmer: Unten rechts</name>
+			    <lastpressedtimestamp></lastpressedtimestamp>
+			  </button>
+			  <button>
+			    <identifier>09995 0403922-5</identifier>
+			    <id>5014</id>
+			    <name>FT-Wohnzimmer: Unten links</name>
+			    <lastpressedtimestamp>1605727666</lastpressedtimestamp>
+			  </button>
+			  <button>
+			    <identifier>09995 0403922-7</identifier>
+			    <id>5015</id>
+			    <name>FT-Wohnzimmer: Oben links</name>
+			    <lastpressedtimestamp></lastpressedtimestamp>
+			  </button>
+		</device>
+		<device>
+			  <identifier>1234567890</identifier>
+			  <id>58</id>
+			  <functionbitmask>288</functionbitmask>
+			  <fwversion>05.07</fwversion>
+			  <manufacturer>AVM</manufacturer>
+			  <productname>FRITZ!DECT 440</productname>
+			  <present>1</present>
+			  <txbusy>0</txbusy>
+			  <name>Wohnzimmer-Zentrale</name>
+			  <battery>100</battery>
+			  <batterylow>0</batterylow>
+			  <temperature>
+			    <celsius>260</celsius>
+			    <offset>0</offset>
+			  </temperature>
+			  <button>
+			    <identifier>12345 67890-1</identifier>
+			    <id>5000</id>
+			    <name>Wohnzimmer-Zentrale: Oben rechts</name>
+			    <lastpressedtimestamp>1605781868</lastpressedtimestamp>
+			  </button>
+			  <button>
+			    <identifier>12345 67890-2</identifier>
+			    <id>5001</id>
+			    <name>Wohnzimmer-Zentrale: Unten rechts</name>
+			    <lastpressedtimestamp></lastpressedtimestamp>
+			  </button>
+			  <button>
+			    <identifier>12345 67890-3</identifier>
+			    <id>5002</id>
+			    <name>Wohnzimmer-Zentrale: Unten links</name>
+			    <lastpressedtimestamp>1605727666</lastpressedtimestamp>
+			  </button>
+			  <button>
+			    <identifier>12345 67890-4</identifier>
+			    <id>5003</id>
+			    <name>Wohnzimmer-Zentrale: Oben links</name>
+			    <lastpressedtimestamp></lastpressedtimestamp>
+			  </button>
+			</device>
 	</devicelist>
 	

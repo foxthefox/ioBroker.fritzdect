@@ -165,6 +165,20 @@ function startAdapter(options) {
            
                         }
                     }
+					if (dp == 'boost') {
+                        fritz.setHkrBoost(id, state.val ).then(function (sid) {
+                            adapter.log.debug('Set thermostat boost ' + id + ' to '+ state.val);
+                            adapter.setState('Comet_'+ id +'.boost', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                        })
+                        .catch(errorHandler);
+                    }
+					if (dp == 'windowopen') {
+                        fritz.setWindowopen(id, state.val ).then(function (sid) {
+                            adapter.log.debug('Set thermostat windowopen ' + id + ' to '+ state.val);
+                            adapter.setState('Comet_'+ id +'.windowopen', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+                        })
+                        .catch(errorHandler);
+                    }
                 }
                 else if (idx.startsWith("Hgroup_")){ //must be comet group
                     id = idx.replace(/Hgroup_/g,''); //Thermostat
@@ -852,6 +866,21 @@ function main() {
             }
         });
     }
+	function createTxBusy(typ,newId){
+        adapter.log.debug('create txbusy object');
+        adapter.setObjectNotExists(typ + newId +'.txbusy', {
+            type: 'state',
+            common: {
+                "name":  "TxBusy", //cmd sending 0=inactive, 1=active
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator"
+            },
+            native: {
+            }
+        });
+    }
     function createEnergy(typ,newId){
         adapter.log.debug('create Energy objects ');
         adapter.setObjectNotExists(typ + newId +'.power', {
@@ -1137,7 +1166,37 @@ function main() {
             native: {
             }
         });
+      	adapter.setObjectNotExists(typ + newId +'.windowopen', {
+            type: 'state',
+            common: {
+                "name":  "window open activation",
+                "type": "time",
+                "read": true,
+                "write": true,
+                "role": "switch",
+                "desc":  "window open activation"
+            },
+            native: {
+            }
+        });
     }
+
+	function createThermostatWindowExt(typ,newId){
+        adapter.log.debug('create Thermostat Window external cmd objects');
+		adapter.setObjectNotExists(typ + newId +'.windowopenactiveendtime', {
+            type: 'state',
+            common: {
+                "name":  "window open active end time",
+                "type": "time",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "window open active end time"
+           },
+            native: {
+            }
+        });            
+    }   
     function createThermostatNextChange(typ,newId){
         adapter.setObjectNotExists(typ + newId +'.nextchangetime', {
             type: 'state',
@@ -1161,6 +1220,50 @@ function main() {
                 "write": false,
                 "role": "value.temperature",
                 "desc":  "Temp after next change"
+              },
+            native: {
+            }
+        });            
+    }   
+
+
+	function createThermostatBoost(typ,newId){
+        adapter.log.debug('create Thermostat Boost objects');
+        adapter.setObjectNotExists(typ + newId +'.boostactive', {
+            type: 'state',
+            common: {
+                "name":  "Boost active",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "Boost active"
+            },
+            native: {
+            }
+        });
+		adapter.setObjectNotExists(typ + newId +'.boostactiveendtime', {
+            type: 'state',
+            common: {
+                "name":  "Boost active end time",
+                "type": "time",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "Boost active end time"
+            },
+            native: {
+            }
+        });
+		adapter.setObjectNotExists(typ + newId +'.boost', {
+            type: 'state',
+            common: {
+                "name":  "Boost activation",
+                "type": "time",
+                "read": true,
+                "write": true,
+                "role": "switch",
+                "desc":  "Boost activation"
             },
             native: {
             }
@@ -1197,22 +1300,8 @@ function main() {
         });
         adapter.setState(typ + newId +'.members',{val: member, ack: true});
     }
-    
-    function createLamp(typ,newId){
-        adapter.log.debug('create Lamp object');
-        adapter.setObjectNotExists(typ + newId +'.txbusy', {
-            type: 'state',
-            common: {
-                "name":  "txbusy",
-                "type": "number",
-                "read": true,
-                "write": false,
-                "role": "value",
-                "desc":  "txbusy"
-            },
-            native: {
-            }
-        });
+    function createSimpleOnOff(typ,newId){
+        adapter.log.debug('create SimpleOnOff object');
         adapter.setObjectNotExists(typ + newId +'.state', {
             type: 'state',
             common: {
@@ -1226,6 +1315,9 @@ function main() {
             native: {
             }
         });
+	}
+	function createLevel(typ,newId){
+        adapter.log.debug('create Level object');
         adapter.setObjectNotExists(typ + newId +'.level', {
             type: 'state',
             common: {
@@ -1257,6 +1349,10 @@ function main() {
             native: {
             }
         });
+	}
+	
+    function createLamp(typ,newId){
+        adapter.log.debug('create Lamp object');
         adapter.setObjectNotExists(typ + newId +'.colormodes', {
             type: 'state',
             common: {
@@ -1357,6 +1453,9 @@ function main() {
                         if (device.temperature){
                             createTemperature(typ,device.identifier);
                         }
+						if (device.txbusy){
+                            createTxBusy(typ,device.identifier);
+                        }
                     }
                     else if((device.functionbitmask & 512) == 512 ){ //switch
                         typ = "DECT200_";
@@ -1374,6 +1473,9 @@ function main() {
                         }
                         if (device.powermeter.voltage){
                             createVoltage(typ,device.identifier);
+                        }
+			if (device.txbusy){
+                            createTxBusy(typ,device.identifier);
                         }
                     }
                     else if((device.functionbitmask & 64) == 64 ){ //thermostat
@@ -1393,9 +1495,21 @@ function main() {
                         if (device.hkr.windowopenactiv){
                             createThermostatWindow(typ,device.identifier);
                         }
+
+            						if (device.hkr.windowopenactiveendtime){
+                            createThermostatBoostExt(typ,device.identifier);
+                        }
+            						if (device.hkr.boostactiveendtime){
+                            createThermostatBoost(typ,device.identifier);
+                        }
+            						if (device.txbusy){
+                            createTxBusy(typ,device.identifier);
+                        }	
+
                         if (device.hkr.nextchange){
                             createThermostatNextChange(typ,device.identifier);
                         } 
+
                     }
                     else if((device.functionbitmask & 16) == 16){ //contact
                         typ = "Contact_";
@@ -1416,9 +1530,10 @@ function main() {
                     else if((device.functionbitmask & 32) == 32){ //buttons from fritzdect 400
                         typ = "Button_";
                         role = "sensor";
+                  			createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         device.button.forEach(function (button){
+                  			    createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
                             adapter.log.info('setting up FD400 Button object '+ button.name);                    
-                            createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
                             createProductName(typ,button.identifier,device.productname);
                             createButton(typ,button.identifier);
                         });
@@ -1427,10 +1542,19 @@ function main() {
                         typ = "DECT500_";
                         role = "lamp";
                         adapter.log.info('setting up DECT500 object '+ device.name);                    
-                    createBasic(typ,device.identifier,device.name,role,device.etsiunitinfo.etsideviceid,device.fwversion,device.manufacturer);
-                    createProductName(typ,device.identifier,device.productname);
+
+                    //new api createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                        createProductName(typ,device.identifier,device.productname);
+
+                        createBasic(typ,device.identifier,device.name,role,device.etsiunitinfo.etsideviceid,device.fwversion,device.manufacturer);
+
                     	//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color machen und somit createWhitelamp createColorLamp oder in in createLampe mit Übergabe supported_modes
+			createSimpleOnOff(typ,device.identifier);
+			createLevel(typ,device.identifier);
                         createLamp(typ,device.identifier);
+			if (device.txbusy){
+                            createTxBusy(typ,device.identifier);
+                        }
                     }
                     /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen
                     besser die hier übermittelte FW Version an das eigentliche Objekt übergeben, ansonsten scheinen die anderen Informationen gedoppelt zu sein.
@@ -1471,6 +1595,9 @@ function main() {
                         createSwitch(typ,group.identifier);
                         createEnergy(typ,group.identifier);
                         createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);
+						if (group.txbusy){
+                            createTxBusy(typ,group.identifier);
+                        }
                     }
                     else if ((group.functionbitmask & 64) == 64){ //hgroup
                         typ = "Hgroup_";
@@ -1481,6 +1608,9 @@ function main() {
                         createThermostatModes(typ,group.identifier);
                         if (group.hkr.summeractive){
                             createThermostatProg(typ,group.identifier);
+                        };
+						if (group.txbusy){
+                            createTxBusy(typ,group.identifier);
                         }
                         createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);    
                     }
@@ -1660,7 +1790,12 @@ function main() {
                             //if( adapter.config.dect200volt_en === 'true' || adapter.config.dect200volt_en  === true || adapter.config.dect200volt_en  === 1 ) {
                                 adapter.log.debug('DECT200_'+ device.identifier + ' : ' +'voltage : ' + device.powermeter.voltage / 1000);
                                 adapter.setState('DECT200_'+ device.identifier +'.voltage', {val: device.powermeter.voltage / 1000, ack: true});
-                            }  
+                            }
+							if(device.txbusy){
+								let convertTxBUSY = device.txbusy == 1 ? true: false;
+                            	adapter.log.debug('DECT200_'+ device.identifier + ' : '  +'txbusy : ' + convertTxBUSY + ' (' + device.txbusy + ')');
+                            	adapter.setState('DECT200_'+ device.identifier +'.txbusy', {val: convertTxBUSY, ack: true});
+							}
                         }
                     }
                     else if((device.functionbitmask & 64) == 64){ //thermostat
@@ -1768,6 +1903,31 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + convertValue + ' (' + device.hkr.windowopenactiv + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: convertValue, ack: true});
                             }
+
+                            if(device.hkr.windowopenactiveendtime){
+                                  let convertValue = device.hkr.windowopenactiveendtime
+
+                                  adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiveendtime :' + convertValue + ' (' + device.hkr.windowopenactiveendtime + ')');
+                                  adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiveendtime', {val: convertValue, ack: true});
+                              }
+                            if(device.hkr.boostactiveendtime){
+                                  let convertValue = device.hkr.boostactiveendtime
+
+                                  adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'boostactiveendtime :' + convertValue + ' (' + device.hkr.boostactiveendtime + ')');
+                                  adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.boostactiveendtime', {val: convertValue, ack: true});
+
+                                  //wenn boostactiveendtime, dann gibt es auch boostactiv
+                                  let convertBoostACTIV = device.hkr.boostactive == 1 ? true: false;
+                                  adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'boostactive :' + convertBoostACTIV + ' (' + device.hkr.boostactive + ')');
+                                  adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.boostactive', {val: convertBoostACTIV, ack: true});
+
+                              }
+                              if(device.txbusy){
+                                let convertTxBUSY = device.txbusy == 1 ? true: false;
+                                adapter.log.debug('Comet_'+ device.identifier + ' : '  +'txbusy : ' + convertTxBUSY + ' (' + device.txbusy + ')');
+                                adapter.setState('DECT200_'+ device.identifier +'.txbusy', {val: convertTxBUSY, ack: true});
+                              }
+
                             if (device.hkr.nextchange){
                                 var changetemp = device.hkr.nextchange.tchange;
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nextchangetemp :' + changetemp);
@@ -1777,6 +1937,7 @@ function main() {
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nextchangetime', {val: changetime, ack: true});
                             } 
 
+
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.operationMode', {val: currentMode, ack: true});
                         }
                     }
@@ -1784,6 +1945,7 @@ function main() {
                         adapter.log.debug('updating Lamp '+ device.name); 
                         adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'name : ' + device.name);
                         adapter.setState('DECT500_'+ device.identifier +'.name', {val: device.name, ack: true});
+						//da TxBusy mit der API zeitgleich mit DECT500 herauskam, sparen wir die Abfrage ob vorhanden 
                         let convertTxBusy= device.txbusy == 1 ? true: false;
                         adapter.log.debug('DECT500_'+ device.identifier + ' : '  +'txbusy : ' + convertTxBusy + '(' + device.txbusy + ')');
                         adapter.setState('DECT500_'+ device.identifier +'.txbusy', {val: convertTxBusy, ack: true});

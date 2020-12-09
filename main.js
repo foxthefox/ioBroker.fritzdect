@@ -1170,7 +1170,7 @@ function main() {
             type: 'state',
             common: {
                 "name":  "window open activation",
-                "type": "time",
+                "type": "boolean",
                 "read": true,
                 "write": true,
                 "role": "switch",
@@ -1187,10 +1187,10 @@ function main() {
             type: 'state',
             common: {
                 "name":  "window open active end time",
-                "type": "time",
+                "type": "string",
                 "read": true,
                 "write": false,
-                "role": "indicator",
+                "role": "value.time",
                 "desc":  "window open active end time"
            },
             native: {
@@ -1246,10 +1246,10 @@ function main() {
             type: 'state',
             common: {
                 "name":  "Boost active end time",
-                "type": "time",
+                "type": "string",
                 "read": true,
                 "write": false,
-                "role": "indicator",
+                "role": "value.time",
                 "desc":  "Boost active end time"
             },
             native: {
@@ -1530,9 +1530,9 @@ function main() {
                     else if((device.functionbitmask & 32) == 32){ //buttons from fritzdect 400
                         typ = "Button_";
                         role = "sensor";
-                  			createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                  	createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         device.button.forEach(function (button){
-                  			    createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
+                  	    createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
                             adapter.log.info('setting up FD400 Button object '+ button.name);                    
                             createProductName(typ,button.identifier,device.productname);
                             createButton(typ,button.identifier);
@@ -1542,11 +1542,9 @@ function main() {
                         typ = "DECT500_";
                         role = "lamp";
                         adapter.log.info('setting up DECT500 object '+ device.name);                    
-
+                        createBasic(typ,device.identifier,device.name,role,device.etsiunitinfo.etsideviceid,device.fwversion,device.manufacturer);
                     //new api createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         createProductName(typ,device.identifier,device.productname);
-
-                        createBasic(typ,device.identifier,device.name,role,device.etsiunitinfo.etsideviceid,device.fwversion,device.manufacturer);
 
                     	//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color machen und somit createWhitelamp createColorLamp oder in in createLampe mit Übergabe supported_modes
 			createSimpleOnOff(typ,device.identifier);

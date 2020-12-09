@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "1.0.1",
+        "version": "1.1.0",
         "news": {
+              "1.1.0": {
+                    "en": "new features AVM API",
+                    "de": "neue Funktionen AVM API",
+                    "ru": "новые возможности AVM API",
+                    "pt": "novos recursos AVM API",
+                    "nl": "nieuwe functies AVM API",
+                    "fr": "nouvelles fonctionnalités API AVM",
+                    "it": "nuove funzionalità API AVM",
+                    "es": "nuevas funciones API AVM",
+                    "pl": "nowe funkcje AVM API",
+                    "zh-cn": "新功能AVM API"
+                  },
             "1.0.1": {
                     "en": "bugfixes in fritz API calls",
                     "de": "Bugfixes in fritz API-Aufrufen",

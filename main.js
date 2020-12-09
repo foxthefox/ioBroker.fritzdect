@@ -149,7 +149,7 @@ function startAdapter(options) {
                                     })
                                     .catch(errorHandler);
                                 }
-                                else{adapter-log.error('no data in targettemp for setting mode')}
+                                else{adapter.log.error('no data in targettemp for setting mode')}
         
                             });
                         } else if (state.val === 1) {
@@ -538,6 +538,10 @@ function errorHandler(error) {
         }
         else if (error.response.statusCode == 503){
             adapter.log.error("service unavailable");
+            adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
+        }
+        else if (error.response.statusCode == 303){
+            adapter.log.error("unknwon error 303");
             adapter.log.error('error calling the fritzbox '+JSON.stringify(error));
         }
         else{
@@ -1090,12 +1094,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.summeractive', {
             type: 'state',
             common: {
-                "name":  "Product Name",
+                "name":  "Summer active",
                 "type": "boolean",
                 "read": true,
                 "write": false,
                 "role": "indicator",
-                "desc":  "Product Name"
+                "desc":  "Summer active"
             },
             native: {
             }
@@ -1103,12 +1107,12 @@ function main() {
         adapter.setObjectNotExists(typ + newId +'.holidayactive', {
             type: 'state',
             common: {
-                "name":  "Product Name",
+                "name":  "Holiday active",
                 "type": "boolean",
                 "read": true,
                 "write": false,
                 "role": "indicator",
-                "desc":  "Product Name"
+                "desc":  "Holiday active"
             },
             native: {
             }
@@ -1162,23 +1166,7 @@ function main() {
             native: {
             }
         });
-    }
-	function createThermostatWindowExt(typ,newId){
-        adapter.log.debug('create Thermostat Window external cmd objects');
-		adapter.setObjectNotExists(typ + newId +'.windowopenactiveendtime', {
-            type: 'state',
-            common: {
-                "name":  "window open active end time",
-                "type": "time",
-                "read": true,
-                "write": false,
-                "role": "indicator",
-                "desc":  "window open active end time"
-            },
-            native: {
-            }
-        });
-		adapter.setObjectNotExists(typ + newId +'.windowopen', {
+      	adapter.setObjectNotExists(typ + newId +'.windowopen', {
             type: 'state',
             common: {
                 "name":  "window open activation",
@@ -1192,6 +1180,53 @@ function main() {
             }
         });
     }
+
+	function createThermostatWindowExt(typ,newId){
+        adapter.log.debug('create Thermostat Window external cmd objects');
+		adapter.setObjectNotExists(typ + newId +'.windowopenactiveendtime', {
+            type: 'state',
+            common: {
+                "name":  "window open active end time",
+                "type": "time",
+                "read": true,
+                "write": false,
+                "role": "indicator",
+                "desc":  "window open active end time"
+           },
+            native: {
+            }
+        });            
+    }   
+    function createThermostatNextChange(typ,newId){
+        adapter.setObjectNotExists(typ + newId +'.nextchangetime', {
+            type: 'state',
+            common: {
+                "name":  "next time for Temp change",
+                "type": "string",
+                "read": true,
+                "write": false,
+                "role": "value.time"
+            },
+            native: {
+            }
+        });
+        adapter.setObjectNotExists(typ + newId +'.nextchangetemp', {
+            type: 'state',
+            common: {
+                "name":  "Temp after next change",
+                "type": "number",
+                "unit": "°C",                    
+                "read": true,
+                "write": false,
+                "role": "value.temperature",
+                "desc":  "Temp after next change"
+              },
+            native: {
+            }
+        });            
+    }   
+
+
 	function createThermostatBoost(typ,newId){
         adapter.log.debug('create Thermostat Boost objects');
         adapter.setObjectNotExists(typ + newId +'.boostactive', {
@@ -1460,15 +1495,21 @@ function main() {
                         if (device.hkr.windowopenactiv){
                             createThermostatWindow(typ,device.identifier);
                         }
-						if (device.hkr.windowopenactiveendtime){
+
+            						if (device.hkr.windowopenactiveendtime){
                             createThermostatBoostExt(typ,device.identifier);
                         }
-						if (device.hkr.boostactiveendtime){
+            						if (device.hkr.boostactiveendtime){
                             createThermostatBoost(typ,device.identifier);
                         }
-						if (device.txbusy){
+            						if (device.txbusy){
                             createTxBusy(typ,device.identifier);
                         }	
+
+                        if (device.hkr.nextchange){
+                            createThermostatNextChange(typ,device.identifier);
+                        } 
+
                     }
                     else if((device.functionbitmask & 16) == 16){ //contact
                         typ = "Contact_";
@@ -1489,9 +1530,9 @@ function main() {
                     else if((device.functionbitmask & 32) == 32){ //buttons from fritzdect 400
                         typ = "Button_";
                         role = "sensor";
-			createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+                  			createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         device.button.forEach(function (button){
-			    createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
+                  			    createBasic(typ,button.identifier,button.name,role,button.id,device.fwversion,device.manufacturer);
                             adapter.log.info('setting up FD400 Button object '+ button.name);                    
                             createProductName(typ,button.identifier,device.productname);
                             createButton(typ,button.identifier);
@@ -1501,8 +1542,12 @@ function main() {
                         typ = "DECT500_";
                         role = "lamp";
                         adapter.log.info('setting up DECT500 object '+ device.name);                    
-                    createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
+
+                    //new api createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
                         createProductName(typ,device.identifier,device.productname);
+
+                        createBasic(typ,device.identifier,device.name,role,device.etsiunitinfo.etsideviceid,device.fwversion,device.manufacturer);
+
                     	//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color machen und somit createWhitelamp createColorLamp oder in in createLampe mit Übergabe supported_modes
 			createSimpleOnOff(typ,device.identifier);
 			createLevel(typ,device.identifier);
@@ -1512,16 +1557,14 @@ function main() {
                         }
                     }
                     /* nicht sinnvoll nur den übergeordneten Datenpunkt anzulegen
+                    besser die hier übermittelte FW Version an das eigentliche Objekt übergeben, ansonsten scheinen die anderen Informationen gedoppelt zu sein.
                     else if((device.functionbitmask & 1) == 1){ //HAN-FUN
-                        typ = "HAN-FUN_";
-                        role = "sensor";
-                        adapter.log.info('setting up HAN-FUN object '+ device.name);                    
-                        createBasic(typ,device.identifier,device.name,role,device.id,device.fwversion,device.manufacturer);
-                        createProductName(typ,device.identifier,device.productname);
+                        search(etsideviceid, replaceFW(device.fwversion))
+                        adapter.log.info('merging HAN-FUN object to '+ device.name);                    
                     }
                     */
                     else {
-                        adapter.log.debug('nix vorbereitet für diese Art von Gerät');
+                        adapter.log.debug('nix vorbereitet für diese Art von Gerät ' + device.functionbitmask + ' -> ' + device.name);
                     }                                
                 });
             }
@@ -1572,7 +1615,7 @@ function main() {
                         createGroupInfo(typ,group.identifier,group.groupinfo.masterdeviceid,group.groupinfo.members);    
                     }
                     else {
-                        adapter.log.debug('nix vorbereitet für diese Art von Gruppe');
+                        adapter.log.debug('nix vorbereitet für diese Art von Gruppe ' + group.functionbitmask);
                     }
                 });
             }
@@ -1601,7 +1644,7 @@ function main() {
                         createTemplate(typ,template.identifier,template.name,role,template.id);
                     }
                     else {
-                        adapter.log.debug('nix vorbereitet für diese Art von Template' + template.functionbitmask);
+                        adapter.log.debug('nix vorbereitet für diese Art von Template' + template.functionbitmask + ' -> ' + template.name);
                     }
                 });
             }
@@ -1860,29 +1903,40 @@ function main() {
                                 adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiv :' + convertValue + ' (' + device.hkr.windowopenactiv + ')');
                                 adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiv', {val: convertValue, ack: true});
                             }
-							if(device.hkr.windowopenactiveendtime){
-                                let convertValue = device.hkr.windowopenactiveendtime
 
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiveendtime :' + convertValue + ' (' + device.hkr.windowopenactiveendtime + ')');
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiveendtime', {val: convertValue, ack: true});
-                            }
-							if(device.hkr.boostactiveendtime){
-                                let convertValue = device.hkr.boostactiveendtime
+                            if(device.hkr.windowopenactiveendtime){
+                                  let convertValue = device.hkr.windowopenactiveendtime
 
-                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'boostactiveendtime :' + convertValue + ' (' + device.hkr.boostactiveendtime + ')');
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.boostactiveendtime', {val: convertValue, ack: true});
-								
-								//wenn boostactiveendtime, dann gibt es auch boostactiv
-								let convertBoostACTIV = device.hkr.boostactive == 1 ? true: false;
-								adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'boostactive :' + convertBoostACTIV + ' (' + device.hkr.boostactive + ')');
-                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.boostactive', {val: convertBoostACTIV, ack: true});
-								
-                            }
-							if(device.txbusy){
-								let convertTxBUSY = device.txbusy == 1 ? true: false;
-                            	adapter.log.debug('Comet_'+ device.identifier + ' : '  +'txbusy : ' + convertTxBUSY + ' (' + device.txbusy + ')');
-                            	adapter.setState('DECT200_'+ device.identifier +'.txbusy', {val: convertTxBUSY, ack: true});
-							}
+                                  adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'windowopenactiveendtime :' + convertValue + ' (' + device.hkr.windowopenactiveendtime + ')');
+                                  adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.windowopenactiveendtime', {val: convertValue, ack: true});
+                              }
+                            if(device.hkr.boostactiveendtime){
+                                  let convertValue = device.hkr.boostactiveendtime
+
+                                  adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'boostactiveendtime :' + convertValue + ' (' + device.hkr.boostactiveendtime + ')');
+                                  adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.boostactiveendtime', {val: convertValue, ack: true});
+
+                                  //wenn boostactiveendtime, dann gibt es auch boostactiv
+                                  let convertBoostACTIV = device.hkr.boostactive == 1 ? true: false;
+                                  adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'boostactive :' + convertBoostACTIV + ' (' + device.hkr.boostactive + ')');
+                                  adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.boostactive', {val: convertBoostACTIV, ack: true});
+
+                              }
+                              if(device.txbusy){
+                                let convertTxBUSY = device.txbusy == 1 ? true: false;
+                                adapter.log.debug('Comet_'+ device.identifier + ' : '  +'txbusy : ' + convertTxBUSY + ' (' + device.txbusy + ')');
+                                adapter.setState('DECT200_'+ device.identifier +'.txbusy', {val: convertTxBUSY, ack: true});
+                              }
+
+                            if (device.hkr.nextchange){
+                                var changetemp = device.hkr.nextchange.tchange;
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nextchangetemp :' + changetemp);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nextchangetemp', {val: parseFloat(changetemp)/2, ack: true});
+                                let changetime = new Date(device.hkr.nextchange.endperiod*1000);
+                                adapter.log.debug('Comet_'+ device.identifier.replace(/\s/g, '') + ' : '  +'nextchangetime :' + changetime);
+                                adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.nextchangetime', {val: changetime, ack: true});
+                            } 
+
 
                             adapter.setState('Comet_'+ device.identifier.replace(/\s/g, '') +'.operationMode', {val: currentMode, ack: true});
                         }
@@ -1926,7 +1980,7 @@ function main() {
                         }
                     }
                     else{
-                        adapter.log.debug('nix vorbereitet für diese Art von device update');
+                        adapter.log.debug('nix vorbereitet für diese Art von device update ' + device.functionbitmask + ' -> ' + device.name);
                     }
                 });
             }
@@ -2068,7 +2122,7 @@ function main() {
 
                     }
                     else{
-                        adapter.log.debug('nix vorbereitet für diese Art von group update');
+                        adapter.log.debug('nix vorbereitet für diese Art von group update ' + group.functionbitmask + ' -> ' + group.name);
                     }
                 });
             }

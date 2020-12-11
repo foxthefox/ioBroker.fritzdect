@@ -135,7 +135,7 @@ objects in *italic* are not part of all fritz.box configurations
 |DECT440.battery|value|-|battery level|
 |DECT440.batterylow|boolean|-|battery status|
 |DECT440.temperature|value|-|temperature |
-|DECT440.humidity|value|-|relative humidity % (not all FW versions |
+|*DECT440.humidity*|value|-|relative humidity %|
 |DECT440.button|time|-|see DECT400 button (4x) |
 
 ### repeater e.g. DECT100
@@ -183,6 +183,8 @@ Not all FW-versions of fritz.box support all objects.
 ### 1.0.1
 * bugfixes in fritz API calls
 * error code 303 (but unknown what it means)
+* (Black-Thunder) targetTemp=null
+* (PascalBru) datapoint nextchange in hkr 
 
 ### 1.0.0 Breaking Change for non-native API objects
 * merge of fritzapi into repo directly including added DECT500 commands

@@ -173,7 +173,7 @@ function startAdapter(options) {
                         .catch(errorHandler);
                     }
 					if (dp == 'windowopen') {
-                        fritz.setWindowopen(id, state.val ).then(function (sid) {
+                        fritz.setWindowOpen(id, state.val ).then(function (sid) {
                             adapter.log.debug('Set thermostat windowopen ' + id + ' to '+ state.val);
                             adapter.setState('Comet_'+ id +'.windowopen', {val: state.val, ack: true}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
                         })

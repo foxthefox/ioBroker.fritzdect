@@ -2203,8 +2203,10 @@ function main() {
 							//button FD400
 							device.button.forEach(function(button) {
 								adapter.log.debug('updating Button ' + button.name);
-								adapter.log.debug('Button_' + button.identifier + ' : ' + 'name : ' + button.name);
-								adapter.setState('Button_' + button.identifier + '.name', {
+								adapter.log.debug(
+									'Button_' + button.identifier.replace(/\s/g, '') + ' : ' + 'name : ' + button.name
+								);
+								adapter.setState('Button_' + button.identifier.replace(/\s/g, '') + '.name', {
 									val: button.name,
 									ack: true
 								});
@@ -2212,7 +2214,7 @@ function main() {
 								let convertPresent = device.present == 1 ? true : false;
 								adapter.log.debug(
 									'Button_' +
-										button.identifier +
+										button.identifier.replace(/\s/g, '') +
 										' : ' +
 										'present : ' +
 										convertPresent +
@@ -2220,7 +2222,7 @@ function main() {
 										device.present +
 										')'
 								);
-								adapter.setState('Button_' + button.identifier + '.present', {
+								adapter.setState('Button_' + button.identifier.replace(/\s/g, '') + '.present', {
 									val: convertPresent,
 									ack: true
 								});
@@ -2235,7 +2237,7 @@ function main() {
 									let lastclick = new Date(button.lastpressedtimestamp * 1000);
 									adapter.log.debug(
 										'Button_' +
-											button.identifier +
+											button.identifier.replace(/\s/g, '') +
 											' : ' +
 											'lastclick: ' +
 											lastclick +
@@ -2243,7 +2245,7 @@ function main() {
 											button.lastpressedtimestamp +
 											')'
 									);
-									adapter.setState('Button_' + button.identifier + '.lastclick', {
+									adapter.setState('Button_' + button.identifier.replace(/\s/g, '') + '.lastclick', {
 										val: lastclick,
 										ack: true
 									});
@@ -2763,7 +2765,7 @@ function main() {
 											device.txbusy +
 											')'
 									);
-									adapter.setState('DECT200_' + device.identifier + '.txbusy', {
+									adapter.setState('Comet_' + device.identifier + '.txbusy', {
 										val: convertTxBUSY,
 										ack: true
 									});

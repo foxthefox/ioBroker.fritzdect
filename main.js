@@ -697,7 +697,10 @@ function startAdapter(options) {
 						fritz
 							.getColorDefaults()
 							.then(function(colorinfos) {
-								var colors = parser.xml2json(colorinfos);
+								var colors = [];
+								if (colorinfos) {
+									colors = parser.xml2json(colorinfos);
+								}
 								result = colors;
 							})
 							.done(function(colorinfos) {

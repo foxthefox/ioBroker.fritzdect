@@ -699,7 +699,8 @@ function startAdapter(options) {
 							.then(function(colorinfos) {
 								var colors = [];
 								if (colorinfos) {
-									colors = parser.xml2json(colorinfos);
+									adapter.log.debug('getcolor ' + colorinfos);
+									//colors = parser.xml2json(colorinfos);
 								}
 								result = colors;
 							})

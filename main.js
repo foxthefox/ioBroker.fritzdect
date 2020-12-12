@@ -519,43 +519,62 @@ function startAdapter(options) {
 						adapter.getState('DECT500_' + id + '.saturation', function(err, saturation) {
 							// oder hier die Verwendung von lasttarget
 							var setSaturation = saturation.val;
-							fritz
-								.setColor(id, setSaturation, state.val)
-								.then(function(sid) {
-									adapter.log.debug(
-										'Set lamp color hue ' +
-											id +
-											' to ' +
-											state.val +
-											' and saturation of ' +
-											setSaturation
-									);
-									adapter.setState('DECT500_' + id + '.hue', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch(errorHandler);
+							if (setSaturation == '') {
+								adapter.log.error(
+									'No saturation value exists when setting hue, please set saturation to a value '
+								);
+							} else {
+								fritz
+									.setColor(id, setSaturation, state.val)
+									.then(function(sid) {
+										adapter.log.debug(
+											'Set lamp color hue ' +
+												id +
+												' to ' +
+												state.val +
+												' and saturation of ' +
+												setSaturation
+										);
+										adapter.setState('DECT500_' + id + '.hue', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch(errorHandler);
+							}
 						});
 					}
 					if (dp == 'saturation') {
 						adapter.getState('DECT500_' + id + '.hue', function(err, hue) {
-							// oder hier die Verwendung von lasttarget
 							var setHue = hue.val;
-							fritz
-								.setColor(id, typ, state.val, setHue)
-								.then(function(sid) {
-									adapter.log.debug(
-										'Set lamp color saturation ' + id + ' to ' + state.val + ' and hue of ' + setHue
-									);
-									adapter.setState('DECT500_' + id + '.saturation', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch(errorHandler);
+							if (setHue == '') {
+								adapter.log.error(
+									'No hue value exists when setting saturation, please set hue to a value '
+								);
+							} else {
+								fritz
+									.setColor(id, typ, state.val, setHue)
+									.then(function(sid) {
+										adapter.log.debug(
+											'Set lamp color saturation ' +
+												id +
+												' to ' +
+												state.val +
+												' and hue of ' +
+												setHue
+										);
+										adapter.setState('DECT500_' + id + '.saturation', {
+											val: state.val,
+											ack: true
+										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch(errorHandler);
+							}
 						});
 					}
-					if (dp == 'temperature') {
+					if (dp == 'ctemperature') {
 						fritz
 							.setColorTemperature(id, state.val)
 							.then(function(sid) {
 								adapter.log.debug('Set lamp color temperature ' + id + ' to ' + state.val);
-								adapter.setState('DECT500_' + id + '.temperature', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								adapter.setState('DECT500_' + id + '.ctemperature', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 							})
 							.catch(errorHandler);
 					}
@@ -742,16 +761,16 @@ function errorHandler(error) {
 			adapter.log.error('bad request (400), ain correct?');
 			adapter.log.error('error calling the fritzbox ' + JSON.stringify(error));
 		} else if (error.response.statusCode == 500) {
-			adapter.log.error('internal fritzbox error');
+			adapter.log.error('internal fritzbox error (500)');
 			adapter.log.error('error calling the fritzbox ' + JSON.stringify(error));
 		} else if (error.response.statusCode == 503) {
-			adapter.log.error('service unavailable');
+			adapter.log.error('service unavailable (503)');
 			adapter.log.error('error calling the fritzbox ' + JSON.stringify(error));
 		} else if (error.response.statusCode == 303) {
-			adapter.log.error('unknwon error 303');
+			adapter.log.error('unknwon error (303)');
 			adapter.log.error('error calling the fritzbox ' + JSON.stringify(error));
 		} else {
-			adapter.log.error('statuscode not in errorhandler');
+			adapter.log.error('statuscode not in errorhandler of fritzdect');
 			adapter.log.error('error calling the fritzbox ' + JSON.stringify(error));
 		}
 	} else {
@@ -1383,6 +1402,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.windowopenactivetime', { val: 5, ack: true });
 	}
 	function createThermostatNextChange(typ, newId) {
 		adapter.setObjectNotExists(typ + newId + '.nextchangetime', {
@@ -1462,6 +1482,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.boostactivetime', { val: 5, ack: true });
 	}
 	function createGroupInfo(typ, newId, mid, member) {
 		adapter.log.debug('create Group objects');
@@ -1523,6 +1544,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.level', { val: 128, ack: true });
 		adapter.setObjectNotExists(typ + newId + '.levelpercentage', {
 			type: 'state',
 			common: {
@@ -1538,6 +1560,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.levelpercentage', { val: 50, ack: true });
 	}
 
 	function createLamp(typ, newId) {
@@ -1581,6 +1604,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.hue', { val: 90, ack: true });
 		adapter.setObjectNotExists(typ + newId + '.saturation', {
 			type: 'state',
 			common: {
@@ -1595,7 +1619,8 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists(typ + newId + '.temperature', {
+		adapter.setState(typ + newId + '.saturation', { val: 50, ack: true });
+		adapter.setObjectNotExists(typ + newId + '.ctemperature', {
 			type: 'state',
 			common: {
 				name: 'Color temperature',
@@ -1610,6 +1635,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.ctemperature', { val: 3600, ack: true });
 	}
 
 	function createDevices() {
@@ -2868,7 +2894,7 @@ function main() {
 										'temperature: ' +
 										device.colorcontrol.temperature
 								);
-								adapter.setState('DECT500_' + device.identifier + '.temperature', {
+								adapter.setState('DECT500_' + device.identifier + '.ctemperature', {
 									val: parseInt(device.colorcontrol.temperature),
 									ack: true
 								});

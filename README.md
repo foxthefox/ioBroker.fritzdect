@@ -106,13 +106,16 @@ objects in *italic* are not part of all fritz.box configurations
 |COMET.operationMode|value|-|actual mode|
 |*COMET.windowopen*|time|x|set status open window until time|
 |*COMET.windowopenendtime*|time|-|time when open window status ends|
+|*COMET.windowopenactiv*|boolean|-|status of window open detection|
+|*COMET.windowopenactivtime*|value|x|time (minutes) when activation of window open |
 |*COMET.boostactive|boolean*|-|boost mode active status|
 |*COMET.boostactiveendtime*|time|-|time when boost status ends|
 |*COMET.boost*|time|x|set boost mode until time|
+|*COMET.boostactivtime*|value|x|time (minutes) when activation of boost|
 |*COMET.battery*|value|-|actual capacity in %|
 |*COMET.summeractive*|boolean|-|summer program status|
 |*COMET.holidayactive*|boolean|-|holiday program status|
-|*COMET.windowopenactiv*|boolean|-|status of window open detection|
+
 |*COMET.txbusy*|boolean|-|cmd sending active |
 
 ### lamp e.g DECT500
@@ -170,6 +173,10 @@ Not all FW-versions of fritz.box support all objects.
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
+### 1.1.1
+* getBasicDeviceStats in Admin
+* getColorDefaults in Admin
+
 ### 1.1.0
 * new features of AVM API 1.33
     * setblind

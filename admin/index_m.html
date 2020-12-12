@@ -120,6 +120,38 @@
             showMessage(JSON.stringify(result), _('Result: '));
         });            
     }
+    function tests() {
+        if (!common.enabled) {
+            showToast(null, _('Enable first the adapter to test client.'));
+            return;
+        }
+        if (changed) {
+            showToast(null, _('First save the adapter'));
+            return;
+        }
+        $('#tests').addClass('disabled');
+        sendTo(null, 'statistic', null, function (result) {
+            $('#tests').removeClass('disabled');
+            console.log("result is "+ JSON.stringify(result));
+            showMessage(JSON.stringify(result), _('Result: '));
+        });            
+    }
+    function testc() {
+        if (!common.enabled) {
+            showToast(null, _('Enable first the adapter to test client.'));
+            return;
+        }
+        if (changed) {
+            showToast(null, _('First save the adapter'));
+            return;
+        }
+        $('#testc').addClass('disabled');
+        sendTo(null, 'color', null, function (result) {
+            $('#testc').removeClass('disabled');
+            console.log("result is "+ JSON.stringify(result));
+            showMessage(JSON.stringify(result), _('Result: '));
+        });            
+    }
     // ... and the function save has to exist.
     // you have to make sure the callback is called with the settings object as first param!
     function save(callback) {
@@ -202,14 +234,20 @@
             </div>
         </div>
         <div class="row">
-            <div class="col s4">
+            <div class="col s2">
                 <a id="testd" class="btn"><span class="translate">My Devices</span></a>
             </div>
-            <div class="col s4">
+            <div class="col s2">
                 <a id="testg" class="btn"><span class="translate">My Groups</span></a>
             </div>
-	    <div class="col s4">
+	        <div class="col s2">
                 <a id="testt" class="btn"><span class="translate">My Templates</span></a>
+            </div>
+            <div class="col s2">
+                <a id="tests" class="btn"><span class="translate">My Statistic</span></a>
+            </div>
+            <div class="col s2">
+                <a id="testc" class="btn"><span class="translate">My Color</span></a>
             </div>
         </div>
 

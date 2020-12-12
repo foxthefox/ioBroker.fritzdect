@@ -182,22 +182,92 @@ function startAdapter(options) {
 						}
 					}
 					if (dp == 'boost') {
-						fritz
-							.setHkrBoost(id, state.val)
-							.then(function(sid) {
-								adapter.log.debug('Set thermostat boost ' + id + ' to ' + state.val);
-								adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-							})
-							.catch(errorHandler);
+						if (
+							state.val === 0 ||
+							state.val === '0' ||
+							state.val === 'false' ||
+							state.val === false ||
+							state.val === 'off' ||
+							state.val === 'OFF'
+						) {
+							fritz
+								.setHkrBoost(id, state.val)
+								.then(function(sid) {
+									adapter.log.debug('Reset thermostat boost ' + id + ' to ' + state.val);
+									adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						} else if (
+							state.val === 1 ||
+							state.val === '1' ||
+							state.val === 'true' ||
+							state.val === true ||
+							state.val === 'on' ||
+							state.val === 'ON'
+						) {
+							let minutes = 5; //erstmal 5min fix
+							let ende = new Date(date.getTime() + minutes * 60000);
+							fritz
+								.setHkrBoost(id, state.val)
+								.then(function(sid) {
+									adapter.log.debug(
+										'Set thermostat boost ' +
+											id +
+											' to ' +
+											state.val +
+											' until ' +
+											ende +
+											' ' +
+											new Date(ende * 1000)
+									);
+									adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						}
 					}
 					if (dp == 'windowopen') {
-						fritz
-							.setWindowOpen(id, state.val)
-							.then(function(sid) {
-								adapter.log.debug('Set thermostat windowopen ' + id + ' to ' + state.val);
-								adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-							})
-							.catch(errorHandler);
+						if (
+							state.val === 0 ||
+							state.val === '0' ||
+							state.val === 'false' ||
+							state.val === false ||
+							state.val === 'off' ||
+							state.val === 'OFF'
+						) {
+							fritz
+								.setWindowOpen(id, 0)
+								.then(function(sid) {
+									adapter.log.debug('Reset thermostat windowopen ' + id + ' to ' + state.val);
+									adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						} else if (
+							state.val === 1 ||
+							state.val === '1' ||
+							state.val === 'true' ||
+							state.val === true ||
+							state.val === 'on' ||
+							state.val === 'ON'
+						) {
+							let minutes = 5; //erstmal 5min fix
+							let ende = new Date(date.getTime() + minutes * 60000);
+							fritz
+								.setWindowOpen(id, ende)
+								.then(function(sid) {
+									adapter.log.debug(
+										'Set thermostat windowopen ' +
+											id +
+											' to ' +
+											state.val +
+											' until ' +
+											ende +
+											' ' +
+											new Date(ende * 1000)
+									);
+									adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						}
 					}
 				} else if (idx.startsWith('Hgroup_')) {
 					//must be comet group
@@ -1274,9 +1344,6 @@ function main() {
 			},
 			native: {}
 		});
-	}
-
-	function createThermostatWindowExt(typ, newId) {
 		adapter.log.debug('create Thermostat Window external cmd objects');
 		adapter.setObjectNotExists(typ + newId + '.windowopenactiveendtime', {
 			type: 'state',
@@ -1600,11 +1667,7 @@ function main() {
 							if (device.hkr.windowopenactiv) {
 								createThermostatWindow(typ, device.identifier);
 							}
-
-							if (device.hkr.windowopenactiveendtime) {
-								createThermostatBoostExt(typ, device.identifier);
-							}
-							if (device.hkr.boostactiveendtime) {
+							if (device.hkr.boostactive) {
 								createThermostatBoost(typ, device.identifier);
 							}
 							if (device.txbusy) {
@@ -2538,39 +2601,39 @@ function main() {
 								}
 
 								if (device.hkr.windowopenactiveendtime) {
-									let convertValue = device.hkr.windowopenactiveendtime;
+									let endtime = new Date(device.hkr.windowopenactiveendtime * 1000);
 
 									adapter.log.debug(
 										'Comet_' +
 											device.identifier.replace(/\s/g, '') +
 											' : ' +
 											'windowopenactiveendtime :' +
-											convertValue +
+											endtime +
 											' (' +
 											device.hkr.windowopenactiveendtime +
 											')'
 									);
 									adapter.setState(
 										'Comet_' + device.identifier.replace(/\s/g, '') + '.windowopenactiveendtime',
-										{ val: convertValue, ack: true }
+										{ val: endtime, ack: true }
 									);
 								}
 								if (device.hkr.boostactiveendtime) {
-									let convertValue = device.hkr.boostactiveendtime;
+									let endtime = new Date(device.hkr.boostactiveendtime * 1000);
 
 									adapter.log.debug(
 										'Comet_' +
 											device.identifier.replace(/\s/g, '') +
 											' : ' +
 											'boostactiveendtime :' +
-											convertValue +
+											endtime +
 											' (' +
 											device.hkr.boostactiveendtime +
 											')'
 									);
 									adapter.setState(
 										'Comet_' + device.identifier.replace(/\s/g, '') + '.boostactiveendtime',
-										{ val: convertValue, ack: true }
+										{ val: endtime, ack: true }
 									);
 
 									//wenn boostactiveendtime, dann gibt es auch boostactiv

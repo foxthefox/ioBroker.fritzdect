@@ -181,6 +181,11 @@ function startAdapter(options) {
 								.catch(errorHandler);
 						}
 					}
+					if (dp == 'boostactivetime') {
+						adapter.log.debug(
+							'Nothing to send external, but the boost active time was defined for ' + state.val + ' min'
+						);
+					}
 					if (dp == 'boost') {
 						if (
 							state.val === 0 ||
@@ -205,25 +210,33 @@ function startAdapter(options) {
 							state.val === 'on' ||
 							state.val === 'ON'
 						) {
-							let minutes = 5; //erstmal 5min fix
-							let ende = new Date(date.getTime() + minutes * 60000);
-							fritz
-								.setHkrBoost(id, state.val)
-								.then(function(sid) {
-									adapter.log.debug(
-										'Set thermostat boost ' +
-											id +
-											' to ' +
-											state.val +
-											' until ' +
-											ende +
-											' ' +
-											new Date(ende * 1000)
-									);
-									adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch(errorHandler);
+							adapter.getState('Comet_' + id + '.boostactivetime', function(err, minutes) {
+								let ende = new Date(date.getTime() + minutes.val * 60000);
+								fritz
+									.setHkrBoost(id, state.val)
+									.then(function(sid) {
+										adapter.log.debug(
+											'Set thermostat boost ' +
+												id +
+												' to ' +
+												state.val +
+												' until ' +
+												ende +
+												' ' +
+												new Date(ende * 1000)
+										);
+										adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch(errorHandler);
+							});
 						}
+					}
+					if (dp == 'windowopenactivetime') {
+						adapter.log.debug(
+							'Nothing to send external, but the window open active time was defined for ' +
+								state.val +
+								' min'
+						);
 					}
 					if (dp == 'windowopen') {
 						if (
@@ -249,24 +262,25 @@ function startAdapter(options) {
 							state.val === 'on' ||
 							state.val === 'ON'
 						) {
-							let minutes = 5; //erstmal 5min fix
-							let ende = new Date(date.getTime() + minutes * 60000);
-							fritz
-								.setWindowOpen(id, ende)
-								.then(function(sid) {
-									adapter.log.debug(
-										'Set thermostat windowopen ' +
-											id +
-											' to ' +
-											state.val +
-											' until ' +
-											ende +
-											' ' +
-											new Date(ende * 1000)
-									);
-									adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch(errorHandler);
+							adapter.getState('Comet_' + id + '.windowopenactivetime', function(err, minutes) {
+								let ende = new Date(date.getTime() + minutes.val * 60000);
+								fritz
+									.setWindowOpen(id, ende)
+									.then(function(sid) {
+										adapter.log.debug(
+											'Set thermostat windowopen ' +
+												id +
+												' to ' +
+												state.val +
+												' until ' +
+												ende +
+												' ' +
+												new Date(ende * 1000)
+										);
+										adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch(errorHandler);
+							});
 						}
 					}
 				} else if (idx.startsWith('Hgroup_')) {
@@ -1344,7 +1358,6 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.log.debug('create Thermostat Window external cmd objects');
 		adapter.setObjectNotExists(typ + newId + '.windowopenactiveendtime', {
 			type: 'state',
 			common: {
@@ -1354,6 +1367,19 @@ function main() {
 				write: false,
 				role: 'value.time',
 				desc: 'window open active end time'
+			},
+			native: {}
+		});
+		adapter.setObjectNotExists(typ + newId + '.windowopenactivetime', {
+			type: 'state',
+			common: {
+				name: 'window open active time for cmd',
+				type: 'number',
+				read: true,
+				write: true,
+				unit: 'min',
+				role: 'value',
+				desc: 'window open active time for cmd'
 			},
 			native: {}
 		});
@@ -1420,6 +1446,19 @@ function main() {
 				write: true,
 				role: 'switch',
 				desc: 'Boost activation'
+			},
+			native: {}
+		});
+		adapter.setObjectNotExists(typ + newId + '.boostactivetime', {
+			type: 'state',
+			common: {
+				name: 'boost active time for cmd',
+				type: 'number',
+				read: true,
+				write: true,
+				unit: 'min',
+				role: 'value',
+				desc: 'boost active time for cmd'
 			},
 			native: {}
 		});

@@ -432,27 +432,41 @@ function startAdapter(options) {
 							.catch(errorHandler);
 					}
 					if (dp == 'hue') {
-						let typ = 'hue';
-						fritz
-							.setColor(id, typ, state.val)
-							.then(function(sid) {
-								adapter.log.debug('Set lamp color' + id + ' to ' + state.val);
-								adapter.setState('DECT500_' + id + '.hue', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-							})
-							.catch(errorHandler);
+						adapter.getState('DECT500_' + id + '.saturation', function(err, saturation) {
+							// oder hier die Verwendung von lasttarget
+							var setSaturation = saturation.val;
+							fritz
+								.setColor(id, setSaturation, state.val)
+								.then(function(sid) {
+									adapter.log.debug(
+										'Set lamp color hue ' +
+											id +
+											' to ' +
+											state.val +
+											' and saturation of ' +
+											setSaturation
+									);
+									adapter.setState('DECT500_' + id + '.hue', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						});
 					}
 					if (dp == 'saturation') {
-						let typ = 'saturation';
-						fritz
-							.setColor(id, typ, state.val)
-							.then(function(sid) {
-								adapter.log.debug('Set lamp color saturation ' + id + ' to ' + state.val);
-								adapter.setState('DECT500_' + id + '.saturation', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-							})
-							.catch(errorHandler);
+						adapter.getState('DECT500_' + id + '.hue', function(err, hue) {
+							// oder hier die Verwendung von lasttarget
+							var setHue = hue.val;
+							fritz
+								.setColor(id, typ, state.val, setHue)
+								.then(function(sid) {
+									adapter.log.debug(
+										'Set lamp color saturation ' + id + ' to ' + state.val + ' and hue of ' + setHue
+									);
+									adapter.setState('DECT500_' + id + '.saturation', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						});
 					}
 					if (dp == 'temperature') {
-						let typ = 'saturation';
 						fritz
 							.setColorTemperature(id, state.val)
 							.then(function(sid) {

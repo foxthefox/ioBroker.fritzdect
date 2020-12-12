@@ -196,7 +196,7 @@ function startAdapter(options) {
 							state.val === 'OFF'
 						) {
 							fritz
-								.setHkrBoost(id, state.val)
+								.setHkrBoost(id, 0)
 								.then(function(sid) {
 									adapter.log.debug('Reset thermostat boost ' + id + ' to ' + state.val);
 									adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -211,9 +211,10 @@ function startAdapter(options) {
 							state.val === 'ON'
 						) {
 							adapter.getState('Comet_' + id + '.boostactivetime', function(err, minutes) {
-								let ende = Date.now() + minutes.val * 60000;
+								let ende = Date.now() / 1000 + minutes.val * 60; //time for fritzbox is in seconds
+								adapter.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
 								fritz
-									.setHkrBoost(id, state.val)
+									.setHkrBoost(id, ende)
 									.then(function(sid) {
 										adapter.log.debug(
 											'Set thermostat boost ' +
@@ -263,7 +264,8 @@ function startAdapter(options) {
 							state.val === 'ON'
 						) {
 							adapter.getState('Comet_' + id + '.windowopenactivetime', function(err, minutes) {
-								let ende = Date.now() + minutes.val * 60000;
+								let ende = Date.now() / 1000 + minutes.val * 60000; //time for fritzbox is in seconds
+								adapter.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
 								fritz
 									.setWindowOpen(id, ende)
 									.then(function(sid) {
@@ -1396,6 +1398,7 @@ function main() {
 				read: true,
 				write: true,
 				unit: 'min',
+				max: 14440,
 				role: 'value',
 				desc: 'window open active time for cmd'
 			},
@@ -1476,6 +1479,7 @@ function main() {
 				read: true,
 				write: true,
 				unit: 'min',
+				max: 1440,
 				role: 'value',
 				desc: 'boost active time for cmd'
 			},

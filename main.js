@@ -216,6 +216,7 @@ function startAdapter(options) {
 								fritz
 									.setHkrBoost(id, ende)
 									.then(function(sid) {
+										adapter.log.debug('boost ' + sid);
 										adapter.log.debug(
 											'Set thermostat boost ' +
 												id +
@@ -264,11 +265,12 @@ function startAdapter(options) {
 							state.val === 'ON'
 						) {
 							adapter.getState('Comet_' + id + '.windowopenactivetime', function(err, minutes) {
-								let ende = Date.now() / 1000 + minutes.val * 60000; //time for fritzbox is in seconds
+								let ende = Date.now() / 1000 + minutes.val * 60; //time for fritzbox is in seconds
 								adapter.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
 								fritz
 									.setWindowOpen(id, ende)
 									.then(function(sid) {
+										adapter.log.debug('window ' + sid);
 										adapter.log.debug(
 											'Set thermostat windowopen ' +
 												id +
@@ -2905,7 +2907,8 @@ function main() {
 									ack: true
 								});
 							}
-						} else if ((device.functionbitmask & 288) == 288) {
+						}
+						if ((device.functionbitmask & 288) == 288) {
 							//DECT440
 							adapter.log.debug('updating DECT440 ' + device.name);
 							adapter.log.debug('DECT440_' + device.identifier + ' : ' + 'name : ' + device.name);
@@ -2974,7 +2977,8 @@ function main() {
 									ack: true
 								});
 							}
-						} else if ((device.functionbitmask & 1048864) == 1048864) {
+						}
+						if ((device.functionbitmask & 1048864) == 1048864) {
 							//DECT440
 							adapter.log.debug('updating DECT440 ' + device.name);
 							adapter.log.debug('DECT440_' + device.identifier + ' : ' + 'name : ' + device.name);

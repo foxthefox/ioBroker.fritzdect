@@ -1650,19 +1650,10 @@ function main() {
 							//buttons from fritzdect 400
 							typ = 'Button_';
 							role = 'sensor';
-							createBasic(
-								typ,
-								device.identifier,
-								device.name,
-								role,
-								device.id,
-								device.fwversion,
-								device.manufacturer
-							);
 							device.button.forEach(function(button) {
 								createBasic(
 									typ,
-									button.identifier,
+									button.identifier.replace(/\s/g, ''),
 									button.name,
 									role,
 									button.id,
@@ -1670,7 +1661,7 @@ function main() {
 									device.manufacturer
 								);
 								adapter.log.info('setting up FD400 Button object ' + button.name);
-								createProductName(typ, button.identifier, device.productname);
+								createProductName(typ, button.identifier.replace(/\s/g, ''), device.productname);
 								createButton(typ, button.identifier);
 							});
 						} else if ((device.functionbitmask & 237572) == 237572) {
@@ -1697,7 +1688,7 @@ function main() {
 							if (device.txbusy) {
 								createTxBusy(typ, device.identifier);
 							}
-						} else if ((device.functionbitmask & 288) == 288) {
+						} else if (device.functionbitmask == 288) {
 							//DECT440 Anzeige Tasten sind schon über 32 erkannt
 							typ = 'DECT440_';
 							role = 'thermo';
@@ -1719,7 +1710,7 @@ function main() {
 							if (device.txbusy) {
 								createTxBusy(typ, device.identifier);
 							}
-						} else if ((device.functionbitmask & 1048864) == 1048864) {
+						} else if (device.functionbitmask == 1048864) {
 							//DECT440 Anzeige Tasten sind schon über 32 erkannt
 							typ = 'DECT440_';
 							role = 'thermo';

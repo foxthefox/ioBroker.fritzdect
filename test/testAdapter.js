@@ -1751,7 +1751,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																					);
 																				}
 																				//expect(state.val).to.exist;
-																				expect(state.val).to.be.equal(90); // im Abbild null aber predefined
+																				expect(state.val).to.be.equal(null); // im Abbild null aber predefined
 																				states.getState(
 																					'fritzdect.0.DECT500_123456789012-1.saturation',
 																					function(err, state) {
@@ -1769,7 +1769,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																						}
 																						//expect(state.val).to.exist;
 																						expect(state.val).to.be.equal(
-																							50
+																							null
 																						); // im Abbild null aber predefined
 																						states.getState(
 																							'fritzdect.0.DECT500_123456789012-1.ctemperature',

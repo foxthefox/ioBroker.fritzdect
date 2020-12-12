@@ -552,7 +552,7 @@ function startAdapter(options) {
 								);
 							} else {
 								fritz
-									.setColor(id, typ, state.val, setHue)
+									.setColor(id, state.val, setHue)
 									.then(function(sid) {
 										adapter.log.debug(
 											'Set lamp color saturation ' +
@@ -1580,7 +1580,7 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists(typ + newId + '.current_mode', {
+		adapter.setObjectNotExists(typ + newId + '.color_mode', {
 			type: 'state',
 			common: {
 				name: 'current color mode',
@@ -2867,11 +2867,11 @@ function main() {
 									'DECT500_' +
 										device.identifier +
 										' : ' +
-										'current_mode: ' +
-										device.colorcontrol.current_mode
+										'color_mode: ' +
+										device.colorcontrol.color_mode
 								);
-								adapter.setState('DECT500_' + device.identifier + '.current_mode', {
-									val: device.colorcontrol.current_mode,
+								adapter.setState('DECT500_' + device.identifier + '.color_mode', {
+									val: device.colorcontrol.color_mode,
 									ack: true
 								});
 								//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color update machen

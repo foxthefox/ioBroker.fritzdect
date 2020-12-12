@@ -1719,17 +1719,17 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																expect(state.val).to.exist;
 																expect(state.val).to.be.equal('5');
 																states.getState(
-																	'fritzdect.0.DECT500_123456789012-1.current_mode',
+																	'fritzdect.0.DECT500_123456789012-1.color_mode',
 																	function(err, state) {
 																		if (err) console.error(err);
 																		expect(state).to.exist;
 																		if (!state) {
 																			console.error(
-																				'state "fritzdect.0.DECT500_123456789012-1.current_mode" not set'
+																				'state "fritzdect.0.DECT500_123456789012-1.color_mode" not set'
 																			);
 																		} else {
 																			console.log(
-																				'fritzdect.0.DECT500_123456789012-1.current_mode    ... ' +
+																				'fritzdect.0.DECT500_123456789012-1.color_mode    ... ' +
 																					state.val
 																			);
 																		}
@@ -1960,17 +1960,17 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																expect(state.val).to.exist;
 																expect(state.val).to.be.equal('5');
 																states.getState(
-																	'fritzdect.0.DECT500_130770000415-1.current_mode',
+																	'fritzdect.0.DECT500_130770000415-1.color_mode',
 																	function(err, state) {
 																		if (err) console.error(err);
 																		expect(state).to.exist;
 																		if (!state) {
 																			console.error(
-																				'state "fritzdect.0.DECT500_130770000415-1.current_mode" not set'
+																				'state "fritzdect.0.DECT500_130770000415-1.color_mode" not set'
 																			);
 																		} else {
 																			console.log(
-																				'fritzdect.0.DECT500_130770000415-1.current_mode    ... ' +
+																				'fritzdect.0.DECT500_130770000415-1.color_mode    ... ' +
 																					state.val
 																			);
 																		}

@@ -808,7 +808,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'ID'
 			},
 			native: {}
@@ -821,7 +821,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'Name'
 			},
 			native: {}
@@ -845,7 +845,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'firmware version'
 			},
 			native: {}
@@ -858,7 +858,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'Manufacturer'
 			},
 			native: {}
@@ -875,7 +875,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'Product Name'
 			},
 			native: {}
@@ -899,7 +899,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'template set'
 			},
 			native: {}
@@ -924,7 +924,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'ID'
 			},
 			native: {}
@@ -937,7 +937,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'Name'
 			},
 			native: {}
@@ -1056,7 +1056,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'Switch mode'
 			},
 			native: {}
@@ -1493,7 +1493,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'masterdeviceid'
 			},
 			native: {}
@@ -1506,7 +1506,7 @@ function main() {
 				type: 'string',
 				read: true,
 				write: false,
-				role: 'text',
+				role: 'info',
 				desc: 'members'
 			},
 			native: {}
@@ -1522,7 +1522,7 @@ function main() {
 				type: 'boolean',
 				read: true,
 				write: true,
-				role: 'switch.power',
+				role: 'switch',
 				desc: 'Switch on/off'
 			},
 			native: {}
@@ -1539,7 +1539,7 @@ function main() {
 				max: 255,
 				read: true,
 				write: true,
-				role: 'level.dimmer',
+				role: 'light.dimmer',
 				desc: 'Level'
 			},
 			native: {}
@@ -1555,7 +1555,7 @@ function main() {
 				unit: '%',
 				read: true,
 				write: true,
-				role: 'level.dimmer',
+				role: 'light.dimmer',
 				desc: 'Level percentage'
 			},
 			native: {}
@@ -1599,7 +1599,7 @@ function main() {
 				unit: '°',
 				read: true,
 				write: true,
-				role: 'level.color.hue',
+				role: 'light.color.hue',
 				desc: 'hue'
 			},
 			native: {}
@@ -1614,7 +1614,7 @@ function main() {
 				max: 255,
 				read: true,
 				write: true,
-				role: 'level.color.saturation',
+				role: 'light.color.saturation',
 				desc: 'Saturation'
 			},
 			native: {}
@@ -1630,7 +1630,7 @@ function main() {
 				unit: 'K',
 				read: true,
 				write: true,
-				role: 'level.color.temperature',
+				role: 'light.color.temperature',
 				desc: 'Color temperature'
 			},
 			native: {}

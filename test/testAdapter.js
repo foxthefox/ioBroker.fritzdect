@@ -1772,18 +1772,18 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																							50
 																						); // im Abbild null aber predefined
 																						states.getState(
-																							'fritzdect.0.DECT500_123456789012-1.temperature',
+																							'fritzdect.0.DECT500_123456789012-1.ctemperature',
 																							function(err, state) {
 																								if (err)
 																									console.error(err);
 																								expect(state).to.exist;
 																								if (!state) {
 																									console.error(
-																										'state "fritzdect.0.DECT500_123456789012-1.temperature" not set'
+																										'state "fritzdect.0.DECT500_123456789012-1.ctemperature" not set'
 																									);
 																								} else {
 																									console.log(
-																										'fritzdect.0.DECT500_123456789012-1.temperature   ... ' +
+																										'fritzdect.0.DECT500_123456789012-1.ctemperature   ... ' +
 																											state.val
 																									);
 																									expect(state.val).to
@@ -2013,18 +2013,18 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																							179
 																						);
 																						states.getState(
-																							'fritzdect.0.DECT500_130770000415-1.temperature',
+																							'fritzdect.0.DECT500_130770000415-1.ctemperature',
 																							function(err, state) {
 																								if (err)
 																									console.error(err);
 																								expect(state).to.exist;
 																								if (!state) {
 																									console.error(
-																										'state "fritzdect.0.DECT500_130770000415-1.temperature" not set'
+																										'state "fritzdect.0.DECT500_130770000415-1.ctemperature" not set'
 																									);
 																								} else {
 																									console.log(
-																										'fritzdect.0.DECT500_130770000415-1.temperature   ... ' +
+																										'fritzdect.0.DECT500_130770000415-1.ctemperature   ... ' +
 																											state.val
 																									);
 																									//expect(state.val).to.exist;

@@ -26,19 +26,19 @@
 			<fwversion>04.90</fwversion> 
 			<manufacturer>AVM</manufacturer>
 			<productname>FRITZ!DECT 400</productname>
-    			<present>1</present>
-    			<name>FRITZ!DECT 400 #14</name>
-    			<battery>100</battery>
-    			<batterylow>0</batterylow>
+    		<present>1</present>
+    		<name>FRITZ!DECT 400 #14</name>
+    		<battery>100</battery>
+    		<batterylow>0</batterylow>
     			<button>
 				<identifier>13096321567-0</identifier> 
-				<id>5000</id>
+					<id>5000</id>
        				<name>FRITZ!DECT 400 #14: kurz</name>
         			<lastpressedtimestamp>1549195586</lastpressedtimestamp>
     			</button>
     			<button>
 				<identifier>13096321567-9</identifier>
-				<id>5001</id>
+					<id>5001</id>
         			<name>FRITZ!DECT 400 #14: lang</name>
         			<lastpressedtimestamp>1549195595</lastpressedtimestamp>
     			</button>

@@ -166,7 +166,7 @@ objects in *italic* are not part of all fritz.box configurations
 Not all FW-versions of fritz.box support all objects.
 
 ## TODO:
-* universal object names
+* universal object names and structures
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog

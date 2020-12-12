@@ -212,22 +212,26 @@ function startAdapter(options) {
 						) {
 							adapter.getState('Comet_' + id + '.boostactivetime', function(err, minutes) {
 								let ende = Date.now() / 1000 + minutes.val * 60; //time for fritzbox is in seconds
-								adapter.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
+								adapter.log.debug(' unix returned ' + ende + ' real ' + new Date(ende * 1000));
 								fritz
 									.setHkrBoost(id, ende)
-									.then(function(sid) {
-										adapter.log.debug('boost ' + sid);
+									.then(function(body) {
+										adapter.log.debug('window ' + body + ' reading to ' + endtime);
 										adapter.log.debug(
 											'Set thermostat boost ' +
 												id +
 												' to ' +
 												state.val +
-												' until ' +
+												' until calculated ' +
 												ende +
 												' ' +
 												new Date(ende * 1000)
 										);
 										adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										adapter.setState('Comet_' + id + '.boostactiveendtime', {
+											val: endtime,
+											ack: true
+										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
 									.catch(errorHandler);
 							});
@@ -269,19 +273,24 @@ function startAdapter(options) {
 								adapter.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
 								fritz
 									.setWindowOpen(id, ende)
-									.then(function(sid) {
-										adapter.log.debug('window ' + sid);
+									.then(function(body) {
+										let endtime = new Date(body * 1000);
+										adapter.log.debug('window ' + body + ' reading to ' + endtime);
 										adapter.log.debug(
 											'Set thermostat windowopen ' +
 												id +
 												' to ' +
 												state.val +
-												' until ' +
+												' until calculated ' +
 												ende +
 												' ' +
 												new Date(ende * 1000)
 										);
 										adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										adapter.setState('Comet_' + id + '.windowopenactiveendtime', {
+											val: endtime,
+											ack: true
+										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
 									.catch(errorHandler);
 							});
@@ -700,7 +709,7 @@ function startAdapter(options) {
 								var colors = [];
 								if (colorinfos) {
 									adapter.log.debug('getcolor ' + colorinfos);
-									//colors = parser.xml2json(colorinfos);
+									//colors = parser.xml2json(colorinfos); //derzeitig nicht einlesbar, da hier schlechtes Format für xml2json
 								}
 								result = colors;
 							})
@@ -1038,6 +1047,18 @@ function main() {
 				write: false,
 				role: 'value.humidity',
 				desc: 'Humidity'
+			},
+			native: {}
+		});
+		//batterylow woanders hin -refactoring
+		adapter.setObjectNotExists(typ + newId + '.batterylow', {
+			type: 'state',
+			common: {
+				name: 'low Battery',
+				type: 'boolean',
+				read: true,
+				write: false,
+				role: 'indicator'
 			},
 			native: {}
 		});
@@ -2964,22 +2985,48 @@ function main() {
 										'temp : ' +
 										parseFloat(device.temperature.celsius) / 10
 								);
-								adapter.setState('DECT200_' + device.identifier + '.temp', {
+								adapter.setState('DECT440_' + device.identifier + '.temp', {
 									val: parseFloat(device.temperature.celsius) / 10,
 									ack: true
 								});
 
 								adapter.log.debug(
-									'DECT200_' +
+									'DECT440_' +
 										device.identifier +
 										' : ' +
 										'temp offset: ' +
 										parseFloat(device.temperature.offset) / 10
 								);
-								adapter.setState('DECT200_' + device.identifier + '.temp_offset', {
+								adapter.setState('DECT440_' + device.identifier + '.temp_offset', {
 									val: parseFloat(device.temperature.offset) / 10,
 									ack: true
 								});
+								var batt;
+								if (device.batterylow == 0) {
+									batt = false;
+								} else {
+									batt = true;
+								}
+								adapter.log.debug(
+									'DECT440_' + device.identifier.replace(/\s/g, '') + ' : ' + 'batterylow :' + batt
+								);
+								adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.batterylow', {
+									val: batt,
+									ack: true
+								});
+								if (device.hkr.battery) {
+									adapter.log.debug(
+										'DECT440__' +
+											device.identifier.replace(/\s/g, '') +
+											' : ' +
+											'battery :' +
+											device.battery
+									);
+									adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.battery', {
+										val: parseInt(device.battery),
+										ack: true
+									});
+								}
 							}
 						}
 						if ((device.functionbitmask & 1048864) == 1048864) {
@@ -3052,12 +3099,42 @@ function main() {
 								});
 
 								adapter.log.debug(
-									'DECT440_' + device.identifier + ' : ' + 'humidity: ' + parseFloat(device.humidity)
+									'DECT440_' +
+										device.identifier +
+										' : ' +
+										'humidity: ' +
+										parseFloat(device.humidity.rel_humidity)
 								);
 								adapter.setState('DECT440_' + device.identifier + '.humidity', {
-									val: parseFloat(device.humidity),
+									val: parseFloat(device.humidity.rel_humidity),
 									ack: true
 								});
+								var batt;
+								if (device.batterylow == 0) {
+									batt = false;
+								} else {
+									batt = true;
+								}
+								adapter.log.debug(
+									'DECT440_' + device.identifier.replace(/\s/g, '') + ' : ' + 'batterylow :' + batt
+								);
+								adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.batterylow', {
+									val: batt,
+									ack: true
+								});
+								if (device.hkr.battery) {
+									adapter.log.debug(
+										'DECT440__' +
+											device.identifier.replace(/\s/g, '') +
+											' : ' +
+											'battery :' +
+											device.battery
+									);
+									adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.battery', {
+										val: parseInt(device.battery),
+										ack: true
+									});
+								}
 							}
 						} else {
 							adapter.log.debug(

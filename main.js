@@ -2979,7 +2979,7 @@ function main() {
 								);
 							} else {
 								adapter.log.debug(
-									'DECT200_' +
+									'DECT440_' +
 										device.identifier +
 										' : ' +
 										'temp : ' +
@@ -3007,22 +3007,16 @@ function main() {
 								} else {
 									batt = true;
 								}
-								adapter.log.debug(
-									'DECT440_' + device.identifier.replace(/\s/g, '') + ' : ' + 'batterylow :' + batt
-								);
-								adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.batterylow', {
+								adapter.log.debug('DECT440_' + device.identifier + ' : ' + 'batterylow :' + batt);
+								adapter.setState('DECT440_' + device.identifier + '.batterylow', {
 									val: batt,
 									ack: true
 								});
-								if (device.hkr.battery) {
+								if (device.battery) {
 									adapter.log.debug(
-										'DECT440__' +
-											device.identifier.replace(/\s/g, '') +
-											' : ' +
-											'battery :' +
-											device.battery
+										'DECT440__' + device.identifier + ' : ' + 'battery :' + device.battery
 									);
-									adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.battery', {
+									adapter.setState('DECT440_' + device.identifier + '.battery', {
 										val: parseInt(device.battery),
 										ack: true
 									});
@@ -3115,22 +3109,16 @@ function main() {
 								} else {
 									batt = true;
 								}
-								adapter.log.debug(
-									'DECT440_' + device.identifier.replace(/\s/g, '') + ' : ' + 'batterylow :' + batt
-								);
-								adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.batterylow', {
+								adapter.log.debug('DECT440_' + device.identifier + ' : ' + 'batterylow :' + batt);
+								adapter.setState('DECT440_' + device.identifier + '.batterylow', {
 									val: batt,
 									ack: true
 								});
-								if (device.hkr.battery) {
+								if (device.battery) {
 									adapter.log.debug(
-										'DECT440__' +
-											device.identifier.replace(/\s/g, '') +
-											' : ' +
-											'battery :' +
-											device.battery
+										'DECT440__' + device.identifier + ' : ' + 'battery :' + device.battery
 									);
-									adapter.setState('DECT440_' + device.identifier.replace(/\s/g, '') + '.battery', {
+									adapter.setState('DECT440_' + device.identifier + '.battery', {
 										val: parseInt(device.battery),
 										ack: true
 									});

@@ -169,12 +169,12 @@ objects in *italic* are not part of all fritz.box configurations
 Not all FW-versions of fritz.box support all objects.
 
 ## TODO:
-* universal object names and structures
+* universal object names and structures -> breaking change
+* groups inside a device e.g. DECT440 -> breaking change
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
 ### 1.1.1
-* getBasicDeviceStats in Admin
 * getColorDefaults in Admin
 
 ### 1.1.0

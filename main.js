@@ -657,7 +657,7 @@ function startAdapter(options) {
 									});
 								result = templates;
 							})
-							.done(function(devicelistinfos) {
+							.done(function(templatelistinfos) {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -671,7 +671,7 @@ function startAdapter(options) {
 
 						var fritz = new Fritz(username, password || '', moreParam || '');
 						fritz
-							.getBasicDeviceStats(obj.message)
+							.getBasicDeviceStats(obj.message) //ain muß übergeben werden
 							.then(function(statisticinfos) {
 								//obj.message should be ain of device requested
 								var devicestats = parser.xml2json(statisticinfos);
@@ -691,11 +691,10 @@ function startAdapter(options) {
 
 						var fritz = new Fritz(username, password || '', moreParam || '');
 						fritz
-							.getColorDefaults(obj.message)
-							.then(function(statisticinfos) {
-								//obj.message should be ain of device requested
-								var devicestats = parser.xml2json(colorinfos);
-								result = devicestats;
+							.getColorDefaults()
+							.then(function(colorinfos) {
+								var colors = parser.xml2json(colorinfos);
+								result = colors;
 							})
 							.done(function(colorinfos) {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);

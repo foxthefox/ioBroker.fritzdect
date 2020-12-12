@@ -211,7 +211,7 @@ function startAdapter(options) {
 							state.val === 'ON'
 						) {
 							adapter.getState('Comet_' + id + '.boostactivetime', function(err, minutes) {
-								let ende = new Date(date.getTime() + minutes.val * 60000);
+								let ende = Date.now() + minutes.val * 60000;
 								fritz
 									.setHkrBoost(id, state.val)
 									.then(function(sid) {
@@ -263,7 +263,7 @@ function startAdapter(options) {
 							state.val === 'ON'
 						) {
 							adapter.getState('Comet_' + id + '.windowopenactivetime', function(err, minutes) {
-								let ende = new Date(date.getTime() + minutes.val * 60000);
+								let ende = Date.now() + minutes.val * 60000;
 								fritz
 									.setWindowOpen(id, ende)
 									.then(function(sid) {
@@ -1461,7 +1461,7 @@ function main() {
 			type: 'state',
 			common: {
 				name: 'Boost activation',
-				type: 'time',
+				type: 'boolean',
 				read: true,
 				write: true,
 				role: 'switch',
@@ -1790,12 +1790,13 @@ function main() {
 								);
 								adapter.log.info('setting up FD400 Button object ' + button.name);
 								createProductName(typ, button.identifier.replace(/\s/g, ''), device.productname);
-								createButton(typ, button.identifier);
+								createButton(typ, button.identifier.replace(/\s/g, ''));
 							});
-						} else if ((device.functionbitmask & 237572) == 237572) {
+						}
+						if ((device.functionbitmask & 237572) == 237572) {
 							//lamp
 							typ = 'DECT500_';
-							role = 'lamp';
+							role = 'light';
 							adapter.log.info('setting up DECT500 object ' + device.name);
 							createBasic(
 								typ,
@@ -1816,7 +1817,9 @@ function main() {
 							if (device.txbusy) {
 								createTxBusy(typ, device.identifier);
 							}
-						} else if (device.functionbitmask == 288) {
+						}
+
+						if (device.functionbitmask == 288) {
 							//DECT440 Anzeige Tasten sind schon über 32 erkannt
 							typ = 'DECT440_';
 							role = 'thermo';

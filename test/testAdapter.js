@@ -2119,7 +2119,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 									}
 									expect(state.val).to.exist;
 									expect(state.val).to.be.equal(18.5);
-									states.getState('fritzdect.0.DECT440_099950403922.temp', function(err, state) {
+									states.getState('fritzdect.0.DECT440_099950403922.humidity', function(err, state) {
 										if (err) console.error(err);
 										expect(state).to.exist;
 										if (!state) {

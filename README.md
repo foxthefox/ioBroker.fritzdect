@@ -173,7 +173,10 @@ Not all FW-versions of fritz.box support all objects.
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
-### 1.1.2 (wip)
+### 1.1.3 (wip)
+* setcolor cmd correction
+
+### 1.1.2
 * merge boost and boost active
 * merge windowopen and windowopenactive
 * DECT440 test

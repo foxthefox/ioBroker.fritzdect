@@ -55,7 +55,7 @@ var fritzTimeout;
 1024 = SUOTA-Update
 */
 
-/* modes of DECT500 supported/color_mode
+/* modes of DECT500 supported/current_mode
 0 = nothing, because OFF or not present
 1 = HueSaturation-Mode
 2 =
@@ -1571,7 +1571,7 @@ function main() {
 	}
 	function createLamp(typ, newId) {
 		adapter.log.debug('create Lamp object');
-		adapter.setObjectNotExists(typ + newId + '.colormodes', {
+		adapter.setObjectNotExists(typ + newId + '.supported_modes', {
 			type: 'state',
 			common: {
 				name: 'available color modes',
@@ -1583,7 +1583,7 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists(typ + newId + '.color_mode', {
+		adapter.setObjectNotExists(typ + newId + '.current_mode', {
 			type: 'state',
 			common: {
 				name: 'current color mode',
@@ -2861,7 +2861,7 @@ function main() {
 										'colormodes: ' +
 										device.colorcontrol.supported_modes
 								);
-								adapter.setState('DECT500_' + device.identifier + '.colormodes', {
+								adapter.setState('DECT500_' + device.identifier + '.supported_modes', {
 									val: device.colorcontrol.supported_modes,
 									ack: true
 								});
@@ -2869,11 +2869,11 @@ function main() {
 									'DECT500_' +
 										device.identifier +
 										' : ' +
-										'color_mode: ' +
-										device.colorcontrol.color_mode
+										'current_mode: ' +
+										device.colorcontrol.current_mode
 								);
-								adapter.setState('DECT500_' + device.identifier + '.color_mode', {
-									val: device.colorcontrol.color_mode,
+								adapter.setState('DECT500_' + device.identifier + '.current_mode', {
+									val: device.colorcontrol.current_mode,
 									ack: true
 								});
 								//evtl. hier in Abhängigkeit des modes eine Unterscheidung für weiß und color update machen

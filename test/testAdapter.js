@@ -1702,34 +1702,34 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 														expect(state.val).to.exist;
 														expect(state.val).to.be.equal(100);
 														states.getState(
-															'fritzdect.0.DECT500_123456789012-1.colormodes',
+															'fritzdect.0.DECT500_123456789012-1.supported_modes',
 															function(err, state) {
 																if (err) console.error(err);
 																expect(state).to.exist;
 																if (!state) {
 																	console.error(
-																		'state "fritzdect.0.DECT500_123456789012-1.colormodes" not set'
+																		'state "fritzdect.0.DECT500_123456789012-1.supported_modes" not set'
 																	);
 																} else {
 																	console.log(
-																		'fritzdect.0.DECT500_123456789012-1.colormodes    ... ' +
+																		'fritzdect.0.DECT500_123456789012-1.supported_modes    ... ' +
 																			state.val
 																	);
 																}
 																expect(state.val).to.exist;
 																expect(state.val).to.be.equal('5');
 																states.getState(
-																	'fritzdect.0.DECT500_123456789012-1.color_mode',
+																	'fritzdect.0.DECT500_123456789012-1.current_mode',
 																	function(err, state) {
 																		if (err) console.error(err);
 																		expect(state).to.exist;
 																		if (!state) {
 																			console.error(
-																				'state "fritzdect.0.DECT500_123456789012-1.color_mode" not set'
+																				'state "fritzdect.0.DECT500_123456789012-1.current_mode" not set'
 																			);
 																		} else {
 																			console.log(
-																				'fritzdect.0.DECT500_123456789012-1.color_mode    ... ' +
+																				'fritzdect.0.DECT500_123456789012-1.current__mode    ... ' +
 																					state.val
 																			);
 																		}
@@ -1943,34 +1943,34 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 														expect(state.val).to.exist;
 														expect(state.val).to.be.equal(100);
 														states.getState(
-															'fritzdect.0.DECT500_130770000415-1.colormodes',
+															'fritzdect.0.DECT500_130770000415-1.supported_modes',
 															function(err, state) {
 																if (err) console.error(err);
 																expect(state).to.exist;
 																if (!state) {
 																	console.error(
-																		'state "fritzdect.0.DECT500_130770000415-1.colormodes" not set'
+																		'state "fritzdect.0.DECT500_130770000415-1.supported_modes" not set'
 																	);
 																} else {
 																	console.log(
-																		'fritzdect.0.DECT500_130770000415-1.colormodes    ... ' +
+																		'fritzdect.0.DECT500_130770000415-1.supported_modes    ... ' +
 																			state.val
 																	);
 																}
 																expect(state.val).to.exist;
 																expect(state.val).to.be.equal('5');
 																states.getState(
-																	'fritzdect.0.DECT500_130770000415-1.color_mode',
+																	'fritzdect.0.DECT500_130770000415-1.current_mode',
 																	function(err, state) {
 																		if (err) console.error(err);
 																		expect(state).to.exist;
 																		if (!state) {
 																			console.error(
-																				'state "fritzdect.0.DECT500_130770000415-1.color_mode" not set'
+																				'state "fritzdect.0.DECT500_130770000415-1.current_mode" not set'
 																			);
 																		} else {
 																			console.log(
-																				'fritzdect.0.DECT500_130770000415-1.color_mode    ... ' +
+																				'fritzdect.0.DECT500_130770000415-1.current_mode    ... ' +
 																					state.val
 																			);
 																		}
@@ -2068,7 +2068,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 					console.log('fritzdect.0.DECT440_099950403922.name          ... ' + state.val);
 				}
 				expect(state.val).to.exist;
-				expect(state.val).to.be.equal('FT-Wohnzimmer<');
+				expect(state.val).to.be.equal('FT-Wohnzimmer');
 				states.getState('fritzdect.0.DECT440_099950403922.present', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;

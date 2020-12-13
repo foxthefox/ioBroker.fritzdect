@@ -121,7 +121,7 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |DECT500.state|boolean|x|true/false -> ON/OFF|
 |DECT500.txbusy|boolean|-|cmd sending active|
-|DECT500.colormodes|value|-|supported colormodes|
+|DECT500.supported_modes|value|-|supported colormodes|
 |DECT500.current_mode|value|?|actual colormode|
 |DECT500.level|value|x|brightness 0-255 |
 |DECT500.levelpercentage|value|x|brightness 0-100% |

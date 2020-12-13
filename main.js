@@ -1589,9 +1589,9 @@ function main() {
 				name: 'current color mode',
 				type: 'number',
 				read: true,
-				write: true,
+				write: false,
 				role: 'value',
-				desc: 'current color modes'
+				desc: 'current color mode'
 			},
 			native: {}
 		});

@@ -211,11 +211,12 @@ function startAdapter(options) {
 							state.val === 'ON'
 						) {
 							adapter.getState('Comet_' + id + '.boostactivetime', function(err, minutes) {
-								let ende = Date.now() / 1000 + minutes.val * 60; //time for fritzbox is in seconds
+								let ende = Math.floor(Date.now() / 1000 + minutes.val * 60); //time for fritzbox is in seconds
 								adapter.log.debug(' unix returned ' + ende + ' real ' + new Date(ende * 1000));
 								fritz
 									.setHkrBoost(id, ende)
 									.then(function(body) {
+										let endtime = new Date(Math.floor(body * 1000));
 										adapter.log.debug('window ' + body + ' reading to ' + endtime);
 										adapter.log.debug(
 											'Set thermostat boost ' +
@@ -269,12 +270,12 @@ function startAdapter(options) {
 							state.val === 'ON'
 						) {
 							adapter.getState('Comet_' + id + '.windowopenactivetime', function(err, minutes) {
-								let ende = Date.now() / 1000 + minutes.val * 60; //time for fritzbox is in seconds
+								let ende = Math.floor(Date.now() / 1000 + minutes.val * 60); //time for fritzbox is in seconds
 								adapter.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
 								fritz
 									.setWindowOpen(id, ende)
 									.then(function(body) {
-										let endtime = new Date(body * 1000);
+										let endtime = new Date(Math.floor(body * 1000));
 										adapter.log.debug('window ' + body + ' reading to ' + endtime);
 										adapter.log.debug(
 											'Set thermostat windowopen ' +

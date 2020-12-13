@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "1.1.1",
+		"version": "1.1.2",
 		"news": {
+			"1.1.2": {
+				"en": "corrections and new features",
+				"de": "Korrekturen und neue Funktionen",
+				"ru": "исправления и новые функции",
+				"pt": "correções e novos recursos",
+				"nl": "correcties en nieuwe functies",
+				"fr": "corrections et nouvelles fonctionnalités",
+				"it": "correzioni e nuove funzionalità",
+				"es": "correcciones y novedades",
+				"pl": "poprawki i nowe funkcje",
+				"zh-cn": "更正和新功能"
+			},
 			"1.1.1": {
 				"en": "corrections and new features",
 				"de": "Korrekturen und neue Funktionen",

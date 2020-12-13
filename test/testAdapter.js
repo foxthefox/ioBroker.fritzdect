@@ -2056,6 +2056,91 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
+	it('Test ' + adapterShortName + ' adapter: Check values of DECT440', function(done) {
+		this.timeout(30000);
+		setTimeout(function() {
+			states.getState('fritzdect.0.DECT440_099950403922.name', function(err, state) {
+				if (err) console.error(err);
+				expect(state).to.exist;
+				if (!state) {
+					console.error('state "fritzdect.0.DECT440_099950403922.name" not set');
+				} else {
+					console.log('fritzdect.0.DECT440_099950403922.name          ... ' + state.val);
+				}
+				expect(state.val).to.exist;
+				expect(state.val).to.be.equal('FT-Wohnzimmer<');
+				states.getState('fritzdect.0.DECT440_099950403922.present', function(err, state) {
+					if (err) console.error(err);
+					expect(state).to.exist;
+					if (!state) {
+						console.error('state "fritzdect.0.DECT440_099950403922.present" not set');
+					} else {
+						console.log('fritzdect.0.DECT440_099950403922.present       ... ' + state.val);
+					}
+					expect(state.val).to.exist;
+					expect(state.val).to.be.equal(true);
+					states.getState('fritzdect.0.DECT440_099950403922.id', function(err, state) {
+						if (err) console.error(err);
+						expect(state).to.exist;
+						if (!state) {
+							console.error('state "fritzdect.0.DECT440_099950403922.id" not set');
+						} else {
+							console.log('fritzdect.0.DECT440_099950403922.id            ... ' + state.val);
+						}
+						expect(state.val).to.exist;
+						expect(state.val).to.be.equal('56');
+						states.getState('fritzdect.0.DECT440_099950403922.fwversion', function(err, state) {
+							if (err) console.error(err);
+							expect(state).to.exist;
+							if (!state) {
+								console.error('state "fritzdect.0.DECT440_099950403922.fwversion" not set');
+							} else {
+								console.log('fritzdect.0.DECT440_099950403922.fwversion     ... ' + state.val);
+							}
+							expect(state.val).to.exist;
+							expect(state.val).to.be.equal('05.10');
+							states.getState('fritzdect.0.DECT440_099950403922.manufacturer', function(err, state) {
+								if (err) console.error(err);
+								expect(state).to.exist;
+								if (!state) {
+									console.error('state "fritzdect.0.DECT440_099950403922.manufacturer" not set');
+								} else {
+									console.log('fritzdect.0.DECT440_099950403922.manufacturer  ... ' + state.val);
+								}
+								expect(state.val).to.exist;
+								expect(state.val).to.be.equal('AVM');
+								states.getState('fritzdect.0.DECT440_099950403922.temp', function(err, state) {
+									if (err) console.error(err);
+									expect(state).to.exist;
+									if (!state) {
+										console.error('state "fritzdect.0.DECT440_099950403922.temp" not set');
+									} else {
+										console.log('fritzdect.0.DECT440_099950403922.temp          ... ' + state.val);
+									}
+									expect(state.val).to.exist;
+									expect(state.val).to.be.equal(18.5);
+									states.getState('fritzdect.0.DECT440_099950403922.temp', function(err, state) {
+										if (err) console.error(err);
+										expect(state).to.exist;
+										if (!state) {
+											console.error('state "fritzdect.0.DECT440_099950403922.humidity" not set');
+										} else {
+											console.log(
+												'fritzdect.0.DECT440_099950403922.humidity          ... ' + state.val
+											);
+											expect(state.val).to.exist;
+											expect(state.val).to.be.equal(52);
+											done();
+										}
+									});
+								});
+							});
+						});
+					});
+				});
+			});
+		}, 1000);
+	});
 	it('Test ' + adapterShortName + ' adapter: Objects must exist for template_tmp6F0093-39091EED0', (done) => {
 		setTimeout(function() {
 			objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.name', (err, obj) => {

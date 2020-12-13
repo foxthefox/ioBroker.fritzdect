@@ -104,13 +104,11 @@ objects in *italic* are not part of all fritz.box configurations
 |COMET.devicelock|boolean|-|Button lock|
 |COMET.operationList|value|-|list of possible modes|
 |COMET.operationMode|value|-|actual mode|
-|*COMET.windowopen*|time|x|set status open window until time|
 |*COMET.windowopenendtime*|time|-|time when open window status ends|
-|*COMET.windowopenactiv*|boolean|-|status of window open detection|
+|*COMET.windowopenactiv*|boolean|x|status and cmd of window open detection|
 |*COMET.windowopenactivtime*|value|x|time (minutes) when activation of window open |
-|*COMET.boostactive|boolean*|-|boost mode active status|
+|*COMET.boostactive|boolean*|x|boost mode active status and cmd|
 |*COMET.boostactiveendtime*|time|-|time when boost status ends|
-|*COMET.boost*|time|x|set boost mode until time|
 |*COMET.boostactivtime*|value|x|time (minutes) when activation of boost|
 |*COMET.battery*|value|-|actual capacity in %|
 |*COMET.summeractive*|boolean|-|summer program status|
@@ -151,7 +149,7 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |Contact.state|boolean|-|true/false -> ON/OFF|
 
-### button (HAN-FUN, DECT400)
+### button (HAN-FUN, DECT400, DECT440)
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
 |Button.lastclick|number|-|timestamp|
@@ -163,6 +161,7 @@ objects in *italic* are not part of all fritz.box configurations
 
 ## API limitations
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command
+* updates to the thermostat are within a 15min range, depending on the previous communication of thermostat with fritzbox the next cycle is sooner or later, but definitely imediately not after an ioBroker intervention
 
 
 ## Known Issues:
@@ -174,8 +173,13 @@ Not all FW-versions of fritz.box support all objects.
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
-### 1.1.1
-* getColorDefaults in Admin
+### 1.1.2 (wip)
+* merge boost and boost active
+* merge windowopen and windowopenactive
+* DECT440 test
+
+### 1.1.1 (npm)
+* getColorDefaults in Admin, prepared but format of xml can no
 
 ### 1.1.0
 * new features of AVM API 1.33
@@ -187,7 +191,7 @@ Not all FW-versions of fritz.box support all objects.
 * DECT440
 * DECT500
 
-### 1.0.1
+### 1.0.1 (npm)
 * bugfixes in fritz API calls
 * error code 303 (but unknown what it means)
 * (Black-Thunder) targetTemp=null
@@ -201,7 +205,7 @@ Not all FW-versions of fritz.box support all objects.
     * OS version
 * correction of timestamp to date conversion for DECT400
 
-### 0.3.2
+### 0.3.2 (npm)
 * new states in heater group, operationList and operationMode
 
 ### 0.3.1

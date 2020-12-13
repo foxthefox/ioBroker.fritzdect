@@ -186,7 +186,7 @@ function startAdapter(options) {
 							'Nothing to send external, but the boost active time was defined for ' + state.val + ' min'
 						);
 					}
-					if (dp == 'boost') {
+					if (dp == 'boostactive') {
 						if (
 							state.val === 0 ||
 							state.val === '0' ||
@@ -199,7 +199,7 @@ function startAdapter(options) {
 								.setHkrBoost(id, 0)
 								.then(function(sid) {
 									adapter.log.debug('Reset thermostat boost ' + id + ' to ' + state.val);
-									adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									adapter.setState('Comet_' + id + '.boostactive', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
 								.catch(errorHandler);
 						} else if (
@@ -227,7 +227,7 @@ function startAdapter(options) {
 												' ' +
 												new Date(ende * 1000)
 										);
-										adapter.setState('Comet_' + id + '.boost', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										adapter.setState('Comet_' + id + '.boostactive', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 										adapter.setState('Comet_' + id + '.boostactiveendtime', {
 											val: endtime,
 											ack: true
@@ -244,7 +244,7 @@ function startAdapter(options) {
 								' min'
 						);
 					}
-					if (dp == 'windowopen') {
+					if (dp == 'windowopenactiv') {
 						if (
 							state.val === 0 ||
 							state.val === '0' ||
@@ -257,7 +257,7 @@ function startAdapter(options) {
 								.setWindowOpen(id, 0)
 								.then(function(sid) {
 									adapter.log.debug('Reset thermostat windowopen ' + id + ' to ' + state.val);
-									adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									adapter.setState('Comet_' + id + '.windowopenactiv', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
 								.catch(errorHandler);
 						} else if (
@@ -286,7 +286,10 @@ function startAdapter(options) {
 												' ' +
 												new Date(ende * 1000)
 										);
-										adapter.setState('Comet_' + id + '.windowopen', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										adapter.setState('Comet_' + id + '.windowopenactiv', {
+											val: state.val,
+											ack: true
+										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 										adapter.setState('Comet_' + id + '.windowopenactiveendtime', {
 											val: endtime,
 											ack: true
@@ -1384,24 +1387,12 @@ function main() {
 		adapter.setObjectNotExists(typ + newId + '.windowopenactiv', {
 			type: 'state',
 			common: {
-				name: 'Window open',
-				type: 'boolean',
-				read: true,
-				write: false,
-				role: 'indicator',
-				desc: 'Window open'
-			},
-			native: {}
-		});
-		adapter.setObjectNotExists(typ + newId + '.windowopen', {
-			type: 'state',
-			common: {
-				name: 'window open activation',
+				name: 'Window open status and cmd',
 				type: 'boolean',
 				read: true,
 				write: true,
 				role: 'switch',
-				desc: 'window open activation'
+				desc: 'Window open status and cmd'
 			},
 			native: {}
 		});
@@ -1465,12 +1456,12 @@ function main() {
 		adapter.setObjectNotExists(typ + newId + '.boostactive', {
 			type: 'state',
 			common: {
-				name: 'Boost active',
+				name: 'Boost active status and cmd',
 				type: 'boolean',
 				read: true,
-				write: false,
-				role: 'indicator',
-				desc: 'Boost active'
+				write: true,
+				role: 'switch',
+				desc: 'Boost active status and cmd'
 			},
 			native: {}
 		});
@@ -1483,18 +1474,6 @@ function main() {
 				write: false,
 				role: 'value.time',
 				desc: 'Boost active end time'
-			},
-			native: {}
-		});
-		adapter.setObjectNotExists(typ + newId + '.boost', {
-			type: 'state',
-			common: {
-				name: 'Boost activation',
-				type: 'boolean',
-				read: true,
-				write: true,
-				role: 'switch',
-				desc: 'Boost activation'
 			},
 			native: {}
 		});
@@ -1574,7 +1553,6 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.level', { val: 128, ack: true });
 		adapter.setObjectNotExists(typ + newId + '.levelpercentage', {
 			type: 'state',
 			common: {
@@ -1590,9 +1568,7 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.levelpercentage', { val: 50, ack: true });
 	}
-
 	function createLamp(typ, newId) {
 		adapter.log.debug('create Lamp object');
 		adapter.setObjectNotExists(typ + newId + '.colormodes', {
@@ -1634,7 +1610,6 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.hue', { val: 90, ack: true });
 		adapter.setObjectNotExists(typ + newId + '.saturation', {
 			type: 'state',
 			common: {
@@ -1649,7 +1624,6 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.saturation', { val: 50, ack: true });
 		adapter.setObjectNotExists(typ + newId + '.ctemperature', {
 			type: 'state',
 			common: {
@@ -1665,7 +1639,6 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.ctemperature', { val: 3600, ack: true });
 	}
 
 	function createDevices() {

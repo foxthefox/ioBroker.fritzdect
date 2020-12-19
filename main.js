@@ -414,45 +414,30 @@ function startAdapter(options) {
 					//must be DECT
 					id = idx.replace(/Blinds_/g, ''); //Blind
 					adapter.log.info('Blind ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
-					if (dp == 'blindtarget') {
-						if (
-							state.val === 0 ||
-							state.val === '0' ||
-							state.val === 'false' ||
-							state.val === false ||
-							state.val === 'off' ||
-							state.val === 'OFF'
-						) {
-							fritz
-								.setBlind(id, 'close')
-								.then(function(sid) {
-									adapter.log.debug('Started blind ' + id + ' to close');
-									adapter.setState('Blinds_' + id + '.state', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch(errorHandler);
-						} else if (
-							state.val === 1 ||
-							state.val === '1' ||
-							state.val === 'true' ||
-							state.val === true ||
-							state.val === 'on' ||
-							state.val === 'ON'
-						) {
-							fritz
-								.setBlind(id, 'open')
-								.then(function(sid) {
-									adapter.log.debug('Started blind ' + id + ' to open');
-									adapter.setState('Blinds_' + id + '.state', { val: true, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch(errorHandler);
-						}
+					if (dp == 'blindsclose') {
+						fritz
+							.setBlind(id, 'close')
+							.then(function(sid) {
+								adapter.log.debug('Started blind ' + id + ' to close');
+								adapter.setState('Blinds_' + id + '.blindsclose', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+							})
+							.catch(errorHandler);
 					}
-					if (dp == 'blindstop') {
+					if (dp == 'blindsopen') {
+						fritz
+							.setBlind(id, 'open')
+							.then(function(sid) {
+								adapter.log.debug('Started blind ' + id + ' to open');
+								adapter.setState('Blinds_' + id + '.blindsopen', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+							})
+							.catch(errorHandler);
+					}
+					if (dp == 'blindsstop') {
 						fritz
 							.setBlind(id, 'stop')
 							.then(function(sid) {
 								adapter.log.debug('Set blind ' + id + ' to stop');
-								adapter.setState('Blinds_' + id + '.state', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								adapter.setState('Blinds_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 							})
 							.catch(errorHandler);
 					}
@@ -1737,19 +1722,31 @@ function main() {
 
 	function createBlind(typ, newId) {
 		adapter.log.debug('create Blinds objects');
-		adapter.setObjectNotExists(typ + newId + '.blindtarget', {
+		adapter.setObjectNotExists(typ + newId + '.blindsopen', {
 			type: 'state',
 			common: {
-				name: 'Switch close/open',
+				name: 'Switch open',
 				type: 'boolean',
 				read: true,
 				write: true,
 				role: 'switch',
-				desc: 'Switch close/open'
+				desc: 'Switch open'
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists(typ + newId + '.blindstop', {
+		adapter.setObjectNotExists(typ + newId + '.blindsclose', {
+			type: 'state',
+			common: {
+				name: 'Switch close',
+				type: 'boolean',
+				read: true,
+				write: true,
+				role: 'switch',
+				desc: 'Switch close'
+			},
+			native: {}
+		});
+		adapter.setObjectNotExists(typ + newId + '.blindsstop', {
 			type: 'state',
 			common: {
 				name: 'Switch STOP',
@@ -3314,7 +3311,7 @@ function main() {
 										'state :' +
 										convertSwitchState +
 										'(' +
-										device.switch.state +
+										device.alert.state +
 										')'
 								);
 								adapter.setState('Blinds_' + device.identifier + '.state', {

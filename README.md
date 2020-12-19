@@ -156,8 +156,9 @@ objects in *italic* are not part of all fritz.box configurations
 ### blinds (HAN-FUN)
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
-|Blinds.blindtarget|string|x|target open/close|
-|Blinds.blindstop|string|x|target stop|
+|Blinds.blindopen|booelan|x|target open|
+|Blinds.blindclose|boolean|x|target close|
+|Blinds.blindstop|boolean|x|target stop|
 |Blinds.level|value|x|opening 0-255 |
 |Blinds.levelpercentage|value|x|openeing 0-100% |
 |Blinds.state|boolean|-|alert status |

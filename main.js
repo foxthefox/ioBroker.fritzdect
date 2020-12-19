@@ -113,7 +113,7 @@ function startAdapter(options) {
 					if (dp === 'targettemp') {
 						if (state.val < 8) {
 							//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-							adapter.setState('Comet_' + id + '.mode', { val: 1, ack: false });
+							adapter.setState('Comet_' + id + '.mode', { val: 1, ack: true }); //false nach true
 							fritz
 								.setTempTarget(id, 'off')
 								.then(function(sid) {
@@ -122,7 +122,7 @@ function startAdapter(options) {
 								.catch(errorHandler);
 						} else if (state.val > 28) {
 							//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-							adapter.setState('Comet_' + id + '.mode', { val: 2, ack: false });
+							adapter.setState('Comet_' + id + '.mode', { val: 2, ack: true }); //false nach true
 							fritz
 								.setTempTarget(id, 'on')
 								.then(function(sid) {
@@ -130,7 +130,7 @@ function startAdapter(options) {
 								})
 								.catch(errorHandler);
 						} else {
-							adapter.setState('Comet_' + id + '.mode', { val: 0, ack: false });
+							adapter.setState('Comet_' + id + '.mode', { val: 0, ack: true }); //false nach true
 							fritz
 								.setTempTarget(id, state.val)
 								.then(function(sid) {
@@ -309,7 +309,7 @@ function startAdapter(options) {
 					if (dp === 'targettemp') {
 						if (state.val < 8) {
 							//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-							adapter.setState('Hgroup_' + id + '.mode', { val: 1, ack: false });
+							adapter.setState('Hgroup_' + id + '.mode', { val: 1, ack: true }); // false nach true
 							fritz
 								.setTempTarget(id, 'off')
 								.then(function(sid) {
@@ -318,7 +318,7 @@ function startAdapter(options) {
 								.catch(errorHandler);
 						} else if (state.val > 28) {
 							//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-							adapter.setState('Hgroup_' + id + '.mode', { val: 2, ack: false });
+							adapter.setState('Hgroup_' + id + '.mode', { val: 2, ack: true }); // false nach true
 							fritz
 								.setTempTarget(id, 'on')
 								.then(function(sid) {
@@ -326,7 +326,7 @@ function startAdapter(options) {
 								})
 								.catch(errorHandler);
 						} else {
-							adapter.setState('Hgroup_' + id + '.mode', { val: 0, ack: false });
+							adapter.setState('Hgroup_' + id + '.mode', { val: 0, ack: true }); // false nach true
 							fritz
 								.setTempTarget(id, state.val)
 								.then(function(sid) {

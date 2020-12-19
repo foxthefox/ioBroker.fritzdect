@@ -156,9 +156,9 @@ objects in *italic* are not part of all fritz.box configurations
 ### blinds (HAN-FUN)
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
-|Blinds.blindopen|booelan|x|target open|
-|Blinds.blindclose|boolean|x|target close|
-|Blinds.blindstop|boolean|x|target stop|
+|Blinds.blindsopen|booelan|x|target open|
+|Blinds.blindsclose|boolean|x|target close|
+|Blinds.blindsstop|boolean|x|target stop|
 |Blinds.level|value|x|opening 0-255 |
 |Blinds.levelpercentage|value|x|openeing 0-100% |
 |Blinds.state|boolean|-|alert status |
@@ -181,6 +181,7 @@ Not all FW-versions of fritz.box support all objects.
 ## Changelog
 ### 1.1.4
 * blinds control
+* correction for Comet/Hgroup to set the mode after temperature change (not ack=false)
 
 ### 1.1.3 (npm)
 * setcolor cmd correction

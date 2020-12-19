@@ -51,6 +51,8 @@ var fritzTimeout;
 512 = ON_OFF
 513 = LEVEL_CTRL
 514 = COLOR_CTRL 
+516 = ? detected with blinds
+517 = ? detected with blinds
 772 = SIMPLE_BUTTON 
 1024 = SUOTA-Update
 */
@@ -407,6 +409,71 @@ function startAdapter(options) {
 								})
 								.catch(errorHandler);
 						}
+					}
+				} else if (idx.startsWith('Blinds_')) {
+					//must be DECT
+					id = idx.replace(/Blinds_/g, ''); //Blind
+					adapter.log.info('Blind ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
+					if (dp == 'blindtarget') {
+						if (
+							state.val === 0 ||
+							state.val === '0' ||
+							state.val === 'false' ||
+							state.val === false ||
+							state.val === 'off' ||
+							state.val === 'OFF'
+						) {
+							fritz
+								.setBlind(id, 'close')
+								.then(function(sid) {
+									adapter.log.debug('Started blind ' + id + ' to close');
+									adapter.setState('Blinds_' + id + '.state', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						} else if (
+							state.val === 1 ||
+							state.val === '1' ||
+							state.val === 'true' ||
+							state.val === true ||
+							state.val === 'on' ||
+							state.val === 'ON'
+						) {
+							fritz
+								.setBlind(id, 'open')
+								.then(function(sid) {
+									adapter.log.debug('Started blind ' + id + ' to open');
+									adapter.setState('Blinds_' + id + '.state', { val: true, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+								})
+								.catch(errorHandler);
+						}
+					}
+					if (dp == 'blindstop') {
+						fritz
+							.setBlind(id, 'stop')
+							.then(function(sid) {
+								adapter.log.debug('Set blind ' + id + ' to stop');
+								adapter.setState('Blinds_' + id + '.state', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+							})
+							.catch(errorHandler);
+					}
+					if (dp == 'level') {
+						fritz
+							.setLevel(id, state.val)
+							.then(function(sid) {
+								adapter.log.debug('Set blind level' + id + ' to ' + state.val);
+								adapter.setState('Blinds_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+							})
+							.catch(errorHandler);
+					}
+					if (dp == 'levelpercentage') {
+						fritz
+							.setLevel(id, parseInt(state.val / 100 * 255))
+							.then(function(sid) {
+								//level is in 0...255
+								adapter.log.debug('Set Blind level %' + id + ' to ' + state.val);
+								adapter.setState('Blinds_' + id + '.levelpercentage', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+							})
+							.catch(errorHandler);
 					}
 				} else if (idx.startsWith('Sgroup_')) {
 					//must be DECT switch group
@@ -991,7 +1058,33 @@ function main() {
 			native: {}
 		});
 	}
-
+	function createAlert2(typ, newId) {
+		adapter.log.debug('create Alert2 object');
+		adapter.setObjectNotExists(typ + newId + '.state', {
+			type: 'state',
+			common: {
+				name: 'Alert',
+				type: 'boolean',
+				read: true,
+				write: false,
+				role: 'indicator',
+				desc: 'Alert'
+			},
+			native: {}
+		});
+		adapter.setObjectNotExists(typ + newId + '.lastalertchgtimestamp', {
+			type: 'state',
+			common: {
+				name: 'Time',
+				type: 'number',
+				read: true,
+				write: false,
+				role: 'date',
+				desc: 'Time'
+			},
+			native: {}
+		});
+	}
 	function createButton(typ, newId) {
 		adapter.log.debug('create Button object');
 		adapter.setObjectNotExists(typ + newId + '.lastclick', {
@@ -1642,6 +1735,34 @@ function main() {
 		});
 	}
 
+	function createBlind(typ, newId) {
+		adapter.log.debug('create Blinds objects');
+		adapter.setObjectNotExists(typ + newId + '.blindtarget', {
+			type: 'state',
+			common: {
+				name: 'Switch close/open',
+				type: 'boolean',
+				read: true,
+				write: true,
+				role: 'switch',
+				desc: 'Switch close/open'
+			},
+			native: {}
+		});
+		adapter.setObjectNotExists(typ + newId + '.blindstop', {
+			type: 'state',
+			common: {
+				name: 'Switch STOP',
+				type: 'boolean',
+				read: true,
+				write: true,
+				role: 'switch',
+				desc: 'Switch STOP'
+			},
+			native: {}
+		});
+	}
+
 	function createDevices() {
 		fritz
 			.getDeviceListInfos()
@@ -1865,6 +1986,27 @@ function main() {
 							createTemperature(typ, device.identifier);
 							createHumidity(typ, device.identifier);
 							createBattery(typ, device.identifier);
+							if (device.txbusy) {
+								createTxBusy(typ, device.identifier);
+							}
+						} else if (device.functionbitmask == 335888) {
+							//Beckert Rollanden
+							typ = 'Blinds_';
+							role = 'blinds';
+							adapter.log.info('setting up Blinds object ' + device.name);
+							createBasic(
+								typ,
+								device.identifier,
+								device.name,
+								role,
+								device.id,
+								device.fwversion,
+								device.manufacturer
+							);
+							createProductName(typ, device.identifier, device.productname);
+							createBlind(typ, device.identifier);
+							createLevel(typ, device.identifier);
+							createAlert2(typ, device.identifier);
 							if (device.txbusy) {
 								createTxBusy(typ, device.identifier);
 							}
@@ -3099,6 +3241,98 @@ function main() {
 										ack: true
 									});
 								}
+							}
+						}
+						if ((device.functionbitmask & 335888) == 335888) {
+							//Blinds
+							adapter.log.debug('updating Blinds ' + device.name);
+							adapter.log.debug('Blinds_' + device.identifier + ' : ' + 'name : ' + device.name);
+							adapter.setState('Blinds_' + device.identifier + '.name', { val: device.name, ack: true });
+							//da TxBusy mit der API zeitgleich mit Blind herauskam, sparen wir die Abfrage ob vorhanden
+							let convertTxBusy = device.txbusy == 1 ? true : false;
+							adapter.log.debug(
+								'Blinds_' +
+									device.identifier +
+									' : ' +
+									'txbusy : ' +
+									convertTxBusy +
+									'(' +
+									device.txbusy +
+									')'
+							);
+							adapter.setState('Blinds_' + device.identifier + '.txbusy', {
+								val: convertTxBusy,
+								ack: true
+							});
+
+							let convertPresent = device.present == 1 ? true : false;
+							adapter.log.debug(
+								'Blinds_' +
+									device.identifier +
+									' : ' +
+									'present : ' +
+									convertPresent +
+									' (' +
+									device.present +
+									')'
+							);
+							adapter.setState('Blinds_' + device.identifier + '.present', {
+								val: convertPresent,
+								ack: true
+							});
+
+							if (device.present === '0' || device.present === 0 || device.present === false) {
+								adapter.log.warn(
+									'Blinds_' +
+										device.identifier +
+										' is not present, check the device connection, no values are written'
+								);
+							} else {
+								adapter.log.debug(
+									'Blinds_' + device.identifier + ' : ' + 'level: ' + device.levelcontrol.level
+								);
+								adapter.setState('Blinds_' + device.identifier + '.level', {
+									val: parseInt(device.levelcontrol.level),
+									ack: true
+								});
+								adapter.log.debug(
+									'Blinds_' +
+										device.identifier +
+										' : ' +
+										'levelpercentage: ' +
+										device.levelcontrol.levelpercentage
+								);
+								adapter.setState('Blinds_' + device.identifier + '.levelpercentage', {
+									val: parseInt(device.levelcontrol.levelpercentage),
+									ack: true
+								});
+								let convertSwitchState = device.alert.state == 1 ? true : false;
+								adapter.log.debug(
+									'Blinds_' +
+										device.identifier +
+										' : ' +
+										'state :' +
+										convertSwitchState +
+										'(' +
+										device.switch.state +
+										')'
+								);
+								adapter.setState('Blinds_' + device.identifier + '.state', {
+									val: convertSwitchState,
+									ack: true
+								});
+								let changetime = new Date(device.alert.lastalertchgtimestamp * 1000);
+								adapter.log.debug(
+									'Blinds_' +
+										device.identifier.replace(/\s/g, '') +
+										' : ' +
+										'lastalertchgtimestamp :' +
+										changetime
+								);
+								adapter.setState(
+									'Blinds_' + device.identifier.replace(/\s/g, '') + '.lastalertchgtimestamp',
+									{ val: changetime, ack: true }
+								);
 							}
 						} else {
 							adapter.log.debug(

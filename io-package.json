@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "1.1.3",
+		"version": "1.1.4",
 		"news": {
+			"1.1.4": {
+				"en": "blinds control",
+				"de": "Jalousiekontrolle",
+				"ru": "управление жалюзи",
+				"pt": "controle de cortinas",
+				"nl": "jaloezieën controle",
+				"fr": "contrôle des stores",
+				"it": "controllo persiane",
+				"es": "control de persianas",
+				"pl": "sterowanie roletami",
+				"zh-cn": "百叶窗控制"
+			},
 			"1.1.3": {
 				"en": "setcolor cmd correction",
 				"de": "setcolor cmd Korrektur",

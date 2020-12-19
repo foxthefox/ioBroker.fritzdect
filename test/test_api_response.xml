@@ -434,5 +434,40 @@
 			    <lastpressedtimestamp></lastpressedtimestamp>
 			  </button>
 			</device>
+			<device>
+				<identifier>119340395779-1</identifier>
+				<id>2000</id>
+				<functionbitmask>335888</functionbitmask>
+				<fwversion>0.0</fwversion>
+				<manufacturer>0x0feb</manufacturer>
+				<productname>HAN-FUN</productname>
+				<present>1</present>
+				<txbusy>0</txbusy>
+				<name>test Rollladen</name>
+				<levelcontrol>
+					<level>77</level>
+					<levelpercentage>30</levelpercentage>
+				</levelcontrol>
+				<etsiunitinfo>
+					<etsideviceid>406</etsideviceid>
+					<unittype>281</unittype>
+					<interfaces>256,513,516,517</interfaces>
+				</etsiunitinfo>
+				<alert>
+					<state>0</state>
+					<lastalertchgtimestamp>1608268905</lastalertchgtimestamp>
+				</alert>
+			</device>
+			<device>
+				<identifier>119340395779</identifier>
+				<id>406</id>
+				<functionbitmask>1</functionbitmask>
+				<fwversion>34.24.01#0.9.8.21.1#7B#14400036</fwversion>
+				<manufacturer>0x0feb</manufacturer>
+				<productname>HAN-FUN</productname>
+				<present>1</present>
+				<txbusy>0</txbusy>
+				<name>test Rollladen</name>
+			</device>
 	</devicelist>
 	

@@ -136,7 +136,7 @@ objects in *italic* are not part of all fritz.box configurations
 |DECT440.batterylow|boolean|-|battery status|
 |DECT440.temperature|value|-|temperature |
 |*DECT440.humidity*|value|-|relative humidity %|
-|DECT440.button|time|-|see DECT400 button (4x) |
+|DECT440.button|-|-|see DECT400 button (4x) |
 
 ### repeater e.g. DECT100
 |Object|Value|settable|Description|
@@ -153,10 +153,15 @@ objects in *italic* are not part of all fritz.box configurations
 |--------|-------|:-:|--------|
 |Button.lastclick|number|-|timestamp|
 
-### blind (HAN-FUN)
+### blinds (HAN-FUN)
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
-|Blind.blindtarget|string|x|target open/close/stop|
+|Blinds.blindtarget|string|x|target open/close|
+|Blinds.blindstop|string|x|target stop|
+|Blinds.level|value|x|opening 0-255 |
+|Blinds.levelpercentage|value|x|openeing 0-100% |
+|Blinds.state|boolean|-|alert status |
+|Blinds.lastalertchgtimestamp|number|-|timestamp |
 
 ## API limitations
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command
@@ -173,6 +178,9 @@ Not all FW-versions of fritz.box support all objects.
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
+### 1.1.4
+* blinds control
+
 ### 1.1.3 (npm)
 * setcolor cmd correction
 * only valid color temperatures for white

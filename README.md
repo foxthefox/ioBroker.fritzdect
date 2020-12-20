@@ -176,12 +176,14 @@ Not all FW-versions of fritz.box support all objects.
 ## TODO:
 * universal object names and structures -> breaking change
 * groups inside a device e.g. DECT440 -> breaking change
+* groups for DECT500
 * usage of predefined colors
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
 ### 1.1.4
 * blinds control
+* update testing
 
 ### 1.1.3 (npm)
 * setcolor cmd correction

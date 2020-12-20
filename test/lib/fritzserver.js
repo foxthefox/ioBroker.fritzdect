@@ -56,6 +56,15 @@ function handleHttpRequest(request, response) {
 				'</Challenge><BlockTime>0</BlockTime><Rights></Rights></SessionInfo>'
 		);
 		response.end();
+	} else if (request.url == '/login_sid.lua?version=2') {
+		//check the URL of the current request
+		response.writeHead(200, { 'Content-Type': 'application/xml' });
+		response.write(
+			'<?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>0000000000000000</SID><Challenge>' +
+				challenge +
+				'</Challenge><BlockTime>0</BlockTime><Rights></Rights></SessionInfo>'
+		);
+		response.end();
 	} else if (request.url == '/login_sid.lua?username=admin') {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/xml' });
@@ -66,6 +75,17 @@ function handleHttpRequest(request, response) {
 		);
 		response.end();
 	} else if (request.url == '/login_sid.lua?username=admin&response=' + challengeResponse) {
+		//check the URL of the current request
+		response.writeHead(200, { 'Content-Type': 'application/xml' });
+		response.write(
+			'<?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>' +
+				sid +
+				'</SID><Challenge>' +
+				challenge2 +
+				'</Challenge><BlockTime>0</BlockTime><Rights><Name>Dial</Name><Access>2</Access><Name>App</Name><Access>2</Access><Name>HomeAuto</Name><Access>2</Access><Name>BoxAdmin</Name><Access>2</Access><Name>Phone</Name><Access>2</Access><Name>NAS</Name><Access>2</Access></Rights></SessionInfo>'
+		);
+		response.end();
+	} else if (request.url == '/login_sid.lua?version=2?username=admin&response=' + challengeResponse) {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/xml' });
 		response.write(

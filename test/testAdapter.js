@@ -2141,6 +2141,80 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
+	it('Test ' + adapterShortName + ' adapter: Check values of Blinds', function(done) {
+		this.timeout(30000);
+		setTimeout(function() {
+			states.getState('fritzdect.0.Blinds_119340395779-1.name', function(err, state) {
+				if (err) console.error(err);
+				expect(state).to.exist;
+				if (!state) {
+					console.error('state "fritzdect.0.Blinds_119340395779-1.name" not set');
+				} else {
+					console.log('fritzdect.0.Blinds_119340395779-1.name          ... ' + state.val);
+				}
+				expect(state.val).to.exist;
+				expect(state.val).to.be.equal('test Rollladen');
+				states.getState('fritzdect.0.Blinds_119340395779-1.present', function(err, state) {
+					if (err) console.error(err);
+					expect(state).to.exist;
+					if (!state) {
+						console.error('state "fritzdect.0.Blinds_119340395779-1.present" not set');
+					} else {
+						console.log('fritzdect.0.Blinds_119340395779-1.present       ... ' + state.val);
+					}
+					expect(state.val).to.exist;
+					expect(state.val).to.be.equal(true);
+					states.getState('fritzdect.0.Blinds_119340395779-1.id', function(err, state) {
+						if (err) console.error(err);
+						expect(state).to.exist;
+						if (!state) {
+							console.error('state "fritzdect.0.Blinds_119340395779-1.id" not set');
+						} else {
+							console.log('fritzdect.0.Blinds_119340395779-1.id            ... ' + state.val);
+						}
+						expect(state.val).to.exist;
+						expect(state.val).to.be.equal('2000');
+						states.getState('fritzdect.0.Blinds_119340395779-1.fwversion', function(err, state) {
+							if (err) console.error(err);
+							expect(state).to.exist;
+							if (!state) {
+								console.error('state "fritzdect.0.Blinds_119340395779-1.fwversion" not set');
+							} else {
+								console.log('fritzdect.0.Blinds_119340395779-1.fwversion     ... ' + state.val);
+							}
+							expect(state.val).to.exist;
+							expect(state.val).to.be.equal('0.0');
+							states.getState('fritzdect.0.Blinds_119340395779-1.manufacturer', function(err, state) {
+								if (err) console.error(err);
+								expect(state).to.exist;
+								if (!state) {
+									console.error('state "fritzdect.0.Blinds_119340395779-1.manufacturer" not set');
+								} else {
+									console.log('fritzdect.0.Blinds_119340395779-1.manufacturer  ... ' + state.val);
+								}
+								expect(state.val).to.exist;
+								expect(state.val).to.be.equal('0x0feb');
+								states.getState('fritzdect.0.Blinds_119340395779-1.level', function(err, state) {
+									if (err) console.error(err);
+									expect(state).to.exist;
+									if (!state) {
+										console.error('state "fritzdect.0.Blinds_119340395779-1.level" not set');
+									} else {
+										console.log('fritzdect.0.Blinds_119340395779-1.temp          ... ' + state.val);
+										expect(state.val).to.exist;
+										expect(state.val).to.be.equal(77);
+										done();
+										// to be added levelpercentage, alert state, alert lastalertchgtimestamp
+									}
+								});
+							});
+						});
+					});
+				});
+			});
+		}, 1000);
+	});
+	// templates
 	it('Test ' + adapterShortName + ' adapter: Objects must exist for template_tmp6F0093-39091EED0', (done) => {
 		setTimeout(function() {
 			objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.name', (err, obj) => {

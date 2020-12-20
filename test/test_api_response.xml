@@ -349,6 +349,35 @@
 				<members>19,20</members>
 			</groupinfo>
 		</group>
+		<group>
+			<synchronized>0</synchronized>
+			<identifier>grp9CEFB6-3BDCFFC80</identifier>
+			<id>901</id>
+			<functionbitmask>233476</functionbitmask>
+			<fwversion>1.0</fwversion>
+			<manufacturer>AVM</manufacturer>
+			<present>1</present>
+			<txbusy>0</txbusy>
+			<name>Stehlampe</name>
+			<simpleonoff>
+				<state>1</state>
+			</simpleonoff>
+			<levelcontrol>
+				<level>26</level>
+				<levelpercentage>10</levelpercentage>
+			</levelcontrol>
+			<colorcontrol>
+				<supported_modes>5</supported_modes>
+				<current_mode>4</current_mode>
+				<hue></hue>
+				<saturation></saturation>
+				<temperature>3000</temperature>
+			</colorcontrol>
+			<groupinfo>
+				<masterdeviceid>0</masterdeviceid>
+				<members>2010,2011</members>
+			</groupinfo>
+		</group>
 		<device>
 			  <identifier>099950403922</identifier>
 			  <id>56</id>

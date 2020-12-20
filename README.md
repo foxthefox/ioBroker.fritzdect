@@ -165,8 +165,9 @@ objects in *italic* are not part of all fritz.box configurations
 |Blinds.lastalertchgtimestamp|number|-|timestamp |
 
 ## API limitations
+* too many login attempts to FB are refused by providing '00000000' as response
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command
-* updates to the thermostat are within a 15min range, depending on the previous communication of thermostat with fritzbox the next cycle is sooner or later, but definitely imediately not after an ioBroker intervention
+* updates to the thermostat are within a 15min range, depending on the previous communication of thermostat with fritzbox the next cycle is sooner or later, but definitely not imediately after an ioBroker intervention
 
 
 ## Known Issues:
@@ -181,7 +182,6 @@ Not all FW-versions of fritz.box support all objects.
 ## Changelog
 ### 1.1.4
 * blinds control
-* correction for Comet/Hgroup to set the mode after temperature change (not ack=false)
 
 ### 1.1.3 (npm)
 * setcolor cmd correction

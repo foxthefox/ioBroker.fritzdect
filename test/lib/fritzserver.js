@@ -56,7 +56,7 @@ function handleHttpRequest(request, response) {
 				'</Challenge><BlockTime>0</BlockTime><Rights></Rights></SessionInfo>'
 		);
 		response.end();
-	} else if (request.url == '/login_sid.lua?version=2') {
+	} else if (request.url == '/login_sid.lua?version=2' && request.method == 'GET') {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/xml' });
 		response.write(
@@ -85,7 +85,7 @@ function handleHttpRequest(request, response) {
 				'</Challenge><BlockTime>0</BlockTime><Rights><Name>Dial</Name><Access>2</Access><Name>App</Name><Access>2</Access><Name>HomeAuto</Name><Access>2</Access><Name>BoxAdmin</Name><Access>2</Access><Name>Phone</Name><Access>2</Access><Name>NAS</Name><Access>2</Access></Rights></SessionInfo>'
 		);
 		response.end();
-	} else if (request.url == '/login_sid.lua?version=2?username=admin&response=' + challengeResponse) {
+	} else if (request.url == '/login_sid.lua?version=2' && request.method == 'POST') {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/xml' });
 		response.write(

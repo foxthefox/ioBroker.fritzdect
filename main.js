@@ -51,8 +51,8 @@ var fritzTimeout;
 512 = ON_OFF
 513 = LEVEL_CTRL
 514 = COLOR_CTRL 
-516 = ? detected with blinds
-517 = ? detected with blinds
+516 = ? detected with blinds, different alert?
+517 = ? detected with blinds, different alerttimestamp
 772 = SIMPLE_BUTTON 
 1024 = SUOTA-Update
 */
@@ -1734,6 +1734,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.blindsopen', { val: false, ack: true }); //Button auf Ausgangszustand
 		adapter.setObjectNotExists(typ + newId + '.blindsclose', {
 			type: 'state',
 			common: {
@@ -1746,6 +1747,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.blindsclose', { val: false, ack: true }); //Button auf Ausgangszustand
 		adapter.setObjectNotExists(typ + newId + '.blindsstop', {
 			type: 'state',
 			common: {
@@ -1758,6 +1760,7 @@ function main() {
 			},
 			native: {}
 		});
+		adapter.setState(typ + newId + '.blindsstop', { val: false, ack: true }); //Button auf Ausgangszustand
 	}
 
 	function createDevices() {

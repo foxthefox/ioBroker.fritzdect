@@ -1651,6 +1651,7 @@ async function main() {
 									device.identifier +
 									' is not present, check the device connection, no values are written'
 							);
+							return;
 						} else {
 							if (device.hkr) {
 								currentMode = 'On';
@@ -1665,9 +1666,7 @@ async function main() {
 							// some weird id usage, the website shows the id of the etsiunit
 							if (device.etsiunitinfo.etsideviceid) {
 								//replace id with etsi
-								adapter.log.debug('id vorher ' + device.id) +
-									' soll ' +
-									device.etsiunitinfo.etsideviceid;
+								adapter.log.debug('id vorher ' + device.id);
 								device.id = device.etsiunitinfo.etsideviceid;
 								adapter.log.debug('id nachher ' + device.id);
 							}
@@ -1681,10 +1680,11 @@ async function main() {
 								// reihenfolge, id immer vorher und dann erst etsi in json?
 								return;
 							} else {
+								adapter.log.debug(' calling update data .....');
 								try {
 									updateData(device, device.identifier);
 								} catch (e) {
-									adapter.log.debug(' issue updating device ' + JSON.stringify(device) + ' ' + e);
+									adapter.log.error(' issue updating device ' + JSON.stringify(device) + ' ' + e);
 									throw {
 										msg: 'issue updating device',
 										function: 'updateDevices',
@@ -1728,7 +1728,7 @@ async function main() {
 							try {
 								updateData(device, device.identifier);
 							} catch (e) {
-								adapter.log.debug(' issue updating group ' + JSON.stringify(device) + ' ' + e);
+								adapter.log.error(' issue updating group ' + JSON.stringify(device) + ' ' + e);
 								throw {
 									msg: 'issue updating group',
 									function: 'updateDevices',

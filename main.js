@@ -1666,7 +1666,7 @@ async function main() {
 					devices.forEach(function(device) {
 						adapter.log.debug('updating Device ' + device.name);
 						if (device.present === '0' || device.present === 0 || device.present === false) {
-							adapter.log.warn(
+							adapter.log.debug(
 								'DECT_' +
 									device.identifier +
 									' is not present, check the device connection, no values are written'
@@ -1715,7 +1715,7 @@ async function main() {
 					groups.forEach(function(device) {
 						adapter.log.debug('updating Group ' + groups.name);
 						if (device.present === '0' || device.present === 0 || device.present === false) {
-							adapter.log.warn(
+							adapter.log.debug(
 								'DECT_' +
 									device.identifier +
 									' is not present, check the device connection, no values are written'
@@ -1745,7 +1745,7 @@ async function main() {
 		fritzTimeout = setTimeout(pollFritzData, fritz_interval * 1000);
 	}
 
-	await createDevices();
+	createDevices();
 	// await createTemplates();
 	// pollFritzData();
 

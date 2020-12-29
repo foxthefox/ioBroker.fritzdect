@@ -991,7 +991,7 @@ async function main() {
 	async function createData(devices) {
 		var typ = '';
 		var role = '';
-		devices.forEach(async function(device) {
+		await devices.forEach(async function(device) {
 			typ = 'DECT_';
 			adapter.log.debug('trying on : ' + JSON.stringify(device));
 			// role to be defined
@@ -1107,7 +1107,7 @@ async function main() {
 				} else if (Array.isArray(device.button)) {
 					//Unterobjekte anlegen
 					adapter.log.info('setting up button(s) ');
-					device.button.forEach(async function(button) {
+					await device.button.forEach(async function(button) {
 						typ = 'DECT_' + device.identifier + '.button.';
 						await createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
 						Object.entries(button).forEach(async ([ key, value ]) => {
@@ -1784,7 +1784,7 @@ async function main() {
 
 	async function pollFritzData() {
 		var fritz_interval = parseInt(adapter.config.fritz_interval, 10) || 300;
-		updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
+		await updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
 		adapter.log.debug('polling! fritzdect is alive');
 		fritzTimeout = setTimeout(pollFritzData, fritz_interval * 1000);
 	}

@@ -1300,7 +1300,7 @@ async function main() {
 								} else if (key === 'boostactive') {
 									createSwitch(device.identifier, 'boostactive', 'Boost active status and cmd');
 									//create the user definde end time for manual setting the window open active state
-									createValueCtrl(
+									await createValueCtrl(
 										device.identifier,
 										'boostactivetime',
 										'boost active time for cmd',
@@ -1318,7 +1318,7 @@ async function main() {
 								} else if (key === 'windowopenactiv') {
 									createSwitch(device.identifier, 'windowopenactiv', 'Window open status and cmd');
 									//create the user definde end time for manual setting the window open active state
-									createValueCtrl(
+									await createValueCtrl(
 										device.identifier,
 										'windowopenactivetime',
 										'window open active time for cmd',
@@ -1388,9 +1388,25 @@ async function main() {
 							adapter.log.info('setting up levelcontrol');
 							Object.entries(device.levelcontrol).forEach(([ key, value ]) => {
 								if (key === 'level') {
-									createValueCtrl(device.identifier, 'level 0..255', 0, 255, '', 'value.level');
+									createValueCtrl(
+										device.identifier,
+										'level',
+										'level 0..255',
+										0,
+										255,
+										'',
+										'value.level'
+									);
 								} else if (key === 'levelpercentage') {
-									createValueCtrl(device.identifier, 'level in %', 0, 100, '%', 'value.level');
+									createValueCtrl(
+										device.identifier,
+										'levelpercentage',
+										'level in %',
+										0,
+										100,
+										'%',
+										'value.level'
+									);
 								} else {
 									adapter.log.warn(' new datapoint in API detected' + key);
 								}

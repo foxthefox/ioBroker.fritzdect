@@ -989,8 +989,10 @@ async function main() {
 	}
 
 	function createData(devices) {
+		var typ = '';
 		var role = '';
 		devices.forEach(function(device) {
+			typ = 'DECT_';
 			adapter.log.debug('trying on : ' + JSON.stringify(device));
 			// role to be defined
 			if ((device.functionbitmask & 64) == 64) {
@@ -1379,7 +1381,6 @@ async function main() {
 		fritz
 			.getDeviceListInfos()
 			.then(function(devicelistinfos) {
-				var typ = '';
 				var devices = parser.xml2json(devicelistinfos);
 				devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
 					// remove spaces in AINs
@@ -1389,7 +1390,6 @@ async function main() {
 				adapter.log.debug('devices\n');
 				adapter.log.debug(JSON.stringify(devices));
 				if (devices.length) {
-					typ = 'DECT_';
 					adapter.log.info('create Devices ' + devices.length);
 					try {
 						createData(devices);
@@ -1407,7 +1407,6 @@ async function main() {
 				adapter.log.debug('groups\n');
 				adapter.log.debug(JSON.stringify(groups));
 				if (groups.length) {
-					typ = 'DECT_';
 					adapter.log.info('create groups ' + groups.length);
 					try {
 						createData(groups);

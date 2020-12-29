@@ -706,9 +706,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createIndicatorState(newId, datapoint, name) {
+	function createIndicatorState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -721,9 +721,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createValueState(newId, datapoint, name, min, max, unit) {
+	function createValueState(newId, datapoint, name, min, max, unit) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -739,9 +739,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createTimeState(newId, datapoint, name) {
+	function createTimeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -754,9 +754,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createButton(newId, datapoint, name) {
+	function createButton(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -769,9 +769,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createSwitch(newId, datapoint, name) {
+	function createSwitch(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -784,9 +784,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createModeState(newId, datapoint, name) {
+	function createModeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -816,9 +816,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createTemplateResponse() {
+	function createTemplateResponse() {
 		adapter.log.debug('create template.lasttemplate for response ');
-		await adapter.setObjectNotExists('template', {
+		adapter.setObjectNotExists('template', {
 			type: 'channel',
 			common: {
 				name: 'template response',
@@ -826,7 +826,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setObjectNotExists('template.lasttemplate', {
+		adapter.setObjectNotExists('template.lasttemplate', {
 			type: 'state',
 			common: {
 				name: 'template set',
@@ -841,7 +841,7 @@ async function main() {
 	}
 	async function createTemplate(typ, newId, name, role, id) {
 		adapter.log.debug('create Template objects ');
-		await adapter.setObjectNotExists(typ + newId, {
+		adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
 			common: {
 				name: name,
@@ -851,7 +851,7 @@ async function main() {
 				aid: newId
 			}
 		});
-		await adapter.setObjectNotExists(typ + newId + '.id', {
+		adapter.setObjectNotExists(typ + newId + '.id', {
 			type: 'state',
 			common: {
 				name: 'ID',
@@ -863,7 +863,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setState(typ + newId + '.id', { val: id, ack: true });
+		adapter.setState(typ + newId + '.id', { val: id, ack: true });
 		await adapter.setObjectNotExists(typ + newId + '.name', {
 			type: 'state',
 			common: {
@@ -876,8 +876,8 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setState(typ + newId + '.name', { val: name, ack: true });
-		await adapter.setObjectNotExists(typ + newId + '.toggle', {
+		adapter.setState(typ + newId + '.name', { val: name, ack: true });
+		adapter.setObjectNotExists(typ + newId + '.toggle', {
 			type: 'state',
 			common: {
 				name: 'Toggle template',
@@ -892,7 +892,7 @@ async function main() {
 	}
 	async function createThermostat(newId) {
 		adapter.log.debug('create Thermostat objects');
-		await adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
+		adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
 			type: 'state',
 			common: {
 				name: 'Thermostat operation mode (0=auto, 1=closed, 2=open)',
@@ -906,7 +906,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
+		adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
 			type: 'state',
 			common: {
 				name: 'last setting of target temp',
@@ -931,11 +931,11 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setState('DECT_' + newId + '.operationList', {
+		adapter.setState('DECT_' + newId + '.operationList', {
 			val: `On, Off, Holiday, Summer, Comfort, Night`,
 			ack: true
 		});
-		await adapter.setObjectNotExists('DECT_' + newId + '.operationMode', {
+		adapter.setObjectNotExists('DECT_' + newId + '.operationMode', {
 			type: 'state',
 			common: {
 				name: 'Current operation mode',
@@ -948,9 +948,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createBlind(newId) {
+	function createBlind(newId) {
 		adapter.log.debug('create Blinds objects');
-		await adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
+		adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
 			type: 'state',
 			common: {
 				name: 'Switch open',
@@ -962,7 +962,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setObjectNotExists('DECT_' + newId + '.blindsclose', {
+		adapter.setObjectNotExists('DECT_' + newId + '.blindsclose', {
 			type: 'state',
 			common: {
 				name: 'Switch close',
@@ -974,7 +974,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setObjectNotExists('DECT_' + newId + '.blindsstop', {
+		adapter.setObjectNotExists('DECT_' + newId + '.blindsstop', {
 			type: 'state',
 			common: {
 				name: 'Switch STOP',
@@ -1042,16 +1042,16 @@ async function main() {
 				await createInfoState(device.identifier, 'productname', 'Product Name');
 			}
 			if (device.present) {
-				await createIndicatorState(device.identifier, 'present', 'device present');
+				createIndicatorState(device.identifier, 'present', 'device present');
 			}
 			if (device.name) {
 				await createInfoState(device.identifier, 'name', 'Device Name');
 			}
 			if (device.txbusy) {
-				await createIndicatorState(device.identifier, 'txbusy', 'Trasmitting active');
+				createIndicatorState(device.identifier, 'txbusy', 'Trasmitting active');
 			}
 			if (device.synchronized) {
-				await createIndicatorState(device.identifier, 'synchronized', 'Synchronized Status');
+				createIndicatorState(device.identifier, 'synchronized', 'Synchronized Status');
 			}
 			//always ID
 			await createInfoState(device.identifier, 'id', 'Device ID');
@@ -1078,28 +1078,28 @@ async function main() {
 				//check for blinds control
 				if (device.etsiunitinfo.unittype == 281) {
 					//additional blind datapoints
-					await createBlind(device.identifier);
+					createBlind(device.identifier);
 				}
 			}
 
 			// create battery devices
 			if (device.battery) {
-				await createValueState(device.identifier, 'battery', 'Battery Charge State', 0, 100, '%');
+				createValueState(device.identifier, 'battery', 'Battery Charge State', 0, 100, '%');
 			}
 			if (device.batterylow) {
-				await createIndicatorState(device.identifier, 'batterylow', 'Battery Low State');
+				createIndicatorState(device.identifier, 'batterylow', 'Battery Low State');
 			}
 
 			// create button parts
 			if (device.button) {
 				if (!Array.isArray(device.button)) {
-					Object.entries(device.button).forEach(async ([ key, value ]) => {
+					Object.entries(device.button).forEach(([ key, value ]) => {
 						if (key === 'lastpressedtimestamp') {
-							await createTimeState(device.identifier, 'lastpressedtimestamp', 'last button Time Stamp');
+							createTimeState(device.identifier, 'lastpressedtimestamp', 'last button Time Stamp');
 						} else if (key === 'id') {
-							await createInfoState(device.identifier, 'id', 'Button ID');
+							createInfoState(device.identifier, 'id', 'Button ID');
 						} else if (key === 'name') {
-							await createInfoState(device.identifier, 'name', 'Button Name');
+							createInfoState(device.identifier, 'name', 'Button Name');
 						} else {
 							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 						}
@@ -1112,7 +1112,7 @@ async function main() {
 						await createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
 						Object.entries(button).forEach(async ([ key, value ]) => {
 							if (key === 'lastpressedtimestamp') {
-								await createTimeState(
+								createTimeState(
 									device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
 									'lastpressedtimestamp',
 									'last button Time Stamp'
@@ -1120,13 +1120,13 @@ async function main() {
 							} else if (key === 'identifier') {
 								//already part of the object
 							} else if (key === 'id') {
-								await createInfoState(
+								createInfoState(
 									device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
 									'id',
 									'Button ID'
 								);
 							} else if (key === 'name') {
-								await createInfoState(
+								createInfoState(
 									device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
 									'name',
 									'Button Name'
@@ -1141,11 +1141,11 @@ async function main() {
 			//create alert
 			if (device.alert) {
 				adapter.log.info('setting up alert ');
-				Object.entries(device.alert).forEach(async ([ key, value ]) => {
+				Object.entries(device.alert).forEach(([ key, value ]) => {
 					if (key === 'state') {
-						await createIndicatorState(device.identifier, 'state', 'Alert State');
+						createIndicatorState(device.identifier, 'state', 'Alert State');
 					} else if (key === 'lastalertchgtimestamp') {
-						await createTimeState(device.identifier, 'lastalertchgtimestamp', 'Alert last Time');
+						createTimeState(device.identifier, 'lastalertchgtimestamp', 'Alert last Time');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1154,15 +1154,15 @@ async function main() {
 			// create switch
 			if (device.switch) {
 				adapter.log.info('setting up switch ');
-				Object.entries(device.switch).forEach(async ([ key, value ]) => {
+				Object.entries(device.switch).forEach(([ key, value ]) => {
 					if (key === 'state') {
-						await createSwitch(device.identifier, 'state', 'Switch Status and Control');
+						createSwitch(device.identifier, 'state', 'Switch Status and Control');
 					} else if (key === 'mode') {
-						await createInfoState(device.identifier, 'mode', 'Switch Mode');
+						createInfoState(device.identifier, 'mode', 'Switch Mode');
 					} else if (key === 'lock') {
-						await createIndicatorState(device.identifier, 'lock', 'API Lock');
+						createIndicatorState(device.identifier, 'lock', 'API Lock');
 					} else if (key === 'devicelock') {
-						await createIndicatorState(device.identifier, 'devicelock', 'Device (Button)lock');
+						createIndicatorState(device.identifier, 'devicelock', 'Device (Button)lock');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1171,13 +1171,13 @@ async function main() {
 			// powermeter
 			if (device.powermeter) {
 				adapter.log.info('setting up powermeter ');
-				Object.entries(device.powermeter).forEach(async ([ key, value ]) => {
+				Object.entries(device.powermeter).forEach(([ key, value ]) => {
 					if (key === 'power') {
-						await createValueState(device.identifier, 'power', 'actual Power', 0, 4000, 'W');
+						createValueState(device.identifier, 'power', 'actual Power', 0, 4000, 'W');
 					} else if (key === 'voltage') {
-						await createValueState(device.identifier, 'voltage', 'actual Voltage', 0, 250, 'V');
+						createValueState(device.identifier, 'voltage', 'actual Voltage', 0, 250, 'V');
 					} else if (key === 'energy') {
-						await createValueState(device.identifier, 'energy', 'Energy consumption', 0, 999999999, 'Wh');
+						createValueState(device.identifier, 'energy', 'Energy consumption', 0, 999999999, 'Wh');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1186,11 +1186,11 @@ async function main() {
 			// groups
 			if (device.groupinfo) {
 				adapter.log.info('setting up groupinfo ');
-				Object.entries(device.groupinfo).forEach(async ([ key, value ]) => {
+				Object.entries(device.groupinfo).forEach(([ key, value ]) => {
 					if (key === 'masterdeviceid') {
-						await createInfoState(device.identifier, 'masterdeviceid', 'ID of the group');
+						createInfoState(device.identifier, 'masterdeviceid', 'ID of the group');
 					} else if (key === 'members') {
-						await createInfoState(device.identifier, 'members', 'member of the group');
+						createInfoState(device.identifier, 'members', 'member of the group');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1199,11 +1199,11 @@ async function main() {
 			// create themosensor
 			if (device.temperature) {
 				adapter.log.info('setting up temperatur ');
-				Object.entries(device.temperature).forEach(async ([ key, value ]) => {
+				Object.entries(device.temperature).forEach(([ key, value ]) => {
 					if (key === 'celsius') {
-						await createValueState(device.identifier, 'celsius', 'Temperature', 8, 32, '°C');
+						createValueState(device.identifier, 'celsius', 'Temperature', 8, 32, '°C');
 					} else if (key === 'offset') {
-						await createValueState(device.identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
+						createValueState(device.identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1212,9 +1212,9 @@ async function main() {
 			// create humidity
 			if (device.humidity) {
 				adapter.log.info('setting up temperatur ');
-				Object.entries(device.humidity).forEach(async ([ key, value ]) => {
+				Object.entries(device.humidity).forEach(([ key, value ]) => {
 					if (key === 'rel_humidity') {
-						await createValueState(device.identifier, 'rel_humidity', 'relative Humidity', 0, 100, '%');
+						createValueState(device.identifier, 'rel_humidity', 'relative Humidity', 0, 100, '%');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1223,13 +1223,13 @@ async function main() {
 			// create thermostat
 			if (device.hkr) {
 				adapter.log.info('setting up thermostat ');
-				await createThermostat(device.identifier); //additional datapoints of thermostats
+				createThermostat(device.identifier); //additional datapoints of thermostats
 				Object.entries(device.hkr).forEach(async ([ key, value ]) => {
 					//create datapoints from the data
 					if (key === 'tist') {
-						await createValueState(device.identifier, 'tist', 'Actual temperature', 0, 32, '°C');
+						createValueState(device.identifier, 'tist', 'Actual temperature', 0, 32, '°C');
 					} else if (key === 'tsoll') {
-						await createValueCtrl(
+						createValueCtrl(
 							device.identifier,
 							'tsoll',
 							'Setpoint Temperature',
@@ -1239,25 +1239,25 @@ async function main() {
 							'value.temperature'
 						);
 					} else if (key === 'absenk') {
-						await createValueState(device.identifier, 'absenk', 'reduced (night) temperature', 0, 32, '°C');
+						createValueState(device.identifier, 'absenk', 'reduced (night) temperature', 0, 32, '°C');
 					} else if (key === 'komfort') {
-						await createValueState(device.identifier, 'komfort', 'comfort temperature', 0, 32, '°C');
+						createValueState(device.identifier, 'komfort', 'comfort temperature', 0, 32, '°C');
 					} else if (key === 'lock') {
-						await createIndicatorState(device.identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
+						createIndicatorState(device.identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
 					} else if (key === 'devicelock') {
-						await createIndicatorState(device.identifier, 'devicelock', 'device lock, button lock');
+						createIndicatorState(device.identifier, 'devicelock', 'device lock, button lock');
 					} else if (key === 'errorcode') {
-						await createModeState(device.identifier, 'errorcode', 'Error Code');
+						createModeState(device.identifier, 'errorcode', 'Error Code');
 					} else if (key === 'batterylow') {
-						await createIndicatorState(device.identifier, 'batterylow', 'battery low');
+						createIndicatorState(device.identifier, 'batterylow', 'battery low');
 					} else if (key === 'battery') {
-						await createValueState(device.identifier, 'battery', 'battery status', 0, 100, '%');
+						createValueState(device.identifier, 'battery', 'battery status', 0, 100, '%');
 					} else if (key === 'summeractive') {
-						await createIndicatorState(device.identifier, 'summeractive', 'summer active status');
+						createIndicatorState(device.identifier, 'summeractive', 'summer active status');
 					} else if (key === 'holidayactive') {
-						await createIndicatorState(device.identifier, 'holidayactive', 'Holiday Active status');
+						createIndicatorState(device.identifier, 'holidayactive', 'Holiday Active status');
 					} else if (key === 'boostactive') {
-						await createSwitch(device.identifier, 'boostactive', 'Boost active status and cmd');
+						createSwitch(device.identifier, 'boostactive', 'Boost active status and cmd');
 						//create the user definde end time for manual setting the window open active state
 						await createValueCtrl(
 							device.identifier,
@@ -1268,14 +1268,14 @@ async function main() {
 							'min'
 						);
 						//preset to 5 min
-						await adapter.setState('DECT_' + device.identifier + '.boostactivetime', {
+						adapter.setState('DECT_' + device.identifier + '.boostactivetime', {
 							val: 5,
 							ack: true
 						});
 					} else if (key === 'boostactiveendtime') {
-						await createTimeState(device.identifier, 'boostactiveendtime', 'Boost active end time');
+						createTimeState(device.identifier, 'boostactiveendtime', 'Boost active end time');
 					} else if (key === 'windowopenactiv') {
-						await createSwitch(device.identifier, 'windowopenactiv', 'Window open status and cmd');
+						createSwitch(device.identifier, 'windowopenactiv', 'Window open status and cmd');
 						//create the user definde end time for manual setting the window open active state
 						await createValueCtrl(
 							device.identifier,
@@ -1287,24 +1287,20 @@ async function main() {
 							'value.time'
 						);
 						//preset to 5 min
-						await adapter.setState('DECT_' + device.identifier + '.windowopenactivetime', {
+						adapter.setState('DECT_' + device.identifier + '.windowopenactivetime', {
 							val: 5,
 							ack: true
 						});
 					} else if (key === 'windowopenactiveendtime') {
-						await createTimeState(
-							device.identifier,
-							'windowopenactiveendtime',
-							'window open active end time'
-						);
+						createTimeState(device.identifier, 'windowopenactiveendtime', 'window open active end time');
 					} else if (key === 'nextchange') {
 						adapter.log.info('setting up thermostat nextchange');
 						try {
-							Object.entries(device.hkr.nextchange).forEach(async ([ key, value ]) => {
+							Object.entries(device.hkr.nextchange).forEach(([ key, value ]) => {
 								if (key === 'endperiod') {
-									await createTimeState(device.identifier, 'endperiod', 'next time for Temp change');
+									createTimeState(device.identifier, 'endperiod', 'next time for Temp change');
 								} else if (key === 'tchange') {
-									await createValueState(
+									createValueState(
 										device.identifier,
 										'tchange',
 										'Temp after next change',
@@ -1330,9 +1326,9 @@ async function main() {
 			// simpleonoff
 			if (device.simpleonoff) {
 				adapter.log.info('setting up simpleonoff');
-				Object.entries(device.simpleonoff).forEach(async ([ key, value ]) => {
+				Object.entries(device.simpleonoff).forEach(([ key, value ]) => {
 					if (key === 'state') {
-						await createSwitch(device.identifier, 'state', 'Simple ON/OFF state and cmd');
+						createSwitch(device.identifier, 'state', 'Simple ON/OFF state and cmd');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1341,19 +1337,11 @@ async function main() {
 			// levelcontrol
 			if (device.levelcontrol) {
 				adapter.log.info('setting up levelcontrol');
-				Object.entries(device.levelcontrol).forEach(async ([ key, value ]) => {
+				Object.entries(device.levelcontrol).forEach(([ key, value ]) => {
 					if (key === 'level') {
-						await createValueCtrl(device.identifier, 'level', 'level 0..255', 0, 255, '', 'value.level');
+						createValueCtrl(device.identifier, 'level', 'level 0..255', 0, 255, '', 'value.level');
 					} else if (key === 'levelpercentage') {
-						await createValueCtrl(
-							device.identifier,
-							'levelpercentage',
-							'level in %',
-							0,
-							100,
-							'%',
-							'value.level'
-						);
+						createValueCtrl(device.identifier, 'levelpercentage', 'level in %', 0, 100, '%', 'value.level');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1362,25 +1350,17 @@ async function main() {
 			// colorcontrol
 			if (device.colorcontrol) {
 				adapter.log.info('setting up thermostat ');
-				Object.entries(device.colorcontrol).forEach(async ([ key, value ]) => {
+				Object.entries(device.colorcontrol).forEach(([ key, value ]) => {
 					if (key === 'supported_modes') {
-						await createModeState(device.identifier, 'supported_modes', 'available color modes');
+						createModeState(device.identifier, 'supported_modes', 'available color modes');
 					} else if (key === 'current_mode') {
-						await createModeState(device.identifier, 'current_mode', 'current color mode');
+						createModeState(device.identifier, 'current_mode', 'current color mode');
 					} else if (key === 'hue') {
-						await createValueCtrl(device.identifier, 'hue', 'HUE color', 0, 359, '°', 'value.hue');
+						createValueCtrl(device.identifier, 'hue', 'HUE color', 0, 359, '°', 'value.hue');
 					} else if (key === 'saturation') {
-						await createValueCtrl(
-							device.identifier,
-							'saturation',
-							'Saturation',
-							0,
-							255,
-							'',
-							'value.saturation'
-						);
+						createValueCtrl(device.identifier, 'saturation', 'Saturation', 0, 255, '', 'value.saturation');
 					} else if (key === 'temperature') {
-						await createValueCtrl(
+						createValueCtrl(
 							device.identifier,
 							'temparature',
 							'color temperature',

@@ -1646,6 +1646,7 @@ async function main() {
 	}
 
 	async function updateDevices() {
+		adapter.log.debug('updating Devices / Groups ');
 		fritz
 			.getDeviceListInfos()
 			.then(function(devicelistinfos) {

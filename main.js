@@ -1189,8 +1189,8 @@ async function main() {
 				Object.entries(device.groupinfo).forEach(([ key, value ]) => {
 					if (key === 'masterdeviceid') {
 						createInfoState(device.identifier, 'masterdeviceid', 'ID of the group');
-					} else if (key === 'member') {
-						createInfoState(device.identifier, 'member', 'member of the group');
+					} else if (key === 'members') {
+						createInfoState(device.identifier, 'members', 'member of the group');
 					} else {
 						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
@@ -1462,7 +1462,7 @@ async function main() {
 			.catch(errorHandler);
 	}
 	function updateDatapoint(key, value, ain) {
-		adapter.log.debug('updating DECT_' + ain + ' : ' + key + ' : ' + value);
+		adapter.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
 		if (key === 'batterylow') {
 			// bool mal anders herum
 			let batt = value == 0 ? false : true;
@@ -1664,7 +1664,11 @@ async function main() {
 							// some weird id usage, the website shows the id of the etsiunit
 							if (device.etsiunitinfo.etsideviceid) {
 								//replace id with etsi
+								adapter.log.debug('id vorher ' + device.id) +
+									' soll ' +
+									device.etsiunitinfo.etsideviceid;
 								device.id = device.etsiunitinfo.etsideviceid;
+								adapter.log.debug('id nachher ' + device.id);
 							}
 							// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
 							if (device.functionbitmask == 1) {

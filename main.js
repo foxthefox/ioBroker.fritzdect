@@ -1101,7 +1101,7 @@ async function main() {
 						} else if (key === 'name') {
 							createInfoState(device.identifier, 'name', 'Button Name');
 						} else {
-							adapter.log.warn(' new datapoint in API detected');
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 						}
 					});
 				} else if (Array.isArray(device.button)) {
@@ -1132,7 +1132,7 @@ async function main() {
 									'Button Name'
 								);
 							} else {
-								adapter.log.warn(' new datapoint in API detected');
+								adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 							}
 						});
 					});
@@ -1147,7 +1147,7 @@ async function main() {
 					} else if (key === 'lastalertchgtimestamp') {
 						createTimeState(device.identifier, 'lastalertchgtimestamp', 'Alert last Time');
 					} else {
-						adapter.log.warn(' new datapoint in API detected');
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1164,7 +1164,7 @@ async function main() {
 					} else if (key === 'devicelock') {
 						createIndicatorState(device.identifier, 'devicelock', 'Device (Button)lock');
 					} else {
-						adapter.log.warn(' new datapoint in API detected');
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1179,7 +1179,7 @@ async function main() {
 					} else if (key === 'energy') {
 						createValueState(device.identifier, 'energy', 'Energy consumption', 0, 999999999, 'Wh');
 					} else {
-						adapter.log.warn(' new datapoint in API detected');
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1192,7 +1192,7 @@ async function main() {
 					} else if (key === 'member') {
 						createInfoState(device.identifier, 'member', 'member of the group');
 					} else {
-						adapter.log.warn(' new datapoint in API detected');
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1205,7 +1205,7 @@ async function main() {
 					} else if (key === 'offset') {
 						createValueState(device.identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
 					} else {
-						adapter.log.warn(' new datapoint in API detected');
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1216,7 +1216,7 @@ async function main() {
 					if (key === 'rel_humidity') {
 						createValueState(device.identifier, 'rel_humidity', 'relative Humidity', 0, 100, '%');
 					} else {
-						adapter.log.warn(' new datapoint in API detected');
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1309,7 +1309,7 @@ async function main() {
 										'°C'
 									);
 								} else {
-									adapter.log.warn(' new datapoint in API detected' + key);
+									adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 								}
 							});
 						} catch (e) {
@@ -1318,7 +1318,7 @@ async function main() {
 							);
 						}
 					} else {
-						adapter.log.warn(' new datapoint in API detected' + key);
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1330,7 +1330,7 @@ async function main() {
 					if (key === 'state') {
 						createSwitch(device.identifier, 'state', 'Simple ON/OFF state and cmd');
 					} else {
-						adapter.log.warn(' new datapoint in API detected' + key);
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1343,7 +1343,7 @@ async function main() {
 					} else if (key === 'levelpercentage') {
 						createValueCtrl(device.identifier, 'levelpercentage', 'level in %', 0, 100, '%', 'value.level');
 					} else {
-						adapter.log.warn(' new datapoint in API detected' + key);
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1370,7 +1370,7 @@ async function main() {
 							'value.temperature'
 						);
 					} else {
-						adapter.log.warn(' new datapoint in API detected' + key);
+						adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 					}
 				});
 			}
@@ -1595,23 +1595,32 @@ async function main() {
 
 	function updateData(array, ident) {
 		adapter.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
-		Object.entries(array).forEach(([ key, value ]) => {
-			if (Array.isArray(value)) {
-				adapter.log.debug('processing datapoint ' + key + ' as array');
-				value.forEach(function(subarray) {
-					subarray.identifier = subarray.identifier.replace(/\s/g, '');
-					updateData(subarray, ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')); // hier wirds erst schwierig wenn array in array
-				});
-			} else if (typeof value === 'object' && value !== null) {
-				adapter.log.debug('processing datapoint ' + key + ' as object');
-				Object.entries(value).forEach(([ key2, value2 ]) => {
-					updateDatapoint(key2, value2, ident);
-				});
-			} else {
-				adapter.log.debug('processing datapoint ' + key + ' directly');
-				updateDatapoint(key, value, ident);
-			}
-		});
+		try {
+			Object.entries(array).forEach(([ key, value ]) => {
+				if (Array.isArray(value)) {
+					adapter.log.debug('processing datapoint ' + key + ' as array');
+					value.forEach(function(subarray) {
+						subarray.identifier = subarray.identifier.replace(/\s/g, '');
+						updateData(subarray, ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')); // hier wirds erst schwierig wenn array in array
+					});
+				} else if (typeof value === 'object' && value !== null) {
+					adapter.log.debug('processing datapoint ' + key + ' as object');
+					Object.entries(value).forEach(([ key2, value2 ]) => {
+						updateDatapoint(key2, value2, ident);
+					});
+				} else {
+					adapter.log.debug('processing datapoint ' + key + ' directly');
+					updateDatapoint(key, value, ident);
+				}
+			});
+		} catch (e) {
+			adapter.log.debug(' issue in update data ' + e);
+			throw {
+				msg: 'issue updating data',
+				function: 'updateData',
+				error: e
+			};
+		}
 	}
 
 	function updateDevices() {
@@ -1669,7 +1678,11 @@ async function main() {
 									updateData(device, device.identifier);
 								} catch (e) {
 									adapter.log.debug(' issue updating device ' + JSON.stringify(device) + ' ' + e);
-									throw e;
+									throw {
+										msg: 'issue updating device',
+										function: 'updateDevices',
+										error: e
+									};
 								}
 							}
 						}
@@ -1709,7 +1722,11 @@ async function main() {
 								updateData(device, device.identifier);
 							} catch (e) {
 								adapter.log.debug(' issue updating group ' + JSON.stringify(device) + ' ' + e);
-								throw e;
+								throw {
+									msg: 'issue updating group',
+									function: 'updateDevices',
+									error: e
+								};
 							}
 						}
 					});

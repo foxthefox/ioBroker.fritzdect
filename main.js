@@ -1647,7 +1647,7 @@ async function main() {
 
 	async function updateDevices() {
 		adapter.log.debug('updating Devices / Groups ');
-		fritz
+		await fritz
 			.getDeviceListInfos()
 			.then(function(devicelistinfos) {
 				var currentMode = null;
@@ -1745,7 +1745,7 @@ async function main() {
 	}
 
 	await createDevices();
-	await createTemplates();
+	// await createTemplates();
 	// pollFritzData();
 
 	// in this template all states changes inside the adapters namespace are subscribed

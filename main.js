@@ -3,7 +3,7 @@
 
 'use strict';
 
-const Fritz = require('./lib/fritzhttp.js');
+const Fritz = require('./lib/fritzhttp.js').Fritz;
 const parser = require('xml2json-light');
 // you have to require the utils module and call adapter function
 

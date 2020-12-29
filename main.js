@@ -1391,7 +1391,12 @@ async function main() {
 				if (devices.length) {
 					typ = 'DECT_';
 					adapter.log.info('create Devices ' + devices.length);
-					createData(devices);
+					try {
+						createData(devices);
+					} catch (e) {
+						adapter.log.debug(' issue creating devices ' + e);
+						throw e;
+					}
 				}
 				var groups = parser.xml2json(devicelistinfos);
 				groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
@@ -1404,7 +1409,12 @@ async function main() {
 				if (groups.length) {
 					typ = 'DECT_';
 					adapter.log.info('create groups ' + groups.length);
-					createData(groups);
+					try {
+						createData(groups);
+					} catch (e) {
+						adapter.log.debug(' issue creating groups ' + e);
+						throw e;
+					}
 				}
 			})
 			.catch(errorHandler);
@@ -1656,7 +1666,12 @@ async function main() {
 								// adapter.setState
 								// reihenfolge, id immer vorher und dann erst etsi in json?
 							} else {
-								updateData(device, device.identifier);
+								try {
+									updateData(device, device.identifier);
+								} catch (e) {
+									adapter.log.debug(' issue updating device ' + JSON.stringify(device) + ' ' + e);
+									throw e;
+								}
 							}
 						}
 					});
@@ -1691,7 +1706,12 @@ async function main() {
 									currentMode = 'Night';
 								}
 							}
-							updateData(device, device.identifier);
+							try {
+								updateData(device, device.identifier);
+							} catch (e) {
+								adapter.log.debug(' issue updating group ' + JSON.stringify(device) + ' ' + e);
+								throw e;
+							}
 						}
 					});
 				}

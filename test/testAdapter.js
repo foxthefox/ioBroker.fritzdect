@@ -384,13 +384,13 @@ function handleHttpRequest(request, response) {
 
 describe('Test ' + adapterShortName + ' adapter', function() {
 	before('Test ' + adapterShortName + ' adapter: Start js-controller', function(_done) {
-		this.timeout(600000); // because of first install from npm
+		this.timeout(45 * 60 * 60 * 1000); // because of first install from npm
 
 		setup.setupController((systemConfig) => {
 			var config = setup.getAdapterConfig();
 			// enable adapter
 			config.common.enabled = true;
-			config.common.loglevel = 'info';
+			config.common.loglevel = 'debug';
 			//config.native.dbtype   = 'sqlite';
 
 			config.native = {
@@ -425,7 +425,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     ENABLE THIS WHEN ADAPTER RUNS IN DEAMON MODE TO CHECK THAT IT HAS STARTED SUCCESSFULLY
 */
 	it('Test ' + adapterShortName + ' adapter: Check if adapter started', function(done) {
-		this.timeout(120000);
+		this.timeout(60000);
 		checkConnectionOfAdapter(function(res) {
 			if (res) console.log(res);
 			expect(res).not.to.be.equal('Cannot check connection');
@@ -441,6 +441,14 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 				}
 			);
 		});
+	});
+
+	it('Test ' + adapterShortName + ' adapter: delay', function(done) {
+		this.timeout(120000);
+
+		setTimeout(function() {
+			done();
+		}, 110000);
 	});
 	/**/
 

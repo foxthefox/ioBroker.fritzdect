@@ -425,7 +425,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
     ENABLE THIS WHEN ADAPTER RUNS IN DEAMON MODE TO CHECK THAT IT HAS STARTED SUCCESSFULLY
 */
 	it('Test ' + adapterShortName + ' adapter: Check if adapter started', function(done) {
-		this.timeout(60000);
+		this.timeout(120000);
 		checkConnectionOfAdapter(function(res) {
 			if (res) console.log(res);
 			expect(res).not.to.be.equal('Cannot check connection');
@@ -450,10 +450,10 @@ describe('Test ' + adapterShortName + ' adapter', function() {
         ...
     });
     You can also use "sendTo" method to send messages to the started adapter
-*/
+	*/
 	// anfang von eigenen Tests
 	it('Test ' + adapterShortName + ' adapter: Check values of switch', function(done) {
-		this.timeout(30000);
+		this.timeout(300000);
 		setTimeout(function() {
 			states.getState('fritzdect.0.DECT_087610006161.prodname', function(err, state) {
 				if (err) console.error(err);

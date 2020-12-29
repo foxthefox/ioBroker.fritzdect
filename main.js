@@ -1644,6 +1644,7 @@ async function main() {
 					devices.forEach(function(device) {
 						adapter.log.debug('_____________________________________________');
 						adapter.log.debug('updating Device ' + device.name);
+						adapter.log.debug('updating Device ' + JSON.stringify(device));
 						if (device.present === '0' || device.present === 0 || device.present === false) {
 							adapter.log.debug(
 								'DECT_' +
@@ -1672,11 +1673,13 @@ async function main() {
 							}
 							// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
 							if (device.functionbitmask == 1) {
+								adapter.log.debug(' functionbitmask 1');
 								// search and find the device id and replace fwversion
 								// todo
 								// find the device.identifier mit der etsi_id
 								// adapter.setState
 								// reihenfolge, id immer vorher und dann erst etsi in json?
+								return;
 							} else {
 								try {
 									updateData(device, device.identifier);

@@ -1746,8 +1746,8 @@ async function main() {
 	}
 
 	createDevices();
-	// await createTemplates();
-	// pollFritzData();
+	createTemplates();
+	pollFritzData();
 
 	// in this template all states changes inside the adapters namespace are subscribed
 	adapter.subscribeStates('*');

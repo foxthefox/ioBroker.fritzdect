@@ -708,7 +708,7 @@ async function main() {
 	}
 	async function createIndicatorState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -723,7 +723,7 @@ async function main() {
 	}
 	async function createValueState(newId, datapoint, name, min, max, unit) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -741,7 +741,7 @@ async function main() {
 	}
 	async function createTimeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -756,7 +756,7 @@ async function main() {
 	}
 	async function createButton(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -771,7 +771,7 @@ async function main() {
 	}
 	async function createSwitch(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -786,7 +786,7 @@ async function main() {
 	}
 	async function createModeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -801,7 +801,7 @@ async function main() {
 	}
 	async function createValueCtrl(newId, datapoint, name, min, max, role) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -892,7 +892,7 @@ async function main() {
 	}
 	async function createThermostat(newId) {
 		adapter.log.debug('create Thermostat objects');
-		adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
 			type: 'state',
 			common: {
 				name: 'Thermostat operation mode (0=auto, 1=closed, 2=open)',
@@ -906,7 +906,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
 			type: 'state',
 			common: {
 				name: 'last setting of target temp',
@@ -991,7 +991,7 @@ async function main() {
 	async function createDevices() {
 		fritz
 			.getDeviceListInfos()
-			.then(function(devicelistinfos) {
+			.then(async function(devicelistinfos) {
 				var typ = '';
 				var role = '';
 				var devices = parser.xml2json(devicelistinfos);
@@ -1300,7 +1300,7 @@ async function main() {
 								} else if (key === 'boostactive') {
 									createSwitch(device.identifier, 'boostactive', 'Boost active status and cmd');
 									//create the user definde end time for manual setting the window open active state
-									await createValueCtrl(
+									createValueCtrl(
 										device.identifier,
 										'boostactivetime',
 										'boost active time for cmd',
@@ -1318,7 +1318,7 @@ async function main() {
 								} else if (key === 'windowopenactiv') {
 									createSwitch(device.identifier, 'windowopenactiv', 'Window open status and cmd');
 									//create the user definde end time for manual setting the window open active state
-									await createValueCtrl(
+									createValueCtrl(
 										device.identifier,
 										'windowopenactivetime',
 										'window open active time for cmd',

@@ -27,8 +27,8 @@ function setupHttpServer(callback) {
 	//Lets start our server
 	server.listen(3333, function() {
 		//Callback triggered when server is successfully listening. Hurray!
-		console.log('HTTP-Server listening on: http://localhost:%s', 3333);
-		console.log('setup in iobroker for second instance admin:password');
+		console.log('HTTP-Server (Fritzbox Emulation) listening on: http://localhost:%s', 3333);
+		console.log('for testing, setup in iobroker for second instance admin:password');
 		callback();
 	});
 }
@@ -45,7 +45,7 @@ var sid =
 	(4294967295 + Math.floor(Math.random() * 4294967295)).toString(16).slice(-8);
 
 function handleHttpRequest(request, response) {
-	console.log('HTTP-Server: Request: ' + request.method + ' ' + request.url);
+	console.log('HTTP-Server (Fritzbox Emulation): Request: ' + request.method + ' ' + request.url);
 
 	if (request.url == '/login_sid.lua') {
 		//check the URL of the current request
@@ -315,7 +315,7 @@ function handleHttpRequest(request, response) {
 			}
 		});
 	} else {
-		console.log(' not supported call ' + request.url);
+		console.log(' not supported call ' + request.method + '  ' + request.url);
 		response.statusCode = 403;
 		response.end();
 	}

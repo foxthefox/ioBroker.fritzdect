@@ -100,7 +100,7 @@ function setupHttpServer(callback) {
 	//Lets start our server
 	server.listen(8080, function() {
 		//Callback triggered when server is successfully listening. Hurray!
-		console.log('HTTP-Server listening on: http://localhost:%s', 8080);
+		console.log('HTTP-Server (Fritzbox Emulation) listening on: http://localhost:%s', 8080);
 		callback();
 	});
 }
@@ -129,9 +129,18 @@ var guestWlan = fs.readFileSync(__dirname + '/../test/guest_wlan_form.xml'); // 
 // es fehlt noch die gethue?
 
 function handleHttpRequest(request, response) {
-	console.log('HTTP-Server: Request: ' + request.method + ' ' + request.url);
+	console.log('HTTP-Server (Fritzbox Emulation) : Request: ' + request.method + ' ' + request.url);
 
 	if (request.url == '/login_sid.lua') {
+		//check the URL of the current request
+		response.writeHead(200, { 'Content-Type': 'application/xml' });
+		response.write(
+			'<?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>0000000000000000</SID><Challenge>' +
+				challenge +
+				'</Challenge><BlockTime>0</BlockTime><Rights></Rights></SessionInfo>'
+		);
+		response.end();
+	} else if (request.url == '/login_sid.lua?version=2' && request.method == 'GET') {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/xml' });
 		response.write(
@@ -150,6 +159,17 @@ function handleHttpRequest(request, response) {
 		);
 		response.end();
 	} else if (request.url == '/login_sid.lua?username=admin&response=' + challengeResponse) {
+		//check the URL of the current request
+		response.writeHead(200, { 'Content-Type': 'application/xml' });
+		response.write(
+			'<?xml version="1.0" encoding="utf-8"?><SessionInfo><SID>' +
+				sid +
+				'</SID><Challenge>' +
+				challenge2 +
+				'</Challenge><BlockTime>0</BlockTime><Rights><Name>Dial</Name><Access>2</Access><Name>App</Name><Access>2</Access><Name>HomeAuto</Name><Access>2</Access><Name>BoxAdmin</Name><Access>2</Access><Name>Phone</Name><Access>2</Access><Name>NAS</Name><Access>2</Access></Rights></SessionInfo>'
+		);
+		response.end();
+	} else if (request.url == '/login_sid.lua?version=2' && request.method == 'POST') {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/xml' });
 		response.write(
@@ -356,7 +376,7 @@ function handleHttpRequest(request, response) {
 			}
 		});
 	} else {
-		console.log(' not supported call ' + request.url);
+		console.log(' not supported call ' + request.method + '  ' + request.url);
 		response.statusCode = 403;
 		response.end();
 	}

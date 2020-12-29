@@ -1669,11 +1669,13 @@ async function main() {
 								}
 								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 								// some weird id usage, the website shows the id of the etsiunit
-								if (devices[i].etsiunitinfo.etsideviceid) {
-									//replace id with etsi
-									adapter.log.debug('id vorher ' + devices[i].id);
-									devices[i].id = devices[i].etsiunitinfo.etsideviceid;
-									adapter.log.debug('id nachher ' + devices[i].id);
+								if (devices[i].etsiunitinfo) {
+									if (devices[i].etsiunitinfo.etsideviceid) {
+										//replace id with etsi
+										adapter.log.debug('id vorher ' + devices[i].id);
+										devices[i].id = devices[i].etsiunitinfo.etsideviceid;
+										adapter.log.debug('id nachher ' + devices[i].id);
+									}
 								}
 								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
 								if (devices[i].functionbitmask == 1) {

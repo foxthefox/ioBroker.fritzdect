@@ -1437,6 +1437,7 @@ async function main() {
 				}
 			})
 			.catch(errorHandler);
+		await sleep(5000);
 		await pollFritzData();
 	}
 
@@ -1791,6 +1792,7 @@ async function main() {
 	}
 
 	await createDevices();
+	await sleep(5000);
 	await createTemplates();
 	// await pollFritzData();
 

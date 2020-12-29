@@ -1437,6 +1437,7 @@ async function main() {
 				}
 			})
 			.catch(errorHandler);
+		await pollFritzData();
 	}
 
 	async function createTemplates() {
@@ -1791,7 +1792,7 @@ async function main() {
 
 	await createDevices();
 	await createTemplates();
-	await pollFritzData();
+	// await pollFritzData();
 
 	// in this template all states changes inside the adapters namespace are subscribed
 	adapter.subscribeStates('*');

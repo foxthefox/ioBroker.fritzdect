@@ -671,16 +671,16 @@ process.on('SIGINT', function() {
 	if (fritzTimeout) clearTimeout(fritzTimeout);
 });
 
-async function main() {
+function main() {
 	var username = adapter.config.fritz_user;
 	var password = adapter.config.fritz_pw;
 	var moreParam = adapter.config.fritz_ip;
 
 	var fritz = new Fritz(username, password || '', moreParam || '');
 
-	async function createObject(typ, newId, name, role) {
+	function createObject(typ, newId, name, role) {
 		adapter.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
-		await adapter.setObjectNotExists(typ + newId, {
+		adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
 			common: {
 				name: name,
@@ -784,9 +784,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createModeState(newId, datapoint, name) {
+	function createModeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -1045,7 +1045,7 @@ async function main() {
 							return;
 						}
 						// create Master Object
-						await createObject(typ, device.identifier, device.name, role);
+						createObject(typ, device.identifier, device.name, role);
 
 						// create general
 						if (device.fwversion) {
@@ -1129,7 +1129,7 @@ async function main() {
 								adapter.log.info('setting up button(s) ');
 								device.button.forEach(async function(button) {
 									typ = 'DECT_' + device.identifier + '.button.';
-									await createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
+									createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
 									Object.entries(button).forEach(([ key, value ]) => {
 										if (key === 'lastpressedtimestamp') {
 											createTimeState(
@@ -1453,7 +1453,7 @@ async function main() {
 			.catch(errorHandler);
 	}
 
-	async function createTemplates() {
+	function createTemplates() {
 		fritz
 			.getTemplateListInfos()
 			.then(function(templatelistinfos) {
@@ -1493,7 +1493,7 @@ async function main() {
 			})
 			.catch(errorHandler);
 	}
-	async function updateDatapoint(key, value, ain) {
+	function updateDatapoint(key, value, ain) {
 		adapter.log.debug('updating DECT_' + ain + ' : ' + key + ' : ' + value);
 		if (key === 'batterylow') {
 			// bool mal anders herum
@@ -1625,7 +1625,7 @@ async function main() {
 		}
 	}
 
-	async function updateData(array, ident) {
+	function updateData(array, ident) {
 		adapter.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
 		Object.entries(array).forEach(([ key, value ]) => {
 			if (Array.isArray(value)) {
@@ -1646,9 +1646,9 @@ async function main() {
 		});
 	}
 
-	async function updateDevices() {
+	function updateDevices() {
 		adapter.log.debug('updating Devices / Groups ');
-		await fritz
+		fritz
 			.getDeviceListInfos()
 			.then(function(devicelistinfos) {
 				var currentMode = null;
@@ -1738,7 +1738,7 @@ async function main() {
 			.catch(errorHandler);
 	}
 
-	async function pollFritzData() {
+	function pollFritzData() {
 		var fritz_interval = parseInt(adapter.config.fritz_interval, 10) || 300;
 		updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
 		adapter.log.debug('polling! fritzdect is alive');

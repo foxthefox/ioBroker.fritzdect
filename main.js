@@ -691,9 +691,9 @@ async function main() {
 			}
 		});
 	}
-	async function createInfoState(newId, datapoint, name) {
+	function createInfoState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -706,9 +706,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createIndicatorState(newId, datapoint, name) {
+	function createIndicatorState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -721,9 +721,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createValueState(newId, datapoint, name, min, max, unit) {
+	function createValueState(newId, datapoint, name, min, max, unit) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -739,9 +739,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createTimeState(newId, datapoint, name) {
+	function createTimeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		dapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -754,9 +754,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createButton(newId, datapoint, name) {
+	function createButton(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -769,9 +769,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createSwitch(newId, datapoint, name) {
+	function createSwitch(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -799,9 +799,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createValueCtrl(newId, datapoint, name, min, max, role) {
+	function createValueCtrl(newId, datapoint, name, min, max, role) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -816,7 +816,7 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createTemplateResponse() {
+	function createTemplateResponse() {
 		adapter.log.debug('create template.lasttemplate for response ');
 		adapter.setObjectNotExists('template', {
 			type: 'channel',
@@ -839,7 +839,7 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createTemplate(typ, newId, name, role, id) {
+	function createTemplate(typ, newId, name, role, id) {
 		adapter.log.debug('create Template objects ');
 		adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
@@ -890,9 +890,9 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createThermostat(newId) {
+	function createThermostat(newId) {
 		adapter.log.debug('create Thermostat objects');
-		await adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
+		adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
 			type: 'state',
 			common: {
 				name: 'Thermostat operation mode (0=auto, 1=closed, 2=open)',
@@ -906,7 +906,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
+		adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
 			type: 'state',
 			common: {
 				name: 'last setting of target temp',
@@ -919,7 +919,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setObjectNotExists('DECT' + newId + '.operationList', {
+		adapter.setObjectNotExists('DECT' + newId + '.operationList', {
 			type: 'state',
 			common: {
 				name: 'List of operation modes',
@@ -931,7 +931,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setState('DECT_' + newId + '.operationList', {
+		adapter.setState('DECT_' + newId + '.operationList', {
 			val: `On, Off, Holiday, Summer, Comfort, Night`,
 			ack: true
 		});
@@ -948,7 +948,7 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createBlind(newId) {
+	function createBlind(newId) {
 		adapter.log.debug('create Blinds objects');
 		adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
 			type: 'state',
@@ -988,7 +988,7 @@ async function main() {
 		});
 	}
 
-	async function createDevices() {
+	function createDevices() {
 		fritz
 			.getDeviceListInfos()
 			.then(async function(devicelistinfos) {
@@ -1049,7 +1049,7 @@ async function main() {
 
 						// create general
 						if (device.fwversion) {
-							await createInfoState(device.identifier, 'fwversion', 'Firmware Version');
+							createInfoState(device.identifier, 'fwversion', 'Firmware Version');
 						}
 						if (device.maunfacturer) {
 							createInfoState(device.identifier, 'manufacturer', 'Manufacturer');
@@ -1070,7 +1070,7 @@ async function main() {
 							createIndicatorState(device.identifier, 'synchronized', 'Synchronized Status');
 						}
 						//always ID
-						await createInfoState(device.identifier, 'id', 'Device ID');
+						createInfoState(device.identifier, 'id', 'Device ID');
 						//etsideviceid im gleichen Object
 						if (device.etsiunitinfo) {
 							if (device.etsiunitinfo.etsideviceid) {
@@ -1309,7 +1309,7 @@ async function main() {
 										'min'
 									);
 									//preset to 5 min
-									adapter.setState('DECT' + device.identifier + '.boostactivetime', {
+									adapter.setState('DECT_' + device.identifier + '.boostactivetime', {
 										val: 5,
 										ack: true
 									});
@@ -1328,7 +1328,7 @@ async function main() {
 										'value.time'
 									);
 									//preset to 5 min
-									adapter.setState('DECT' + device.identifier + '.windowopenactivetime', {
+									adapter.setState('DECT_' + device.identifier + '.windowopenactivetime', {
 										val: 5,
 										ack: true
 									});
@@ -1437,7 +1437,8 @@ async function main() {
 										device.identifier,
 										'temparature',
 										'color temperature',
-										2700.65,
+										2700,
+										6500,
 										'K',
 										'value.temperature'
 									);

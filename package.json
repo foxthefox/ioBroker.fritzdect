@@ -21,6 +21,8 @@
 	},
 	"dependencies": {
 		"xml2json-light": "^1.0.6",
+		"bluebird": "^3.7.2",
+		"extend": "^3.0.2",
 		"@root/request": "^1.6.1",
 		"@iobroker/adapter-core": "^1.0.3"
 	},

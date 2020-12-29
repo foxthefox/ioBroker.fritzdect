@@ -931,7 +931,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setState('DECT_' + newId + '.operationList', {
+		await adapter.setState('DECT_' + newId + '.operationList', {
 			val: `On, Off, Holiday, Summer, Comfort, Night`,
 			ack: true
 		});
@@ -1309,7 +1309,10 @@ async function main() {
 										'min'
 									);
 									//preset to 5 min
-									adapter.setState('DECT' + newId + '.boostactivetime', { val: 5, ack: true });
+									adapter.setState('DECT' + device.identifier + '.boostactivetime', {
+										val: 5,
+										ack: true
+									});
 								} else if (key === 'boostactiveendtime') {
 									createTimeState(device.identifier, 'boostactiveendtime', 'Boost active end time');
 								} else if (key === 'windowopenactiv') {
@@ -1325,7 +1328,10 @@ async function main() {
 										'value.time'
 									);
 									//preset to 5 min
-									adapter.setState('DECT' + newId + '.windowopenactivetime', { val: 5, ack: true });
+									adapter.setState('DECT' + device.identifier + '.windowopenactivetime', {
+										val: 5,
+										ack: true
+									});
 								} else if (key === 'windowopenactiveendtime') {
 									createTimeState(
 										device.identifier,
@@ -1333,37 +1339,39 @@ async function main() {
 										'window open active end time'
 									);
 								} else if (key === 'nextchange') {
-									//kommt außerhalb
+									adapter.log.info('setting up thermostat nextchange');
+									try {
+										Object.entries(device.hkr.nextchange).forEach(([ key, value ]) => {
+											if (key === 'endperiod') {
+												createTimeState(
+													device.identifier,
+													'endperiod',
+													'next time for Temp change'
+												);
+											} else if (key === 'tchange') {
+												createValueState(
+													device.identifier,
+													'tchange',
+													'Temp after next change',
+													8,
+													32,
+													'°C'
+												);
+											} else {
+												adapter.log.warn(' new datapoint in API detected' + key);
+											}
+										});
+									} catch (e) {
+										adapter.log.debug(
+											' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
+										);
+									}
 								} else {
 									adapter.log.warn(' new datapoint in API detected' + key);
 								}
 							});
 						}
-						if (device.hkr.nextchange) {
-							adapter.log.info('setting up thermostat nextchange');
-							try {
-								Object.entries(device.hkr.nextchange).forEach(([ key, value ]) => {
-									if (key === 'endperiod') {
-										createTimeState(device.identifier, 'endperiod', 'next time for Temp change');
-									} else if (key === 'tchange') {
-										createValueState(
-											device.identifier,
-											'tchange',
-											'Temp after next change',
-											8,
-											32,
-											'°C'
-										);
-									} else {
-										adapter.log.warn(' new datapoint in API detected' + key);
-									}
-								});
-							} catch (e) {
-								adapter.log.debug(
-									' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
-								);
-							}
-						}
+
 						// simpleonoff
 						if (device.simpleonoff) {
 							adapter.log.info('setting up simpleonoff');

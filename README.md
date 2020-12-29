@@ -56,7 +56,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 
 ### devices or groups
 |Object|Value|settable|Description|DECT2x0|DECT3x0|DECT400|DECT440|DECT500|Blinds|Contact|
-|--------|-------|:-:|--------|DECT2x0|DECT3x0|DECT400|DECT440|DECT500|Blinds|Contact|
+|--------|-------|:-:|--------|-----|-----|-----|-----|-----|-----|-----|
 |id|text|-|internal id of device|DECT2x0|DECT3x0|DECT400|DECT440|DECT500|Blinds|Contact|
 |name|text|-|name of device|DECT2x0|DECT3x0|DECT400|DECT440|DECT500|Blinds|Contact|
 |productname|text|-|product name|DECT2x0|DECT3x0|DECT400|DECT440|DECT500|Blinds|Contact|

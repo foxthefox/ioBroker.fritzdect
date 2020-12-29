@@ -1398,7 +1398,7 @@ async function main() {
 	}
 
 	async function createDevices() {
-		fritz
+		await fritz
 			.getDeviceListInfos()
 			.then(async function(devicelistinfos) {
 				var devices = parser.xml2json(devicelistinfos);
@@ -1440,7 +1440,7 @@ async function main() {
 	}
 
 	async function createTemplates() {
-		fritz
+		await fritz
 			.getTemplateListInfos()
 			.then(async function(templatelistinfos) {
 				var typ = '';
@@ -1497,23 +1497,23 @@ async function main() {
 				val: batt,
 				ack: true
 			});
-		} else if (key in [ 'celsius', 'offset' ]) {
+		} else if (key == 'celsius' || key == 'offset') {
 			//numbers
 			adapter.setState('DECT_' + ain + '.' + key, {
 				val: parseFloat(value) / 10,
 				ack: true
 			});
-		} else if (key in [ 'power', 'voltage' ]) {
+		} else if (key == 'power' || key == 'voltage') {
 			adapter.setState('DECT_' + ain + '.power', {
 				val: parseFloat(value) / 1000,
 				ack: true
 			});
-		} else if (key in [ 'komfort', 'absenk', 'tist', 'tchange' ]) {
+		} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
 			adapter.setState('DECT_' + ain + '.' + key, {
 				val: parseFloat(value) / 2,
 				ack: true
 			});
-		} else if (key in [ 'humidity' ]) {
+		} else if (key == 'humidity') {
 			//e.g humidity
 			adapter.setState('DECT_' + ain + '.' + key, {
 				val: parseFloat(value),
@@ -1556,20 +1556,17 @@ async function main() {
 				ack: true
 			});
 		} else if (
-			key in
-			[
-				'state',
-				'simpleonoff',
-				'lock',
-				'devicelock',
-				'txbusy',
-				'present',
-				'summeractive',
-				'holidayactive',
-				'boostactive',
-				'windowactive',
-				'synchronized'
-			]
+			key == 'state' ||
+			key == 'simpleonoff' ||
+			key == 'lock' ||
+			key == 'devicelock' ||
+			key == 'txbusy' ||
+			key == 'present' ||
+			key == 'summeractive' ||
+			key == 'holidayactive' ||
+			key == 'boostactive' ||
+			key == 'windowactive' ||
+			key == 'synchronized'
 		) {
 			//bool
 			let convertValue = value == 1 ? true : false;
@@ -1577,7 +1574,12 @@ async function main() {
 				val: convertValue,
 				ack: true
 			});
-		} else if (key in [ 'lastpressedtimestamp', 'boostactiveendtime', 'windowopenactiveendtime', 'endperiod' ]) {
+		} else if (
+			key == 'lastpressedtimestamp' ||
+			key == 'boostactiveendtime' ||
+			key == 'windowopenactiveendtime' ||
+			key == 'endperiod'
+		) {
 			//time
 			let convTime = new Date(value * 1000);
 			adapter.setState('DECT_' + ain + '.' + key, {
@@ -1585,26 +1587,23 @@ async function main() {
 				ack: true
 			});
 		} else if (
-			key in
-			[
-				'errorcode',
-				'level',
-				'levelpercentage',
-				'battery',
-				'hue',
-				'saturation',
-				'temperature',
-				'supported_mode',
-				'current_mode',
-				'humidity'
-			]
+			key == 'errorcode' ||
+			key == 'level' ||
+			key == 'levelpercentage' ||
+			key == 'battery' ||
+			key == 'hue' ||
+			key == 'saturation' ||
+			key == 'temperature' ||
+			key == 'supported_mode' ||
+			key == 'current_mode' ||
+			key == 'humidity'
 		) {
 			// integer number
 			adapter.setState('DECT_' + ain + '.' + key, {
 				val: parseInt(value),
 				ack: true
 			});
-		} else if (key in [ 'fwversion', 'manufacturer', 'name', 'prodname', 'mode' ]) {
+		} else if (key == 'fwversion' || key == 'manufacturer' || key == 'name' || key == 'prodname' || key == 'mode') {
 			// || 'id' , id schon beim initialisieren gesetzt
 			// text
 			adapter.setState('DECT_' + ain + '.' + key, {
@@ -1649,10 +1648,10 @@ async function main() {
 		}
 	}
 
-	function updateDevices() {
+	async function updateDevices() {
 		adapter.log.debug('__________________________');
 		adapter.log.debug('updating Devices / Groups ');
-		fritz
+		await fritz
 			.getDeviceListInfos()
 			.then(function(devicelistinfos) {
 				var currentMode = null;
@@ -1783,7 +1782,7 @@ async function main() {
 			.catch(errorHandler);
 	}
 
-	function pollFritzData() {
+	async function pollFritzData() {
 		var fritz_interval = parseInt(adapter.config.fritz_interval, 10) || 300;
 		updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
 		adapter.log.debug('polling! fritzdect is alive');
@@ -1792,7 +1791,7 @@ async function main() {
 
 	await createDevices();
 	await createTemplates();
-	pollFritzData();
+	await pollFritzData();
 
 	// in this template all states changes inside the adapters namespace are subscribed
 	adapter.subscribeStates('*');

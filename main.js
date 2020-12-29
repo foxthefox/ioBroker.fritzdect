@@ -3,8 +3,8 @@
 
 'use strict';
 
-var { Fritz } = require('./lib/fritzhttp.js').Fritz;
-var parser = require('xml2json-light');
+const Fritz = require('./lib/fritzhttp.js');
+const parser = require('xml2json-light');
 // you have to require the utils module and call adapter function
 
 var utils = require('@iobroker/adapter-core'); // Get common adapter utils

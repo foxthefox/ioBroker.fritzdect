@@ -1641,38 +1641,42 @@ async function main() {
 				adapter.log.debug(JSON.stringify(devices));
 				if (devices.length) {
 					adapter.log.debug('update Devices ' + devices.length);
-					devices
-						.forEach(function(device) {
+					try {
+						for (let i = 0; i < devices.length; i++) {
 							adapter.log.debug('_____________________________________________');
-							adapter.log.debug('updating Device ' + device.name);
-							adapter.log.debug('updating Device ' + JSON.stringify(device));
-							if (device.present === '0' || device.present === 0 || device.present === false) {
+							adapter.log.debug('updating Device ' + devices[i].name);
+							adapter.log.debug('updating Device ' + JSON.stringify(devices[i]));
+							if (
+								devices[i].present === '0' ||
+								devices[i].present === 0 ||
+								devices[i].present === false
+							) {
 								adapter.log.debug(
 									'DECT_' +
-										device.identifier +
+										devices[i].identifier +
 										' is not present, check the device connection, no values are written'
 								);
 								return;
 							} else {
-								if (device.hkr) {
+								if (devices[i].hkr) {
 									currentMode = 'On';
-									if (device.hkr.tsoll === device.hkr.komfort) {
+									if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
 										currentMode = 'Comfort';
 									}
-									if (device.hkr.tsoll === device.hkr.absenk) {
+									if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
 										currentMode = 'Night';
 									}
 								}
 								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 								// some weird id usage, the website shows the id of the etsiunit
-								if (device.etsiunitinfo.etsideviceid) {
+								if (devices[i].etsiunitinfo.etsideviceid) {
 									//replace id with etsi
-									adapter.log.debug('id vorher ' + device.id);
-									device.id = device.etsiunitinfo.etsideviceid;
-									adapter.log.debug('id nachher ' + device.id);
+									adapter.log.debug('id vorher ' + devices[i].id);
+									devices[i].id = devices[i].etsiunitinfo.etsideviceid;
+									adapter.log.debug('id nachher ' + devices[i].id);
 								}
 								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
-								if (device.functionbitmask == 1) {
+								if (devices[i].functionbitmask == 1) {
 									adapter.log.debug(' functionbitmask 1');
 									// search and find the device id and replace fwversion
 									// todo
@@ -1683,7 +1687,7 @@ async function main() {
 								} else {
 									adapter.log.debug(' calling update data .....');
 									try {
-										updateData(device, device.identifier);
+										updateData(devices[i], devices[i].identifier);
 									} catch (e) {
 										adapter.log.error(' issue updating device ' + e);
 										throw {
@@ -1694,8 +1698,15 @@ async function main() {
 									}
 								}
 							}
-						})
-						.catch(errorHandler);
+						}
+					} catch (e) {
+						adapter.log.error(' issue updating device ' + e);
+						throw {
+							msg: 'issue updating device',
+							function: 'updateDevices',
+							error: e
+						};
+					}
 				}
 
 				// groups

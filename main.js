@@ -919,7 +919,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT' + newId + '.operationList', {
+		adapter.setObjectNotExists('DECT_' + newId + '.operationList', {
 			type: 'state',
 			common: {
 				name: 'List of operation modes',
@@ -1641,59 +1641,61 @@ async function main() {
 				adapter.log.debug(JSON.stringify(devices));
 				if (devices.length) {
 					adapter.log.debug('update Devices ' + devices.length);
-					devices.forEach(function(device) {
-						adapter.log.debug('_____________________________________________');
-						adapter.log.debug('updating Device ' + device.name);
-						adapter.log.debug('updating Device ' + JSON.stringify(device));
-						if (device.present === '0' || device.present === 0 || device.present === false) {
-							adapter.log.debug(
-								'DECT_' +
-									device.identifier +
-									' is not present, check the device connection, no values are written'
-							);
-							return;
-						} else {
-							if (device.hkr) {
-								currentMode = 'On';
-								if (device.hkr.tsoll === device.hkr.komfort) {
-									currentMode = 'Comfort';
-								}
-								if (device.hkr.tsoll === device.hkr.absenk) {
-									currentMode = 'Night';
-								}
-							}
-							// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
-							// some weird id usage, the website shows the id of the etsiunit
-							if (device.etsiunitinfo.etsideviceid) {
-								//replace id with etsi
-								adapter.log.debug('id vorher ' + device.id);
-								device.id = device.etsiunitinfo.etsideviceid;
-								adapter.log.debug('id nachher ' + device.id);
-							}
-							// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
-							if (device.functionbitmask == 1) {
-								adapter.log.debug(' functionbitmask 1');
-								// search and find the device id and replace fwversion
-								// todo
-								// find the device.identifier mit der etsi_id
-								// adapter.setState
-								// reihenfolge, id immer vorher und dann erst etsi in json?
+					devices
+						.forEach(function(device) {
+							adapter.log.debug('_____________________________________________');
+							adapter.log.debug('updating Device ' + device.name);
+							adapter.log.debug('updating Device ' + JSON.stringify(device));
+							if (device.present === '0' || device.present === 0 || device.present === false) {
+								adapter.log.debug(
+									'DECT_' +
+										device.identifier +
+										' is not present, check the device connection, no values are written'
+								);
 								return;
 							} else {
-								adapter.log.debug(' calling update data .....');
-								try {
-									updateData(device, device.identifier);
-								} catch (e) {
-									adapter.log.error(' issue updating device ' + JSON.stringify(device) + ' ' + e);
-									throw {
-										msg: 'issue updating device',
-										function: 'updateDevices',
-										error: e
-									};
+								if (device.hkr) {
+									currentMode = 'On';
+									if (device.hkr.tsoll === device.hkr.komfort) {
+										currentMode = 'Comfort';
+									}
+									if (device.hkr.tsoll === device.hkr.absenk) {
+										currentMode = 'Night';
+									}
+								}
+								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
+								// some weird id usage, the website shows the id of the etsiunit
+								if (device.etsiunitinfo.etsideviceid) {
+									//replace id with etsi
+									adapter.log.debug('id vorher ' + device.id);
+									device.id = device.etsiunitinfo.etsideviceid;
+									adapter.log.debug('id nachher ' + device.id);
+								}
+								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
+								if (device.functionbitmask == 1) {
+									adapter.log.debug(' functionbitmask 1');
+									// search and find the device id and replace fwversion
+									// todo
+									// find the device.identifier mit der etsi_id
+									// adapter.setState
+									// reihenfolge, id immer vorher und dann erst etsi in json?
+									return;
+								} else {
+									adapter.log.debug(' calling update data .....');
+									try {
+										updateData(device, device.identifier);
+									} catch (e) {
+										adapter.log.error(' issue updating device ' + e);
+										throw {
+											msg: 'issue updating device',
+											function: 'updateDevices',
+											error: e
+										};
+									}
 								}
 							}
-						}
-					});
+						})
+						.catch(errorHandler);
 				}
 
 				// groups
@@ -1726,6 +1728,7 @@ async function main() {
 								}
 							}
 							try {
+								adapter.log.debug(' calling update data .....');
 								updateData(device, device.identifier);
 							} catch (e) {
 								adapter.log.error(' issue updating group ' + JSON.stringify(device) + ' ' + e);

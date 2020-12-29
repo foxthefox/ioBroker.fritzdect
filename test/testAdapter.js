@@ -443,8 +443,6 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 		});
 	});
 
-	/*
-
 	it('Test ' + adapterShortName + ' adapter: delay', function(done) {
 		this.timeout(120000);
 
@@ -452,7 +450,6 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			done();
 		}, 110000);
 	});
-	*/
 
 	/**/
 

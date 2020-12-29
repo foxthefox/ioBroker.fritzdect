@@ -1645,7 +1645,6 @@ async function main() {
 						for (let i = 0; i < devices.length; i++) {
 							adapter.log.debug('_____________________________________________');
 							adapter.log.debug('updating Device ' + devices[i].name);
-							adapter.log.debug('updating Device ' + JSON.stringify(devices[i]));
 							if (
 								devices[i].present === '0' ||
 								devices[i].present === 0 ||
@@ -1685,7 +1684,7 @@ async function main() {
 									// find the device.identifier mit der etsi_id
 									// adapter.setState
 									// reihenfolge, id immer vorher und dann erst etsi in json?
-									return;
+									continue;
 								} else {
 									adapter.log.debug(' calling update data .....');
 									try {

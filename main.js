@@ -679,7 +679,7 @@ async function main() {
 	var fritz = new Fritz(username, password || '', moreParam || '');
 
 	async function createObject(typ, newId, name, role) {
-		adapter.log.debug('create Main object ');
+		adapter.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
 		await adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
 			common: {
@@ -1109,22 +1109,20 @@ async function main() {
 						// create button parts
 						if (device.button) {
 							if (!Array.isArray(device.button)) {
-								device.button.forEach(function(button) {
-									Object.entries(button).forEach(([ key, value ]) => {
-										if (key === 'lastpressedtimestamp') {
-											createTimeState(
-												device.identifier,
-												'lastpressedtimestamp',
-												'last button Time Stamp'
-											);
-										} else if (key === 'id') {
-											createInfoState(device.identifier, 'id', 'Button ID');
-										} else if (key === 'name') {
-											createInfoState(device.identifier, 'name', 'Button Name');
-										} else {
-											adapter.log.warn(' new datapoint in API detected');
-										}
-									});
+								Object.entries(device.button).forEach(([ key, value ]) => {
+									if (key === 'lastpressedtimestamp') {
+										createTimeState(
+											device.identifier,
+											'lastpressedtimestamp',
+											'last button Time Stamp'
+										);
+									} else if (key === 'id') {
+										createInfoState(device.identifier, 'id', 'Button ID');
+									} else if (key === 'name') {
+										createInfoState(device.identifier, 'name', 'Button Name');
+									} else {
+										adapter.log.warn(' new datapoint in API detected');
+									}
 								});
 							} else if (Array.isArray(device.button)) {
 								//Unterobjekte anlegen
@@ -1261,8 +1259,6 @@ async function main() {
 							adapter.log.info('setting up thermostat ');
 							createThermostat(device.identifier); //additional datapoints of thermostats
 							Object.entries(device.hkr).forEach(([ key, value ]) => {
-								//generic cmd not part of the data
-								createThermostatModes(device.identifier);
 								//create datapoints from the data
 								if (key === 'tist') {
 									createValueState(device.identifier, 'tist', 'Actual temperature', 0, 32, '°C');
@@ -1345,23 +1341,28 @@ async function main() {
 						}
 						if (device.hkr.nextchange) {
 							adapter.log.info('setting up thermostat nextchange');
-							Object.entries(device.hkr.nextchange).forEach(([ key, value ]) => {
-								//console.log(`${key} ${value}`); // "a 5", "b 7", "c 9"
-								if (key === 'endperiod') {
-									createTimeState(device.identifier, 'endperiod', 'next time for Temp change');
-								} else if (key === 'tchange') {
-									createValueState(
-										device.identifier,
-										'tchange',
-										'Temp after next change',
-										8,
-										32,
-										'°C'
-									);
-								} else {
-									adapter.log.warn(' new datapoint in API detected' + key);
-								}
-							});
+							try {
+								Object.entries(device.hkr.nextchange).forEach(([ key, value ]) => {
+									if (key === 'endperiod') {
+										createTimeState(device.identifier, 'endperiod', 'next time for Temp change');
+									} else if (key === 'tchange') {
+										createValueState(
+											device.identifier,
+											'tchange',
+											'Temp after next change',
+											8,
+											32,
+											'°C'
+										);
+									} else {
+										adapter.log.warn(' new datapoint in API detected' + key);
+									}
+								});
+							} catch (e) {
+								adapter.log.debug(
+									' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
+								);
+							}
 						}
 						// simpleonoff
 						if (device.simpleonoff) {
@@ -1718,8 +1719,8 @@ async function main() {
 		fritzTimeout = setTimeout(pollFritzData, fritz_interval * 1000);
 	}
 
-	createDevices();
-	createTemplates();
+	await createDevices();
+	await createTemplates();
 	pollFritzData();
 
 	// in this template all states changes inside the adapters namespace are subscribed

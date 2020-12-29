@@ -741,7 +741,7 @@ async function main() {
 	}
 	function createTimeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		dapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,

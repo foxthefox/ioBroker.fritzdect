@@ -1634,7 +1634,7 @@ async function main() {
 					key == 'summeractive' ||
 					key == 'holidayactive' ||
 					key == 'boostactive' ||
-					key == 'windowactive' ||
+					key == 'windowopenactiv' ||
 					key == 'synchronized'
 				) {
 					//bool

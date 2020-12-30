@@ -121,8 +121,8 @@ var sid =
 
 //xml Antworten
 var content = fs.readFileSync(__dirname + '/../test/test_api_response.xml'); //getdevicelistinfos
-var celsiuslates = fs.readFileSync(__dirname + '/../test/celsiuslate_answer.xml'); //getcelsiuslate
-var celsius_stats = fs.readFileSync(__dirname + '/../test/devicestat_celsius_answer.xml'); //getbasicdevicestats celsius
+var templates = fs.readFileSync(__dirname + '/../test/template_answer.xml'); //gettemplate
+var temp_stats = fs.readFileSync(__dirname + '/../test/devicestat_temp_answer.xml'); //getbasicdevicestats temp
 var power_stats = fs.readFileSync(__dirname + '/../test/devicestat_power_answer.xml'); //getbasicdevicestats power/voltage
 var hkr_batt = fs.readFileSync(__dirname + '/../test/hkr_response.xml'); // Anteil der Webseite für BatteriesLadung
 var guestWlan = fs.readFileSync(__dirname + '/../test/guest_wlan_form.xml'); // Anteil der Webseite für GästeWLAN
@@ -190,10 +190,10 @@ function handleHttpRequest(request, response) {
 		response.writeHead(200, { 'Content-Type': 'application/json' });
 		response.write(String(content));
 		response.end();
-	} else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=getcelsiuslatelistinfos') {
+	} else if (request.url == '/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=gettemplatelistinfos') {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/json' });
-		response.write(String(celsiuslates));
+		response.write(String(templates));
 		response.end();
 	} else if (
 		request.url ==
@@ -201,7 +201,7 @@ function handleHttpRequest(request, response) {
 	) {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/json' });
-		response.write(String(celsius_stats));
+		response.write(String(temp_stats));
 		response.end();
 	} else if (
 		request.url ==
@@ -221,7 +221,7 @@ function handleHttpRequest(request, response) {
 		response.end();
 	} else if (
 		request.url ==
-		'/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=getcelsiuserature&ain=087610006102'
+		'/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=gettemperature&ain=087610006102'
 	) {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/json' });
@@ -229,7 +229,7 @@ function handleHttpRequest(request, response) {
 		response.end();
 	} else if (
 		request.url ==
-		'/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=getcelsiuserature&ain=117951022222'
+		'/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=gettemperature&ain=117951022222'
 	) {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/json' });
@@ -311,14 +311,14 @@ function handleHttpRequest(request, response) {
 		request.url ==
 		'/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=sethkrtsoll&param=36&ain=117951022222'
 	) {
-		//wie auf egal welche celsius reagieren? regex?
+		//wie auf egal welche temp reagieren? regex?
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/json' });
 		response.write(JSON.stringify([ '36' ]));
 		response.end();
 	} else if (
 		request.url ==
-		'/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=applycelsiuslate&ain=tmp6F0093-391363146'
+		'/webservices/homeautoswitch.lua?0=0&sid=' + sid + '&switchcmd=applytemplate&ain=tmp6F0093-391363146'
 	) {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/json' });
@@ -2212,15 +2212,15 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
-	// celsiuslates
-	it('Test ' + adapterShortName + ' adapter: Objects must exist for celsiuslate_tmp6F0093-39091EED0', (done) => {
+	// templates
+	it('Test ' + adapterShortName + ' adapter: Objects must exist for template_tmp6F0093-39091EED0', (done) => {
 		setTimeout(function() {
-			objects.getObject(adapterShortName + '.0.celsiuslate_tmp6F0093-39091EED0.name', (err, obj) => {
-				if (err) console.error('celsiuslate_tmp6F0093-39091EED0.name ' + err);
+			objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.name', (err, obj) => {
+				if (err) console.error('template_tmp6F0093-39091EED0.name ' + err);
 				expect(obj).to.exist;
 				expect(obj).to.be.ok;
-				objects.getObject(adapterShortName + '.0.celsiuslate_tmp6F0093-39091EED0.id', (err, obj) => {
-					if (err) console.error('celsiuslate_tmp6F0093-39091EED0.name ' + err);
+				objects.getObject(adapterShortName + '.0.template_tmp6F0093-39091EED0.id', (err, obj) => {
+					if (err) console.error('template_tmp6F0093-39091EED0.name ' + err);
 					expect(obj).to.exist;
 					expect(obj).to.be.ok;
 					done();
@@ -2229,26 +2229,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 		}, 1000);
 	}).timeout(5000);
 
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 1', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 1', function(done) {
 		this.timeout(5000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091EED0.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp6F0093-39091EED0.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091EED0.name" not set');
+					console.error('state "fritzdect.0.template_tmp6F0093-39091EED0.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp6F0093-39091EED0.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp6F0093-39091EED0.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('Alle aus (Sommer)');
-				states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091EED0.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp6F0093-39091EED0.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091EED0.id" not set');
+						console.error('state "fritzdect.0.template_tmp6F0093-39091EED0.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp6F0093-39091EED0.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp6F0093-39091EED0.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60010');
 						done();
@@ -2258,26 +2258,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 		}, 1000);
 	});
 
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 2', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 2', function(done) {
 		this.timeout(5000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp6F0093-390920878.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp6F0093-390920878.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp6F0093-390920878.name" not set');
+					console.error('state "fritzdect.0.template_tmp6F0093-390920878.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp6F0093-390920878.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp6F0093-390920878.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('Normal Bad');
-				states.getState('fritzdect.0.celsiuslate_tmp6F0093-390920878.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp6F0093-390920878.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp6F0093-390920878.id" not set');
+						console.error('state "fritzdect.0.template_tmp6F0093-390920878.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp6F0093-390920878.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp6F0093-390920878.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60011');
 						done();
@@ -2286,26 +2286,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 3', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 3', function(done) {
 		this.timeout(5000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp6F0093-390920F4A.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp6F0093-390920F4A.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp6F0093-390920F4A.name" not set');
+					console.error('state "fritzdect.0.template_tmp6F0093-390920F4A.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp6F0093-390920F4A.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp6F0093-390920F4A.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('Normal Schlafzimmer');
-				states.getState('fritzdect.0.celsiuslate_tmp6F0093-390920F4A.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp6F0093-390920F4A.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp6F0093-390920F4A.id" not set');
+						console.error('state "fritzdect.0.template_tmp6F0093-390920F4A.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp6F0093-390920F4A.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp6F0093-390920F4A.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60005');
 						done();
@@ -2314,26 +2314,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 4', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 4', function(done) {
 		this.timeout(5000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091E943.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp6F0093-39091E943.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091E943.name" not set');
+					console.error('state "fritzdect.0.template_tmp6F0093-39091E943.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp6F0093-39091E943.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp6F0093-39091E943.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('Urlaub Anfang');
-				states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091E943.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp6F0093-39091E943.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091E943.id" not set');
+						console.error('state "fritzdect.0.template_tmp6F0093-39091E943.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp6F0093-39091E943.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp6F0093-39091E943.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60009');
 						done();
@@ -2342,26 +2342,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 5', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 5', function(done) {
 		this.timeout(5000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp6F0093-391363146.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp6F0093-391363146.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp6F0093-391363146.name" not set');
+					console.error('state "fritzdect.0.template_tmp6F0093-391363146.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp6F0093-391363146.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp6F0093-391363146.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('Urlaub Ende');
-				states.getState('fritzdect.0.celsiuslate_tmp6F0093-391363146.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp6F0093-391363146.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp6F0093-391363146.id" not set');
+						console.error('state "fritzdect.0.template_tmp6F0093-391363146.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp6F0093-391363146.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp6F0093-391363146.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60008');
 						done();
@@ -2370,26 +2370,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 6', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 6', function(done) {
 		this.timeout(30000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091E733.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp6F0093-39091E733.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091E733.name" not set');
+					console.error('state "fritzdect.0.template_tmp6F0093-39091E733.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp6F0093-39091E733.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp6F0093-39091E733.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('Wohnen Home');
-				states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091E733.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp6F0093-39091E733.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091E733.id" not set');
+						console.error('state "fritzdect.0.template_tmp6F0093-39091E733.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp6F0093-39091E733.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp6F0093-39091E733.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60006');
 						done();
@@ -2398,26 +2398,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 7', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 7', function(done) {
 		this.timeout(30000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091E428.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp6F0093-39091E428.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091E428.name" not set');
+					console.error('state "fritzdect.0.template_tmp6F0093-39091E428.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp6F0093-39091E428.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp6F0093-39091E428.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('Wohnen Work');
-				states.getState('fritzdect.0.celsiuslate_tmp6F0093-39091E428.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp6F0093-39091E428.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp6F0093-39091E428.id" not set');
+						console.error('state "fritzdect.0.template_tmp6F0093-39091E428.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp6F0093-39091E428.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp6F0093-39091E428.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60007');
 						done();
@@ -2426,26 +2426,26 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			});
 		}, 1000);
 	});
-	it('Test ' + adapterShortName + ' adapter: Check values of celsiuslate 8', function(done) {
+	it('Test ' + adapterShortName + ' adapter: Check values of template 8', function(done) {
 		this.timeout(30000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.celsiuslate_tmp5665DB-3A1C9EC6F.name', function(err, state) {
+			states.getState('fritzdect.0.template_tmp5665DB-3A1C9EC6F.name', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.celsiuslate_tmp5665DB-3A1C9EC6F.name" not set');
+					console.error('state "fritzdect.0.template_tmp5665DB-3A1C9EC6F.name" not set');
 				} else {
-					console.log('fritzdect.0.DECT_celsiuslate_tmp5665DB-3A1C9EC6F.name         ... ' + state.val);
+					console.log('fritzdect.0.DECT_template_tmp5665DB-3A1C9EC6F.name         ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('vorlage_dect200');
-				states.getState('fritzdect.0.celsiuslate_tmp5665DB-3A1C9EC6F.id', function(err, state) {
+				states.getState('fritzdect.0.template_tmp5665DB-3A1C9EC6F.id', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.celsiuslate_tmp5665DB-3A1C9EC6F.id" not set');
+						console.error('state "fritzdect.0.template_tmp5665DB-3A1C9EC6F.id" not set');
 					} else {
-						console.log('fritzdect.0.celsiuslate_tmp5665DB-3A1C9EC6F.id ... ' + state.val);
+						console.log('fritzdect.0.template_tmp5665DB-3A1C9EC6F.id ... ' + state.val);
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('60101');
 						done();

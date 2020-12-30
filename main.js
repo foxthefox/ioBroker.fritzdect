@@ -1001,6 +1001,7 @@ async function main() {
 		//await devices.forEach(async function(device) {
 		await asyncForEach(devices, async (device) => {
 			typ = 'DECT_';
+			adapter.log.debug('======================================');
 			adapter.log.debug('TRYING on : ' + JSON.stringify(device));
 			// role to be defined
 			if ((device.functionbitmask & 64) == 64) {
@@ -1488,153 +1489,164 @@ async function main() {
 	}
 	function updateDatapoint(key, value, ain) {
 		adapter.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
-		if (key == 'id' || key == 'identifier' || key == 'functionbitmask') {
-			// skip it
-		} else if (key === 'batterylow') {
-			// bool mal anders herum
-			let batt = value == 0 ? false : true;
-			/*
-			if (value == 0) {
-				let batt = false;
-			} else {
-				let batt = true;
-			}
-			*/
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: batt,
-				ack: true
-			});
-		} else if (key == 'celsius' || key == 'offset') {
-			//numbers
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseFloat(value) / 10,
-				ack: true
-			});
-		} else if (key == 'power' || key == 'voltage') {
-			adapter.setState('DECT_' + ain + '.power', {
-				val: parseFloat(value) / 1000,
-				ack: true
-			});
-		} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseFloat(value) / 2,
-				ack: true
-			});
-		} else if (key == 'humidity') {
-			//e.g humidity
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseFloat(value),
-				ack: true
-			});
-		} else if (key == 'tsoll') {
-			adapter.setState('DECT_' + ain + '.tsoll', {
-				val: parseFloat(tsoll) / 2,
-				ack: true
-			});
-			/*
-			if (tsoll < 57) {
-				// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+		if (!value || value == '') {
+			adapter.log.debug(' no value for updating in ' + key);
+		} else {
+			if (
+				key == 'id' ||
+				key == 'identifier' ||
+				key == 'functionbitmask' ||
+				key == 'etsideviceid' ||
+				key == 'unittype' ||
+				key == 'interfaces'
+			) {
+				// skip it
+			} else if (key === 'batterylow') {
+				// bool mal anders herum
+				let batt = value == 0 ? false : true;
+				/*
+				if (value == 0) {
+					let batt = false;
+				} else {
+					let batt = true;
+				}
+				*/
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: batt,
+					ack: true
+				});
+			} else if (key == 'celsius' || key == 'offset') {
+				//numbers
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: parseFloat(value) / 10,
+					ack: true
+				});
+			} else if (key == 'power' || key == 'voltage') {
+				adapter.setState('DECT_' + ain + '.power', {
+					val: parseFloat(value) / 1000,
+					ack: true
+				});
+			} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: parseFloat(value) / 2,
+					ack: true
+				});
+			} else if (key == 'humidity') {
+				//e.g humidity
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: parseFloat(value),
+					ack: true
+				});
+			} else if (key == 'tsoll') {
 				adapter.setState('DECT_' + ain + '.tsoll', {
 					val: parseFloat(tsoll) / 2,
 					ack: true
 				});
-				adapter.setState('DECT_' + ain + '.lasttarget', {
-					val: parseFloat(tsoll) / 2,
-					ack: true
-				}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-				adapter.setState('DECT_' + ain + '.mode', {
-					val: 0,
+				/*
+				if (tsoll < 57) {
+					// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+					adapter.setState('DECT_' + ain + '.tsoll', {
+						val: parseFloat(tsoll) / 2,
+						ack: true
+					});
+					adapter.setState('DECT_' + ain + '.lasttarget', {
+						val: parseFloat(tsoll) / 2,
+						ack: true
+					}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+					adapter.setState('DECT_' + ain + '.mode', {
+						val: 0,
+						ack: true
+					});
+				} else if (tsoll == 253) {
+					adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
+					// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+					adapter.setState('DECT_' + ain + '.mode', {
+						val: 1,
+						ack: true
+					});
+					let currentMode = 'Off';
+				} else if (tsoll == 254) {
+					adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
+					// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+					adapter.setState('DECT_' + ain + '.mode', {
+						val: 2,
+						ack: true
+					});
+					let currentMode = 'On';
+				}
+				adapter.setState('DECT_' + ain + '.operationmode', {
+					val: currentMode,
 					ack: true
 				});
-			} else if (tsoll == 253) {
-				adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
-				// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-				adapter.setState('DECT_' + ain + '.mode', {
-					val: 1,
+				*/
+			} else if (
+				key == 'state' ||
+				key == 'simpleonoff' ||
+				key == 'lock' ||
+				key == 'devicelock' ||
+				key == 'txbusy' ||
+				key == 'present' ||
+				key == 'summeractive' ||
+				key == 'holidayactive' ||
+				key == 'boostactive' ||
+				key == 'windowactive' ||
+				key == 'synchronized'
+			) {
+				//bool
+				let convertValue = value == 1 ? true : false;
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: convertValue,
 					ack: true
 				});
-				let currentMode = 'Off';
-			} else if (tsoll == 254) {
-				adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
-				// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-				adapter.setState('DECT_' + ain + '.mode', {
-					val: 2,
+			} else if (
+				key == 'lastpressedtimestamp' ||
+				key == 'boostactiveendtime' ||
+				key == 'windowopenactiveendtime' ||
+				key == 'endperiod'
+			) {
+				//time
+				let convTime = new Date(value * 1000);
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: convTime,
 					ack: true
 				});
-				let currentMode = 'On';
+			} else if (
+				key == 'errorcode' ||
+				key == 'level' ||
+				key == 'levelpercentage' ||
+				key == 'battery' ||
+				key == 'energy' ||
+				key == 'hue' ||
+				key == 'saturation' ||
+				key == 'temperature' ||
+				key == 'supported_mode' ||
+				key == 'current_mode' ||
+				key == 'humidity'
+			) {
+				// integer number
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: parseInt(value),
+					ack: true
+				});
+			} else if (
+				key == 'fwversion' ||
+				key == 'manufacturer' ||
+				key == 'name' ||
+				key == 'productname' ||
+				key == 'mode'
+			) {
+				// || 'id' , id schon beim initialisieren gesetzt
+				// text
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: value.toString(),
+					ack: true
+				});
+			} else {
+				// unbekannt
+				adapter.log.warn(
+					'unknown datapoint DECT_' + ain + '.' + key + ' please inform devloper and open issue in github'
+				);
 			}
-			adapter.setState('DECT_' + ain + '.operationmode', {
-				val: currentMode,
-				ack: true
-			});
-			*/
-		} else if (
-			key == 'state' ||
-			key == 'simpleonoff' ||
-			key == 'lock' ||
-			key == 'devicelock' ||
-			key == 'txbusy' ||
-			key == 'present' ||
-			key == 'summeractive' ||
-			key == 'holidayactive' ||
-			key == 'boostactive' ||
-			key == 'windowactive' ||
-			key == 'synchronized'
-		) {
-			//bool
-			let convertValue = value == 1 ? true : false;
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: convertValue,
-				ack: true
-			});
-		} else if (
-			key == 'lastpressedtimestamp' ||
-			key == 'boostactiveendtime' ||
-			key == 'windowopenactiveendtime' ||
-			key == 'endperiod'
-		) {
-			//time
-			let convTime = new Date(value * 1000);
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: convTime,
-				ack: true
-			});
-		} else if (
-			key == 'errorcode' ||
-			key == 'level' ||
-			key == 'levelpercentage' ||
-			key == 'battery' ||
-			key == 'energy' ||
-			key == 'hue' ||
-			key == 'saturation' ||
-			key == 'temperature' ||
-			key == 'supported_mode' ||
-			key == 'current_mode' ||
-			key == 'humidity'
-		) {
-			// integer number
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseInt(value),
-				ack: true
-			});
-		} else if (
-			key == 'fwversion' ||
-			key == 'manufacturer' ||
-			key == 'name' ||
-			key == 'productname' ||
-			key == 'mode'
-		) {
-			// || 'id' , id schon beim initialisieren gesetzt
-			// text
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: value.toString(),
-				ack: true
-			});
-		} else {
-			// unbekannt
-			adapter.log.warn(
-				'unknown datapoint DECT_' + ain + '.' + key + ' please inform devloper and open issue in github'
-			);
 		}
 	}
 

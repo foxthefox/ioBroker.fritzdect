@@ -51,6 +51,7 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 ## ioBroker objects
 
 objects in *italic* are not part of all fritz.box configurations
+objects in **bold** are datapoints from the adapter
 
 The datapoints are created on the basis of the returned values of the Fritz AHA API. All groups or devices start wirth "DECT_".
 
@@ -66,47 +67,47 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 |present|boolean|-|true/false -> connected/not available|DECT2x0|DECT3x0|DECT400|DECT440|DECT500|Blinds|Contact|
 |*txbusy*|boolean|-|true/false -> cmd sending active/not active|DECT2x0|DECT3x0|DECT400|DECT440|DECT500|Blinds|Contact|
 |*batterylow*|boolean|-|battery status| |DECT3x0|DECT400|DECT440| | |Contact|
-|*battery*|value|-|actual capacity in %| |DECT3x0|DECT400|DECT440| | |Contact|
+|*battery*|number|-|actual capacity in %| |DECT3x0|DECT400|DECT440| | |Contact|
 |state|boolean|?|true/false |DECT2x0| | | |DECT500|Blinds| |
-|power|value|-|actual power in W|DECT2x0| | | | | | |
-|energy|value|-|actual energy consumption in Wh|DECT2x0| | | | | | |
-|*voltage*|value|-|actual voltage in V|DECT2x0| | | | | | |
+|power|number|-|actual power in W|DECT2x0| | | | | | |
+|energy|number|-|actual energy consumption in Wh|DECT2x0| | | | | | |
+|*voltage*|number|-|actual voltage in V|DECT2x0| | | | | | |
 |lock|boolean|-|UI/API lock|DECT2x0|DECT3x0| | | | | |
 |devicelock|boolean|-|Button lock|DECT2x0|DECT3x0| | | | | |
-|*celsius*|value|-|actual temperature in °C|DECT2x0|DECT3x0| |DECT440| | | |
-|*offset*|value|-|offset temperature in °C|DECT2x0|DECT3x0| |DECT440| | | |
-|*rel_humidity*|value|-|relative humidity %| | | |DECT440| | | |
-|tist|value|x|actual temperature in °C| |DECT3x0| | | | | |
-|tsoll|value|x|target temperature in °C| |DECT3x0| | | | | |
-|komfort|value|-|comfort temperature in °C| |DECT3x0| | | | | |
-|absenk|value|-|night temperature in °C| |DECT3x0| | | | | |
-|hkrmode|array|x| 0=AUTO/1=OFF/2=ON state of thermostat| |DECT3x0| | | | | |
-|lasttarget|value|-| last target temperature in °C| |DECT3x0| | | | | |
+|*celsius*|number|-|actual temperature in °C|DECT2x0|DECT3x0| |DECT440| | | |
+|*offset*|number|-|offset temperature in °C|DECT2x0|DECT3x0| |DECT440| | | |
+|*rel_humidity*|number|-|relative humidity %| | | |DECT440| | | |
+|tist|number|-|actual temperature in °C| |DECT3x0| | | | | |
+|tsoll|number|x|target temperature in °C| |DECT3x0| | | | | |
+|komfort|number|-|comfort temperature in °C| |DECT3x0| | | | | |
+|absenk|number|-|night temperature in °C| |DECT3x0| | | | | |
+|**hkrmode**|array|x| 0=AUTO/1=OFF/2=ON state of thermostat| |DECT3x0| | | | | |
+|**lasttarget**|number|-| last target temperature in °C| |DECT3x0| | | | | |
 |errorcode|number|-|errorcode| |DECT3x0| | | | | |
-|operationList|value|-|list of possible modes| |DECT3x0| | | | | |
-|operationMode|value|-|actual mode| |DECT3x0| | | | | |
+|**operationList**|number-|list of possible modes| |DECT3x0| | | | | |
+|**operationMode**|number|-|actual mode| |DECT3x0| | | | | |
 |*windowopenendtime*|time|-|time when open window status ends| |DECT3x0| | | | | |
 |*windowopenactiv*|boolean|x|status and cmd of window open detection| |DECT3x0| | | | | |
-|*windowopenactivtime*|value|x|time (minutes) when activation of window open | |DECT3x0| | | | | |
-|*boostactive|boolean*|x|boost mode active status and cmd| |DECT3x0| | | | | |
+|**windowopenactivtime**|number|x|time (minutes) when activation of window open | |DECT3x0| | | | | |
+|*boostactive*|boolean|x|boost mode active status and cmd| |DECT3x0| | | | | |
 |*boostactiveendtime*|time|-|time when boost status ends| |DECT3x0| | | | | |
-|*boostactivtime*|value|x|time (minutes) when activation of boost| |DECT3x0| | | | | |
+|**boostactivtime**|number|x|time (minutes) when activation of boost| |DECT3x0| | | | | |
 |*summeractive*|boolean|-|summer program status| |DECT3x0| | | | | |
 |*holidayactive*|boolean|-|holiday program status| |DECT3x0| | | | | |
-|*tchange*|value|-|temp with next change in °C| |DECT3x0| | | | | |
+|*tchange*|number|-|temp with next change in °C| |DECT3x0| | | | | |
 |*endperiod*|time|-|time when next change is active| |DECT3x0| | | | | |
-|supported_modes|value|-|supported colormodes| | | | |DECT500| | |
-|current_mode|value|?|actual colormode| | | | |DECT500| | |
-|level|value|x|level 0-255 | | | | |DECT500|Blinds| |
-|levelpercentage|value|x|level 0-100 % | | | | |DECT500|Blinds| |
-|hue|value|x|color 0-359 | | | | |DECT500| | |
-|saturation|value|x|saturation 0-100| | | | |DECT500| | |
-|temperature|value|x|color temperature (white mode)| | | | |DECT500| | |
-|lastpressedtimestamp|number|-|timestamp| | |DECT400|DECT440| | |Contact|
-|blindsopen|booelan|x|target open| | | | | |Blinds| |
-|blindsclose|boolean|x|target close| | | | | |Blinds| |
-|blindsstop|boolean|x|target stop| | | | | |Blinds| |
-|lastalertchgtimestamp|number|-|timestamp | | | | | |Blinds| |
+|supported_modes|number|-|supported colormodes| | | | |DECT500| | |
+|current_mode|number|?|actual colormode| | | | |DECT500| | |
+|level|number|x|level 0-255 | | | | |DECT500|Blinds| |
+|levelpercentage|number|x|level 0-100 % | | | | |DECT500|Blinds| |
+|hue|number|x|color 0-359 | | | | |DECT500| | |
+|saturation|number|x|saturation 0-100| | | | |DECT500| | |
+|temperature|number|x|color temperature (white mode)| | | | |DECT500| | |
+|lastpressedtimestamp|time|-|timestamp| | |DECT400|DECT440| | |Contact|
+|**blindsopen**|booelan|x|target open| | | | | |Blinds| |
+|**blindsclose**|boolean|x|target close| | | | | |Blinds| |
+|**blindsstop**|boolean|x|target stop| | | | | |Blinds| |
+|lastalertchgtimestamp|time|-|timestamp | | | | | |Blinds| |
 
 
 ### groups
@@ -120,23 +121,23 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 ### templates
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|
-|template.id|text|-|internal id of template|
-|template.name|text|-|name of template|
-|template.toggle|boolean|x|toggle switch for template activation|
-|template.lasttemplate|text|-|last confirmed template|
+|toggle|boolean|x|toggle switch for template activation|
+|lasttemplate|text|-|last confirmed template|
 
 
 ## API limitations
 * too many login attempts to FB are refused by providing '00000000' as response
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command
 * updates to the thermostat are within a 15min range, depending on the previous communication of thermostat with fritzbox the next cycle is sooner or later, but definitely not imediately after an ioBroker intervention
+* only a few color temperatures are accepted (mapped already be the API to valid ones)
+* only the predefined colors are valid combinations (getcolordefaults)
 
 
-## Known Issues:
-Not all FW-versions of fritz.box support all objects.
+## Known Adapter Limitations:
+* Not all FW-versions of fritz.box support all objects.
 
 ## TODO:
-* usage of predefined colors
+* map of data input from user to valid predefined colors (nearest match)
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog

@@ -892,8 +892,8 @@ async function main() {
 		});
 	}
 	async function createThermostat(newId) {
-		adapter.log.debug('create Thermostat objects');
-		adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
+		await adapter.log.debug('create Thermostat objects');
+		await adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
 			type: 'state',
 			common: {
 				name: 'Thermostat operation mode (0=auto, 1=closed, 2=open)',
@@ -907,7 +907,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.lasttarget', {
 			type: 'state',
 			common: {
 				name: 'last setting of target temp',
@@ -920,7 +920,7 @@ async function main() {
 			},
 			native: {}
 		});
-		await adapter.setObjectNotExists('DECT_' + newId + '.operationList', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.operationlist', {
 			type: 'state',
 			common: {
 				name: 'List of operation modes',
@@ -932,11 +932,11 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setState('DECT_' + newId + '.operationList', {
-			val: `On, Off, Holiday, Summer, Comfort, Night`,
+		await adapter.setState('DECT_' + newId + '.operationlist', {
+			val: `Control, On, Off, Holiday, Summer, Boost, WindowOpen`,
 			ack: true
 		});
-		adapter.setObjectNotExists('DECT_' + newId + '.operationMode', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.operationmode', {
 			type: 'state',
 			common: {
 				name: 'Current operation mode',
@@ -1597,6 +1597,12 @@ async function main() {
 							val: 0,
 							ack: true
 						});
+						//always control if in absenk or komfort
+						let currentMode = 'Control';
+						adapter.setState('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
 					} else if (tsoll == 253) {
 						adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
 						// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
@@ -1641,6 +1647,34 @@ async function main() {
 						val: convertValue,
 						ack: true
 					});
+					if (key == 'summeractive' && convertValue == true) {
+						let currentMode = 'Summer';
+						adapter.setState('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
+					}
+					if (key == 'holidayactive' && convertValue == true) {
+						let currentMode = 'Holiday';
+						adapter.setState('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
+					}
+					if (key == 'boostactive' && convertValue == true) {
+						let currentMode = 'Boost';
+						adapter.setState('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
+					}
+					if (key == 'windowopenactiv' && convertValue == true) {
+						let currentMode = 'WindowOpen';
+						adapter.setState('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
+					}
 				} else if (
 					key == 'lastalertchgtimestamp' ||
 					key == 'lastpressedtimestamp' ||

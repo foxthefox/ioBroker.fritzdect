@@ -1394,7 +1394,7 @@ async function main() {
 					try {
 						await createData(devices);
 					} catch (e) {
-						adapter.log.debug(' issue creating devices ' + e);
+						adapter.log.debug(' issue creating devices ' + JSON.stringify(e));
 						throw e;
 					}
 				}
@@ -1411,7 +1411,7 @@ async function main() {
 					try {
 						await createData(groups);
 					} catch (e) {
-						adapter.log.debug(' issue creating groups ' + e);
+						adapter.log.debug(' issue creating groups ' + JSON.stringify(e));
 						throw e;
 					}
 				}
@@ -1503,31 +1503,31 @@ async function main() {
 				ack: true
 			});
 		} else if (key == 'tsoll') {
-			if (targettemp < 57) {
+			if (tsoll < 57) {
 				// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 				adapter.setState('DECT_' + ain + '.tsoll', {
-					val: parseFloat(targettemp) / 2,
+					val: parseFloat(tsoll) / 2,
 					ack: true
 				});
 				adapter.setState('DECT_' + ain + '.lasttarget', {
-					val: parseFloat(targettemp) / 2,
+					val: parseFloat(tsoll) / 2,
 					ack: true
 				}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
 				adapter.setState('DECT_' + ain + '.mode', {
 					val: 0,
 					ack: true
 				});
-			} else if (targettemp == 253) {
+			} else if (tsoll == 253) {
 				adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
-				// adapter.setState('DECT_'+ ain +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+				// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
 				adapter.setState('DECT_' + ain + '.mode', {
 					val: 1,
 					ack: true
 				});
 				currentMode = 'Off';
-			} else if (targettemp == 254) {
+			} else if (tsoll == 254) {
 				adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
-				// adapter.setState('DECT_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+				// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
 				adapter.setState('DECT_' + ain + '.mode', {
 					val: 2,
 					ack: true
@@ -1622,7 +1622,7 @@ async function main() {
 				}
 			});
 		} catch (e) {
-			adapter.log.debug(' issue in update data ' + e);
+			adapter.log.debug(' issue in update data ' + JSON.stringify(e));
 			throw {
 				msg: 'issue updating data',
 				function: 'updateData',
@@ -1698,7 +1698,7 @@ async function main() {
 									try {
 										updateData(devices[i], devices[i].identifier);
 									} catch (e) {
-										adapter.log.error(' issue updating device ' + e);
+										adapter.log.error(' issue updating device ' + JSON.stringify(e));
 										throw {
 											msg: 'issue updating device',
 											function: 'updateDevices',
@@ -1709,7 +1709,7 @@ async function main() {
 							}
 						}
 					} catch (e) {
-						adapter.log.error(' issue updating device ' + e);
+						adapter.log.error(' issue updating device ' + JSON.stringify(e));
 						throw {
 							msg: 'issue updating device',
 							function: 'updateDevices',
@@ -1751,7 +1751,7 @@ async function main() {
 								adapter.log.debug(' calling update data .....');
 								updateData(device, device.identifier);
 							} catch (e) {
-								adapter.log.error(' issue updating group ' + JSON.stringify(device) + ' ' + e);
+								adapter.log.error(' issue updating group ' + JSON.stringify(e));
 								throw {
 									msg: 'issue updating group',
 									function: 'updateDevices',

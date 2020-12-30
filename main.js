@@ -522,7 +522,7 @@ function startAdapter(options) {
 								});
 								result = groups;
 							})
-							.then(function(devicelistinfos) {
+							.then(function() {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -548,7 +548,7 @@ function startAdapter(options) {
 									});
 								result = templates;
 							})
-							.then(function(templatelistinfos) {
+							.then(function() {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -568,7 +568,7 @@ function startAdapter(options) {
 								var devicestats = parser.xml2json(statisticinfos);
 								result = devicestats;
 							})
-							.then(function(statisticinfos) {
+							.then(function() {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -586,7 +586,7 @@ function startAdapter(options) {
 							.then(function(colorinfos) {
 								result = colorinfos;
 							})
-							.then(function(colorinfos) {
+							.then(function() {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -1074,6 +1074,7 @@ async function main() {
 					if (device.etsiunitinfo.etsideviceid) {
 						//replace id with etsi
 						await adapter.log.debug('etsideviceid to be replaced');
+						await adapter.log.debug('etsideviceid ' + device.etsiunitinfo.etsideviceid);
 						await adapter.setState('DECT_' + device.identifier + '.id', {
 							val: device.etsiunitinfo.etsideviceid.toString(),
 							ack: true
@@ -1582,48 +1583,41 @@ async function main() {
 						ack: true
 					});
 				} else if (key == 'tsoll') {
-					//shortcut
-					adapter.setState('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 2,
+					if (tsoll < 57) {
+						// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+						adapter.setState('DECT_' + ain + '.tsoll', {
+							val: parseFloat(value) / 2,
+							ack: true
+						});
+						adapter.setState('DECT_' + ain + '.lasttarget', {
+							val: parseFloat(value) / 2,
+							ack: true
+						}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+						adapter.setState('DECT_' + ain + '.mode', {
+							val: 0,
+							ack: true
+						});
+					} else if (tsoll == 253) {
+						adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
+						// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						adapter.setState('DECT_' + ain + '.mode', {
+							val: 1,
+							ack: true
+						});
+						let currentMode = 'Off';
+					} else if (tsoll == 254) {
+						adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
+						// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						adapter.setState('DECT_' + ain + '.mode', {
+							val: 2,
+							ack: true
+						});
+						let currentMode = 'On';
+					}
+					adapter.setState('DECT_' + ain + '.operationmode', {
+						val: currentMode,
 						ack: true
 					});
-					/*
-				if (tsoll < 57) {
-					// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-					adapter.setState('DECT_' + ain + '.tsoll', {
-						val: parseFloat(value) / 2,
-						ack: true
-					});
-					adapter.setState('DECT_' + ain + '.lasttarget', {
-						val: parseFloat(value) / 2,
-						ack: true
-					}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-					adapter.setState('DECT_' + ain + '.mode', {
-						val: 0,
-						ack: true
-					});
-				} else if (tsoll == 253) {
-					adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
-					// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-					adapter.setState('DECT_' + ain + '.mode', {
-						val: 1,
-						ack: true
-					});
-					let currentMode = 'Off';
-				} else if (tsoll == 254) {
-					adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
-					// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-					adapter.setState('DECT_' + ain + '.mode', {
-						val: 2,
-						ack: true
-					});
-					let currentMode = 'On';
-				}
-				adapter.setState('DECT_' + ain + '.operationmode', {
-					val: currentMode,
-					ack: true
-				});
-				*/
 				} else if (
 					key == 'state' ||
 					key == 'simpleonoff' ||

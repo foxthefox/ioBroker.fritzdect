@@ -1102,7 +1102,8 @@ async function main() {
 			// create button parts
 			if (device.button) {
 				if (!Array.isArray(device.button)) {
-					Object.entries(device.button).forEach(async ([ key, value ]) => {
+					await asyncForEach(Object.keys(device.button), async (key) => {
+						//Object.entries(device.button).forEach(async ([ key, value ]) => {
 						if (key === 'lastpressedtimestamp') {
 							await createTimeState(device.identifier, 'lastpressedtimestamp', 'last button Time Stamp');
 						} else if (key === 'id') {
@@ -1115,8 +1116,8 @@ async function main() {
 					});
 				} else if (Array.isArray(device.button)) {
 					//Unterobjekte anlegen
-					adapter.log.info('setting up button(s) ');
-					await device.button.forEach(async function(button) {
+					await adapter.log.info('setting up button(s) ');
+					await asyncForEach(device.button, async (button) => {
 						typ = 'DECT_' + device.identifier + '.button.';
 						await createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
 						Object.entries(button).forEach(async ([ key, value ]) => {
@@ -1543,7 +1544,7 @@ async function main() {
 					val: 2,
 					ack: true
 				});
-				currentMode = 'On';
+				let currentMode = 'On';
 			}
 			adapter.setState('DECT_' + ain + '.operationmode', {
 				val: currentMode,

@@ -1075,18 +1075,18 @@ async function main() {
 						//replace id with etsi
 						await adapter.log.debug('etsideviceid to be replaced');
 						await adapter.setState('DECT_' + device.identifier + '.id', {
-							val: device.etsiunitinfo.etsideviceid,
+							val: device.etsiunitinfo.etsideviceid.toString(),
 							ack: true
 						});
 						// noch nicht perfekt da dies überschrieben wird
 						await adapter.setState('DECT_' + device.identifier + '.fwversion', {
-							val: device.etsiunitinfo.fwversion,
+							val: device.etsiunitinfo.fwversion.toString(),
 							ack: true
 						});
 					} else {
 						//device.id
 						await adapter.setState('DECT_' + device.identifier + '.id', {
-							val: device.id,
+							val: device.id.toString(),
 							ack: true
 						});
 					}
@@ -1531,7 +1531,6 @@ async function main() {
 				adapter.log.debug(' no value for updating in ' + key);
 			} else {
 				if (
-					key == 'id' ||
 					key == 'identifier' ||
 					key == 'functionbitmask' ||
 					key == 'etsideviceid' ||
@@ -1658,7 +1657,6 @@ async function main() {
 					key == 'hue' ||
 					key == 'saturation' ||
 					key == 'temperature' ||
-					key == 'supported_modes' ||
 					key == 'current_mode' ||
 					key == 'humidity'
 				) {
@@ -1668,10 +1666,12 @@ async function main() {
 						ack: true
 					});
 				} else if (
+					key == 'id' ||
 					key == 'fwversion' ||
 					key == 'manufacturer' ||
 					key == 'name' ||
 					key == 'productname' ||
+					key == 'supported_modes' ||
 					key == 'members' ||
 					key == 'masterdeviceid' ||
 					key == 'mode'

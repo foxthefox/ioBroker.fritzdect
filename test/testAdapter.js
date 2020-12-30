@@ -1191,7 +1191,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 								console.log('fritzdect.0.DECT_112240205290-1.id             ... ' + state.val);
 							}
 							expect(state.val).to.exist;
-							expect(state.val).to.be.equal('2001');
+							expect(state.val).to.be.equal('2413');
 							states.getState('fritzdect.0.DECT_112240205290-1.name', function(err, state) {
 								if (err) console.error(err);
 								expect(state).to.exist;
@@ -1263,7 +1263,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 								console.log('fritzdect.0.DECT_119340141058-2.id           ... ' + state.val);
 							}
 							expect(state.val).to.exist;
-							expect(state.val).to.be.equal('2000');
+							expect(state.val).to.be.equal('406');
 							states.getState('fritzdect.0.DECT_119340141058-2.name', function(err, state) {
 								if (err) console.error(err);
 								expect(state).to.exist;
@@ -2190,7 +2190,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 							console.log('fritzdect.0.DECT_119340395779-1.id            ... ' + state.val);
 						}
 						expect(state.val).to.exist;
-						expect(state.val).to.be.equal('2000');
+						expect(state.val).to.be.equal('406');
 						states.getState('fritzdect.0.DECT_119340395779-1.fwversion', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;

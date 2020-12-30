@@ -700,7 +700,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 												}
 												expect(state.val).to.exist;
 												expect(state.val).to.be.equal(15);
-												states.getState('fritzdect.0.DECT_117951022222.offset', function(
+												states.getState('fritzdect.0.DECT_117951022222.tist', function(
 													/// hier noch was tun
 													err,
 													state
@@ -709,12 +709,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 													expect(state).to.exist;
 													if (!state) {
 														console.error(
-															'state "fritzdect.0.DECT_117951022222.offset" not set'
+															'state "fritzdect.0.DECT_117951022222.tist" not set'
 														);
 													} else {
 														console.log(
-															'fritzdect.0.DECT_117951022222.offset        ... ' +
-																state.val
+															'fritzdect.0.DECT_117951022222.tist        ... ' + state.val
 														);
 													}
 													expect(state.val).to.exist;
@@ -914,7 +913,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 												}
 												expect(state.val).to.exist;
 												expect(state.val).to.be.equal(15);
-												states.getState('fritzdect.0.DECT_117951033333.offset', function(
+												states.getState('fritzdect.0.DECT_117951033333.tist', function(
 													err,
 													state
 												) {
@@ -922,12 +921,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 													expect(state).to.exist;
 													if (!state) {
 														console.error(
-															'state "fritzdect.0.DECT_117951033333.offset" not set'
+															'state "fritzdect.0.DECT_117951033333.tist" not set'
 														);
 													} else {
 														console.log(
-															'fritzdect.0.DECT_117951033333.offset        ... ' +
-																state.val
+															'fritzdect.0.DECT_117951033333.tist        ... ' + state.val
 														);
 													}
 													expect(state.val).to.exist;
@@ -1087,7 +1085,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 												}
 												expect(state.val).to.exist;
 												expect(state.val).to.be.equal(16);
-												states.getState('fritzdect.0.DECT_119600642220.offset', function(
+												states.getState('fritzdect.0.DECT_119600642220.tist', function(
 													err,
 													state
 												) {
@@ -1095,12 +1093,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 													expect(state).to.exist;
 													if (!state) {
 														console.error(
-															'state "fritzdect.0.DECT_119600642220.offset" not set'
+															'state "fritzdect.0.DECT_119600642220.tist" not set'
 														);
 													} else {
 														console.log(
-															'fritzdect.0.DECT_119600642220.offset        ... ' +
-																state.val
+															'fritzdect.0.DECT_119600642220.tist        ... ' + state.val
 														);
 													}
 													expect(state.val).to.exist;
@@ -1277,13 +1274,20 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 								}
 								expect(state.val).to.exist;
 								expect(state.val).to.be.equal('DectTaster_F1');
-								states.getState('fritzdect.0.DECT_119340141058-2.lastclick', function(err, state) {
+								states.getState('fritzdect.0.DECT_119340141058-2.lastpressedtimestamp', function(
+									err,
+									state
+								) {
 									if (err) console.error(err);
 									expect(state).to.exist;
 									if (!state) {
-										console.error('state "fritzdect.0.DECT_119340141058-2.lastclick" not set'); ////
+										console.error(
+											'state "fritzdect.0.DECT_119340141058-2.lastpressedtimestamp" not set'
+										);
 									} else {
-										console.log('fritzdect.0.DECT_119340141058-2.lastclick  ... ' + state.val);
+										console.log(
+											'fritzdect.0.DECT_119340141058-2.lastpressedtimestamp  ... ' + state.val
+										);
 										expect(state.val).to.exist;
 										expect(state.val).to.be.equal('2018-10-01T20:41:32.000Z');
 										done();
@@ -1299,68 +1303,86 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 	it('Test ' + adapterShortName + ' adapter: Check values of 2nd Button from FD400', function(done) {
 		this.timeout(30000);
 		setTimeout(function() {
-			states.getState('fritzdect.0.DECT_13096321567-9.productname', function(err, state) {
+			states.getState('fritzdect.0.DECT_13096321567.productname', function(err, state) {
 				if (err) console.error(err);
 				expect(state).to.exist;
 				if (!state) {
-					console.error('state "fritzdect.0.DECT_13096321567-9.productname" not set');
+					console.error('state "fritzdect.0.DECT_13096321567.productname" not set');
 				} else {
-					console.log('fritzdect.0.DECT_13096321567-9.productname     ... ' + state.val);
+					console.log('fritzdect.0.DECT_13096321567.productname     ... ' + state.val);
 				}
 				expect(state.val).to.exist;
 				expect(state.val).to.be.equal('FRITZ!DECT 400');
-				states.getState('fritzdect.0.DECT_13096321567-9.manufacturer', function(err, state) {
+				states.getState('fritzdect.0.DECT_13096321567.manufacturer', function(err, state) {
 					if (err) console.error(err);
 					expect(state).to.exist;
 					if (!state) {
-						console.error('state "fritzdect.0.DECT_13096321567-9.manufacturer" not set');
+						console.error('state "fritzdect.0.DECT_13096321567.manufacturer" not set');
 					} else {
-						console.log('fritzdect.0.DECT_13096321567-9.manufacturer ... ' + state.val);
+						console.log('fritzdect.0.DECT_13096321567.manufacturer ... ' + state.val);
 					}
 					expect(state.val).to.exist;
 					expect(state.val).to.be.equal('AVM');
-					states.getState('fritzdect.0.DECT_13096321567-9.fwversion', function(err, state) {
+					states.getState('fritzdect.0.DECT_13096321567.fwversion', function(err, state) {
 						if (err) console.error(err);
 						expect(state).to.exist;
 						if (!state) {
-							console.error('state "fritzdect.0.DECT_13096321567-9.fwversion" not set');
+							console.error('state "fritzdect.0.DECT_13096321567.fwversion" not set');
 						} else {
 							console.log('fritzdect.0.DECT_13096321567-9.fwversion    ... ' + state.val);
 						}
 						expect(state.val).to.exist;
 						expect(state.val).to.be.equal('04.90');
-						states.getState('fritzdect.0.DECT_13096321567-9.id', function(err, state) {
+						states.getState('fritzdect.0.DECT_13096321567.button.13096321567-9.id', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
 							if (!state) {
-								console.error('state "fritzdect.0.DECT_13096321567-9.id" not set');
+								console.error('state "fritzdect.0.DECT_13096321567.button.13096321567-9.id" not set');
 							} else {
-								console.log('fritzdect.0.DECT_13096321567-9.id           ... ' + state.val);
+								console.log(
+									'fritzdect.0.DECT_13096321567.button.13096321567-9.id           ... ' + state.val
+								);
 							}
 							expect(state.val).to.exist;
 							expect(state.val).to.be.equal('5001');
-							states.getState('fritzdect.0.DECT_13096321567-9.name', function(err, state) {
+							states.getState('fritzdect.0.DECT_13096321567.button.13096321567-9.name', function(
+								err,
+								state
+							) {
 								if (err) console.error(err);
 								expect(state).to.exist;
 								if (!state) {
-									console.error('state "fritzdect.0.DECT_13096321567-9.name" not set');
+									console.error(
+										'state "fritzdect.0.DECT_13096321567.button.13096321567-9.name" not set'
+									);
 								} else {
-									console.log('fritzdect.0.DECT_13096321567-9.name         ... ' + state.val);
+									console.log(
+										'fritzdect.0.DECT_13096321567.button.13096321567-9.name         ... ' +
+											state.val
+									);
 								}
 								expect(state.val).to.exist;
 								expect(state.val).to.be.equal('FRITZ!DECT 400 #14: lang');
-								states.getState('fritzdect.0.DECT_13096321567-9.lastclick', function(err, state) {
-									if (err) console.error(err);
-									expect(state).to.exist;
-									if (!state) {
-										console.error('state "fritzdect.0.DECT_13096321567-9.lastclick" not set');
-									} else {
-										console.log('fritzdect.0.DECT_13096321567-9.lastclick  ... ' + state.val);
-										expect(state.val).to.exist;
-										expect(state.val).to.be.equal('2019-02-03T12:06:35.000Z');
-										done();
+								states.getState(
+									'fritzdect.0.DECT_13096321567.button.13096321567-9.lastpressedtimestamp',
+									function(err, state) {
+										if (err) console.error(err);
+										expect(state).to.exist;
+										if (!state) {
+											console.error(
+												'state "fritzdect.0.DECT_13096321567.button.13096321567-9.lastpressedtimestamp" not set'
+											);
+										} else {
+											console.log(
+												'fritzdect.0.DECT_13096321567.button.13096321567-9.lastpressedtimestamp  ... ' +
+													state.val
+											);
+											expect(state.val).to.exist;
+											expect(state.val).to.be.equal('2019-02-03T12:06:35.000Z');
+											done();
+										}
 									}
-								});
+								);
 							});
 						});
 					});

@@ -817,9 +817,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createTemplateResponse() {
-		adapter.log.debug('create template.lasttemplate for response ');
-		adapter.setObjectNotExists('template', {
+	async function createTemplateResponse() {
+		await adapter.log.debug('create template.lasttemplate for response ');
+		await adapter.setObjectNotExists('template', {
 			type: 'channel',
 			common: {
 				name: 'template response',
@@ -827,7 +827,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('template.lasttemplate', {
+		await adapter.setObjectNotExists('template.lasttemplate', {
 			type: 'state',
 			common: {
 				name: 'template set',
@@ -841,8 +841,8 @@ async function main() {
 		});
 	}
 	async function createTemplate(typ, newId, name, role, id) {
-		adapter.log.debug('create Template objects ');
-		adapter.setObjectNotExists(typ + newId, {
+		await adapter.log.debug('create Template objects ');
+		await adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
 			common: {
 				name: name,
@@ -852,7 +852,7 @@ async function main() {
 				aid: newId
 			}
 		});
-		adapter.setObjectNotExists(typ + newId + '.id', {
+		await adapter.setObjectNotExists(typ + newId + '.id', {
 			type: 'state',
 			common: {
 				name: 'ID',
@@ -864,7 +864,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.id', { val: id, ack: true });
+		await adapter.setState(typ + newId + '.id', { val: id, ack: true });
 		await adapter.setObjectNotExists(typ + newId + '.name', {
 			type: 'state',
 			common: {
@@ -877,8 +877,8 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.name', { val: name, ack: true });
-		adapter.setObjectNotExists(typ + newId + '.toggle', {
+		await adapter.setState(typ + newId + '.name', { val: name, ack: true });
+		await adapter.setObjectNotExists(typ + newId + '.toggle', {
 			type: 'state',
 			common: {
 				name: 'Toggle template',
@@ -950,7 +950,7 @@ async function main() {
 		});
 	}
 	async function createBlind(newId) {
-		adapter.log.debug('create Blinds objects');
+		await adapter.log.debug('create Blinds objects');
 		await adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
 			type: 'state',
 			common: {
@@ -1044,7 +1044,7 @@ async function main() {
 			if (device.fwversion) {
 				await createInfoState(device.identifier, 'fwversion', 'Firmware Version');
 			}
-			if (device.maunfacturer) {
+			if (device.manufacturer) {
 				await createInfoState(device.identifier, 'manufacturer', 'Manufacturer');
 			}
 			if (device.productname) {
@@ -1430,7 +1430,7 @@ async function main() {
 				adapter.log.debug('groups\n');
 				adapter.log.debug(JSON.stringify(groups));
 				if (groups.length) {
-					adapter.log.info('create groups ' + groups.length);
+					adapter.log.info('CREATE groups ' + groups.length);
 					try {
 						await createData(groups);
 					} catch (e) {
@@ -1439,9 +1439,11 @@ async function main() {
 					}
 				}
 			})
+			/*
 			.then(function() {
 				pollFritzData();
 			})
+			*/
 			.catch(errorHandler);
 	}
 
@@ -1460,8 +1462,8 @@ async function main() {
 				adapter.log.debug(JSON.stringify(templates));
 				if (templates.length) {
 					adapter.log.info('create Templates ' + templates.length);
-					createTemplateResponse();
-					templates.forEach(async function(template) {
+					await createTemplateResponse();
+					await asyncForEach(templates, async (template) => {
 						if (
 							(template.functionbitmask & 320) == 320 ||
 							(template.functionbitmask & 4160) == 4160 ||
@@ -1490,7 +1492,7 @@ async function main() {
 	function updateDatapoint(key, value, ain) {
 		adapter.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
 		try {
-			if (!value || value == '') {
+			if (!value || value == '' || !key) {
 				adapter.log.debug(' no value for updating in ' + key);
 			} else {
 				if (
@@ -1660,6 +1662,7 @@ async function main() {
 		}
 	}
 	function updateData(array, ident) {
+		adapter.log.debug('======================================');
 		adapter.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
 		try {
 			Object.entries(array).forEach(([ key, value ]) => {
@@ -1832,7 +1835,7 @@ async function main() {
 
 	await createDevices();
 	await createTemplates();
-	// await pollFritzData();
+	await pollFritzData();
 
 	// in this template all states changes inside the adapters namespace are subscribed
 	adapter.subscribeStates('*');

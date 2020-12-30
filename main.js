@@ -3,7 +3,7 @@
 
 'use strict';
 
-const Fritz = require('./lib/fritzhttp.js').Fritz;
+const Fritz = require('./lib/fritzhttp.js');
 const parser = require('xml2json-light');
 // you have to require the utils module and call adapter function
 
@@ -671,16 +671,17 @@ process.on('SIGINT', function() {
 	if (fritzTimeout) clearTimeout(fritzTimeout);
 });
 
-function main() {
+async function main() {
 	var username = adapter.config.fritz_user;
 	var password = adapter.config.fritz_pw;
 	var moreParam = adapter.config.fritz_ip;
 
 	var fritz = new Fritz(username, password || '', moreParam || '');
 
-	function createObject(typ, newId, name, role) {
-		adapter.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
-		adapter.setObjectNotExists(typ + newId, {
+	async function createObject(typ, newId, name, role) {
+		await adapter.log.debug('____________________________________________');
+		await adapter.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
+		await adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
 			common: {
 				name: name,
@@ -691,9 +692,9 @@ function main() {
 			}
 		});
 	}
-	function createInfoState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+	async function createInfoState(newId, datapoint, name) {
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -706,9 +707,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createIndicatorState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+	async function createIndicatorState(newId, datapoint, name) {
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -721,9 +722,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createValueState(newId, datapoint, name, min, max, unit) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+	async function createValueState(newId, datapoint, name, min, max, unit) {
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -739,9 +740,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createTimeState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+	async function createTimeState(newId, datapoint, name) {
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -754,9 +755,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createButton(newId, datapoint, name) {
+	async function createButton(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -769,9 +770,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createSwitch(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+	async function createSwitch(newId, datapoint, name) {
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -784,9 +785,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createModeState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+	async function createModeState(newId, datapoint, name) {
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -799,9 +800,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createValueCtrl(newId, datapoint, name, min, max, role) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+	async function createValueCtrl(newId, datapoint, name, min, max, role) {
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -816,9 +817,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createTemplateResponse() {
-		adapter.log.debug('create template.lasttemplate for response ');
-		adapter.setObjectNotExists('template', {
+	async function createTemplateResponse() {
+		await adapter.log.debug('create template.lasttemplate for response ');
+		await adapter.setObjectNotExists('template', {
 			type: 'channel',
 			common: {
 				name: 'template response',
@@ -826,7 +827,7 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('template.lasttemplate', {
+		await adapter.setObjectNotExists('template.lasttemplate', {
 			type: 'state',
 			common: {
 				name: 'template set',
@@ -839,9 +840,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createTemplate(typ, newId, name, role, id) {
-		adapter.log.debug('create Template objects ');
-		adapter.setObjectNotExists(typ + newId, {
+	async function createTemplate(typ, newId, name, role, id) {
+		await adapter.log.debug('create Template objects ');
+		await adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
 			common: {
 				name: name,
@@ -851,7 +852,7 @@ function main() {
 				aid: newId
 			}
 		});
-		adapter.setObjectNotExists(typ + newId + '.id', {
+		await adapter.setObjectNotExists(typ + newId + '.id', {
 			type: 'state',
 			common: {
 				name: 'ID',
@@ -863,8 +864,8 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.id', { val: id, ack: true });
-		adapter.setObjectNotExists(typ + newId + '.name', {
+		await adapter.setState(typ + newId + '.id', { val: id, ack: true });
+		await adapter.setObjectNotExists(typ + newId + '.name', {
 			type: 'state',
 			common: {
 				name: 'Name',
@@ -876,8 +877,8 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setState(typ + newId + '.name', { val: name, ack: true });
-		adapter.setObjectNotExists(typ + newId + '.toggle', {
+		await adapter.setState(typ + newId + '.name', { val: name, ack: true });
+		await adapter.setObjectNotExists(typ + newId + '.toggle', {
 			type: 'state',
 			common: {
 				name: 'Toggle template',
@@ -890,7 +891,7 @@ function main() {
 			native: {}
 		});
 	}
-	function createThermostat(newId) {
+	async function createThermostat(newId) {
 		adapter.log.debug('create Thermostat objects');
 		adapter.setObjectNotExists('DECT_' + newId + '.hkrmode', {
 			type: 'state',
@@ -919,7 +920,7 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT' + newId + '.operationList', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.operationList', {
 			type: 'state',
 			common: {
 				name: 'List of operation modes',
@@ -948,9 +949,9 @@ function main() {
 			native: {}
 		});
 	}
-	function createBlind(newId) {
-		adapter.log.debug('create Blinds objects');
-		adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
+	async function createBlind(newId) {
+		await adapter.log.debug('create Blinds objects');
+		await adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
 			type: 'state',
 			common: {
 				name: 'Switch open',
@@ -962,7 +963,7 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT_' + newId + '.blindsclose', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.blindsclose', {
 			type: 'state',
 			common: {
 				name: 'Switch close',
@@ -974,7 +975,7 @@ function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT_' + newId + '.blindsstop', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.blindsstop', {
 			type: 'state',
 			common: {
 				name: 'Switch STOP',
@@ -988,12 +989,456 @@ function main() {
 		});
 	}
 
-	function createDevices() {
-		fritz
+	async function asyncForEach(array, callback) {
+		for (let index = 0; index < array.length; index++) {
+			await callback(array[index], index, array);
+		}
+	}
+
+	async function createData(devices) {
+		var typ = '';
+		var role = '';
+		//await devices.forEach(async function(device) {
+		await asyncForEach(devices, async (device) => {
+			typ = 'DECT_';
+			role = '';
+			adapter.log.debug('======================================');
+			adapter.log.debug('TRYING on : ' + JSON.stringify(device));
+			// role to be defined
+			if ((device.functionbitmask & 64) == 64) {
+				role = 'thermo.heat';
+			} else if ((device.functionbitmask & 512) == 512) {
+				//DECT300/301
+				role = 'switch';
+			} else if (device.functionbitmask == 1024 || 1024) {
+				//DECT200/210
+				role = 'thermo';
+			} else if (device.functionbitmask == 288 || 1048864) {
+				// Repeater
+				role = 'thermo';
+			} else if (device.functionbitmask == 237572) {
+				// DECT440
+				role = 'light';
+			} else if (device.functionbitmask == 335888) {
+				//DECT500
+				role = 'blinds';
+			} else if (
+				(device.functionbitmask & 16) == 16 ||
+				(device.functionbitmask & 8) == 8 ||
+				(device.functionbitmask & 32) == 32
+			) {
+				//Blinds
+				role = 'sensor';
+			} else if (device.functionbitmask == 1) {
+				role = 'etsi';
+				// replace id, fwversion in vorher erzeugten device, spätestens beim update
+				adapter.log.debug('skipping etsi !!!');
+			} else {
+				role = 'other';
+				adapter.log.warn(' unknown functionbitmask, please open issue on github ' + device.functionbitmask);
+			}
+			// no break in else if
+			// so we use all except etsi and other
+			// other might be created, but better to warn, if during runtime it changes the updates will work until restart and new creation of datapoints
+			if (role != 'etsi') {
+				// create Master Object
+				await createObject(typ, device.identifier, device.name, role);
+
+				// create general
+				if (device.fwversion) {
+					await createInfoState(device.identifier, 'fwversion', 'Firmware Version');
+				}
+				if (device.manufacturer) {
+					await createInfoState(device.identifier, 'manufacturer', 'Manufacturer');
+				}
+				if (device.productname) {
+					await createInfoState(device.identifier, 'productname', 'Product Name');
+				}
+				if (device.present) {
+					await createIndicatorState(device.identifier, 'present', 'device present');
+				}
+				if (device.name) {
+					await createInfoState(device.identifier, 'name', 'Device Name');
+				}
+				if (device.txbusy) {
+					await createIndicatorState(device.identifier, 'txbusy', 'Trasmitting active');
+				}
+				if (device.synchronized) {
+					await createIndicatorState(device.identifier, 'synchronized', 'Synchronized Status');
+				}
+				//always ID
+				await createInfoState(device.identifier, 'id', 'Device ID');
+				//etsideviceid im gleichen Object
+				if (device.etsiunitinfo) {
+					await adapter.log.debug('etsi part');
+					if (device.etsiunitinfo.etsideviceid) {
+						//replace id with etsi
+						await adapter.log.debug('etsideviceid to be replaced');
+						await adapter.setState('DECT_' + device.identifier + '.id', {
+							val: device.etsiunitinfo.etsideviceid,
+							ack: true
+						});
+						// noch nicht perfekt da dies überschrieben wird
+						await adapter.setState('DECT_' + device.identifier + '.fwversion', {
+							val: device.etsiunitinfo.fwversion,
+							ack: true
+						});
+					} else {
+						//device.id
+						await adapter.setState('DECT_' + device.identifier + '.id', {
+							val: device.id,
+							ack: true
+						});
+					}
+					//check for blinds control
+					if (device.etsiunitinfo.unittype == 281) {
+						//additional blind datapoints
+						await createBlind(device.identifier);
+					}
+				}
+
+				// create battery devices
+				if (device.battery) {
+					await createValueState(device.identifier, 'battery', 'Battery Charge State', 0, 100, '%');
+				}
+				if (device.batterylow) {
+					await createIndicatorState(device.identifier, 'batterylow', 'Battery Low State');
+				}
+
+				// create button parts
+				if (device.button) {
+					if (!Array.isArray(device.button)) {
+						await asyncForEach(Object.keys(device.button), async (key) => {
+							if (key === 'lastpressedtimestamp') {
+								await createTimeState(
+									device.identifier,
+									'lastpressedtimestamp',
+									'last button Time Stamp'
+								);
+							} else if (key === 'id') {
+								await createInfoState(device.identifier, 'id', 'Button ID');
+							} else if (key === 'name') {
+								await createInfoState(device.identifier, 'name', 'Button Name');
+							} else {
+								adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							}
+						});
+					} else if (Array.isArray(device.button)) {
+						//Unterobjekte anlegen
+						await adapter.log.info('setting up button(s) ');
+						await asyncForEach(device.button, async (button) => {
+							typ = 'DECT_' + device.identifier + '.button.';
+							await createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
+							await asyncForEach(Object.keys(button), async (key) => {
+								if (key === 'lastpressedtimestamp') {
+									await createTimeState(
+										device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
+										'lastpressedtimestamp',
+										'last button Time Stamp'
+									);
+								} else if (key === 'identifier') {
+									//already part of the object
+								} else if (key === 'id') {
+									await createInfoState(
+										device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
+										'id',
+										'Button ID'
+									);
+								} else if (key === 'name') {
+									await createInfoState(
+										device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
+										'name',
+										'Button Name'
+									);
+								} else {
+									adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+								}
+							});
+						});
+					}
+				}
+				//create alert
+				if (device.alert) {
+					await adapter.log.info('setting up alert ');
+					await asyncForEach(Object.keys(device.alert), async (key) => {
+						if (key === 'state') {
+							await createIndicatorState(device.identifier, 'state', 'Alert State');
+						} else if (key === 'lastalertchgtimestamp') {
+							await createTimeState(device.identifier, 'lastalertchgtimestamp', 'Alert last Time');
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// create switch
+				if (device.switch) {
+					await adapter.log.info('setting up switch ');
+					await asyncForEach(Object.keys(device.switch), async (key) => {
+						if (key === 'state') {
+							await createSwitch(device.identifier, 'state', 'Switch Status and Control');
+						} else if (key === 'mode') {
+							await createInfoState(device.identifier, 'mode', 'Switch Mode');
+						} else if (key === 'lock') {
+							await createIndicatorState(device.identifier, 'lock', 'API Lock');
+						} else if (key === 'devicelock') {
+							await createIndicatorState(device.identifier, 'devicelock', 'Device (Button)lock');
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// powermeter
+				if (device.powermeter) {
+					await adapter.log.info('setting up powermeter ');
+					await asyncForEach(Object.keys(device.powermeter), async (key) => {
+						if (key === 'power') {
+							await createValueState(device.identifier, 'power', 'actual Power', 0, 4000, 'W');
+						} else if (key === 'voltage') {
+							await createValueState(device.identifier, 'voltage', 'actual Voltage', 0, 250, 'V');
+						} else if (key === 'energy') {
+							await createValueState(
+								device.identifier,
+								'energy',
+								'Energy consumption',
+								0,
+								999999999,
+								'Wh'
+							);
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// groups
+				if (device.groupinfo) {
+					await adapter.log.info('setting up groupinfo ');
+					await asyncForEach(Object.keys(device.groupinfo), async (key) => {
+						if (key === 'masterdeviceid') {
+							await createInfoState(device.identifier, 'masterdeviceid', 'ID of the group');
+						} else if (key === 'members') {
+							await createInfoState(device.identifier, 'members', 'member of the group');
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// create themosensor
+				if (device.temperature) {
+					await adapter.log.info('setting up temperatur ');
+					await asyncForEach(Object.keys(device.temperature), async (key) => {
+						if (key === 'celsius') {
+							await createValueState(device.identifier, 'celsius', 'Temperature', 8, 32, '°C');
+						} else if (key === 'offset') {
+							await createValueState(device.identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// create humidity
+				if (device.humidity) {
+					adapter.log.info('setting up temperatur ');
+					await asyncForEach(Object.keys(device.humidity), async (key) => {
+						if (key === 'rel_humidity') {
+							await createValueState(device.identifier, 'rel_humidity', 'relative Humidity', 0, 100, '%');
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// create thermostat
+				if (device.hkr) {
+					adapter.log.info('setting up thermostat ');
+					await createThermostat(device.identifier); //additional datapoints of thermostats
+					await asyncForEach(Object.keys(device.hkr), async (key) => {
+						//create datapoints from the data
+						if (key === 'tist') {
+							await createValueState(device.identifier, 'tist', 'Actual temperature', 0, 32, '°C');
+						} else if (key === 'tsoll') {
+							await createValueCtrl(
+								device.identifier,
+								'tsoll',
+								'Setpoint Temperature',
+								0,
+								255,
+								'°C',
+								'value.temperature'
+							);
+						} else if (key === 'absenk') {
+							await createValueState(
+								device.identifier,
+								'absenk',
+								'reduced (night) temperature',
+								0,
+								32,
+								'°C'
+							);
+						} else if (key === 'komfort') {
+							await createValueState(device.identifier, 'komfort', 'comfort temperature', 0, 32, '°C');
+						} else if (key === 'lock') {
+							await createIndicatorState(device.identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
+						} else if (key === 'devicelock') {
+							await createIndicatorState(device.identifier, 'devicelock', 'device lock, button lock');
+						} else if (key === 'errorcode') {
+							await createModeState(device.identifier, 'errorcode', 'Error Code');
+						} else if (key === 'batterylow') {
+							await createIndicatorState(device.identifier, 'batterylow', 'battery low');
+						} else if (key === 'battery') {
+							await createValueState(device.identifier, 'battery', 'battery status', 0, 100, '%');
+						} else if (key === 'summeractive') {
+							await createIndicatorState(device.identifier, 'summeractive', 'summer active status');
+						} else if (key === 'holidayactive') {
+							await createIndicatorState(device.identifier, 'holidayactive', 'Holiday Active status');
+						} else if (key === 'boostactive') {
+							await createSwitch(device.identifier, 'boostactive', 'Boost active status and cmd');
+							//create the user definde end time for manual setting the window open active state
+							await createValueCtrl(
+								device.identifier,
+								'boostactivetime',
+								'boost active time for cmd',
+								0,
+								1440,
+								'min'
+							);
+							//preset to 5 min
+							await adapter.setState('DECT_' + device.identifier + '.boostactivetime', {
+								val: 5,
+								ack: true
+							});
+						} else if (key === 'boostactiveendtime') {
+							await createTimeState(device.identifier, 'boostactiveendtime', 'Boost active end time');
+						} else if (key === 'windowopenactiv') {
+							await createSwitch(device.identifier, 'windowopenactiv', 'Window open status and cmd');
+							//create the user definde end time for manual setting the window open active state
+							await createValueCtrl(
+								device.identifier,
+								'windowopenactivetime',
+								'window open active time for cmd',
+								0,
+								1440,
+								'min',
+								'value.time'
+							);
+							//preset to 5 min
+							await adapter.setState('DECT_' + device.identifier + '.windowopenactivetime', {
+								val: 5,
+								ack: true
+							});
+						} else if (key === 'windowopenactiveendtime') {
+							await createTimeState(
+								device.identifier,
+								'windowopenactiveendtime',
+								'window open active end time'
+							);
+						} else if (key === 'nextchange') {
+							await adapter.log.info('setting up thermostat nextchange');
+							try {
+								await asyncForEach(Object.keys(device.hkr.nextchange), async (key) => {
+									if (key === 'endperiod') {
+										await createTimeState(
+											device.identifier,
+											'endperiod',
+											'next time for Temp change'
+										);
+									} else if (key === 'tchange') {
+										await createValueState(
+											device.identifier,
+											'tchange',
+											'Temp after next change',
+											8,
+											32,
+											'°C'
+										);
+									} else {
+										adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+									}
+								});
+							} catch (e) {
+								adapter.log.debug(
+									' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
+								);
+							}
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+
+				// simpleonoff
+				if (device.simpleonoff) {
+					await adapter.log.info('setting up simpleonoff');
+					await asyncForEach(Object.keys(device.simpleonoff), async (key) => {
+						if (key === 'state') {
+							createSwitch(device.identifier, 'state', 'Simple ON/OFF state and cmd');
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// levelcontrol
+				if (device.levelcontrol) {
+					await adapter.log.info('setting up levelcontrol');
+					await asyncForEach(Object.keys(device.levelcontrol), async (key) => {
+						if (key === 'level') {
+							createValueCtrl(device.identifier, 'level', 'level 0..255', 0, 255, '', 'value.level');
+						} else if (key === 'levelpercentage') {
+							createValueCtrl(
+								device.identifier,
+								'levelpercentage',
+								'level in %',
+								0,
+								100,
+								'%',
+								'value.level'
+							);
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+				// colorcontrol
+				if (device.colorcontrol) {
+					await adapter.log.info('setting up thermostat ');
+					await asyncForEach(Object.keys(device.colorcontrol), async (key) => {
+						if (key === 'supported_modes') {
+							await createModeState(device.identifier, 'supported_modes', 'available color modes');
+						} else if (key === 'current_mode') {
+							await createModeState(device.identifier, 'current_mode', 'current color mode');
+						} else if (key === 'hue') {
+							await createValueCtrl(device.identifier, 'hue', 'HUE color', 0, 359, '°', 'value.hue');
+						} else if (key === 'saturation') {
+							await createValueCtrl(
+								device.identifier,
+								'saturation',
+								'Saturation',
+								0,
+								255,
+								'',
+								'value.saturation'
+							);
+						} else if (key === 'temperature') {
+							await createValueCtrl(
+								device.identifier,
+								'temparature',
+								'color temperature',
+								2700,
+								6500,
+								'K',
+								'value.temperature'
+							);
+						} else {
+							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+						}
+					});
+				}
+			}
+		});
+	}
+
+	async function createDevices() {
+		await fritz
 			.getDeviceListInfos()
 			.then(async function(devicelistinfos) {
-				var typ = '';
-				var role = '';
 				var devices = parser.xml2json(devicelistinfos);
 				devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
 					// remove spaces in AINs
@@ -1003,472 +1448,57 @@ function main() {
 				adapter.log.debug('devices\n');
 				adapter.log.debug(JSON.stringify(devices));
 				if (devices.length) {
-					typ = 'DECT_';
-					adapter.log.info('create Devices ' + devices.length);
-
-					devices.forEach(async function(device) {
-						adapter.log.debug('trying on : ' + JSON.stringify(device));
-						// role to be defined
-						if ((device.functionbitmask & 64) == 64) {
-							role = 'thermo.heat';
-						} else if ((device.functionbitmask & 512) == 512) {
-							//DECT300/301
-							role = 'switch';
-						} else if (device.functionbitmask == 1024 || 1024) {
-							//DECT200/210
-							role = 'thermo';
-						} else if (device.functionbitmask == 288 || 1048864) {
-							// Repeater
-							role = 'thermo';
-						} else if (device.functionbitmask == 237572) {
-							// DECT440
-							role = 'light';
-						} else if (device.functionbitmask == 335888) {
-							//DECT500
-							role = 'blinds';
-						} else if (
-							(device.functionbitmask & 16) == 16 ||
-							(device.functionbitmask & 8) == 8 ||
-							(device.functionbitmask & 32) == 32
-						) {
-							//Blinds
-							role = 'sensor';
-						} else if (device.functionbitmask & 1) {
-							role = 'etsi';
-							// replace id, fwversion in vorher erzeugten device, spätestens beim update
-							return;
-						} else {
-							role = 'other';
-							adapter.log.warn(
-								' unknown functionbitmask, please open issue on github ' + device.functionbitmask
-							);
-							return;
-						}
-						// create Master Object
-						createObject(typ, device.identifier, device.name, role);
-
-						// create general
-						if (device.fwversion) {
-							createInfoState(device.identifier, 'fwversion', 'Firmware Version');
-						}
-						if (device.maunfacturer) {
-							createInfoState(device.identifier, 'manufacturer', 'Manufacturer');
-						}
-						if (device.productname) {
-							createInfoState(device.identifier, 'productname', 'Product Name');
-						}
-						if (device.present) {
-							createIndicatorState(device.identifier, 'present', 'device present');
-						}
-						if (device.name) {
-							createInfoState(device.identifier, 'name', 'Device Name');
-						}
-						if (device.txbusy) {
-							createIndicatorState(device.identifier, 'txbusy', 'Trasmitting active');
-						}
-						if (device.synchronized) {
-							createIndicatorState(device.identifier, 'synchronized', 'Synchronized Status');
-						}
-						//always ID
-						createInfoState(device.identifier, 'id', 'Device ID');
-						//etsideviceid im gleichen Object
-						if (device.etsiunitinfo) {
-							if (device.etsiunitinfo.etsideviceid) {
-								//replace id with etsi
-								adapter.setState('DECT_' + device.identifier + '.id', {
-									val: device.etsiunitinfo.etsideviceid,
-									ack: true
-								});
-								// noch nicht perfekt da dies überschrieben wird
-								adapter.setState('DECT_' + device.identifier + '.fwversion', {
-									val: device.etsiunitinfo.fwversion,
-									ack: true
-								});
-							} else {
-								//device.id
-								adapter.setState('DECT_' + device.identifier + '.id', {
-									val: device.id,
-									ack: true
-								});
-							}
-							//check for blinds control
-							if (device.etsiunitinfo.unittype == 281) {
-								//additional blind datapoints
-								createBlind(device.identifier);
-							}
-						}
-
-						// create battery devices
-						if (device.battery) {
-							createValueState(device.identifier, 'battery', 'Battery Charge State', 0, 100, '%');
-						}
-						if (device.batterylow) {
-							createIndicatorState(device.identifier, 'batterylow', 'Battery Low State');
-						}
-
-						// create button parts
-						if (device.button) {
-							if (!Array.isArray(device.button)) {
-								Object.entries(device.button).forEach(([ key, value ]) => {
-									if (key === 'lastpressedtimestamp') {
-										createTimeState(
-											device.identifier,
-											'lastpressedtimestamp',
-											'last button Time Stamp'
-										);
-									} else if (key === 'id') {
-										createInfoState(device.identifier, 'id', 'Button ID');
-									} else if (key === 'name') {
-										createInfoState(device.identifier, 'name', 'Button Name');
-									} else {
-										adapter.log.warn(' new datapoint in API detected');
-									}
-								});
-							} else if (Array.isArray(device.button)) {
-								//Unterobjekte anlegen
-								adapter.log.info('setting up button(s) ');
-								device.button.forEach(async function(button) {
-									typ = 'DECT_' + device.identifier + '.button.';
-									createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
-									Object.entries(button).forEach(([ key, value ]) => {
-										if (key === 'lastpressedtimestamp') {
-											createTimeState(
-												device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
-												'lastpressedtimestamp',
-												'last button Time Stamp'
-											);
-										} else if (key === 'identifier') {
-											//already part of the object
-										} else if (key === 'id') {
-											createInfoState(
-												device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
-												'id',
-												'Button ID'
-											);
-										} else if (key === 'name') {
-											createInfoState(
-												device.identifier + '.button.' + button.identifier.replace(/\s/g, ''),
-												'name',
-												'Button Name'
-											);
-										} else {
-											adapter.log.warn(' new datapoint in API detected');
-										}
-									});
-								});
-							}
-						}
-						//create alert
-						if (device.alert) {
-							adapter.log.info('setting up alert ');
-							Object.entries(device.alert).forEach(([ key, value ]) => {
-								if (key === 'state') {
-									createIndicatorState(device.identifier, 'state', 'Alert State');
-								} else if (key === 'lastalertchgtimestamp') {
-									createTimeState(device.identifier, 'lastalertchgtimestamp', 'Alert last Time');
-								} else {
-									adapter.log.warn(' new datapoint in API detected');
-								}
-							});
-						}
-						// create switch
-						if (device.switch) {
-							adapter.log.info('setting up switch ');
-							Object.entries(device.switch).forEach(([ key, value ]) => {
-								if (key === 'state') {
-									createSwitch(device.identifier, 'state', 'Switch Status and Control');
-								} else if (key === 'mode') {
-									createInfoState(device.identifier, 'mode', 'Switch Mode');
-								} else if (key === 'lock') {
-									createIndicatorState(device.identifier, 'lock', 'API Lock');
-								} else if (key === 'devicelock') {
-									createIndicatorState(device.identifier, 'devicelock', 'Device (Button)lock');
-								} else {
-									adapter.log.warn(' new datapoint in API detected');
-								}
-							});
-						}
-						// powermeter
-						if (device.powermeter) {
-							adapter.log.info('setting up powermeter ');
-							Object.entries(device.powermeter).forEach(([ key, value ]) => {
-								if (key === 'power') {
-									createValueState(device.identifier, 'power', 'actual Power', 0, 4000, 'W');
-								} else if (key === 'voltage') {
-									createValueState(device.identifier, 'voltage', 'actual Voltage', 0, 250, 'V');
-								} else if (key === 'energy') {
-									createValueState(
-										device.identifier,
-										'energy',
-										'Energy consumption',
-										0,
-										999999999,
-										'Wh'
-									);
-								} else {
-									adapter.log.warn(' new datapoint in API detected');
-								}
-							});
-						}
-						// groups
-						if (device.groupinfo) {
-							adapter.log.info('setting up groupinfo ');
-							Object.entries(device.groupinfo).forEach(([ key, value ]) => {
-								if (key === 'masterdeviceid') {
-									createInfoState(device.identifier, 'masterdeviceid', 'ID of the group');
-								} else if (key === 'member') {
-									createInfoState(device.identifier, 'member', 'member of the group');
-								} else {
-									adapter.log.warn(' new datapoint in API detected');
-								}
-							});
-						}
-						// create themosensor
-						if (device.temperature) {
-							adapter.log.info('setting up temperatur ');
-							Object.entries(device.temperature).forEach(([ key, value ]) => {
-								if (key === 'celsius') {
-									createValueState(device.identifier, 'celsius', 'Temperature', 8, 32, '°C');
-								} else if (key === 'offset') {
-									createValueState(device.identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
-								} else {
-									adapter.log.warn(' new datapoint in API detected');
-								}
-							});
-						}
-						// create humidity
-						if (device.humidity) {
-							adapter.log.info('setting up temperatur ');
-							Object.entries(device.humidity).forEach(([ key, value ]) => {
-								if (key === 'rel_humidity') {
-									createValueState(
-										device.identifier,
-										'rel_humidity',
-										'relative Humidity',
-										0,
-										100,
-										'%'
-									);
-								} else {
-									adapter.log.warn(' new datapoint in API detected');
-								}
-							});
-						}
-						// create thermostat
-						if (device.hkr) {
-							adapter.log.info('setting up thermostat ');
-							createThermostat(device.identifier); //additional datapoints of thermostats
-							Object.entries(device.hkr).forEach(([ key, value ]) => {
-								//create datapoints from the data
-								if (key === 'tist') {
-									createValueState(device.identifier, 'tist', 'Actual temperature', 0, 32, '°C');
-								} else if (key === 'tsoll') {
-									createValueCtrl(
-										device.identifier,
-										'tsoll',
-										'Setpoint Temperature',
-										8,
-										32,
-										'°C',
-										'value.temperature'
-									);
-								} else if (key === 'absenk') {
-									createValueState(
-										device.identifier,
-										'absenk',
-										'reduced (night) temperature',
-										0,
-										32,
-										'°C'
-									);
-								} else if (key === 'komfort') {
-									createValueState(device.identifier, 'komfort', 'comfort temperature', 0, 32, '°C');
-								} else if (key === 'lock') {
-									createIndicatorState(device.identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
-								} else if (key === 'devicelock') {
-									createIndicatorState(device.identifier, 'devicelock', 'device lock, button lock');
-								} else if (key === 'errorcode') {
-									createModeState(device.identifier, 'errorcode', 'Error Code');
-								} else if (key === 'batterylow') {
-									createIndicatorState(device.identifier, 'batterylow', 'battery low');
-								} else if (key === 'battery') {
-									createValueState(device.identifier, 'battery', 'battery status', 0, 100, '%');
-								} else if (key === 'summeractive') {
-									createIndicatorState(device.identifier, 'summeractive', 'summer active status');
-								} else if (key === 'holidayactive') {
-									createIndicatorState(device.identifier, 'holidayactive', 'Holiday Active status');
-								} else if (key === 'boostactive') {
-									createSwitch(device.identifier, 'boostactive', 'Boost active status and cmd');
-									//create the user definde end time for manual setting the window open active state
-									createValueCtrl(
-										device.identifier,
-										'boostactivetime',
-										'boost active time for cmd',
-										0,
-										1440,
-										'min'
-									);
-									//preset to 5 min
-									adapter.setState('DECT_' + device.identifier + '.boostactivetime', {
-										val: 5,
-										ack: true
-									});
-								} else if (key === 'boostactiveendtime') {
-									createTimeState(device.identifier, 'boostactiveendtime', 'Boost active end time');
-								} else if (key === 'windowopenactiv') {
-									createSwitch(device.identifier, 'windowopenactiv', 'Window open status and cmd');
-									//create the user definde end time for manual setting the window open active state
-									createValueCtrl(
-										device.identifier,
-										'windowopenactivetime',
-										'window open active time for cmd',
-										0,
-										1440,
-										'min',
-										'value.time'
-									);
-									//preset to 5 min
-									adapter.setState('DECT_' + device.identifier + '.windowopenactivetime', {
-										val: 5,
-										ack: true
-									});
-								} else if (key === 'windowopenactiveendtime') {
-									createTimeState(
-										device.identifier,
-										'windowopenactiveendtime',
-										'window open active end time'
-									);
-								} else if (key === 'nextchange') {
-									adapter.log.info('setting up thermostat nextchange');
-									try {
-										Object.entries(device.hkr.nextchange).forEach(([ key, value ]) => {
-											if (key === 'endperiod') {
-												createTimeState(
-													device.identifier,
-													'endperiod',
-													'next time for Temp change'
-												);
-											} else if (key === 'tchange') {
-												createValueState(
-													device.identifier,
-													'tchange',
-													'Temp after next change',
-													8,
-													32,
-													'°C'
-												);
-											} else {
-												adapter.log.warn(' new datapoint in API detected' + key);
-											}
-										});
-									} catch (e) {
-										adapter.log.debug(
-											' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
-										);
-									}
-								} else {
-									adapter.log.warn(' new datapoint in API detected' + key);
-								}
-							});
-						}
-
-						// simpleonoff
-						if (device.simpleonoff) {
-							adapter.log.info('setting up simpleonoff');
-							Object.entries(device.simpleonoff).forEach(([ key, value ]) => {
-								if (key === 'state') {
-									createSwitch(device.identifier, 'state', 'Simple ON/OFF state and cmd');
-								} else {
-									adapter.log.warn(' new datapoint in API detected' + key);
-								}
-							});
-						}
-						// levelcontrol
-						if (device.levelcontrol) {
-							adapter.log.info('setting up levelcontrol');
-							Object.entries(device.levelcontrol).forEach(([ key, value ]) => {
-								if (key === 'level') {
-									createValueCtrl(
-										device.identifier,
-										'level',
-										'level 0..255',
-										0,
-										255,
-										'',
-										'value.level'
-									);
-								} else if (key === 'levelpercentage') {
-									createValueCtrl(
-										device.identifier,
-										'levelpercentage',
-										'level in %',
-										0,
-										100,
-										'%',
-										'value.level'
-									);
-								} else {
-									adapter.log.warn(' new datapoint in API detected' + key);
-								}
-							});
-						}
-						// colorcontrol
-						if (device.colorcontrol) {
-							adapter.log.info('setting up thermostat ');
-							Object.entries(device.colorcontrol).forEach(([ key, value ]) => {
-								if (key === 'supported_modes') {
-									createModeState(device.identifier, 'supported_modes', 'available color modes');
-								} else if (key === 'current_mode') {
-									createModeState(device.identifier, 'current_mode', 'current color mode');
-								} else if (key === 'hue') {
-									createValueCtrl(device.identifier, 'hue', 'HUE color', 0, 359, '°', 'value.hue');
-								} else if (key === 'saturation') {
-									createValueCtrl(
-										device.identifier,
-										'saturation',
-										'Saturation',
-										0,
-										255,
-										'',
-										'value.saturation'
-									);
-								} else if (key === 'temperature') {
-									createValueCtrl(
-										device.identifier,
-										'temparature',
-										'color temperature',
-										2700,
-										6500,
-										'K',
-										'value.temperature'
-									);
-								} else {
-									adapter.log.warn(' new datapoint in API detected' + key);
-								}
-							});
-						}
-					});
+					adapter.log.info('CREATE Devices ' + devices.length);
+					try {
+						await createData(devices);
+					} catch (e) {
+						adapter.log.debug(' issue creating devices ' + JSON.stringify(e));
+						throw e;
+					}
+				}
+				var groups = parser.xml2json(devicelistinfos);
+				groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+					// remove spaces in AINs
+					group.identifier = group.identifier.replace(/\s/g, '');
+					return group;
+				});
+				adapter.log.debug('groups\n');
+				adapter.log.debug(JSON.stringify(groups));
+				if (groups.length) {
+					adapter.log.info('CREATE groups ' + groups.length);
+					try {
+						await createData(groups);
+					} catch (e) {
+						adapter.log.debug(' issue creating groups ' + JSON.stringify(e));
+						throw e;
+					}
 				}
 			})
+			/*
+			.then(function() {
+				pollFritzData();
+			})
+			*/
 			.catch(errorHandler);
 	}
 
-	function createTemplates() {
-		fritz
+	async function createTemplates() {
+		await fritz
 			.getTemplateListInfos()
-			.then(function(templatelistinfos) {
+			.then(async function(templatelistinfos) {
 				var typ = '';
 				var role = '';
 				var templates = parser.xml2json(templatelistinfos);
 				templates = [].concat((templates.templatelist || {}).template || []).map(function(template) {
 					return template;
 				});
+				adapter.log.debug('__________________________');
 				adapter.log.debug('templates\n');
 				adapter.log.debug(JSON.stringify(templates));
 				if (templates.length) {
 					adapter.log.info('create Templates ' + templates.length);
-					createTemplateResponse();
-					templates.forEach(function(template) {
+					await createTemplateResponse();
+					await asyncForEach(templates, async (template) => {
 						if (
 							(template.functionbitmask & 320) == 320 ||
 							(template.functionbitmask & 4160) == 4160 ||
@@ -1478,8 +1508,9 @@ function main() {
 							//heating template
 							typ = 'template_';
 							role = 'switch';
+							adapter.log.debug('__________________________');
 							adapter.log.info('setting up Template ' + template.name);
-							createTemplate(typ, template.identifier, template.name, role, template.id);
+							await createTemplate(typ, template.identifier, template.name, role, template.id);
 						} else {
 							adapter.log.debug(
 								'nix vorbereitet für diese Art von Template' +
@@ -1494,161 +1525,215 @@ function main() {
 			.catch(errorHandler);
 	}
 	function updateDatapoint(key, value, ain) {
-		adapter.log.debug('updating DECT_' + ain + ' : ' + key + ' : ' + value);
-		if (key === 'batterylow') {
-			// bool mal anders herum
-			let batt = value == 0 ? false : true;
-			/*
-			if (value == 0) {
-				let batt = false;
+		adapter.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
+		try {
+			if (!value || value == '' || !key) {
+				adapter.log.debug(' no value for updating in ' + key);
 			} else {
-				let batt = true;
+				if (
+					key == 'id' ||
+					key == 'identifier' ||
+					key == 'functionbitmask' ||
+					key == 'etsideviceid' ||
+					key == 'unittype' ||
+					key == 'interfaces'
+				) {
+					// skip it
+				} else if (key === 'batterylow') {
+					// bool mal anders herum
+					let batt = value == 0 ? false : true;
+					/*
+				if (value == 0) {
+					let batt = false;
+				} else {
+					let batt = true;
+				}
+				*/
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: batt,
+						ack: true
+					});
+				} else if (key == 'celsius' || key == 'offset') {
+					//numbers
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: parseFloat(value) / 10,
+						ack: true
+					});
+				} else if (key == 'power' || key == 'voltage') {
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: parseFloat(value) / 1000,
+						ack: true
+					});
+				} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: parseFloat(value) / 2,
+						ack: true
+					});
+				} else if (key == 'humidity') {
+					//e.g humidity
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: parseFloat(value),
+						ack: true
+					});
+				} else if (key == 'tsoll') {
+					//shortcut
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: parseFloat(value) / 2,
+						ack: true
+					});
+					/*
+				if (tsoll < 57) {
+					// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+					adapter.setState('DECT_' + ain + '.tsoll', {
+						val: parseFloat(value) / 2,
+						ack: true
+					});
+					adapter.setState('DECT_' + ain + '.lasttarget', {
+						val: parseFloat(value) / 2,
+						ack: true
+					}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+					adapter.setState('DECT_' + ain + '.mode', {
+						val: 0,
+						ack: true
+					});
+				} else if (tsoll == 253) {
+					adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
+					// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+					adapter.setState('DECT_' + ain + '.mode', {
+						val: 1,
+						ack: true
+					});
+					let currentMode = 'Off';
+				} else if (tsoll == 254) {
+					adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
+					// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+					adapter.setState('DECT_' + ain + '.mode', {
+						val: 2,
+						ack: true
+					});
+					let currentMode = 'On';
+				}
+				adapter.setState('DECT_' + ain + '.operationmode', {
+					val: currentMode,
+					ack: true
+				});
+				*/
+				} else if (
+					key == 'state' ||
+					key == 'simpleonoff' ||
+					key == 'lock' ||
+					key == 'devicelock' ||
+					key == 'txbusy' ||
+					key == 'present' ||
+					key == 'summeractive' ||
+					key == 'holidayactive' ||
+					key == 'boostactive' ||
+					key == 'windowactive' ||
+					key == 'synchronized'
+				) {
+					//bool
+					let convertValue = value == 1 ? true : false;
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: convertValue,
+						ack: true
+					});
+				} else if (
+					key == 'lastpressedtimestamp' ||
+					key == 'boostactiveendtime' ||
+					key == 'windowopenactiveendtime' ||
+					key == 'endperiod'
+				) {
+					//time
+					let convTime = new Date(value * 1000);
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: convTime,
+						ack: true
+					});
+				} else if (
+					key == 'errorcode' ||
+					key == 'level' ||
+					key == 'levelpercentage' ||
+					key == 'battery' ||
+					key == 'energy' ||
+					key == 'hue' ||
+					key == 'saturation' ||
+					key == 'temperature' ||
+					key == 'supported_modes' ||
+					key == 'current_mode' ||
+					key == 'humidity'
+				) {
+					// integer number
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: parseInt(value),
+						ack: true
+					});
+				} else if (
+					key == 'fwversion' ||
+					key == 'manufacturer' ||
+					key == 'name' ||
+					key == 'productname' ||
+					key == 'members' ||
+					key == 'masterdeviceid' ||
+					key == 'mode'
+				) {
+					// || 'id' , id schon beim initialisieren gesetzt
+					// text
+					adapter.setState('DECT_' + ain + '.' + key, {
+						val: value.toString(),
+						ack: true
+					});
+				} else {
+					// unbekannt
+					adapter.log.warn(
+						'unknown datapoint DECT_' + ain + '.' + key + ' please inform devloper and open issue in github'
+					);
+				}
 			}
-			*/
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: batt,
-				ack: true
+		} catch (e) {
+			adapter.log.debug(' issue in update datapoint ' + JSON.stringify(e));
+			throw {
+				msg: 'issue updating datapoint',
+				function: 'updateDatapoint',
+				error: e
+			};
+		}
+	}
+	function updateData(array, ident) {
+		adapter.log.debug('======================================');
+		adapter.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
+		try {
+			Object.entries(array).forEach(([ key, value ]) => {
+				if (Array.isArray(value)) {
+					adapter.log.debug('processing datapoint ' + key + ' as array');
+					value.forEach(function(subarray) {
+						subarray.identifier = subarray.identifier.replace(/\s/g, '');
+						updateData(subarray, ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')); // hier wirds erst schwierig wenn array in array
+					});
+				} else if (typeof value === 'object' && value !== null) {
+					adapter.log.debug('processing datapoint ' + key + ' as object');
+					Object.entries(value).forEach(([ key2, value2 ]) => {
+						adapter.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
+						updateDatapoint(key2, value2, ident);
+					});
+				} else {
+					adapter.log.debug('processing datapoint ' + key + ' directly');
+					updateDatapoint(key, value, ident);
+				}
 			});
-		} else if (key == 'celsius' || 'offset') {
-			//numbers
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseFloat(value) / 10,
-				ack: true
-			});
-		} else if (key == 'power' || 'voltage') {
-			adapter.setState('DECT_' + ain + '.power', {
-				val: parseFloat(value) / 1000,
-				ack: true
-			});
-		} else if (key == 'komfort' || 'absenk' || 'tist' || 'tchange') {
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseFloat(value) / 2,
-				ack: true
-			});
-		} else if (key == 'humidity') {
-			//e.g humidity
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseFloat(value),
-				ack: true
-			});
-		} else if (key == 'tsoll') {
-			if (targettemp < 57) {
-				// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-				adapter.setState('DECT_' + ain + '.tsoll', {
-					val: parseFloat(targettemp) / 2,
-					ack: true
-				});
-				adapter.setState('DECT_' + ain + '.lasttarget', {
-					val: parseFloat(targettemp) / 2,
-					ack: true
-				}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-				adapter.setState('DECT_' + ain + '.mode', {
-					val: 0,
-					ack: true
-				});
-			} else if (targettemp == 253) {
-				adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
-				// adapter.setState('DECT_'+ ain +'.targettemp', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-				adapter.setState('DECT_' + ain + '.mode', {
-					val: 1,
-					ack: true
-				});
-				currentMode = 'Off';
-			} else if (targettemp == 254) {
-				adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
-				// adapter.setState('DECT_'+ device.identifier.replace(/\s/g, '') +'.targettemp', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-				adapter.setState('DECT_' + ain + '.mode', {
-					val: 2,
-					ack: true
-				});
-				currentMode = 'On';
-			}
-			adapter.setState('DECT_' + ain + '.operationmode', {
-				val: currentMode,
-				ack: true
-			});
-		} else if (
-			key == 'state' ||
-			'simpleonoff' ||
-			'lock' ||
-			'devicelock' ||
-			'txbusy' ||
-			'present' ||
-			'summeractive' ||
-			'holidayactive' ||
-			'boostactive' ||
-			'windowactive'
-		) {
-			//bool
-			let convertValue = value == 1 ? true : false;
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: convertValue,
-				ack: true
-			});
-		} else if (key == 'lastpressedtimestamp' || 'boostactiveendtime' || 'windowopenactiveendtime' || 'nextchange') {
-			//time
-			let convTime = new Date(value * 1000);
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: convTime,
-				ack: true
-			});
-		} else if (
-			key == 'errorcode' ||
-			'level' ||
-			'levelpercentage' ||
-			'battery' ||
-			'hue' ||
-			'saturation' ||
-			'temperature' ||
-			'supported_mode' ||
-			'current_mode' ||
-			'humidity' ||
-			'sycnhronized'
-		) {
-			// integer number
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: parseInt(value),
-				ack: true
-			});
-		} else if (key == 'fwversion' || 'manufacturer' || 'name' || 'prodname' || 'mode') {
-			// || 'id' , id schon beim initialisieren gesetzt
-			// text
-			adapter.setState('DECT_' + ain + '.' + key, {
-				val: value,
-				ack: true
-			});
-		} else {
-			// unbekannt
-			adapter.log.warn(
-				'unknown datapoint DECT_' + ain + '.' + key + ' please inform devloper and open issue in github'
-			);
+		} catch (e) {
+			adapter.log.debug(' issue in update data ' + JSON.stringify(e));
+			throw {
+				msg: 'issue updating data',
+				function: 'updateData',
+				error: e
+			};
 		}
 	}
 
-	function updateData(array, ident) {
-		adapter.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
-		Object.entries(array).forEach(([ key, value ]) => {
-			if (Array.isArray(value)) {
-				adapter.log.debug('processing datapoint ' + key + 'as array');
-				value.forEach(function(subarray) {
-					subarray.identifier = subarray.identifier.replace(/\s/g, '');
-					updateData(subarray, ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')); // hier wirds erst schwierig wenn array in array
-				});
-			} else if (typeof value === 'object' && value !== null) {
-				adapter.log.debug('processing datapoint ' + key + 'as object');
-				Object.entries(value).forEach(([ key2, value2 ]) => {
-					updateDatapoint(key2, value2, ident);
-				});
-			} else {
-				adapter.log.debug('processing datapoint ' + key + 'directly');
-				updateDatapoint(key, value, ident);
-			}
-		});
-	}
-
-	function updateDevices() {
+	async function updateDevices() {
+		adapter.log.debug('__________________________');
 		adapter.log.debug('updating Devices / Groups ');
-		fritz
+		await fritz
 			.getDeviceListInfos()
 			.then(function(devicelistinfos) {
 				var currentMode = null;
@@ -1663,42 +1748,73 @@ function main() {
 				adapter.log.debug(JSON.stringify(devices));
 				if (devices.length) {
 					adapter.log.debug('update Devices ' + devices.length);
-					devices.forEach(function(device) {
-						adapter.log.debug('updating Device ' + device.name);
-						if (device.present === '0' || device.present === 0 || device.present === false) {
-							adapter.log.debug(
-								'DECT_' +
-									device.identifier +
-									' is not present, check the device connection, no values are written'
-							);
-						} else {
-							if (device.hkr) {
-								currentMode = 'On';
-								if (device.hkr.tsoll === device.hkr.komfort) {
-									currentMode = 'Comfort';
-								}
-								if (device.hkr.tsoll === device.hkr.absenk) {
-									currentMode = 'Night';
-								}
-							}
-							// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
-							// some weird id usage, the website shows the id of the etsiunit
-							if (device.etsiunitinfo.etsideviceid) {
-								//replace id with etsi
-								device.id = device.etsiunitinfo.etsideviceid;
-							}
-							// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
-							if (device.functionbitmask == 1) {
-								// search and find the device id and replace fwversion
-								// todo
-								// find the device.identifier mit der etsi_id
-								// adapter.setState
-								// reihenfolge, id immer vorher und dann erst etsi in json?
+					try {
+						for (let i = 0; i < devices.length; i++) {
+							adapter.log.debug('_____________________________________________');
+							adapter.log.debug('updating Device ' + devices[i].name);
+							if (
+								devices[i].present === '0' ||
+								devices[i].present === 0 ||
+								devices[i].present === false
+							) {
+								adapter.log.debug(
+									'DECT_' +
+										devices[i].identifier +
+										' is not present, check the device connection, no values are written'
+								);
+								return;
 							} else {
-								updateData(device, device.identifier);
+								if (devices[i].hkr) {
+									currentMode = 'On';
+									if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
+										currentMode = 'Comfort';
+									}
+									if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
+										currentMode = 'Night';
+									}
+								}
+								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
+								// some weird id usage, the website shows the id of the etsiunit
+								if (devices[i].etsiunitinfo) {
+									if (devices[i].etsiunitinfo.etsideviceid) {
+										//replace id with etsi
+										adapter.log.debug('id vorher ' + devices[i].id);
+										devices[i].id = devices[i].etsiunitinfo.etsideviceid;
+										adapter.log.debug('id nachher ' + devices[i].id);
+									}
+								}
+								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
+								if (devices[i].functionbitmask == 1) {
+									adapter.log.debug(' functionbitmask 1');
+									// search and find the device id and replace fwversion
+									// todo
+									// find the device.identifier mit der etsi_id
+									// adapter.setState
+									// reihenfolge, id immer vorher und dann erst etsi in json?
+									continue;
+								} else {
+									adapter.log.debug(' calling update data .....');
+									try {
+										updateData(devices[i], devices[i].identifier);
+									} catch (e) {
+										adapter.log.error(' issue updating device ' + JSON.stringify(e));
+										throw {
+											msg: 'issue updating device',
+											function: 'updateDevices',
+											error: e
+										};
+									}
+								}
 							}
 						}
-					});
+					} catch (e) {
+						adapter.log.error(' issue updating device ' + JSON.stringify(e));
+						throw {
+							msg: 'issue updating device',
+							function: 'updateDevices',
+							error: e
+						};
+					}
 				}
 
 				// groups
@@ -1730,7 +1846,17 @@ function main() {
 									currentMode = 'Night';
 								}
 							}
-							updateData(device, device.identifier);
+							try {
+								adapter.log.debug(' calling update data .....');
+								updateData(device, device.identifier);
+							} catch (e) {
+								adapter.log.error(' issue updating group ' + JSON.stringify(e));
+								throw {
+									msg: 'issue updating group',
+									function: 'updateDevices',
+									error: e
+								};
+							}
 						}
 					});
 				}
@@ -1738,16 +1864,16 @@ function main() {
 			.catch(errorHandler);
 	}
 
-	function pollFritzData() {
+	async function pollFritzData() {
 		var fritz_interval = parseInt(adapter.config.fritz_interval, 10) || 300;
-		updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
+		await updateDevices(); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
 		adapter.log.debug('polling! fritzdect is alive');
 		fritzTimeout = setTimeout(pollFritzData, fritz_interval * 1000);
 	}
 
-	createDevices();
-	createTemplates();
-	pollFritzData();
+	await createDevices();
+	await createTemplates();
+	await pollFritzData();
 
 	// in this template all states changes inside the adapters namespace are subscribed
 	adapter.subscribeStates('*');
@@ -1760,3 +1886,4 @@ if (module && module.parent) {
 	// or start the instance directly
 	startAdapter();
 }
+

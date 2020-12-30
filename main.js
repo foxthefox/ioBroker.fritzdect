@@ -679,6 +679,7 @@ async function main() {
 	var fritz = new Fritz(username, password || '', moreParam || '');
 
 	async function createObject(typ, newId, name, role) {
+		await adapter.log.debug('____________________________________________');
 		await adapter.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
 		await adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
@@ -1526,6 +1527,11 @@ async function main() {
 				ack: true
 			});
 		} else if (key == 'tsoll') {
+			adapter.setState('DECT_' + ain + '.tsoll', {
+				val: parseFloat(tsoll) / 2,
+				ack: true
+			});
+			/*
 			if (tsoll < 57) {
 				// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 				adapter.setState('DECT_' + ain + '.tsoll', {
@@ -1547,7 +1553,7 @@ async function main() {
 					val: 1,
 					ack: true
 				});
-				currentMode = 'Off';
+				let currentMode = 'Off';
 			} else if (tsoll == 254) {
 				adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
 				// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
@@ -1561,6 +1567,7 @@ async function main() {
 				val: currentMode,
 				ack: true
 			});
+			*/
 		} else if (
 			key == 'state' ||
 			key == 'simpleonoff' ||

@@ -706,9 +706,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createIndicatorState(newId, datapoint, name) {
+	async function createIndicatorState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -721,9 +721,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createValueState(newId, datapoint, name, min, max, unit) {
+	async function createValueState(newId, datapoint, name, min, max, unit) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -739,9 +739,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createTimeState(newId, datapoint, name) {
+	async function createTimeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -754,9 +754,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createButton(newId, datapoint, name) {
+	async function createButton(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -769,9 +769,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createSwitch(newId, datapoint, name) {
+	async function createSwitch(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -784,9 +784,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createModeState(newId, datapoint, name) {
+	async function createModeState(newId, datapoint, name) {
 		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -948,9 +948,9 @@ async function main() {
 			native: {}
 		});
 	}
-	function createBlind(newId) {
+	async function createBlind(newId) {
 		adapter.log.debug('create Blinds objects');
-		adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.blindsopen', {
 			type: 'state',
 			common: {
 				name: 'Switch open',
@@ -962,7 +962,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT_' + newId + '.blindsclose', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.blindsclose', {
 			type: 'state',
 			common: {
 				name: 'Switch close',
@@ -974,7 +974,7 @@ async function main() {
 			},
 			native: {}
 		});
-		adapter.setObjectNotExists('DECT_' + newId + '.blindsstop', {
+		await adapter.setObjectNotExists('DECT_' + newId + '.blindsstop', {
 			type: 'state',
 			common: {
 				name: 'Switch STOP',
@@ -988,10 +988,17 @@ async function main() {
 		});
 	}
 
+	async function asyncForEach(array, callback) {
+		for (let index = 0; index < array.length; index++) {
+			await callback(array[index], index, array);
+		}
+	}
+
 	async function createData(devices) {
 		var typ = '';
 		var role = '';
-		await devices.forEach(async function(device) {
+		//await devices.forEach(async function(device) {
+		await asyncForEach(devices, async (device) => {
 			typ = 'DECT_';
 			adapter.log.debug('trying on : ' + JSON.stringify(device));
 			// role to be defined
@@ -1048,10 +1055,10 @@ async function main() {
 				await createInfoState(device.identifier, 'name', 'Device Name');
 			}
 			if (device.txbusy) {
-				createIndicatorState(device.identifier, 'txbusy', 'Trasmitting active');
+				await createIndicatorState(device.identifier, 'txbusy', 'Trasmitting active');
 			}
 			if (device.synchronized) {
-				createIndicatorState(device.identifier, 'synchronized', 'Synchronized Status');
+				await createIndicatorState(device.identifier, 'synchronized', 'Synchronized Status');
 			}
 			//always ID
 			await createInfoState(device.identifier, 'id', 'Device ID');
@@ -1078,7 +1085,7 @@ async function main() {
 				//check for blinds control
 				if (device.etsiunitinfo.unittype == 281) {
 					//additional blind datapoints
-					createBlind(device.identifier);
+					await createBlind(device.identifier);
 				}
 			}
 
@@ -1093,7 +1100,7 @@ async function main() {
 			// create button parts
 			if (device.button) {
 				if (!Array.isArray(device.button)) {
-					Object.entries(device.button).forEach(([ key, value ]) => {
+					Object.entries(device.button).asyncForEach(async ([ key, value ]) => {
 						if (key === 'lastpressedtimestamp') {
 							createTimeState(device.identifier, 'lastpressedtimestamp', 'last button Time Stamp');
 						} else if (key === 'id') {

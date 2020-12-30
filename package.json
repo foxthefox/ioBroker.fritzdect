@@ -22,7 +22,7 @@
 	"dependencies": {
 		"xml2json-light": "^1.0.6",
 		"@root/request": "^1.6.1",
-		"@iobroker/adapter-core": "^2.4.0"
+		"@iobroker/adapter-core": "^1.0.3"
 	},
 	"devDependencies": {
 		"gulp": "^4.0.0",

@@ -1039,7 +1039,7 @@ async function main() {
 			// no break in else if
 			// so we use all except etsi and other
 			// other might be created, but better to warn, if during runtime it changes the updates will work until restart and new creation of datapoints
-			if (role != 'etsi' && role != 'other') {
+			if (role != 'etsi') {
 				// create Master Object
 				await createObject(typ, device.identifier, device.name, role);
 
@@ -1709,6 +1709,7 @@ async function main() {
 				} else if (typeof value === 'object' && value !== null) {
 					adapter.log.debug('processing datapoint ' + key + ' as object');
 					Object.entries(value).forEach(([ key2, value2 ]) => {
+						adapter.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
 						updateDatapoint(key2, value2, ident);
 					});
 				} else {

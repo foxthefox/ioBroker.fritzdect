@@ -1527,10 +1527,17 @@ async function main() {
 	function updateDatapoint(key, value, ain) {
 		adapter.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
 		try {
-			if (!value || value == '' || !key) {
+			if (!value || value == '') {
 				adapter.log.debug(' no value for updating in ' + key);
+				adapter.setState('DECT_' + ain + '.' + key, {
+					val: null,
+					ack: true
+				});
 			} else {
-				if (
+				if (key == 'nextchange') {
+					//fasthack anstatt neue objekterkennung
+					updateData(value, ain);
+				} else if (
 					key == 'identifier' ||
 					key == 'functionbitmask' ||
 					key == 'etsideviceid' ||

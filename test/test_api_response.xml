@@ -340,9 +340,9 @@
 				<nextchange>
 					<endperiod>1584738000</endperiod>
 					<tchange>32</tchange>
-			      	</nextchange>
-			      	<summeractive>0</summeractive>
-			      	<holidayactive>0</holidayactive>
+			    </nextchange>
+			    <summeractive>0</summeractive>
+			    <holidayactive>0</holidayactive>
 			</hkr>
 			<groupinfo>
 				<masterdeviceid>0</masterdeviceid>

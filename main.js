@@ -1605,6 +1605,10 @@ async function main() {
 							ack: true
 						});
 						let currentMode = 'Off';
+						adapter.setState('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
 					} else if (tsoll == 254) {
 						adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
 						// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
@@ -1613,11 +1617,11 @@ async function main() {
 							ack: true
 						});
 						let currentMode = 'On';
+						adapter.setState('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
 					}
-					adapter.setState('DECT_' + ain + '.operationmode', {
-						val: currentMode,
-						ack: true
-					});
 				} else if (
 					key == 'state' ||
 					key == 'simpleonoff' ||

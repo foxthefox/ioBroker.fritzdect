@@ -1657,7 +1657,7 @@ async function main() {
 					key == 'hue' ||
 					key == 'saturation' ||
 					key == 'temperature' ||
-					key == 'supported_mode' ||
+					key == 'supported_modes' ||
 					key == 'current_mode' ||
 					key == 'humidity'
 				) {
@@ -1671,6 +1671,8 @@ async function main() {
 					key == 'manufacturer' ||
 					key == 'name' ||
 					key == 'productname' ||
+					key == 'members' ||
+					key == 'masterdeviceid' ||
 					key == 'mode'
 				) {
 					// || 'id' , id schon beim initialisieren gesetzt

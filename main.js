@@ -1029,7 +1029,7 @@ async function main() {
 			) {
 				//Blinds
 				role = 'sensor';
-			} else if (device.functionbitmask & 1) {
+			} else if (device.functionbitmask == 1) {
 				role = 'etsi';
 				// replace id, fwversion in vorher erzeugten device, spätestens beim update
 			} else {
@@ -1577,18 +1577,18 @@ async function main() {
 				} else if (key == 'tsoll') {
 					//shortcut
 					adapter.setState('DECT_' + ain + '.' + key, {
-						val: parseFloat(tsoll) / 2,
+						val: parseFloat(value) / 2,
 						ack: true
 					});
 					/*
 				if (tsoll < 57) {
 					// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 					adapter.setState('DECT_' + ain + '.tsoll', {
-						val: parseFloat(tsoll) / 2,
+						val: parseFloat(value) / 2,
 						ack: true
 					});
 					adapter.setState('DECT_' + ain + '.lasttarget', {
-						val: parseFloat(tsoll) / 2,
+						val: parseFloat(value) / 2,
 						ack: true
 					}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
 					adapter.setState('DECT_' + ain + '.mode', {

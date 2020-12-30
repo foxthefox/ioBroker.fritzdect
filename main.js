@@ -1657,8 +1657,9 @@ async function main() {
 					key == 'hue' ||
 					key == 'saturation' ||
 					key == 'temperature' ||
+					key == 'supported_modes' ||
 					key == 'current_mode' ||
-					key == 'humidity'
+					key == 'rel_humidity'
 				) {
 					// integer number
 					adapter.setState('DECT_' + ain + '.' + key, {
@@ -1671,7 +1672,6 @@ async function main() {
 					key == 'manufacturer' ||
 					key == 'name' ||
 					key == 'productname' ||
-					key == 'supported_modes' ||
 					key == 'members' ||
 					key == 'masterdeviceid' ||
 					key == 'mode'

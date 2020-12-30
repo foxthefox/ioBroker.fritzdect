@@ -581,7 +581,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																state.val
 														);
 														expect(state.val).to.exist;
-														expect(state.val).to.be.equal('104560');
+														expect(state.val).to.be.equal(104560);
 														done();
 													}
 												});
@@ -1513,7 +1513,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																state.val
 														);
 														expect(state.val).to.exist;
-														expect(state.val).to.be.equal('19331');
+														expect(state.val).to.be.equal(19331);
 														done();
 													}
 												});
@@ -1738,7 +1738,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																	);
 																}
 																expect(state.val).to.exist;
-																expect(state.val).to.be.equal('5');
+																expect(state.val).to.be.equal(5);
 																states.getState(
 																	'fritzdect.0.DECT_123456789012-1.current_mode',
 																	function(err, state) {
@@ -1755,7 +1755,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																			);
 																		}
 																		expect(state.val).to.exist;
-																		expect(state.val).to.be.equal('4');
+																		expect(state.val).to.be.equal(4);
 																		states.getState(
 																			'fritzdect.0.DECT_123456789012-1.hue',
 																			function(err, state) {
@@ -1975,7 +1975,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																	);
 																}
 																expect(state.val).to.exist;
-																expect(state.val).to.be.equal('5');
+																expect(state.val).to.be.equal(5);
 																states.getState(
 																	'fritzdect.0.DECT_130770000415-1.current_mode',
 																	function(err, state) {
@@ -1992,7 +1992,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 																			);
 																		}
 																		expect(state.val).to.exist;
-																		expect(state.val).to.be.equal('1');
+																		expect(state.val).to.be.equal(1);
 																		states.getState(
 																			'fritzdect.0.DECT_130770000415-1.hue',
 																			function(err, state) {

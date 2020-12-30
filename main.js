@@ -1644,6 +1644,7 @@ async function main() {
 						ack: true
 					});
 				} else if (
+					key == 'lastalertchgtimestamp' ||
 					key == 'lastpressedtimestamp' ||
 					key == 'boostactiveendtime' ||
 					key == 'windowopenactiveendtime' ||

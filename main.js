@@ -1032,6 +1032,7 @@ async function main() {
 			} else if (device.functionbitmask == 1) {
 				role = 'etsi';
 				// replace id, fwversion in vorher erzeugten device, spätestens beim update
+				adapter.log.debug('skipping etsi !!!');
 			} else {
 				role = 'other';
 				adapter.log.warn(' unknown functionbitmask, please open issue on github ' + device.functionbitmask);

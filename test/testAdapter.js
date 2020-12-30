@@ -2198,9 +2198,7 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 									if (!state) {
 										console.error('state "fritzdect.0.DECT_119340395779-1.level" not set');
 									} else {
-										console.log(
-											'fritzdect.0.DECT_119340395779-1.celsius          ... ' + state.val
-										);
+										console.log('fritzdect.0.DECT_119340395779-1.level          ... ' + state.val);
 										expect(state.val).to.exist;
 										expect(state.val).to.be.equal(77);
 										done();

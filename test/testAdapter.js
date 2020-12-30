@@ -126,7 +126,7 @@ var temp_stats = fs.readFileSync(__dirname + '/../test/devicestat_temp_answer.xm
 var power_stats = fs.readFileSync(__dirname + '/../test/devicestat_power_answer.xml'); //getbasicdevicestats power/voltage
 var hkr_batt = fs.readFileSync(__dirname + '/../test/hkr_response.xml'); // Anteil der Webseite für BatteriesLadung
 var guestWlan = fs.readFileSync(__dirname + '/../test/guest_wlan_form.xml'); // Anteil der Webseite für GästeWLAN
-var colordef = fs.readFileSync(__dirname + '/../test/colordefaults2.xml'); // COLOR
+var colordef = fs.readFileSync(__dirname + '/../test/colodefaults2.xml'); // COLOR
 
 function handleHttpRequest(request, response) {
 	console.log('HTTP-Server (Fritzbox Emulation) : Request: ' + request.method + ' ' + request.url);
@@ -691,12 +691,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 												expect(state).to.exist;
 												if (!state) {
 													console.error(
-														'state "fritzdect.0.DECT_117951022222.celsius" not set'
+														'state "fritzdect.0.DECT_117951022222.absenk" not set'
 													);
 												} else {
 													console.log(
-														'fritzdect.0.DECT_117951022222.nighcelsius        ... ' +
-															state.val
+														'fritzdect.0.DECT_117951022222.absenk        ... ' + state.val
 													);
 												}
 												expect(state.val).to.exist;
@@ -906,12 +905,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 												expect(state).to.exist;
 												if (!state) {
 													console.error(
-														'state "fritzdect.0.DECT_117951033333.celsius" not set'
+														'state "fritzdect.0.DECT_117951033333.absenk" not set'
 													);
 												} else {
 													console.log(
-														'fritzdect.0.DECT_117951033333.nighcelsius        ... ' +
-															state.val
+														'fritzdect.0.DECT_117951033333.absenk        ... ' + state.val
 													);
 												}
 												expect(state.val).to.exist;
@@ -1080,12 +1078,11 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 												expect(state).to.exist;
 												if (!state) {
 													console.error(
-														'state "fritzdect.0.DECT_119600642220.celsius" not set'
+														'state "fritzdect.0.DECT_119600642220.absnek" not set'
 													);
 												} else {
 													console.log(
-														'fritzdect.0.DECT_119600642220.nighcelsius        ... ' +
-															state.val
+														'fritzdect.0.DECT_119600642220.absenk        ... ' + state.val
 													);
 												}
 												expect(state.val).to.exist;
@@ -2117,14 +2114,14 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 									}
 									expect(state.val).to.exist;
 									expect(state.val).to.be.equal(18.5);
-									states.getState('fritzdect.0.DECT_099950403922.humidity', function(err, state) {
+									states.getState('fritzdect.0.DECT_099950403922.rel_humidity', function(err, state) {
 										if (err) console.error(err);
 										expect(state).to.exist;
 										if (!state) {
-											console.error('state "fritzdect.0.DECT_099950403922.humidity" not set');
+											console.error('state "fritzdect.0.DECT_099950403922.rel_humidity" not set');
 										} else {
 											console.log(
-												'fritzdect.0.DECT_099950403922.humidity          ... ' + state.val
+												'fritzdect.0.DECT_099950403922.rel_humidity          ... ' + state.val
 											);
 											expect(state.val).to.exist;
 											expect(state.val).to.be.equal(52);

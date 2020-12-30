@@ -1522,7 +1522,7 @@ async function main() {
 					ack: true
 				});
 			} else if (key == 'power' || key == 'voltage') {
-				adapter.setState('DECT_' + ain + '.power', {
+				adapter.setState('DECT_' + ain + '.' + key, {
 					val: parseFloat(value) / 1000,
 					ack: true
 				});
@@ -1538,7 +1538,8 @@ async function main() {
 					ack: true
 				});
 			} else if (key == 'tsoll') {
-				adapter.setState('DECT_' + ain + '.tsoll', {
+				//shortcut
+				adapter.setState('DECT_' + ain + '.' + key, {
 					val: parseFloat(tsoll) / 2,
 					ack: true
 				});

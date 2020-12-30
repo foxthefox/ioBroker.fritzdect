@@ -498,7 +498,7 @@ function startAdapter(options) {
 								});
 								result = devices;
 							})
-							.done(function(devicelistinfos) {
+							.then(function(devicelistinfos) {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -522,7 +522,7 @@ function startAdapter(options) {
 								});
 								result = groups;
 							})
-							.done(function(devicelistinfos) {
+							.then(function(devicelistinfos) {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -548,7 +548,7 @@ function startAdapter(options) {
 									});
 								result = templates;
 							})
-							.done(function(templatelistinfos) {
+							.then(function(templatelistinfos) {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -568,7 +568,7 @@ function startAdapter(options) {
 								var devicestats = parser.xml2json(statisticinfos);
 								result = devicestats;
 							})
-							.done(function(statisticinfos) {
+							.then(function(statisticinfos) {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;
@@ -586,7 +586,7 @@ function startAdapter(options) {
 							.then(function(colorinfos) {
 								result = colorinfos;
 							})
-							.done(function(colorinfos) {
+							.then(function(colorinfos) {
 								if (obj.callback) adapter.sendTo(obj.from, obj.command, result, obj.callback);
 							});
 						wait = true;

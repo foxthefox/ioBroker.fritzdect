@@ -1059,18 +1059,18 @@ async function main() {
 			if (device.etsiunitinfo) {
 				if (device.etsiunitinfo.etsideviceid) {
 					//replace id with etsi
-					await adapter.setState('DECT_' + device.identifier + '.id', {
+					adapter.setState('DECT_' + device.identifier + '.id', {
 						val: device.etsiunitinfo.etsideviceid,
 						ack: true
 					});
 					// noch nicht perfekt da dies überschrieben wird
-					await adapter.setState('DECT_' + device.identifier + '.fwversion', {
+					adapter.setState('DECT_' + device.identifier + '.fwversion', {
 						val: device.etsiunitinfo.fwversion,
 						ack: true
 					});
 				} else {
 					//device.id
-					await adapter.setState('DECT_' + device.identifier + '.id', {
+					adapter.setState('DECT_' + device.identifier + '.id', {
 						val: device.id,
 						ack: true
 					});
@@ -1437,7 +1437,7 @@ async function main() {
 				adapter.log.debug(JSON.stringify(templates));
 				if (templates.length) {
 					adapter.log.info('create Templates ' + templates.length);
-					await createTemplateResponse();
+					createTemplateResponse();
 					templates.forEach(async function(template) {
 						if (
 							(template.functionbitmask & 320) == 320 ||
@@ -1466,7 +1466,9 @@ async function main() {
 	}
 	function updateDatapoint(key, value, ain) {
 		adapter.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
-		if (key === 'batterylow') {
+		if (key == 'id' || key == 'identifier' || key == 'functionbitmask') {
+			// skip it
+		} else if (key === 'batterylow') {
 			// bool mal anders herum
 			let batt = value == 0 ? false : true;
 			/*
@@ -1574,6 +1576,7 @@ async function main() {
 			key == 'level' ||
 			key == 'levelpercentage' ||
 			key == 'battery' ||
+			key == 'energy' ||
 			key == 'hue' ||
 			key == 'saturation' ||
 			key == 'temperature' ||
@@ -1586,7 +1589,13 @@ async function main() {
 				val: parseInt(value),
 				ack: true
 			});
-		} else if (key == 'fwversion' || key == 'manufacturer' || key == 'name' || key == 'prodname' || key == 'mode') {
+		} else if (
+			key == 'fwversion' ||
+			key == 'manufacturer' ||
+			key == 'name' ||
+			key == 'productname' ||
+			key == 'mode'
+		) {
 			// || 'id' , id schon beim initialisieren gesetzt
 			// text
 			adapter.setState('DECT_' + ain + '.' + key, {

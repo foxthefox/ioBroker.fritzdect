@@ -126,7 +126,7 @@ var temp_stats = fs.readFileSync(__dirname + '/../test/devicestat_temp_answer.xm
 var power_stats = fs.readFileSync(__dirname + '/../test/devicestat_power_answer.xml'); //getbasicdevicestats power/voltage
 var hkr_batt = fs.readFileSync(__dirname + '/../test/hkr_response.xml'); // Anteil der Webseite für BatteriesLadung
 var guestWlan = fs.readFileSync(__dirname + '/../test/guest_wlan_form.xml'); // Anteil der Webseite für GästeWLAN
-var colordef = fs.readFileSync(__dirname + '/../test/colodefaults2.xml'); // COLOR
+//var colordef = fs.readFileSync(__dirname + '/../test/colodefaults2.xml'); // COLOR
 
 function handleHttpRequest(request, response) {
 	console.log('HTTP-Server (Fritzbox Emulation) : Request: ' + request.method + ' ' + request.url);

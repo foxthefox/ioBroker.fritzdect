@@ -679,7 +679,7 @@ async function main() {
 	var fritz = new Fritz(username, password || '', moreParam || '');
 
 	async function createObject(typ, newId, name, role) {
-		adapter.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
+		await adapter.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
 		await adapter.setObjectNotExists(typ + newId, {
 			type: 'channel',
 			common: {
@@ -692,7 +692,7 @@ async function main() {
 		});
 	}
 	async function createInfoState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
@@ -707,7 +707,7 @@ async function main() {
 		});
 	}
 	async function createIndicatorState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
@@ -722,7 +722,7 @@ async function main() {
 		});
 	}
 	async function createValueState(newId, datapoint, name, min, max, unit) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
@@ -740,7 +740,7 @@ async function main() {
 		});
 	}
 	async function createTimeState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
@@ -770,7 +770,7 @@ async function main() {
 		});
 	}
 	async function createSwitch(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
@@ -785,7 +785,7 @@ async function main() {
 		});
 	}
 	async function createModeState(newId, datapoint, name) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
@@ -800,7 +800,7 @@ async function main() {
 		});
 	}
 	async function createValueCtrl(newId, datapoint, name, min, max, role) {
-		adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
@@ -1049,7 +1049,7 @@ async function main() {
 				await createInfoState(device.identifier, 'productname', 'Product Name');
 			}
 			if (device.present) {
-				createIndicatorState(device.identifier, 'present', 'device present');
+				await createIndicatorState(device.identifier, 'present', 'device present');
 			}
 			if (device.name) {
 				await createInfoState(device.identifier, 'name', 'Device Name');
@@ -1064,20 +1064,22 @@ async function main() {
 			await createInfoState(device.identifier, 'id', 'Device ID');
 			//etsideviceid im gleichen Object
 			if (device.etsiunitinfo) {
+				await adapter.log.debug('etsi part');
 				if (device.etsiunitinfo.etsideviceid) {
 					//replace id with etsi
-					adapter.setState('DECT_' + device.identifier + '.id', {
+					await adapter.log.debug('etsideviceid to be replaced');
+					await adapter.setState('DECT_' + device.identifier + '.id', {
 						val: device.etsiunitinfo.etsideviceid,
 						ack: true
 					});
 					// noch nicht perfekt da dies überschrieben wird
-					adapter.setState('DECT_' + device.identifier + '.fwversion', {
+					await adapter.setState('DECT_' + device.identifier + '.fwversion', {
 						val: device.etsiunitinfo.fwversion,
 						ack: true
 					});
 				} else {
 					//device.id
-					adapter.setState('DECT_' + device.identifier + '.id', {
+					await adapter.setState('DECT_' + device.identifier + '.id', {
 						val: device.id,
 						ack: true
 					});
@@ -1091,22 +1093,22 @@ async function main() {
 
 			// create battery devices
 			if (device.battery) {
-				createValueState(device.identifier, 'battery', 'Battery Charge State', 0, 100, '%');
+				await createValueState(device.identifier, 'battery', 'Battery Charge State', 0, 100, '%');
 			}
 			if (device.batterylow) {
-				createIndicatorState(device.identifier, 'batterylow', 'Battery Low State');
+				await createIndicatorState(device.identifier, 'batterylow', 'Battery Low State');
 			}
 
 			// create button parts
 			if (device.button) {
 				if (!Array.isArray(device.button)) {
-					Object.entries(device.button).asyncForEach(async ([ key, value ]) => {
+					Object.entries(device.button).forEach(async ([ key, value ]) => {
 						if (key === 'lastpressedtimestamp') {
-							createTimeState(device.identifier, 'lastpressedtimestamp', 'last button Time Stamp');
+							await createTimeState(device.identifier, 'lastpressedtimestamp', 'last button Time Stamp');
 						} else if (key === 'id') {
-							createInfoState(device.identifier, 'id', 'Button ID');
+							await createInfoState(device.identifier, 'id', 'Button ID');
 						} else if (key === 'name') {
-							createInfoState(device.identifier, 'name', 'Button Name');
+							await createInfoState(device.identifier, 'name', 'Button Name');
 						} else {
 							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
 						}

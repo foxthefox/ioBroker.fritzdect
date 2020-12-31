@@ -442,15 +442,15 @@ describe('Test ' + adapterShortName + ' adapter', function() {
 			);
 		});
 	});
-	/*
+
 	it('Test ' + adapterShortName + ' adapter: delay', function(done) {
-		this.timeout(120000);
+		this.timeout(20000);
 
 		setTimeout(function() {
 			done();
-		}, 110000);
+		}, 10000);
 	});
-	*/
+
 	/**/
 
 	/*

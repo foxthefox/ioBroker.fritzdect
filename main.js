@@ -1434,7 +1434,7 @@ async function main() {
 						} else if (key === 'temperature') {
 							await createValueCtrl(
 								device.identifier,
-								'temparature',
+								'temperature',
 								'color temperature',
 								2700,
 								6500,

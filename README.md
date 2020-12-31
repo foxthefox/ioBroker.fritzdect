@@ -35,9 +35,11 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 
 ## Common Issues / Frequently Asked Questions
 
-  1. Fritzbox returned '00000000' no login possible.
+  1. Fritzbox returned '00000000' no login possible. possible reasons:
 
         The fritzbox allows only a limited number of logins in a timeframe. So very fast polling (update) attempts may lead to blocking of logins.
+        There are no appropriate user rights set in the fritzbox.
+        There is a time elapsing in the fritzbox blocking the logins 
 
  2. no login to the FritzBox, when using https
 
@@ -45,7 +47,7 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 
           { error: { [Error: self signed certificate] code: 'DEPTH_ZERO_SELF_SIGNED_CERT' }
 
-      indicate that there are SSL security problems. Use the `"strictSSL": false` option (no tick in checkbox) in the admin page of adapter to disable the respective check.
+      indicate that there are SSL security problems (certificate). Use the `"strictSSL": false` option (no tick in checkbox) in the admin page of adapter to disable the respective check (experimental). 
 
 ## Thermostat
 
@@ -150,6 +152,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 ## TODO:
 * map of data input from user to valid predefined colors (nearest match)
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
+* refactor to the format of as of "create adapter"
 
 ## Changelog
 
@@ -161,7 +164,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * DECT500 groups
 * accepting blocktime from fritzbox
 * announcing new detected datapoints delivered by fritzbox
-* option strictSSL
+* option strictSSL (experimental)
 
 ### 1.1.4 (npm)
 * blinds control

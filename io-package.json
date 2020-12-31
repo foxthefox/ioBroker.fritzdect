@@ -263,7 +263,7 @@
 		"platform": "Javascript/Node.js",
 		"mode": "daemon",
 		"license": "MIT",
-		"keywords": [ "smart home", "DECT200", "COMET", "fritzbox" ],
+		"keywords": [ "smart home", "DECT ULE", "lighting", "heating", "switching", "fritzbox" ],
 		"type": "hardware",
 		"icon": "fritzdect_logo.png",
 		"extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
@@ -274,6 +274,12 @@
 		"materialize": true,
 		"compact": true,
 		"messagebox": true,
+		"dependencies": [
+			{
+				"admin": ">=3.0.0",
+				"js-controller": ">=2.0.0"
+			}
+		],
 		"restartAdapters": [ "vis" ],
 		"authors": [ "foxthefox <foxthefox@wysiwis.net>" ]
 	},
@@ -281,7 +287,8 @@
 		"fritz_ip": "http://192.x.x.x",
 		"fritz_user": "admin",
 		"fritz_pw": "pw",
-		"fritz_interval": "300"
+		"fritz_interval": "300",
+		"fritz_strictssl": true
 	},
 	"objects": [],
 	"instanceObjects": []

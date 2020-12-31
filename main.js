@@ -98,8 +98,9 @@ function startAdapter(options) {
 			var username = adapter.config.fritz_user;
 			var password = adapter.config.fritz_pw;
 			var moreParam = adapter.config.fritz_ip;
+			var strictssl = adapter.config.fritz_strictssl;
 
-			var fritz = new Fritz(username, password || '', moreParam || '');
+			var fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
 
 			// you can use the ack flag to detect if it is status (true) or command (false)
 			if (state && !state.ack) {
@@ -485,8 +486,9 @@ function startAdapter(options) {
 						var username = adapter.config.fritz_user;
 						var password = adapter.config.fritz_pw;
 						var moreParam = adapter.config.fritz_ip;
+						var strictssl = adapter.config.fritz_strictssl;
 
-						var fritz = new Fritz(username, password || '', moreParam || '');
+						var fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
 						fritz
 							.getDeviceListInfos()
 							.then(function(devicelistinfos) {
@@ -509,8 +511,9 @@ function startAdapter(options) {
 						var username = adapter.config.fritz_user;
 						var password = adapter.config.fritz_pw;
 						var moreParam = adapter.config.fritz_ip;
+						var strictssl = adapter.config.fritz_strictssl;
 
-						var fritz = new Fritz(username, password || '', moreParam || '');
+						var fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
 						fritz
 							.getDeviceListInfos()
 							.then(function(devicelistinfos) {
@@ -533,8 +536,9 @@ function startAdapter(options) {
 						var username = adapter.config.fritz_user;
 						var password = adapter.config.fritz_pw;
 						var moreParam = adapter.config.fritz_ip;
+						var strictssl = adapter.config.fritz_strictssl;
 
-						var fritz = new Fritz(username, password || '', moreParam || '');
+						var fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
 						fritz
 							.getTemplateListInfos()
 							.then(function(templatelistinfos) {
@@ -559,8 +563,9 @@ function startAdapter(options) {
 						var username = adapter.config.fritz_user;
 						var password = adapter.config.fritz_pw;
 						var moreParam = adapter.config.fritz_ip;
+						var strictssl = adapter.config.fritz_strictssl;
 
-						var fritz = new Fritz(username, password || '', moreParam || '');
+						var fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
 						fritz
 							.getBasicDeviceStats(obj.message) //ain muß übergeben werden
 							.then(function(statisticinfos) {
@@ -579,8 +584,9 @@ function startAdapter(options) {
 						var username = adapter.config.fritz_user;
 						var password = adapter.config.fritz_pw;
 						var moreParam = adapter.config.fritz_ip;
+						var strictssl = adapter.config.fritz_strictssl;
 
-						var fritz = new Fritz(username, password || '', moreParam || '');
+						var fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
 						fritz
 							.getColorDefaults()
 							.then(function(colorinfos) {
@@ -675,8 +681,9 @@ async function main() {
 	var username = adapter.config.fritz_user;
 	var password = adapter.config.fritz_pw;
 	var moreParam = adapter.config.fritz_ip;
+	var strictssl = adapter.config.fritz_strictssl;
 
-	var fritz = new Fritz(username, password || '', moreParam || '');
+	var fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
 
 	async function createObject(typ, newId, name, role) {
 		await adapter.log.debug('____________________________________________');
@@ -1843,7 +1850,7 @@ async function main() {
 									// search and find the device id and replace fwversion
 									// todo
 									// find the device.identifier mit der etsi_id
-									// adapter.setState
+									// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
 									// reihenfolge, id immer vorher und dann erst etsi in json?
 									continue;
 								} else {

@@ -1076,18 +1076,18 @@ async function main() {
 						await adapter.log.debug('etsideviceid to be replaced');
 						await adapter.log.debug('etsideviceid ' + device.etsiunitinfo.etsideviceid);
 						await adapter.setState('DECT_' + device.identifier + '.id', {
-							val: device.etsiunitinfo.etsideviceid.toString(),
+							val: device.etsiunitinfo.etsideviceid,
 							ack: true
 						});
 						// noch nicht perfekt da dies überschrieben wird
 						await adapter.setState('DECT_' + device.identifier + '.fwversion', {
-							val: device.etsiunitinfo.fwversion.toString(),
+							val: device.etsiunitinfo.fwversion,
 							ack: true
 						});
 					} else {
 						//device.id
 						await adapter.setState('DECT_' + device.identifier + '.id', {
-							val: device.id.toString(),
+							val: device.id,
 							ack: true
 						});
 					}

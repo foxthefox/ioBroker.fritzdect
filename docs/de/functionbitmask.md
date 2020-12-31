@@ -16,8 +16,9 @@
 |dect 400|32|0|0|0|0|0|0|0|0|0|0|0|0|32|0|0|0|0|0|
 |dect 440|288|0|0|0|0|0|0|0|0|0|256|0|0|32|0|0|0|0|0|
 |dect 440|1048864 |0|0 |0|16384|0|0 |2048|0|0|0  |0|64|32|0  |0|4|0|0|
+|dect 500|237572|131072|65536|32768|0|8192|0|0|0|0|0|0|0|0|0|0|4|0|0|
 
-#decoding functionbitmask for HAN-FUN
+# decoding functionbitmask for HAN-FUN
 
 |device|decimal|color (514)|level (513)|simple ONOFF (512)|not used|hanfun unit|group|microfon|repeater|steckdose|temp|energie|hkr|AVM button|alert (256)|button (772)|lamp|not used|hanfun device|
 |:--------|:--------|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -39,20 +40,20 @@
 |simple light (264)|40964|0|0|32768|0|8192|0|0|0|0|0|0|0|0|0|0|4|0|0|
 |color bulb (278)|172036|131072|0|32768|0|8192|0|0|0|0|0|0|0|0|0|0|4|0|0|
 
-##772 Simple Button
+## 772 Simple Button
 * button lastpressedtimestamp
 
-##256 Alert
+## 256 Alert
 * alert state (0/1)
 
-##512 ON_OFF
+## 512 ON_OFF
 * simpleonoff state (0/1)
 
-##513 LEVEL_CTRL
+## 513 LEVEL_CTRL
 * levelcontrol level
 * levelcontrol levelpercentage
 
-##514 COLOR_CTRL
+## 514 COLOR_CTRL
 * colorcontrol supported_modes
 * colorcontrol current_mode
 * colorcontrol hue

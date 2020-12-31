@@ -800,7 +800,7 @@ async function main() {
 			native: {}
 		});
 	}
-	async function createValueCtrl(newId, datapoint, name, min, max, role) {
+	async function createValueCtrl(newId, datapoint, name, min, max, unit, role) {
 		await adapter.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
 		await adapter.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
@@ -809,6 +809,7 @@ async function main() {
 				type: 'number',
 				min: min,
 				max: max,
+				unit: unit,
 				read: true,
 				write: true,
 				role: role,
@@ -933,7 +934,7 @@ async function main() {
 			native: {}
 		});
 		await adapter.setState('DECT_' + newId + '.operationlist', {
-			val: `Control, On, Off, Holiday, Summer, Boost, WindowOpen`,
+			val: `Auto, On, Off, Holiday, Summer, Boost, WindowOpen`,
 			ack: true
 		});
 		await adapter.setObjectNotExists('DECT_' + newId + '.operationmode', {
@@ -1006,28 +1007,30 @@ async function main() {
 			adapter.log.debug('TRYING on : ' + JSON.stringify(device));
 			// role to be defined
 			if ((device.functionbitmask & 64) == 64) {
+				//DECT300/301
 				role = 'thermo.heat';
 			} else if ((device.functionbitmask & 512) == 512) {
-				//DECT300/301
-				role = 'switch';
-			} else if (device.functionbitmask == 1024 || 1024) {
 				//DECT200/210
-				role = 'thermo';
-			} else if (device.functionbitmask == 288 || 1048864) {
+				role = 'switch';
+			} else if ((device.functionbitmask & 256) == 256) {
+				// == 1024 || 1024)
 				// Repeater
 				role = 'thermo';
-			} else if (device.functionbitmask == 237572) {
+			} else if (device.functionbitmask == 288 || device.functionbitmask == 1048864) {
 				// DECT440
+				role = 'thermo';
+			} else if (device.functionbitmask == 237572 || (device.functionbitmask & 131072) == 131072) {
+				// DECT500
 				role = 'light';
 			} else if (device.functionbitmask == 335888) {
-				//DECT500
+				//Blinds
 				role = 'blinds';
 			} else if (
 				(device.functionbitmask & 16) == 16 ||
 				(device.functionbitmask & 8) == 8 ||
 				(device.functionbitmask & 32) == 32
 			) {
-				//Blinds
+				//Alarm, Contact Sensor
 				role = 'sensor';
 			} else if (device.functionbitmask == 1) {
 				role = 'etsi';
@@ -1040,6 +1043,16 @@ async function main() {
 			// no break in else if
 			// so we use all except etsi and other
 			// other might be created, but better to warn, if during runtime it changes the updates will work until restart and new creation of datapoints
+			adapter.log.debug(
+				'device ' +
+					device.identifier +
+					' named ' +
+					device.name +
+					' mask ' +
+					device.functionbitmask +
+					' assigned to ' +
+					role
+			);
 			if (role != 'etsi') {
 				// create Master Object
 				await createObject(typ, device.identifier, device.name, role);
@@ -1261,7 +1274,7 @@ async function main() {
 								'tsoll',
 								'Setpoint Temperature',
 								0,
-								255,
+								32,
 								'°C',
 								'value.temperature'
 							);
@@ -1299,7 +1312,8 @@ async function main() {
 								'boost active time for cmd',
 								0,
 								1440,
-								'min'
+								'min',
+								'value.time'
 							);
 							//preset to 5 min
 							await adapter.setState('DECT_' + device.identifier + '.boostactivetime', {
@@ -1593,20 +1607,20 @@ async function main() {
 							val: parseFloat(value) / 2,
 							ack: true
 						}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-						adapter.setState('DECT_' + ain + '.mode', {
+						adapter.setState('DECT_' + ain + '.hkrmode', {
 							val: 0,
 							ack: true
 						});
 						//always control if in absenk or komfort
-						let currentMode = 'Control';
+						let currentMode = 'Auto';
 						adapter.setState('DECT_' + ain + '.operationmode', {
 							val: currentMode,
 							ack: true
 						});
-					} else if (tsoll == 253) {
+					} else if (value == 253) {
 						adapter.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
 						// adapter.setState('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-						adapter.setState('DECT_' + ain + '.mode', {
+						adapter.setState('DECT_' + ain + '.hkrmode', {
 							val: 1,
 							ack: true
 						});
@@ -1615,10 +1629,10 @@ async function main() {
 							val: currentMode,
 							ack: true
 						});
-					} else if (tsoll == 254) {
+					} else if (value == 254) {
 						adapter.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
 						// adapter.setState('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-						adapter.setState('DECT_' + ain + '.mode', {
+						adapter.setState('DECT_' + ain + '.hkrmode', {
 							val: 2,
 							ack: true
 						});

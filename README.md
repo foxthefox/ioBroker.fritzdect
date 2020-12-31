@@ -48,6 +48,16 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 
       indicate that there are SSL security problems. Use the `"strictSSL": false` option (no tick in checkbox) in the admin page of adapter to disable the respective check.
 
+## Thermostat
+The thermostat has different modes:
+* auto (temperature control), to be set by hkrmode (0)
+* on (full open), to be set by hkrmode (1)
+* off (full close), to be set by hkrmode (2)
+* boost (full open for limited time), detected by feedback boostactive, can be set by boostactive (false->true)
+* windowopen (full closed for defined time), detected by feedback windowopenactiv, can be set be windowopenactiv (false->true)
+* holiday (temp control), detected by holidayactive
+* summer (temp control), detected by summeractive
+
 ## ioBroker objects
 
 objects in *italic* are not part of all fritz.box configurations
@@ -144,11 +154,13 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 
 ### 2.0.0 Breaking Changes in datapoints and structures (wip)
 * refactoring of the code
-* new fritzapi to either used md5 or pbkf2 decryption, needed for FW >7.24
+* new fritzapi to either used md5 or pbkf2 decryption, needed for fritzbox FW >7.24
 * **usage of AHA API returned values as datapoint identifier**
 * **grouping of buttons under the DECT440**
 * DECT500 groups
 * accepting blocktime from fritzbox
+* announcing new detected datapoints delivered by fritzbox
+* rounding of float values to 1 digit after comma
 
 ### 1.1.4 (npm)
 * blinds control

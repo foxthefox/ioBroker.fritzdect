@@ -1583,7 +1583,7 @@ async function main() {
 						ack: true
 					});
 				} else if (key == 'tsoll') {
-					if (tsoll < 57) {
+					if (value < 57) {
 						// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 						adapter.setState('DECT_' + ain + '.tsoll', {
 							val: parseFloat(value) / 2,

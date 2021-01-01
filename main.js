@@ -1141,7 +1141,7 @@ async function main() {
 							} else if (key === 'name') {
 								await createInfoState(device.identifier, 'name', 'Button Name');
 							} else {
-								adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+								adapter.log.warn(' new datapoint in API detected -> ' + key);
 							}
 						});
 					} else if (Array.isArray(device.button)) {
@@ -1172,7 +1172,7 @@ async function main() {
 										'Button Name'
 									);
 								} else {
-									adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+									adapter.log.warn(' new datapoint in API detected -> ' + key);
 								}
 							});
 						});
@@ -1187,7 +1187,7 @@ async function main() {
 						} else if (key === 'lastalertchgtimestamp') {
 							await createTimeState(device.identifier, 'lastalertchgtimestamp', 'Alert last Time');
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1204,7 +1204,7 @@ async function main() {
 						} else if (key === 'devicelock') {
 							await createIndicatorState(device.identifier, 'devicelock', 'Device (Button)lock');
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1226,7 +1226,7 @@ async function main() {
 								'Wh'
 							);
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1239,7 +1239,7 @@ async function main() {
 						} else if (key === 'members') {
 							await createInfoState(device.identifier, 'members', 'member of the group');
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1252,7 +1252,7 @@ async function main() {
 						} else if (key === 'offset') {
 							await createValueState(device.identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1263,7 +1263,7 @@ async function main() {
 						if (key === 'rel_humidity') {
 							await createValueState(device.identifier, 'rel_humidity', 'relative Humidity', 0, 100, '%');
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1372,7 +1372,7 @@ async function main() {
 											'°C'
 										);
 									} else {
-										adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+										adapter.log.warn(' new datapoint in API detected -> ' + key);
 									}
 								});
 							} catch (e) {
@@ -1381,7 +1381,7 @@ async function main() {
 								);
 							}
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1393,7 +1393,7 @@ async function main() {
 						if (key === 'state') {
 							createSwitch(device.identifier, 'state', 'Simple ON/OFF state and cmd');
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1414,7 +1414,7 @@ async function main() {
 								'value.level'
 							);
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}
@@ -1449,7 +1449,7 @@ async function main() {
 								'value.temperature'
 							);
 						} else {
-							adapter.log.warn(' new datapoint in API detected -> ' + key + ' ' + value);
+							adapter.log.warn(' new datapoint in API detected -> ' + key);
 						}
 					});
 				}

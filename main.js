@@ -84,7 +84,7 @@ class Fritzdect extends utils.Adapter {
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
-		//this.settings = { Username: '', Password: '', moreParam: '', strictSsl: true, intervall: 300 };
+		this.errorHandler.bind(this);
 		this.systemConfig = {};
 	}
 
@@ -111,7 +111,6 @@ class Fritzdect extends utils.Adapter {
 			const sysConf = await this.getForeignObjectAsync('system.config');
 			if (sysConf && sysConf.common) {
 				this.systemConfig = sysConf.common;
-				this.log.debug('system config' + JSON.stringify(sysConf));
 			} else {
 				throw `ioBroker system configuration not found.`;
 			}

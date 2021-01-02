@@ -1,12 +1,22 @@
 const path = require('path');
 const { tests } = require('@iobroker/testing');
 
+const server = require('./lib/fritz_mockserver.js');
+
 function encrypt(key, value) {
 	let result = '';
 	for (let i = 0; i < value.length; ++i) {
 		result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
 	}
 	return result;
+}
+
+function delay(t, val) {
+	return new Promise(function(resolve) {
+		setTimeout(function() {
+			resolve(val);
+		}, t);
+	});
 }
 
 // Run integration tests - See https://github.com/ioBroker/testing for a detailed explanation and further options
@@ -21,6 +31,9 @@ tests.integration(path.join(__dirname, '..'), {
 	// Since the tests are heavily instrumented, you need to create and use a so called "harness" to control the tests.
 	defineAdditionalTests(getHarness) {
 		describe('Test sendTo()', () => {
+			before('start the emulation', () => {
+				server.setupHttpServer(function() {});
+			});
 			it('Should work', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
@@ -31,14 +44,16 @@ tests.integration(path.join(__dirname, '..'), {
 					//config.common.loglevel = 'debug';
 					// systemConfig.native.secret ='Zgfr56gFe87jJOM'
 
+					//await delay (15000);
+
 					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
-						obj.native.fritz_ip = 'http://localhost:8080';
+						obj.native.fritz_ip = 'http://localhost:3333';
 						obj.native.fritz_user = 'admin';
 						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
 						obj.native.fritz_pw = encrypt('Zgfr56gFe87jJOM', 'password');
 						obj.native.fritz_interval = 300;
 						obj.native.fritz_strictssl = true;
-						harness._objects.setObject(obj._id, obj);
+						await harness._objects.setObjectAsync(obj._id, obj);
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
@@ -60,8 +75,6 @@ const { expect } = require('chai');
 // import { functionToTest } from "./moduleToTest";
 
 const setup = require(__dirname + '/test/lib/setup');
-
-const server = require('./test/lib/fritz_mockserver.js');
 
 let objects = null;
 let states = null;

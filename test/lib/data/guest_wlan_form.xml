@@ -1,0 +1,227 @@
+<form name="main_form" method="POST" action="/wlan/guest_access.lua?sid=f8c96e2327e7a4f9" id="uiMainForm">
+    <div id="disable_all">
+        <div style="">
+            <p>
+                Hier ermöglichen Sie Ihren Gästen schnell und sicher einen WLAN-Zugang zum Internet (privater Hotspot).
+                Angemeldete Geräte nutzen lediglich den Internetzugang, haben aber keinen Zugriff auf Ihr Heimnetz. Die
+                Nutzung kann protokolliert und auf bestimmte Internetanwendungen beschränkt werden.
+                <a target="_blank" href="/secure_link.lua?sid=f8c96e2327e7a4f9&lnk=https%3A%2F%2Fhelp.avm.de%2Ffritzbox.php%3Fhardware%3D156%26oem%3Davm%26language%3Dde%26country%3D049%26version%3D84.06.85%26subversion%3D%26set%3D016%26topic%3Dhilfe_wlan_gast_hinweis%26userSettings%3D0100">Wichtige
+                    Hinweise</a>
+            </p>
+        </div>
+        <div style="display:none;">
+            <p>
+                Über den Gastzugang können Sie Ihren Gästen schnell, sicher und einfach den Zugang zum Internet über
+                Ihr WLAN-Funknetz gestatten. Wenn Sie
+                in der als WLAN-Basisstation genutzten FRITZ!Box einen Gastzugang eingerichtet haben, wird dieser auch
+                über die als WLAN-Repeater genutzten FRITZ!Box zur Verfügung gestellt.
+            </p>
+            <div>
+                <input type="checkbox" id="uiAutoupdate" name="autoupdate" onclick="onAutoupdate()" checked><label for="uiAutoupdate">
+                    Einstellungen für den Gastzugang aus der WLAN-Basisstation übernehmen
+                </label>
+                <div class="form_input_explain">
+                    <div>
+                        <h4>Hinweis:</h4>Sollten Sie in der als WLAN-Basisstation genutzten FRITZ!Box zukünftig einmal
+                        die Zugangsdaten für den Gastzugang ändern,
+                        muss dort erneut WPS ausgelöst werden, damit die geänderten Daten in die als WLAN-Repeater
+                        genutzten FRITZ!Box übertragen werden können.
+                    </div>
+                    <div>Möchten Sie für die als WLAN-Repeater genutzten FRITZ!Box andere Einstellungen verwenden als
+                        in der als WLAN-Basisstation genutzten FRITZ!Box eingerichtet sind, so deaktivieren Sie diese
+                        Option und nehmen Sie die Einstellungen hier vor.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="uiGuestManu" style="">
+            <hr>
+            <h4>Gastzugang (privater Hotspot) aktivieren</h4>
+            <div>
+                <div>
+                    <input type="checkbox" id="uiViewActivateGuestAccess" name="activate_guest_access" onclick="onGuestWlanActiv()"><label
+                        for="uiViewActivateGuestAccess">Gastzugang aktiv
+                        <!--  --></label>
+                </div>
+                <div id="uiViewGuestInstall" class="formular">
+                    <div>
+                        <label for="uiViewGuestSsid">Name des Gastfunknetzes (SSID)</label>
+                        <input type="text" size="33" maxlength="32" id="uiViewGuestSsid" name="guest_ssid" onpaste="valuesChanged()"
+                            oninput="valuesChanged()" value="GästeWLAN">
+                    </div>
+                    <div id="uiViewGuestSecurity">
+                        <div>
+                            <label for="uiSecMode">Verschlüsselung</label>
+                            <select id="uiSecMode" name="sec_mode" onchange="onWlanSecurity();valuesChanged();" size="1">
+                                <option value="2">WPA (TKIP)</option>
+                                <option value="3">WPA2 (CCMP)</option>
+                                <option value="4" selected="selected">WPA + WPA2</option>
+                                <option value="5">unverschlüsselt</option>
+
+                            </select>
+                        </div>
+                        <div id="uiViewWpaDialogBox">
+                            <p>Legen Sie einen WLAN-Netzwerkschlüssel fest. Der Netzwerkschlüssel muss zwischen 8 und
+                                63 Zeichen lang sein.</p>
+                            <label for="uiViewWpaKey">WLAN-Netzwerkschlüssel</label>
+                            <input type="text" size="33" maxlength="63" id="uiViewWpaKey" name="wpa_key" onpaste="valuesChanged()"
+                                autocomplete="off" oninput="valuesChanged()" value="KeyValueWPASchlüssel">
+                        </div>
+                        <div id="uiViewNoneDialogBox" style="display:none">
+                            <h4>Hinweis:</h4>
+                            <p>Ein unverschlüsseltes WLAN öffnet Ihren Internetzugang und die übertragenen Daten für
+                                alle, die sich mit dem WLAN verbinden. Auch unberechtigte Personen können Ihren
+                                Internetzugang mitbenutzen oder die im WLAN-Gastzugang übertragenen Daten anderer
+                                Benutzer möglicherweise abhören.</p>
+                        </div>
+                    </div>
+                    <div style="">
+                        <div style="">
+                            <div class="disableNode">
+                                <input type="checkbox" id="uiDisableMe" disabled><label>Protokoll der An- und
+                                    Abmeldungen der Geräte an dieser FRITZ!Box per E-Mail versenden (FRITZ!Box Push
+                                    Service)</label>
+                            </div>
+                            <p class="form_checkbox_explain">Bitte richten Sie zuerst den Push Service im Bereich <a
+                                    href="/system/push_list.lua?sid=f8c96e2327e7a4f9">&quot;System &gt; Push
+                                    Service&quot;</a> ein. </p>
+                        </div>
+                        <div style="display:none;">
+                            <input type="checkbox" id="uiPushService" name="push_service" onclick=""><label for="uiPushService">Protokoll
+                                der An- und Abmeldungen der
+                                Geräte per E-Mail versenden (FRITZ!Box Push Service)</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="uiGroupAccess" name="group_access" onclick=""><label for="uiGroupAccess">Internetanwendungen
+                                beschränken: Nur Surfen und Mailen erlaubt</label>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="uiUntrusted" name="untrusted" onclick="onGuestUntrustedActiv()">
+                            <label class="long grouplabel" for="uiUntrusted">Vorschaltseite anzeigen mit Informationen
+                                zu dem Anbieter des Gastzugangs</label>
+                        </div>
+                        <div class="formular">
+                            <p>Bevor die Nutzer Ihres Gastzugangs surfen können, wird ihnen eine Vorschaltseite
+                                angezeigt, auf der Sie ein Bild (z.B. Ihr Firmenlogo) und einen eigenen Text anzeigen
+                                lassen können. Sie können zusätzlich auf <a href="http://service.avm.de/help/de/FRITZ-Box-Fon-WLAN-7490/016/hilfe_wlan_gast_hinweis"
+                                    target="_blank">Ihre eigenen Nutzungsbedingungen</a> aufmerksam machen</p>
+                        </div>
+                        <div id="uiPictureEdit" class="formular">
+                            <div id="uiUntrustedBlock">
+                                <div class="formular">
+                                    <input type="checkbox" id="uiShowLawText" name="showlawtext">
+                                    <label class="long grouplabel" for="uiShowLawText">Anmeldung am Gastzugang nur nach
+                                        Zustimmung zu den Nutzungsbedingungen gestatten</label></div>
+                            </div>
+                            <p>Bild hinzufügen:</p>
+                            <div id="uiCaptivePicture" class="photocontainer"><span class="photo"><span>Kein Bild
+                                        zugewiesen</span></span><span class="photoedit"><button id="uiUpload" type="submit"
+                                        name="upload" class="icon edit"></button><span>Bild zuweisen</span></span></div>
+                        </div>
+                        <div id="uiTextEdit" class="formular">
+                            <p>Text hinzufügen:</p>
+                            <textarea id="uiCaptiveText" maxlength="450" name="captivetext" rows="4" cols="100">
+
+
+</textarea>
+                        </div>
+                        <div id="uiRedirectUrlEdit" class="formular">
+                            <input type="checkbox" id="uiPortalRedirectEnabled" name="portal_redirect_enabled" onclick="onCaptiveWebseiteActiv()">
+                            <label class="long grouplabel" for="uiPortalRedirectEnabled">Nach der Anmeldung am
+                                Gastzugang die WLAN-Gäste auf die folgende Webseite (z.B. Ihre Homepage) leiten.</label>
+                            <div class="widetext formular">
+                                <label for="uiPortalRedirectUrl">Webseite</label>
+                                <input type="text" id="uiPortalRedirectUrl" name="portal_redirect_url" class=""
+                                    placeholder="z.B. http://avm.de" value="">
+                            </div>
+                        </div>
+                        <div>
+                            <input type="checkbox" id="uiUserIsolation" name="user_isolation" onclick=""><label for="uiUserIsolation">Die
+                                mit dem Gastzugang verbundenen WLAN-Geräte dürfen untereinander kommunizieren</label>
+                        </div>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="uiViewDownTimeActiv" name="down_time_activ" onclick="onDownTimerActiv()">
+                        <label id="uiViewDownTimeActivLabel" for="uiViewDownTimeActiv">automatisch deaktivieren nach</label>
+                        <span id="uiViewDownTimeBox">
+                            <select id="uiViewDownTime" name="down_time_value" size="1">
+                                <option value="15">15 Minuten</option>
+                                <option value="30">30 Minuten</option>
+                                <option value="45">45 Minuten</option>
+                                <option value="60" selected="selected">60 Minuten</option>
+                                <option value="90">90 Minuten</option>
+                                <option value="120"> 2 Stunden</option>
+                                <option value="180"> 3 Stunden</option>
+                                <option value="240"> 4 Stunden</option>
+                                <option value="300"> 5 Stunden</option>
+                                <option value="360"> 6 Stunden</option>
+                                <option value="480"> 8 Stunden</option>
+                                <option value="600">10 Stunden</option>
+                                <option value="720">12 Stunden</option>
+                                <option value="900">15 Stunden</option>
+                                <option value="1080">18 Stunden</option>
+                                <option value="1260">21 Stunden</option>
+
+                            </select>
+                        </span>
+                        <div id="uiViewDisconnectGuestAccessBox" class="formular">
+                            <input type="checkbox" id="uiViewDisconnectGuestAccess" name="disconnect_guest_access"
+                                onclick="">
+                            <label class="long grouplabel" for="uiViewDisconnectGuestAccess">erst deaktivieren, wenn
+                                alle Gäste abgemeldet sind</label>
+                        </div>
+                        <div>
+                            <div class="hintMsg">Hinweis:</div>
+                            <div>Alle Geräte im Gastzugang erhalten das Zugangsprofil „Gast“. Dieses können Sie im
+                                Bereich „Internet > Filter > Zugangsprofile“ bearbeiten, um beispielsweise einen
+                                Zeitraum festzulegen, wann Ihre Gäste das Internet nutzen dürfen oder um bestimmte
+                                Internetseiten zu sperren.
+                                Im Bereich „Internet > Filter > Priorisierung“ können Sie außerdem die Bandbreite für
+                                den Gastzugang begrenzen.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="uiViewQRCode">
+                <hr>
+                <h4>QR-Code (Quick Response Code)</h4>
+                <div class="formular">
+                    <span>
+                        Mit dem QR-Code können Sie den WLAN-Gastzugang bequem in Mobilgeräten (z.B. Smartphone, Tablet)
+                        einrichten. Beim Scannen des Codes werden die Verschlüsselungseinstellungen für den
+                        WLAN-Gastzugang automatisch auf das Mobilgerät übertragen. Für eine besonders komfortable
+                        Nutzung
+                        des QR-Codes empfehlen wir die App <a href="https://avm.de/produkte/fritzapps/fritzapp-wlan/"
+                            target="_blank">&quot;FRITZ!App WLAN&quot;</a>.
+                    </span>
+                    <p>Der Anbieter dieses Gastzugangs weist darauf hin, dass bei der Nutzung dieses Gastzugangs die
+                        Nutzungsbedingungen des Anbieters zu beachten sind. Geräteidentifikationsdaten (MAC-Adresse
+                        meines WLAN / LAN-Geräts) sowie Nutzungszeiten können vom Anbieter des Gastzugangs
+                        protokolliert werden.</p>
+                    <br>
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+            <div id="uiViewWps">
+                <hr>
+                <h4>WPS</h4>
+                <div class="rightBtn formular">
+                    <span>Mit der WPS-Schnellverbindung können Sie WLAN-Geräte Ihrer Gäste per Knopfdruck in Ihr
+                        WLAN-Gastnetz einbinden. Aktivieren Sie WPS (WPS-PBC, Push Button Configuration) am WLAN-Gerät
+                        und klicken Sie hier auf "WPS starten", nun werden die Verschlüsselungseinstellungen für den
+                        Gastzugang automatisch übertragen.</span>
+                    <br>
+                    <br>
+                    <div>
+                        <button type="submit" id="uiStartWPS" name="start_wps" disabled="disabled">WPS starten</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="btn_form_foot">
+
+        <button type="submit" name="apply" onclick="onApply()">Übernehmen</button>
+        <button type="submit" name="btn_cancel" id="btnChancel">Abbrechen</button>
+    </div>
+</form>

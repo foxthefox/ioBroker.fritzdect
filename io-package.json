@@ -257,39 +257,64 @@
 			"pl": "łączy urządzenia DECT ULE (fritzdect) z ioBroker",
 			"zh-cn": "将DECT ULE设备（fritzdect）连接到ioBroker"
 		},
+		"authors": [ "foxthefox <foxthefox@wysiwis.net>" ],
 		"docs": {
 			"de": "docs/de/install.md"
 		},
-		"platform": "Javascript/Node.js",
-		"mode": "daemon",
-		"license": "MIT",
 		"keywords": [ "smart home", "DECT ULE", "lighting", "heating", "switching", "fritzbox" ],
-		"type": "hardware",
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "main.js",
 		"icon": "fritzdect_logo.png",
+		"enabled": true,
 		"extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
 		"readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
 		"loglevel": "info",
+		"restartAdapters": [ "vis" ],
+		"localLink": "%web_protocol%://%ip%:%web_port%/vis/edit.html",
+		"mode": "daemon",
+		"type": "hardware",
+		"compact": true,
 		"connectionType": "local",
 		"dataSource": "poll",
 		"materialize": true,
-		"compact": true,
-		"messagebox": true,
+		"supportCustoms": true,
 		"dependencies": [
 			{
-				"admin": ">=3.0.0",
 				"js-controller": ">=2.0.0"
-			}
-		],
-		"restartAdapters": [ "vis" ],
-		"authors": [ "foxthefox <foxthefox@wysiwis.net>" ]
+			},
+			"vis"
+		]
 	},
 	"native": {
 		"fritz_ip": "http://192.x.x.x",
 		"fritz_user": "admin",
 		"fritz_pw": "pw",
-		"fritz_interval": "300",
+		"fritz_interval": 300,
 		"fritz_strictssl": true
 	},
 	"objects": [],
-	"instanceObjects": []
+	"instanceObjects": [
+		{
+			"_id": "info",
+			"type": "channel",
+			"common": {
+				"name": "Information"
+			},
+			"native": {}
+		},
+		{
+			"_id": "info.connection",
+			"type": "state",
+			"common": {
+				"role": "indicator.connected",
+				"name": "Device or service connected",
+				"type": "boolean",
+				"read": true,
+				"write": false,
+				"def": false
+			},
+			"native": {}
+		}
+	]
 }

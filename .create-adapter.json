@@ -1,0 +1,41 @@
+{
+	"cli": true,
+	"adapterName": "fritzdect",
+	"title": "fritzbox DECT",
+	"description": "verbindet DECT ULE-Geräte (fritzdect) mit ioBroker",
+	"keywords": [
+		"DECT",
+		"switche"
+	],
+	"expert": "yes",
+	"features": [
+		"adapter",
+		"vis"
+	],
+	"adminFeatures": [
+		"custom"
+	],
+	"type": "hardware",
+	"startMode": "daemon",
+	"connectionType": "local",
+	"dataSource": "poll",
+	"connectionIndicator": "yes",
+	"language": "JavaScript",
+	"adminReact": "no",
+	"tools": [
+		"ESLint",
+		"type checking"
+	],
+	"indentation": "Tab",
+	"quotes": "single",
+	"es6class": "yes",
+	"authorName": "foxthefox",
+	"authorGithub": "foxthefox",
+	"authorEmail": "foxthefox@wysiwis.net",
+	"gitRemoteProtocol": "HTTPS",
+	"gitCommit": "no",
+	"license": "MIT License",
+	"ci": "gh-actions",
+	"dependabot": "yes",
+	"creatorVersion": "1.31.0"
+}

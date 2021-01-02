@@ -906,7 +906,7 @@ class Fritzdect extends utils.Adapter {
 
 				// groups
 				let groups = parser.xml2json(devicelistinfos);
-				groups = [].concat((groups.devicelist || {}).group || []).map(async (group) => {
+				groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
 					// remove spaces in AINs
 					// group.identifier = group.identifier.replace(/\s/g, '');
 					return group;

@@ -827,7 +827,7 @@ class Fritzdect extends utils.Adapter {
 				this.log.debug('server answer for updates ' + JSON.stringify(devicelistinfos));
 				let devices = parser.xml2json(devicelistinfos);
 				// devices
-				devices = [].concat((devices.devicelist || {}).device || []).map(async (device) => {
+				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
 					//device.identifier = device.identifier.replace(/\s/g, '');
 					return device;
@@ -1207,7 +1207,7 @@ class Fritzdect extends utils.Adapter {
 				let typ = '';
 				let role = '';
 				let templates = parser.xml2json(templatelistinfos);
-				templates = [].concat((templates.templatelist || {}).template || []).map(async (template) => {
+				templates = [].concat((templates.templatelist || {}).template || []).map((template) => {
 					return template;
 				});
 				this.log.debug('__________________________');
@@ -1253,6 +1253,7 @@ class Fritzdect extends utils.Adapter {
 			.getDeviceListInfos()
 			.then(async (devicelistinfos) => {
 				let devices = parser.xml2json(devicelistinfos);
+				this.log.debug('server answer for create ' + JSON.stringify(devicelistinfos));
 				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
 					// device.identifier = device.identifier.replace(/\s/g, '');

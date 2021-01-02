@@ -84,7 +84,7 @@ class Fritzdect extends utils.Adapter {
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
-		this.errorHandler.bind(this);
+		//this.errorHandler.bind(this);
 		this.systemConfig = {};
 	}
 
@@ -824,6 +824,7 @@ class Fritzdect extends utils.Adapter {
 			.getDeviceListInfos()
 			.then(async (devicelistinfos) => {
 				let currentMode = null;
+				this.log.debug('server answer for updates ' + JSON.stringify(devicelistinfos));
 				let devices = parser.xml2json(devicelistinfos);
 				// devices
 				devices = [].concat((devices.devicelist || {}).device || []).map(async (device) => {
@@ -1202,6 +1203,7 @@ class Fritzdect extends utils.Adapter {
 		await fritz
 			.getTemplateListInfos()
 			.then(async (templatelistinfos) => {
+				this.log.debug('server answer templates ' + JSON.stringify(templatelistinfos));
 				let typ = '';
 				let role = '';
 				let templates = parser.xml2json(templatelistinfos);

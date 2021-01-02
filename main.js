@@ -653,9 +653,9 @@ class Fritzdect extends utils.Adapter {
 		let wait = false;
 		if (typeof obj === 'object' && obj.message) {
 			// if (obj) {
-			if (obj.command === 'send') {
+			if (obj.command === 'test') {
 				// e.g. send email or pushover or whatever
-				this.log.info('send command');
+				this.log.info('command for test received');
 
 				// Send response in callback if required
 				if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);

@@ -165,6 +165,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * accepting blocktime from fritzbox
 * announcing new detected datapoints delivered by fritzbox
 * option strictSSL (experimental)
+* adapter based on class, gitCI instead of travisCI
 
 ### 1.1.4 (npm)
 * blinds control

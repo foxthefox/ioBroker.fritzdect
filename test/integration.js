@@ -60,7 +60,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(1000);
+						await delay(2000);
 
 						harness.states.getState('fritzdect.0.DECT_087610006161.productname', function(err, state) {
 							if (err) console.error(err);
@@ -224,7 +224,7 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(10000);
+			}).timeout(20000);
 			it('Fritzdect 300 (Comet) schould be created', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
@@ -248,7 +248,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(1000);
+						await delay(2000);
 						harness.states.getState('fritzdect.0.DECT_117951022222.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -523,7 +523,7 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(10000);
+			}).timeout(20000);
 			it('Fritzdect 300 Comet2 schould be created', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
@@ -548,7 +548,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(1000);
+						await delay(2000);
 						harness.states.getState('fritzdect.0.DECT_117951033333.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -754,7 +754,7 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(10000);
+			}).timeout(20000);
 			/*
 			it('Should work, to send a message', () => {
 				return new Promise(async (resolve) => {

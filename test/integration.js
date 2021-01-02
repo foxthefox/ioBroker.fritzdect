@@ -32,11 +32,11 @@ tests.integration(path.join(__dirname, '..'), {
 	// Define your own tests inside defineAdditionalTests
 	// Since the tests are heavily instrumented, you need to create and use a so called "harness" to control the tests.
 	defineAdditionalTests(getHarness) {
-		describe('Test sendTo()', () => {
+		describe('Test creation of devices', () => {
 			before('start the emulation', () => {
 				server.setupHttpServer(function() {});
 			});
-			it('Should work, to send a message', () => {
+			it('Fritzdect 200 schould be created', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
 					const harness = getHarness();
@@ -222,15 +222,309 @@ tests.integration(path.join(__dirname, '..'), {
 								});
 							});
 						});
+					});
+				});
+			}).timeout(10000);
+			it('Fritzdect 300 (Comet) schould be created', () => {
+				return new Promise(async (resolve) => {
+					// Create a fresh harness instance each test!
+					const harness = getHarness();
+					// modification of some starting values
 
-						// Perform the actual test:
-						harness.sendTo('fritzdect.0', 'test', 'message', (resp) => {
-							console.dir(resp);
-							resolve();
+					//schon Teil des iobroker/testing :-)
+					//config.common.enabled = true;
+					//config.common.loglevel = 'debug';
+					// systemConfig.native.secret ='Zgfr56gFe87jJOM'
+
+					//await delay (15000);
+					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
+						obj.native.fritz_ip = 'http://localhost:3333';
+						obj.native.fritz_user = 'admin';
+						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
+						obj.native.fritz_pw = encrypt('Zgfr56gFe87jJOM', 'password');
+						obj.native.fritz_interval = 300;
+						obj.native.fritz_strictssl = true;
+						await harness._objects.setObjectAsync(obj._id, obj);
+
+						// Start the adapter and wait until it has started
+						await harness.startAdapterAndWait();
+						await delay(1000);
+						harness.states.getState('fritzdect.0.DECT_117951022222.productname', function(err, state) {
+							if (err) console.error(err);
+							expect(state).to.exist;
+							if (!state) {
+								console.error('state "fritzdect.0.DECT_117951022222.productname" not set');
+							} else {
+								console.log('fritzdect.0.DECT_117951022222.productname        ... ' + state.val);
+							}
+							expect(state.val).to.exist;
+							expect(state.val).to.be.equal('Comet DECT');
+							harness.states.getState('fritzdect.0.DECT_117951022222.manufacturer', function(err, state) {
+								if (err) console.error(err);
+								expect(state).to.exist;
+								if (!state) {
+									console.error('state "fritzdect.0.DECT_117951022222.manufacturer" not set');
+								} else {
+									console.log('fritzdect.0.DECT_117951022222.manufacturer    ... ' + state.val);
+								}
+								expect(state.val).to.exist;
+								expect(state.val).to.be.equal('AVM');
+								harness.states.getState('fritzdect.0.DECT_117951022222.fwversion', function(
+									err,
+									state
+								) {
+									if (err) console.error(err);
+									expect(state).to.exist;
+									if (!state) {
+										console.error('state "fritzdect.0.DECT_117951022222.fwversion" not set');
+									} else {
+										console.log('fritzdect.0.DECT_117951022222.fwversion       ... ' + state.val);
+									}
+									expect(state.val).to.exist;
+									expect(state.val).to.be.equal('03.54');
+									harness.states.getState('fritzdect.0.DECT_117951022222.id', function(err, state) {
+										if (err) console.error(err);
+										expect(state).to.exist;
+										if (!state) {
+											console.error('state "fritzdect.0.DECT_117951022222.id" not set');
+										} else {
+											console.log(
+												'fritzdect.0.DECT_117951022222.id              ... ' + state.val
+											);
+										}
+										expect(state.val).to.exist;
+										expect(state.val).to.be.equal('20');
+										harness.states.getState('fritzdect.0.DECT_117951022222.devicelock', function(
+											err,
+											state
+										) {
+											if (err) console.error(err);
+											expect(state).to.exist;
+											if (!state) {
+												console.error(
+													'state "fritzdect.0.DECT_117951022222.devicelock" not set'
+												);
+											} else {
+												console.log(
+													'fritzdect.0.DECT_117951022222.devicelock        ... ' + state.val
+												);
+											}
+											expect(state.val).to.exist;
+											expect(state.val).to.be.equal(true);
+											harness.states.getState('fritzdect.0.DECT_117951022222.present', function(
+												err,
+												state
+											) {
+												if (err) console.error(err);
+												expect(state).to.exist;
+												if (!state) {
+													console.error(
+														'state "fritzdect.0.DECT_117951022222.present" not set'
+													);
+												} else {
+													console.log(
+														'fritzdect.0.DECT_117951022222.present         ... ' + state.val
+													);
+												}
+												expect(state.val).to.exist;
+												expect(state.val).to.be.equal(true);
+												harness.states.getState('fritzdect.0.DECT_117951022222.lock', function(
+													err,
+													state
+												) {
+													if (err) console.error(err);
+													expect(state).to.exist;
+													if (!state) {
+														console.error(
+															'state "fritzdect.0.DECT_117951022222.lock" not set'
+														);
+													} else {
+														console.log(
+															'fritzdect.0.DECT_117951022222.lock            ... ' +
+																state.val
+														);
+													}
+													expect(state.val).to.exist;
+													expect(state.val).to.be.equal(false);
+													harness.states.getState(
+														'fritzdect.0.DECT_117951022222.komfort',
+														function(err, state) {
+															if (err) console.error(err);
+															expect(state).to.exist;
+															if (!state) {
+																console.error(
+																	'state "fritzdect.0.DECT_117951022222.komfort" not set'
+																);
+															} else {
+																console.log(
+																	'fritzdect.0.DECT_117951022222.komfort        ... ' +
+																		state.val
+																);
+															}
+															expect(state.val).to.exist;
+															expect(state.val).to.be.equal(19);
+															harness.states.getState(
+																'fritzdect.0.DECT_117951022222.absenk',
+																function(err, state) {
+																	if (err) console.error(err);
+																	expect(state).to.exist;
+																	if (!state) {
+																		console.error(
+																			'state "fritzdect.0.DECT_117951022222.absenk" not set'
+																		);
+																	} else {
+																		console.log(
+																			'fritzdect.0.DECT_117951022222.absenk        ... ' +
+																				state.val
+																		);
+																	}
+																	expect(state.val).to.exist;
+																	expect(state.val).to.be.equal(15);
+																	harness.states.getState(
+																		'fritzdect.0.DECT_117951022222.tist',
+																		function(
+																			/// hier noch was tun
+																			err,
+																			state
+																		) {
+																			if (err) console.error(err);
+																			expect(state).to.exist;
+																			if (!state) {
+																				console.error(
+																					'state "fritzdect.0.DECT_117951022222.tist" not set'
+																				);
+																			} else {
+																				console.log(
+																					'fritzdect.0.DECT_117951022222.tist        ... ' +
+																						state.val
+																				);
+																			}
+																			expect(state.val).to.exist;
+																			expect(state.val).to.be.equal(20);
+																			harness.states.getState(
+																				'fritzdect.0.DECT_117951022222.celsius',
+																				function(err, state) {
+																					if (err) console.error(err);
+																					expect(state).to.exist;
+																					if (!state) {
+																						console.error(
+																							'state "fritzdect.0.DECT_117951022222.celsius" not set'
+																						);
+																					} else {
+																						console.log(
+																							'fritzdect.0.DECT_117951022222.celsius            ... ' +
+																								state.val
+																						);
+																					}
+																					expect(state.val).to.exist;
+																					expect(state.val).to.be.equal(20);
+																					harness.states.getState(
+																						'fritzdect.0.DECT_117951022222.battery',
+																						function(err, state) {
+																							if (err) console.error(err);
+																							expect(state).to.exist;
+																							if (!state) {
+																								console.error(
+																									'state "fritzdect.0.DECT_117951022222.battery" not set'
+																								);
+																							} else {
+																								console.log(
+																									'fritzdect.0.DECT_117951022222.battery          ... ' +
+																										state.val
+																								);
+																								expect(state.val).to
+																									.exist;
+																								expect(
+																									state.val
+																								).to.be.equal(80);
+																							}
+																							harness.states.getState(
+																								'fritzdect.0.DECT_117951022222.tchange',
+																								function(err, state) {
+																									if (err)
+																										console.error(
+																											err
+																										);
+																									expect(state).to
+																										.exist;
+																									if (!state) {
+																										console.error(
+																											'state "fritzdect.0.DECT_117951022222.tchange" not set'
+																										);
+																									} else {
+																										console.log(
+																											'fritzdect.0.DECT_117951022222.tchange          ... ' +
+																												state.val
+																										);
+																										expect(
+																											state.val
+																										).to.exist;
+																										expect(
+																											state.val
+																										).to.be.equal(
+																											22
+																										);
+																									}
+																									harness.states.getState(
+																										'fritzdect.0.DECT_117951022222.endperiod',
+																										function(
+																											err,
+																											state
+																										) {
+																											if (err)
+																												console.error(
+																													err
+																												);
+																											expect(
+																												state
+																											).to.exist;
+																											if (
+																												!state
+																											) {
+																												console.error(
+																													'state "fritzdect.0.DECT_117951022222.endperiod" not set'
+																												);
+																											} else {
+																												console.log(
+																													'fritzdect.0.DECT_117951022222.endperiod          ... ' +
+																														state.val
+																												);
+																												expect(
+																													state.val
+																												).to
+																													.exist;
+																												expect(
+																													state.val
+																												).to.be.equal(
+																													'2034-01-04T07:00:00.000Z'
+																												);
+																												resolve();
+																											}
+																										}
+																									);
+																								}
+																							);
+																						}
+																					);
+																				}
+																			);
+																		}
+																	);
+																}
+															);
+														}
+													);
+												});
+											});
+										});
+									});
+								});
+							});
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(10000);
+			/*
 			it('Should work, to send a message', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
@@ -265,19 +559,7 @@ tests.integration(path.join(__dirname, '..'), {
 					});
 				});
 			}).timeout(20000);
+			*/
 		});
 	}
 });
-
-// anfang von eigenen Tests
-/*
-	after('Test ' + adapterShortName + ' adapter: Stop js-controller', function(done) {
-		this.timeout(10000);
-
-		setup.stopController(function(normalTerminated) {
-			console.log('Adapter normal terminated: ' + normalTerminated);
-			done();
-		});
-	});
-});
-*/

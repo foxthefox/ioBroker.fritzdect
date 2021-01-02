@@ -156,7 +156,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 
 ## Changelog
 
-### 2.0.0 Breaking Changes in datapoints and structures (wip)
+### 2.0.0 Breaking Changes in datapoints and structures
 * refactoring of the code
 * new fritzapi to either used md5 or pbkf2 decryption, needed for fritzbox FW >7.24
 * **usage of AHA API returned values as datapoint identifier**

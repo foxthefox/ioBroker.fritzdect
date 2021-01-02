@@ -208,12 +208,13 @@ class Fritzdect extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			const username = this.config.fritz_user;
-			const password = this.config.fritz_pw;
-			const moreParam = this.config.fritz_ip;
-			const strictssl = this.config.fritz_strictssl;
-
-			const fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
+			this.log.debug('STATE CHANGE ' + JSON.stringify(settings));
+			const fritz = new Fritz(
+				settings.Username,
+				settings.Password,
+				settings.moreParam || '',
+				settings.strictSsl || true
+			);
 			//const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 
 			// you can use the ack flag to detect if it is status (true) or command (false)
@@ -237,7 +238,7 @@ class Fritzdect extends utils.Adapter {
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed');
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							} else if (state.val > 28) {
 								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt
@@ -246,7 +247,7 @@ class Fritzdect extends utils.Adapter {
 									.then(() => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							} else {
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 0, ack: false }); //damit das Ventil auch regelt
 								fritz
@@ -262,7 +263,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							}
 						} else if (dp === 'mode') {
 							if (state.val === 0) {
@@ -287,7 +288,7 @@ class Fritzdect extends utils.Adapter {
 														ack: true
 													}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 												})
-												.catch(this.errorHandler);
+												.catch((e) => this.errorHandler(e));
 										} else {
 											this.log.error('no data in targettemp for setting mode');
 										}
@@ -301,14 +302,14 @@ class Fritzdect extends utils.Adapter {
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed.');
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							} else if (state.val === 2) {
 								fritz
 									.setTempTarget(id, 'on')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							}
 						}
 						if (dp == 'boostactivetime') {
@@ -336,7 +337,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							} else if (
 								state.val === 1 ||
 								state.val === '1' ||
@@ -374,7 +375,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch(this.errorHandler);
+											.catch((e) => this.errorHandler(e));
 									} else {
 										throw { error: 'minutes were NULL' };
 									}
@@ -406,7 +407,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							} else if (
 								state.val === 1 ||
 								state.val === '1' ||
@@ -444,7 +445,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch(this.errorHandler);
+											.catch((e) => this.errorHandler(e));
 									} else {
 										throw { error: 'minutes were NULL' };
 									}
@@ -466,7 +467,7 @@ class Fritzdect extends utils.Adapter {
 										this.log.debug('Turned switch ' + id + ' off');
 										await this.setStateAsync('DECT_' + id + '.state', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							} else if (
 								state.val === 1 ||
 								state.val === '1' ||
@@ -481,7 +482,7 @@ class Fritzdect extends utils.Adapter {
 										this.log.debug('Turned switch ' + id + ' on');
 										await this.setStateAsync('DECT_' + id + '.state', { val: true, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							}
 						}
 						if (dp == 'blindsclose') {
@@ -491,7 +492,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Started blind ' + id + ' to close');
 									await this.setStateAsync('DECT_' + id + '.blindsclose', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch(this.errorHandler);
+								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'blindsopen') {
 							fritz
@@ -500,7 +501,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Started blind ' + id + ' to open');
 									await this.setStateAsync('DECT_' + id + '.blindsopen', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch(this.errorHandler);
+								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'blindsstop') {
 							fritz
@@ -509,7 +510,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Set blind ' + id + ' to stop');
 									await this.setStateAsync('DECT_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch(this.errorHandler);
+								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'level') {
 							fritz
@@ -518,7 +519,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Set level' + id + ' to ' + state.val);
 									await this.setStateAsync('DECT_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch(this.errorHandler);
+								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'levelpercentage') {
 							fritz
@@ -531,7 +532,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch(this.errorHandler);
+								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'hue') {
 							this.getState('DECT_' + id + '.saturation', async (err, saturation) => {
@@ -559,7 +560,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch(this.errorHandler);
+											.catch((e) => this.errorHandler(e));
 									}
 								} else {
 									throw { error: 'minutes were NULL' };
@@ -591,7 +592,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch(this.errorHandler);
+											.catch((e) => this.errorHandler(e));
 									}
 								} else {
 									throw { error: 'hue were NULL' };
@@ -608,7 +609,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch(this.errorHandler);
+								.catch((e) => this.errorHandler(e));
 						}
 					} else if (idx.startsWith('template_')) {
 						//must be fritzbox template
@@ -630,7 +631,7 @@ class Fritzdect extends utils.Adapter {
 										this.log.debug('response ' + sid);
 										await this.setStateAsync('template.lasttemplate', { val: sid, ack: true }); //when successfull toggle, the API returns the id of the template
 									})
-									.catch(this.errorHandler);
+									.catch((e) => this.errorHandler(e));
 							}
 						}
 					}
@@ -661,11 +662,13 @@ class Fritzdect extends utils.Adapter {
 			}
 			if (obj) {
 				let result = [];
-				const username = this.config.fritz_user;
-				const password = this.config.fritz_pw;
-				const moreParam = this.config.fritz_ip;
-				const strictssl = this.config.fritz_strictssl;
-				const fritz = new Fritz(username, password || '', moreParam || '', strictssl || true);
+				this.log.debug('Message ' + JSON.stringify(settings));
+				const fritz = new Fritz(
+					settings.Username,
+					settings.Password,
+					settings.moreParam || '',
+					settings.strictSsl || true
+				);
 				// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 
 				switch (obj.command) {
@@ -766,6 +769,7 @@ class Fritzdect extends utils.Adapter {
 		}
 		return result;
 	}
+
 	errorHandler(error) {
 		try {
 			this.log.error('fritzbox returned this ' + JSON.stringify(error));
@@ -944,7 +948,7 @@ class Fritzdect extends utils.Adapter {
 					});
 				}
 			})
-			.catch(this.errorHandler);
+			.catch((e) => this.errorHandler(e));
 	}
 	async updateData(array, ident) {
 		this.log.debug('======================================');
@@ -1240,7 +1244,7 @@ class Fritzdect extends utils.Adapter {
 					});
 				}
 			})
-			.catch(this.errorHandler);
+			.catch((e) => this.errorHandler(e));
 	}
 	async createDevices(fritz) {
 		await fritz
@@ -1286,7 +1290,7 @@ class Fritzdect extends utils.Adapter {
 				pollFritzData();
 			})
 			*/
-			.catch(this.errorHandler);
+			.catch((e) => this.errorHandler(e));
 	}
 	async asyncForEach(array, callback) {
 		for (let index = 0; index < array.length; index++) {

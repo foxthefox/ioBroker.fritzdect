@@ -34,7 +34,7 @@ tests.integration(path.join(__dirname, '..'), {
 			before('start the emulation', () => {
 				server.setupHttpServer(function() {});
 			});
-			it('Should work', () => {
+			it('Should work, to send a message', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
 					const harness = getHarness();
@@ -59,102 +59,17 @@ tests.integration(path.join(__dirname, '..'), {
 						await harness.startAdapterAndWait();
 
 						// Perform the actual test:
-						harness.sendTo('adapter.0', 'test', 'message', (resp) => {
+						harness.sendTo('fritzdect.0', 'test', 'message', (resp) => {
 							console.dir(resp);
 							resolve();
 						});
 					});
 				});
-			});
+			}).timeout(10000);
 		});
 	}
 });
 
-/*
-const { expect } = require('chai');
-// import { functionToTest } from "./moduleToTest";
-
-const setup = require(__dirname + '/test/lib/setup');
-
-let objects = null;
-let states = null;
-const onStateChanged = null;
-
-const adapterShortName = setup.adapterName.substring(setup.adapterName.indexOf('.') + 1);
-
-
-describe('Test ' + adapterShortName + ' adapter', function() {
-	before('Test ' + adapterShortName + ' adapter: Start js-controller', function(_done) {
-		this.timeout(45 * 60 * 60 * 1000); // because of first install from npm
-
-		setup.setupController((systemConfig) => {
-			const config = setup.getAdapterConfig();
-			// enable adapter
-			config.common.enabled = true;
-			config.common.loglevel = 'debug';
-
-			config.native = {
-				fritz_ip: 'http://localhost:8080',
-				fritz_user: 'admin',
-				fritz_pw: encrypt(systemConfig.native.secret, 'password'),
-				fritz_interval: '300',
-				fritz_strictssl: true
-			};
-
-			setup.setAdapterConfig(config.common, config.native);
-			server.setupHttpServer(function() {
-				setup.startController(
-					true,
-					function(id, obj) {},
-					function(id, state) {
-						if (onStateChanged) onStateChanged(id, state);
-					},
-					function(_objects, _states) {
-						objects = _objects;
-						states = _states;
-						_done();
-					}
-				);
-			});
-		});
-	});
-	/*
-    ENABLE THIS WHEN ADAPTER RUNS IN DEAMON MODE TO CHECK THAT IT HAS STARTED SUCCESSFULLY
-    */
-/*
-	it('Test ' + adapterShortName + ' adapter: Check if adapter started', function(done) {
-		this.timeout(120000);
-		checkConnectionOfAdapter(function(res) {
-			if (res) console.log(res);
-			expect(res).not.to.be.equal('Cannot check connection');
-			objects.setObject(
-				'system.adapter.test.0',
-				{
-					common: {},
-					type: 'instance'
-				},
-				function() {
-					states.subscribeMessage('system.adapter.test.0');
-					done();
-				}
-			);
-		});
-	});
-
-	it('Test ' + adapterShortName + ' adapter: delay', function(done) {
-		this.timeout(20000);
-
-		setTimeout(function() {
-			done();
-		}, 10000);
-	});
-	/*
-    PUT YOUR OWN TESTS HERE USING
-    it('Testname', function ( done) {
-        ...
-    });
-    You can also use "sendTo" method to send messages to the started adapter
-	*/
 // anfang von eigenen Tests
 /*
 	it('Test ' + adapterShortName + ' adapter: Check values of switch', function(done) {

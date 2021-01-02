@@ -1,6 +1,14 @@
 const path = require('path');
 const { tests } = require('@iobroker/testing');
 
+function encrypt(key, value) {
+	let result = '';
+	for (let i = 0; i < value.length; ++i) {
+		result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
+	}
+	return result;
+}
+
 // Run integration tests - See https://github.com/ioBroker/testing for a detailed explanation and further options
 tests.integration(path.join(__dirname, '..'), {
 	// This should be the adapter's root directory
@@ -17,13 +25,29 @@ tests.integration(path.join(__dirname, '..'), {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
 					const harness = getHarness();
-					// Start the adapter and wait until it has started
-					await harness.startAdapterAndWait();
+					// modification of some starting values
 
-					// Perform the actual test:
-					harness.sendTo('adapter.0', 'test', 'message', (resp) => {
-						console.dir(resp);
-						resolve();
+					//config.common.enabled = true;
+					//config.common.loglevel = 'debug';
+					// systemConfig.native.secret ='Zgfr56gFe87jJOM'
+
+					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
+						obj.native.fritz_ip = 'http://localhost:8080';
+						obj.native.fritz_user = 'admin';
+						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
+						obj.native.fritz_pw = encrypt('Zgfr56gFe87jJOM', 'password');
+						obj.native.fritz_interval = 300;
+						obj.native.fritz_strictssl = true;
+						harness._objects.setObject(obj._id, obj);
+
+						// Start the adapter and wait until it has started
+						await harness.startAdapterAndWait();
+
+						// Perform the actual test:
+						harness.sendTo('adapter.0', 'test', 'message', (resp) => {
+							console.dir(resp);
+							resolve();
+						});
 					});
 				});
 			});
@@ -45,49 +69,7 @@ const onStateChanged = null;
 
 const adapterShortName = setup.adapterName.substring(setup.adapterName.indexOf('.') + 1);
 
-function encrypt(key, value) {
-	let result = '';
-	for (let i = 0; i < value.length; ++i) {
-		result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-	}
-	return result;
-}
 
-function checkConnectionOfAdapter(cb, counter) {
-	counter = counter || 0;
-	console.log('Try check #' + counter);
-	if (counter > 30) {
-		if (cb) cb('Cannot check connection');
-		return;
-	}
-
-	states.getState('system.adapter.' + adapterShortName + '.0.alive', function(err, state) {
-		if (err) console.error(err);
-		if (state && state.val) {
-			if (cb) cb();
-		} else {
-			setTimeout(function() {
-				checkConnectionOfAdapter(cb, counter + 1);
-			}, 1000);
-		}
-	});
-}
-
-describe('module to test => function to test', () => {
-	// initializing logic
-	const expected = 5;
-
-	it(`should return ${expected}`, () => {
-		const result = 5;
-		// assign result a value from functionToTest
-		expect(result).to.equal(expected);
-		// or using the should() syntax
-		result.should.equal(expected);
-	});
-	// ... more tests => it
-});
-
-// ... more test suites => describe
 describe('Test ' + adapterShortName + ' adapter', function() {
 	before('Test ' + adapterShortName + ' adapter: Start js-controller', function(_done) {
 		this.timeout(45 * 60 * 60 * 1000); // because of first install from npm

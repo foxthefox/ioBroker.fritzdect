@@ -59,7 +59,7 @@ tests.integration(path.join(__dirname, '..'), {
 						await harness.startAdapterAndWait();
 
 						// Perform the actual test:
-						harness.sendTo('fritzdect.0', 'send', null, (resp) => {
+						harness.sendTo('fritzdect.0', 'send', 'message', (resp) => {
 							console.dir(resp);
 							resolve();
 						});

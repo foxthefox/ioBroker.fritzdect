@@ -121,10 +121,10 @@ class Fritzdect extends utils.Adapter {
 				this.getForeignObject('system.config', async (err, obj) => {
 					if (obj && obj.native && obj.native.secret) {
 						//noinspection JSUnresolvedVariable
-						settings.Password = this.decrypt(obj.native.secret, settings.Password); // this.config.fritz_pw);
+						settings.Password = this.decryptfc(obj.native.secret, settings.Password); // this.config.fritz_pw);
 					} else {
 						//noinspection JSUnresolvedVariable
-						settings.Password = this.decrypt('Zgfr56gFe87jJOM', settings.Password);
+						settings.Password = this.decryptfc('Zgfr56gFe87jJOM', settings.Password);
 					}
 					// Adapter is alive, make API call
 					this.setForeignState('system.this.' + this.namespace + '.alive', false);
@@ -762,7 +762,7 @@ class Fritzdect extends utils.Adapter {
 		}
 	}
 
-	decrypt(key, value) {
+	decryptfc(key, value) {
 		let result = '';
 		for (let i = 0; i < value.length; ++i) {
 			result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));

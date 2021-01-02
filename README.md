@@ -1,9 +1,16 @@
 ![Logo](admin/fritzdect_logo.png)
 # ioBroker.fritzdect
 
-![Number of Installations](http://iobroker.live/badges/fritzdect-installed.svg) ![Number of Installations](http://iobroker.live/badges/fritzdect-stable.svg) [![NPM version](http://img.shields.io/npm/v/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
+[![NPM version](http://img.shields.io/npm/v/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
 [![Downloads](https://img.shields.io/npm/dm/iobroker.fritzdect.svg)](https://www.npmjs.com/package/iobroker.fritzdect)
-[![Build Status](https://travis-ci.org/foxthefox/ioBroker.fritzdect.svg?branch=master)](https://travis-ci.org/foxthefox/ioBroker.fritzdect)
+![Number of Installations (latest)](http://iobroker.live/badges/fritzdect-installed.svg)
+![Number of Installations (stable)](http://iobroker.live/badges/fritzdect-stable.svg)
+[![Dependency Status](https://img.shields.io/david/foxthefox/iobroker.fritzdect.svg)](https://david-dm.org/foxthefox/iobroker.fritzdect)
+[![Known Vulnerabilities](https://snyk.io/test/github/foxthefox/ioBroker.fritzdect/badge.svg)](https://snyk.io/test/github/foxthefox/ioBroker.fritzdect)
+
+[![NPM](https://nodei.co/npm/iobroker.fritzdect.png?downloads=true)](https://nodei.co/npm/iobroker.fritzdect/)
+
+**Tests:** ![Test and Release](https://github.com/foxthefox/ioBroker.fritzdect/workflows/Test%20and%20Release/badge.svg)
 
 [![NPM](https://nodei.co/npm/iobroker.fritzdect.png?downloads=true)](https://nodei.co/npm/iobroker.fritzdect/)
 

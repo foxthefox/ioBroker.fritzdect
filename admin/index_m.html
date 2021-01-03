@@ -39,6 +39,7 @@
 			$('#testt').click(testt);
 			//$('#tests').click(tests); //hier muß es eine Übergabe der ain geben
 			$('#testc').click(testc);
+			$('#testo').click(testo);
 		}
 		// This will be called by the admin adapter when the settings page loads
 		function loadHelper(settings, onChange) {
@@ -159,6 +160,22 @@
 				showMessage(JSON.stringify(result), _('Result: '));
 			});            
 		}
+		function testo() {
+			if (!common.enabled) {
+				showToast(null, _('Enable first the adapter to test client.'));
+				return;
+			}
+			if (changed) {
+				showToast(null, _('First save the adapter'));
+				return;
+			}
+			$('#testo').addClass('disabled');
+			sendTo(null, 'test', 'message in a bottle', function (result) {
+				$('#testo').removeClass('disabled');
+				console.log("result is "+ JSON.stringify(result));
+				showMessage(JSON.stringify(result), _('Result: '));
+			});            
+		}
 		// This will be called by the admin adapter when the user presses the save button
 		function save(callback) {
 			// example: select elements with class=value and build settings object
@@ -250,6 +267,9 @@
 				</div>
 				<div class="col s2">
 					<a id="testc" class="btn"><span class="translate">My Color</span></a>
+				</div>
+				<div class="col s2">
+					<a id="testo" class="btn"><span class="translate">Adapter Conn Test</span></a>
 				</div>
 			</div>
 		</div>	

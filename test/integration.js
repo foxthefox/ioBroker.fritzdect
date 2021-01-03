@@ -36,6 +36,35 @@ tests.integration(path.join(__dirname, '..'), {
 			before('start the emulation', () => {
 				server.setupHttpServer(function() {});
 			});
+			/*
+			// should work but doesnt
+			it('Should work to send a message', () => {
+				return new Promise(async (resolve) => {
+					// Create a fresh harness instance each test!
+					const harness = getHarness();
+					// Start the adapter and wait until it has started
+					await harness.startAdapterAndWait();
+					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
+						obj.native.fritz_ip = 'http://localhost:3333';
+						obj.native.fritz_user = 'admin';
+						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
+						obj.native.fritz_pw = encrypt('Zgfr56gFe87jJOM', 'password');
+						obj.native.fritz_interval = 300;
+						obj.native.fritz_strictssl = true;
+						await harness._objects.setObjectAsync(obj._id, obj);
+
+						// Start the adapter and wait until it has started
+						await harness.startAdapterAndWait();
+						await delay(2000);
+						// Perform the actual test:
+						harness.sendTo('fritzdect.0', 'test', 'message', (resp) => {
+							console.dir(resp);
+							resolve();
+						});
+					});
+				});
+			}).timeout(20000);
+			*/
 			it('Fritzdect 200 schould be created', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
@@ -51,6 +80,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 					//man könnte auch je device ein json array der datenpunkte und der erwarteten Werte anlegen und dann eine loop
 
+					//this refers to https://github.com/ioBroker/testing/issues/218
 					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						obj.native.fritz_ip = 'http://localhost:3333';
 						obj.native.fritz_user = 'admin';

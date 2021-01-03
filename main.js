@@ -712,105 +712,106 @@ class Fritzdect extends utils.Adapter {
 				// Send response in callback if required
 				if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
 			}
-			if (obj) {
-				let result = [];
-				this.log.debug('Message ' + JSON.stringify(settings));
-				const fritz = new Fritz(
-					settings.Username,
-					settings.Password,
-					settings.moreParam || '',
-					settings.strictSsl || true
-				);
-				// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
+		}
+		//my own messages for detectiung are without a message
+		if (obj) {
+			let result = [];
+			this.log.debug('Message ' + JSON.stringify(settings));
+			const fritz = new Fritz(
+				settings.Username,
+				settings.Password,
+				settings.moreParam || '',
+				settings.strictSsl || true
+			);
+			// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 
-				switch (obj.command) {
-					case 'devices':
-						fritz
-							.getDeviceListInfos()
-							.then((devicelistinfos) => {
-								let devices = parser.xml2json(devicelistinfos);
-								devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
-									// remove spaces in AINs
-									// device.identifier = device.identifier.replace(/\s/g, '');
-									return device;
-								});
-								result = devices;
-							})
-							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+			switch (obj.command) {
+				case 'devices':
+					fritz
+						.getDeviceListInfos()
+						.then((devicelistinfos) => {
+							let devices = parser.xml2json(devicelistinfos);
+							devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
+								// remove spaces in AINs
+								// device.identifier = device.identifier.replace(/\s/g, '');
+								return device;
 							});
+							result = devices;
+						})
+						.then(async () => {
+							if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+						});
 
-						wait = true;
-						break;
-					case 'groups':
-						fritz
-							.getDeviceListInfos()
-							.then((devicelistinfos) => {
-								let groups = parser.xml2json(devicelistinfos);
-								groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+					wait = true;
+					break;
+				case 'groups':
+					fritz
+						.getDeviceListInfos()
+						.then((devicelistinfos) => {
+							let groups = parser.xml2json(devicelistinfos);
+							groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
+								// remove spaces in AINs
+								// group.identifier = group.identifier.replace(/\s/g, '');
+								return group;
+							});
+							result = groups;
+						})
+						.then(async () => {
+							if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+						});
+					wait = true;
+					break;
+				case 'templates':
+					fritz
+						.getTemplateListInfos()
+						.then(function(templatelistinfos) {
+							let templates = parser.xml2json(templatelistinfos);
+							templates = []
+								.concat((templates.templatelist || {}).template || [])
+								.map(function(template) {
 									// remove spaces in AINs
-									// group.identifier = group.identifier.replace(/\s/g, '');
-									return group;
+									// template.identifier = group.identifier.replace(/\s/g, '');
+									return template;
 								});
-								result = groups;
-							})
-							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
-							});
-						wait = true;
-						break;
-					case 'templates':
-						fritz
-							.getTemplateListInfos()
-							.then(function(templatelistinfos) {
-								let templates = parser.xml2json(templatelistinfos);
-								templates = []
-									.concat((templates.templatelist || {}).template || [])
-									.map(function(template) {
-										// remove spaces in AINs
-										// template.identifier = group.identifier.replace(/\s/g, '');
-										return template;
-									});
-								result = templates;
-							})
-							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
-							});
-						wait = true;
-						break;
-					case 'statistic':
-						fritz
-							.getBasicDeviceStats(obj.message) //ain muß übergeben werden
-							.then(function(statisticinfos) {
-								//obj.message should be ain of device requested
-								const devicestats = parser.xml2json(statisticinfos);
-								result = devicestats;
-							})
-							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
-							});
-						wait = true;
-						break;
-					case 'color':
-						fritz
-							.getColorDefaults()
-							.then(function(colorinfos) {
-								result = colorinfos;
-							})
-							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
-							});
-						wait = true;
-						break;
-					//idea for other statistics: call of message returns everything (loop over all devices)
-					default:
-						this.log.warn('Received unhandled message: ' + obj.command);
-						break;
-				}
+							result = templates;
+						})
+						.then(async () => {
+							if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+						});
+					wait = true;
+					break;
+				case 'statistic':
+					fritz
+						.getBasicDeviceStats(obj.message) //ain muß übergeben werden
+						.then(function(statisticinfos) {
+							//obj.message should be ain of device requested
+							const devicestats = parser.xml2json(statisticinfos);
+							result = devicestats;
+						})
+						.then(async () => {
+							if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+						});
+					wait = true;
+					break;
+				case 'color':
+					fritz
+						.getColorDefaults()
+						.then(function(colorinfos) {
+							result = colorinfos;
+						})
+						.then(async () => {
+							if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+						});
+					wait = true;
+					break;
+				//idea for other statistics: call of message returns everything (loop over all devices)
+				default:
+					this.log.warn('Received unhandled message: ' + obj.command);
+					break;
 			}
-			if (!wait && obj.callback) {
-				this.sendTo(obj.from, obj.command, obj.message, obj.callback);
-			}
+		}
+		if (!wait && obj.callback) {
+			this.sendTo(obj.from, obj.command, obj.message, obj.callback);
 		}
 	}
 

@@ -12,8 +12,6 @@
 
 **Tests:** ![Test and Release](https://github.com/foxthefox/ioBroker.fritzdect/workflows/Test%20and%20Release/badge.svg)
 
-[![NPM](https://nodei.co/npm/iobroker.fritzdect.png?downloads=true)](https://nodei.co/npm/iobroker.fritzdect/)
-
 Fritzbox DECT adapter for ioBroker
 
 ## Installation:

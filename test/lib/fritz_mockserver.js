@@ -262,7 +262,7 @@ function handleHttpRequest(request, response) {
 	) {
 		//check the URL of the current request
 		response.writeHead(200, { 'Content-Type': 'application/json' });
-		response.write(JSON.stringify([ '601' ]));
+		response.write('60008');
 		response.end();
 	} else if (request.url == '/wlan/guest_access.lua?0=0&sid=' + sid) {
 		//check the URL of the current request

@@ -14,6 +14,7 @@ const Fritz = require('./lib/fritzhttp.js');
 const parser = require('xml2json-light');
 
 let fritzTimeout;
+let polling;
 
 /* errorcodes hkr
 0: kein Fehler
@@ -140,7 +141,20 @@ class Fritzdect extends utils.Adapter {
 
 					await this.createDevices(fritz);
 					await this.createTemplates(fritz);
-					this.pollFritzData(fritz);
+					await this.updateDevices(fritz);
+					if (!polling) {
+						polling = setInterval(async () => {
+							// poll fritzbox
+							try {
+								this.log.debug('polling! fritzdect is alive');
+								await this.updateDevices(fritz);
+							} catch (e) {
+								this.log.warn(`[REQUEST] <== ${e.message}`);
+								this.setState(`info.connection`, false, true);
+								this.log.warn(`[CONNECT] Connection failed`);
+							}
+						}, (settings.intervall || 300) * 1000);
+					}
 				});
 			} else {
 				this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
@@ -175,6 +189,7 @@ class Fritzdect extends utils.Adapter {
 			// ...
 			// clearInterval(interval1);
 			if (fritzTimeout) clearTimeout(fritzTimeout);
+			clearInterval(polling);
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
@@ -865,6 +880,7 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('polling! fritzdect is alive');
 		fritzTimeout = setTimeout(this.pollFritzData, fritz_interval * 1000);
 	}
+
 	async updateDevices(fritz) {
 		this.log.debug('__________________________');
 		this.log.debug('updating Devices / Groups ');

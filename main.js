@@ -141,7 +141,7 @@ class Fritzdect extends utils.Adapter {
 
 					await this.createDevices(fritz);
 					await this.createTemplates(fritz);
-					await this.uodateDevices(fritz);
+					await this.updateDevices(fritz);
 					if (!polling) {
 						polling = setInterval(async () => {
 							// poll fritzbox

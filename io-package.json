@@ -275,10 +275,11 @@
 		"mode": "daemon",
 		"type": "hardware",
 		"compact": true,
+		"messagebox": true,
 		"connectionType": "local",
 		"dataSource": "poll",
 		"materialize": true,
-		"supportCustoms": true,
+		"supportCustoms": false,
 		"dependencies": [
 			{
 				"js-controller": ">=2.0.0"

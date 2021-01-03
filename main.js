@@ -85,7 +85,6 @@ class Fritzdect extends utils.Adapter {
 		// this.on('objectChange', this.onObjectChange.bind(this));
 		this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
-		//this.errorHandler.bind(this);
 		this.systemConfig = {};
 	}
 
@@ -118,7 +117,6 @@ class Fritzdect extends utils.Adapter {
 
 			// Check if credentials are not empty and decrypt stored password
 			if (settings.Username !== '' && settings.Password !== '') {
-				this.log.debug(' das' + settings.Username + '-' + settings.Password + '-');
 				this.getForeignObject('system.config', async (err, obj) => {
 					if (obj && obj.native && obj.native.secret) {
 						//noinspection JSUnresolvedVariable
@@ -149,7 +147,7 @@ class Fritzdect extends utils.Adapter {
 								this.log.debug('polling! fritzdect is alive');
 								await this.updateDevices(fritz);
 							} catch (e) {
-								this.log.warn(`[REQUEST] <== ${e.message}`);
+								this.log.warn(`[REQUEST] <== ${e}`);
 								this.setState(`info.connection`, false, true);
 								this.log.warn(`[CONNECT] Connection failed`);
 							}
@@ -163,13 +161,6 @@ class Fritzdect extends utils.Adapter {
 
 			// in this template all states changes inside the adapters namespace are subscribed
 			this.subscribeStates('*');
-
-			// examples for the checkPassword/checkGroup functions
-			let result = await this.checkPasswordAsync('admin', 'iobroker');
-			this.log.info('check user admin pw iobroker: ' + result);
-
-			result = await this.checkGroupAsync('admin', 'admin');
-			this.log.info('check group user admin group admin: ' + result);
 		} catch (error) {
 			this.log.error('[asyncOnReady()]' + error);
 			this.setState('info.connection', false, true); // change to yellow
@@ -188,9 +179,8 @@ class Fritzdect extends utils.Adapter {
 			// clearTimeout(timeout2);
 			// ...
 			// clearInterval(interval1);
-			clearInterval(polling);
+			if (polling) clearInterval(polling);
 			if (fritzTimeout) clearTimeout(fritzTimeout);
-			clearInterval(polling);
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
@@ -224,7 +214,6 @@ class Fritzdect extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			this.log.debug('STATE CHANGE ' + JSON.stringify(settings));
 			const fritz = new Fritz(
 				settings.Username,
 				settings.Password,

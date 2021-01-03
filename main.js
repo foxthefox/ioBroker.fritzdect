@@ -265,7 +265,7 @@ class Fritzdect extends utils.Adapter {
 									})
 									.catch((e) => this.errorHandler(e));
 							}
-						} else if (dp === 'mode') {
+						} else if (dp === 'hkrmode') {
 							if (state.val === 0) {
 								this.getState('DECT_' + id + '.tsoll', async (err, targettemp) => {
 									// oder hier die Verwendung von lasttarget

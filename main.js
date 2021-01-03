@@ -188,6 +188,7 @@ class Fritzdect extends utils.Adapter {
 			// clearTimeout(timeout2);
 			// ...
 			// clearInterval(interval1);
+			clearInterval(polling);
 			if (fritzTimeout) clearTimeout(fritzTimeout);
 			clearInterval(polling);
 			this.log.info('cleaned everything up...');

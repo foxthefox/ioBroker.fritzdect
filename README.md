@@ -55,20 +55,23 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
       indicate that there are SSL security problems (certificate). Use the `"strictSSL": false` option (no tick in checkbox) in the admin page of adapter to disable the respective check (experimental). 
 
 ## Thermostat
-
+### Fritzbox AHA API
 The API of fritzbox has the following access:
 * sethkrtsoll
     * 8-28°C for automatic control
-    * >28°C (254=ON)
-    * >28°C (255=OFF)
+    * greater 28°C (254=ON)
+    * greater 28°C (255=OFF)
+
 These settings are covered by the hkrmode and the 3 buttons. The activation lasts as long there is no other command or programmed sequence.
 
 Additionally there is the access to:
 * windowopenactiv
 * boostactive
+
 These are indications as well as commands (sethkrwindowopen,sethkrboost) and when commanded they act with the provided time limit (max. 24h).
 
-Therefore the thermostat has different modes in point of view of iobroker.adapter:
+### fritzdect implementation
+From the above API possibilities the thermostat has different modes in point of view of iobroker.adapter:
 * auto (temperature control), to be set by hkrmode (0) or button "setmodeauto" -> the tsoll value will be used!
 * on (full open), to be set by hkrmode (1) or button "setmodeon"
 * off (full close), to be set by hkrmode (2) or button "setmodeoff"

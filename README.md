@@ -178,7 +178,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * refactor to the format of as of "create adapter"
 
 ## Changelog
-### 2.1.0
+### 2.1.0 NOT READY for Installation WIP
 * adapter based on class, gitCI instead of travisCI
 * new thromastat buttons (setmodeauto, setmodeon,setmodeoff)
 

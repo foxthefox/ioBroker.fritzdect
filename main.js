@@ -140,7 +140,7 @@ class Fritzdect extends utils.Adapter {
 
 					await this.createDevices(fritz);
 					await this.createTemplates(fritz);
-					await this.pollFritzData(fritz);
+					this.pollFritzData(fritz);
 				});
 			} else {
 				this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
@@ -859,9 +859,9 @@ class Fritzdect extends utils.Adapter {
 		}
 	}
 
-	async pollFritzData(fritz) {
+	pollFritzData(fritz) {
 		const fritz_interval = settings.intervall || 300;
-		await this.updateDevices(fritz); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
+		this.updateDevices(fritz); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
 		this.log.debug('polling! fritzdect is alive');
 		fritzTimeout = setTimeout(this.pollFritzData, fritz_interval * 1000);
 	}
@@ -2154,4 +2154,3 @@ if (module.parent) {
 	// otherwise start the instance directly
 	new Fritzdect();
 }
-

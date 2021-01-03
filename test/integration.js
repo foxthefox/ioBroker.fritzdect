@@ -49,6 +49,8 @@ tests.integration(path.join(__dirname, '..'), {
 
 					//await delay (15000);
 
+					//man könnte auch je device ein json array der datenpunkte und der erwarteten Werte anlegen und dann eine loop
+
 					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						obj.native.fritz_ip = 'http://localhost:3333';
 						obj.native.fritz_user = 'admin';

@@ -56,10 +56,22 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 
 ## Thermostat
 
-The thermostat has different modes:
-* auto (temperature control), to be set by hkrmode (0)
-* on (full open), to be set by hkrmode (1)
-* off (full close), to be set by hkrmode (2)
+The API of fritzbox has the following access:
+* sethkrtsoll
+    * 8-28°C for automatic control
+    * >28°C (254=ON)
+    * >28°C (255=OFF)
+These settings are covered by the hkrmode and the 3 buttons. The activation lasts as long there is no other command or programmed sequence.
+
+Additionally there is the access to:
+* windowopenactiv
+* boostactive
+These are indications as well as commands (sethkrwindowopen,sethkrboost) and when commanded they act with the provided time limit (max. 24h).
+
+Therefore the thermostat has different modes in point of view of iobroker.adapter:
+* auto (temperature control), to be set by hkrmode (0) or button "setmodeauto" -> the tsoll value will be used!
+* on (full open), to be set by hkrmode (1) or button "setmodeon"
+* off (full close), to be set by hkrmode (2) or button "setmodeoff"
 * boost (full open for limited time), detected by feedback boostactive, can be set by boostactive (false->true)
 * windowopen (full closed for defined time), detected by feedback windowopenactiv, can be set be windowopenactiv (false->true)
 * holiday (temp control), detected by holidayactive
@@ -109,6 +121,9 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 |*boostactive*|boolean|x|boost mode active status and cmd| |DECT3x0| | | | | |
 |*boostactiveendtime*|time|-|time when boost status ends| |DECT3x0| | | | | |
 |**boostactivtime**|number|x|time (minutes) when activation of boost| |DECT3x0| | | | | |
+|**setmodeauto**|number|x|set Auto| |DECT3x0| | | | | |
+|**setmodeon**|number|x|set On| |DECT3x0| | | | | |
+|**setmodeoff**|number|x|set Off| |DECT3x0| | | | | |
 |*summeractive*|boolean|-|summer program status| |DECT3x0| | | | | |
 |*holidayactive*|boolean|-|holiday program status| |DECT3x0| | | | | |
 |*tchange*|number|-|temp with next change in °C| |DECT3x0| | | | | |
@@ -160,8 +175,11 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * refactor to the format of as of "create adapter"
 
 ## Changelog
+### 2.1.0
+* adapter based on class, gitCI instead of travisCI
+* new thromastat buttons (setmodeauto, setmodeon,setmodeoff)
 
-### 2.0.0 Breaking Changes in datapoints and structures (wip)
+### 2.0.0 Breaking Changes in datapoints and structures (npm)
 * refactoring of the code
 * new fritzapi to either used md5 or pbkf2 decryption, needed for fritzbox FW >7.24
 * **usage of AHA API returned values as datapoint identifier**
@@ -170,7 +188,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * accepting blocktime from fritzbox
 * announcing new detected datapoints delivered by fritzbox
 * option strictSSL (experimental)
-* adapter based on class, gitCI instead of travisCI
+
 
 ### 1.1.4 (npm)
 * blinds control

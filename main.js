@@ -312,6 +312,54 @@ class Fritzdect extends utils.Adapter {
 									.catch((e) => this.errorHandler(e));
 							}
 						}
+						//no need to check the state.val, it is a button
+						if (dp === 'setmodeauto') {
+							this.getState('DECT_' + id + '.tsoll', async (err, targettemp) => {
+								// oder hier die Verwendung von lasttarget
+								if (targettemp && targettemp.val !== null) {
+									if (targettemp.val) {
+										let setTemp = targettemp.val;
+										if (setTemp < 8) {
+											this.setStateAsync('DECT_' + id + '.tsoll', { val: 8, ack: true });
+											setTemp = 8;
+										} else if (setTemp > 28) {
+											this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
+											setTemp = 28;
+										}
+										fritz
+											.setTempTarget(id, setTemp)
+											.then(async () => {
+												this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
+												await this.setStateAsync('DECT_' + id + '.tsoll', {
+													val: setTemp,
+													ack: true
+												}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+											})
+											.catch((e) => this.errorHandler(e));
+									} else {
+										this.log.error('no data in targettemp for setting mode');
+									}
+								} else {
+									throw { error: ' targettemp is NULL ' };
+								}
+							});
+						}
+						if (dp === 'setmodeoff') {
+							fritz
+								.setTempTarget(id, 'off')
+								.then((sid) => {
+									this.log.debug('Switched Mode' + id + ' to closed.');
+								})
+								.catch((e) => this.errorHandler(e));
+						}
+						if (dp === 'setmodeon') {
+							fritz
+								.setTempTarget(id, 'on')
+								.then((sid) => {
+									this.log.debug('Switched Mode' + id + ' to opened permanently');
+								})
+								.catch((e) => this.errorHandler(e));
+						}
 						if (dp == 'boostactivetime') {
 							this.log.debug(
 								'Nothing to send external, but the boost active time was defined for ' +
@@ -2014,6 +2062,42 @@ class Fritzdect extends utils.Adapter {
 				write: false,
 				role: 'indicator',
 				desc: 'Current operation mode'
+			},
+			native: {}
+		});
+		await this.setObjectNotExists('DECT_' + newId + '.setmodeoff', {
+			type: 'state',
+			common: {
+				name: 'Switch MODE OFF',
+				type: 'boolean',
+				read: true,
+				write: true,
+				role: 'button',
+				desc: 'Switch MODE OFF'
+			},
+			native: {}
+		});
+		await this.setObjectNotExists('DECT_' + newId + '.setmodeon', {
+			type: 'state',
+			common: {
+				name: 'Switch MODE ON',
+				type: 'boolean',
+				read: true,
+				write: true,
+				role: 'button',
+				desc: 'Switch MODE ON'
+			},
+			native: {}
+		});
+		await this.setObjectNotExists('DECT_' + newId + '.setmodeauto', {
+			type: 'state',
+			common: {
+				name: 'Switch MODE AUTO',
+				type: 'boolean',
+				read: true,
+				write: true,
+				role: 'button',
+				desc: 'Switch MODE AUTO'
 			},
 			native: {}
 		});

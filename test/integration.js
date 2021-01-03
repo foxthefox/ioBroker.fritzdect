@@ -1,7 +1,7 @@
 const path = require('path');
 const { tests } = require('@iobroker/testing');
 
-const server = require('./lib/fritz_mockserver.js');
+const server = require('../lib/fritz/fritz_mockserver.js');
 
 const expect = require('chai').expect;
 

@@ -1,19 +1,19 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.0.0",
+		"version": "2.1.0",
 		"news": {
-			"2.0.0": {
-				"en": "breaking change, new fritzbox API, usage of datapoint of API",
-				"de": "Breaking Change, neue Fritzbox-API, Verwendung des Datenpunkts der API",
-				"ru": "критическое изменение, новый fritzbox API, использование данных API",
-				"pt": "mudança de última hora, nova API fritzbox, uso de pontos de dados da API",
-				"nl": "breken van verandering, nieuwe fritzbox API, gebruik van datapunt van API",
-				"fr": "changement de rupture, nouvelle API fritzbox, utilisation du point de données de l'API",
-				"it": "cambiamento radicale, nuova API fritzbox, utilizzo del datapoint dell'API",
-				"es": "cambio rotundo, nueva API fritzbox, uso del punto de datos de la API",
-				"pl": "przełomowa zmiana, nowe API Fritzbox, użycie punktu danych API",
-				"zh-cn": "重大变化，新的fritzbox API，API数据点的使用"
+			"2.1.0": {
+				"en": "transition to class based adapter style, new thermostat buttons",
+				"de": "Übergang zum klassenbasierten Adapterstil, neue Thermostat-Tasten",
+				"ru": "переход на стиль адаптера на основе классов, новые кнопки термостата",
+				"pt": "transição para o estilo de adaptador baseado em classe, novos botões de termostato",
+				"nl": "overgang naar op klasse gebaseerde adapterstijl, nieuwe thermostaatknoppen",
+				"fr": "transition vers un style d'adaptateur basé sur la classe, nouveaux boutons de thermostat",
+				"it": "transizione allo stile dell'adattatore basato sulla classe, nuovi pulsanti del termostato",
+				"es": "transición al estilo de adaptador basado en clases, nuevos botones de termostato",
+				"pl": "przejście na styl adaptera oparty na klasach, nowe przyciski termostatu",
+				"zh-cn": "过渡到基于类的适配器样式，新的恒温器按钮"
 			},
 			"1.1.4": {
 				"en": "blinds control",

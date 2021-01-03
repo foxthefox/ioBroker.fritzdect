@@ -707,16 +707,14 @@ class Fritzdect extends utils.Adapter {
 			// if (obj) {
 			if (obj.command === 'test') {
 				// e.g. send email or pushover or whatever
-				this.log.info('command for test received');
+				this.log.debug('msg with obj.command for test received');
 
 				// Send response in callback if required
 				if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
 			}
-		}
-		//my own messages for detectiung are without a message
-		if (obj) {
+		} else if (obj) {
+			//my own messages for detectiung are without a message
 			let result = [];
-			this.log.debug('Message ' + JSON.stringify(settings));
 			const fritz = new Fritz(
 				settings.Username,
 				settings.Password,
@@ -811,6 +809,7 @@ class Fritzdect extends utils.Adapter {
 			}
 		}
 		if (!wait && obj.callback) {
+			this.log.debug('messagebox landed in last evaluation wait=false and callback');
 			this.sendTo(obj.from, obj.command, obj.message, obj.callback);
 		}
 	}

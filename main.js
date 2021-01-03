@@ -143,7 +143,7 @@ function startAdapter(options) {
 								})
 								.catch(errorHandler);
 						}
-					} else if (dp === 'mode') {
+					} else if (dp === 'hkrmode') {
 						if (state.val === 0) {
 							adapter.getState('DECT_' + id + '.tsoll', function(err, targettemp) {
 								// oder hier die Verwendung von lasttarget

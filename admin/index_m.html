@@ -88,6 +88,7 @@
 				return;
 			}
 			$('#testg').addClass('disabled');
+			console.log('testg clicked')
 			sendTo(null, 'groups', null, function (result) {
 				$('#testg').removeClass('disabled');
 				console.log("result is "+ JSON.stringify(result));

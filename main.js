@@ -13,7 +13,6 @@ const utils = require('@iobroker/adapter-core');
 const Fritz = require('./lib/fritzhttp.js');
 const parser = require('xml2json-light');
 
-let fritzTimeout;
 let polling;
 
 /* errorcodes hkr
@@ -180,7 +179,6 @@ class Fritzdect extends utils.Adapter {
 			// ...
 			// clearInterval(interval1);
 			if (polling) clearInterval(polling);
-			if (fritzTimeout) clearTimeout(fritzTimeout);
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
@@ -213,7 +211,7 @@ class Fritzdect extends utils.Adapter {
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
 			const fritz = new Fritz(
 				settings.Username,
 				settings.Password,
@@ -704,6 +702,7 @@ class Fritzdect extends utils.Adapter {
 	//  */
 	onMessage(obj) {
 		let wait = false;
+		this.log.debug('messagebox received ' + JSON.stringify(obj));
 		if (typeof obj === 'object' && obj.message) {
 			// if (obj) {
 			if (obj.command === 'test') {
@@ -862,13 +861,6 @@ class Fritzdect extends utils.Adapter {
 			this.log.error('errorHandler' + e);
 			throw e;
 		}
-	}
-
-	pollFritzData(fritz) {
-		const fritz_interval = settings.intervall || 300;
-		this.updateDevices(fritz); // für alle Objekte, da in xml/json mehr enthalten als in API-Aufrufe
-		this.log.debug('polling! fritzdect is alive');
-		fritzTimeout = setTimeout(this.pollFritzData, fritz_interval * 1000);
 	}
 
 	async updateDevices(fritz) {

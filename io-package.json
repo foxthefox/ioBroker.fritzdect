@@ -1,19 +1,31 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.5",
+		"version": "2.1.6",
 		"news": {
+			"2.1.6": {
+				"en": "pbkdf2 hash calculation",
+				"de": "pbkdf2 Hash-Berechnung",
+				"ru": "pbkdf2 расчет хэша",
+				"pt": "cálculo de hash pbkdf2",
+				"nl": "pbkdf2 hash-berekening",
+				"fr": "calcul de hachage pbkdf2",
+				"it": "calcolo hash pbkdf2",
+				"es": "cálculo hash pbkdf2",
+				"pl": "Obliczanie skrótu pbkdf2",
+				"zh-cn": "pbkdf2哈希计算"
+			},
 			"2.1.5": {
-				"en": "pbkf2 hash correction",
-				"de": "pbkf2 Hash-Korrektur",
-				"ru": "исправление хэша pbkf2",
-				"pt": "correção de hash pbkf2",
-				"nl": "pbkf2 hash-correctie",
-				"fr": "Correction de hachage pbkf2",
-				"it": "correzione hash pbkf2",
-				"es": "corrección de hash pbkf2",
-				"pl": "pbkf2 korekta skrótu",
-				"zh-cn": "pbkf2哈希校正"
+				"en": "pbkdf2 hash correction",
+				"de": "pbkdf2 Hash-Korrektur",
+				"ru": "pbkdf2 исправление хэша",
+				"pt": "correção de hash pbkdf2",
+				"nl": "pbkdf2 hash-correctie",
+				"fr": "Correction de hachage pbkdf2",
+				"it": "correzione hash pbkdf2",
+				"es": "corrección de hash pbkdf2",
+				"pl": "pbkdf2 korekta skrótu",
+				"zh-cn": "pbkdf2哈希校正"
 			},
 			"2.1.4": {
 				"en": "io-package vis not required",

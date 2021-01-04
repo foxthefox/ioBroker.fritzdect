@@ -178,8 +178,11 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * refactor to the format of as of "create adapter"
 
 ## Changelog
+### 2.1.6
+* pbkdf2 hash correction in calculation
+
 ### 2.1.5
-* pbkf2 hash correction
+* pbkdf2 hash correction in output to fritzbox
 
 ### 2.1.4
 * removed the dependency to vis

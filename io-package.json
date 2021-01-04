@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.1",
+		"version": "2.1.2",
 		"news": {
+			"2.1.2": {
+				"en": "without info.connection",
+				"de": "ohne info.connection",
+				"ru": "без инфо. связи",
+				"pt": "sem info.conexão",
+				"nl": "zonder info.connection",
+				"fr": "sans connexion info",
+				"it": "senza info.connection",
+				"es": "sin conexión info.",
+				"pl": "bez połączenia informacyjnego",
+				"zh-cn": "没有信息连接"
+			},
 			"2.1.1": {
 				"en": "improvement catching errors in MSGBOX",
 				"de": "Verbesserung beim Abfangen von Fehlern in MSGBOX",
@@ -199,27 +211,5 @@
 		"fritz_strictssl": true
 	},
 	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": "Device or service connected",
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		}
-	]
+	"instanceObjects": []
 }

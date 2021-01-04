@@ -100,9 +100,6 @@ class Fritzdect extends utils.Adapter {
 			settings.strictSsl = this.config.fritz_strictssl;
 			settings.intervall = this.config.fritz_interval;
 
-			// Reset the connection indicator during startup
-			this.setStateAsync('info.connection', false, true);
-
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
 			// this.config:
 			this.log.info('fritzdect entered ready');
@@ -146,8 +143,7 @@ class Fritzdect extends utils.Adapter {
 								this.log.debug('polling! fritzdect is alive');
 								await this.updateDevices(fritz);
 							} catch (e) {
-								this.log.warn(`[REQUEST] <== ${e}`);
-								this.setState(`info.connection`, false, true);
+								this.log.warn(`[Polling] <== ${e}`);
 								this.log.warn(`[CONNECT] Connection failed`);
 							}
 						}, (settings.intervall || 300) * 1000);
@@ -162,7 +158,6 @@ class Fritzdect extends utils.Adapter {
 			this.subscribeStates('*');
 		} catch (error) {
 			this.log.error('[asyncOnReady()]' + error);
-			this.setState('info.connection', false, true); // change to yellow
 			return;
 		}
 	}

@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.2",
+		"version": "2.1.3",
 		"news": {
+			"2.1.3": {
+				"en": "correction when presence=0 to continue",
+				"de": "Korrektur bei Anwesenheit = 0, um fortzufahren",
+				"ru": "исправление при наличии = 0 для продолжения",
+				"pt": "correção quando presença = 0 para continuar",
+				"nl": "correctie wanneer aanwezigheid = 0 om door te gaan",
+				"fr": "correction quand présence = 0 pour continuer",
+				"it": "correzione quando presenza = 0 per continuare",
+				"es": "corrección cuando presencia = 0 para continuar",
+				"pl": "korekta, gdy obecność = 0, aby kontynuować",
+				"zh-cn": "存在= 0时进行更正以继续"
+			},
 			"2.1.2": {
 				"en": "without info.connection",
 				"de": "ohne info.connection",

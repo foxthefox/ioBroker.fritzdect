@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.4",
+		"version": "2.1.5",
 		"news": {
+			"2.1.5": {
+				"en": "pbkf2 hash correction",
+				"de": "pbkf2 Hash-Korrektur",
+				"ru": "исправление хэша pbkf2",
+				"pt": "correção de hash pbkf2",
+				"nl": "pbkf2 hash-correctie",
+				"fr": "Correction de hachage pbkf2",
+				"it": "correzione hash pbkf2",
+				"es": "corrección de hash pbkf2",
+				"pl": "pbkf2 korekta skrótu",
+				"zh-cn": "pbkf2哈希校正"
+			},
 			"2.1.4": {
 				"en": "io-package vis not required",
 				"de": "io-package vis nicht erforderlich",

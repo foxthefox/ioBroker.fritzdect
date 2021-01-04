@@ -38,307 +38,308 @@
 				"es": "cambio rotundo, nueva API fritzbox, uso del punto de datos de la API",
 				"pl": "przełomowa zmiana, nowe API Fritzbox, użycie punktu danych API",
 				"zh-cn": "重大变化，新的fritzbox API，API数据点的使用",
-			"1.1.4": {
-				"en": "blinds control",
-				"de": "Jalousiekontrolle",
-				"ru": "управление жалюзи",
-				"pt": "controle de cortinas",
-				"nl": "jaloezieën controle",
-				"fr": "contrôle des stores",
-				"it": "controllo persiane",
-				"es": "control de persianas",
-				"pl": "sterowanie roletami",
-				"zh-cn": "百叶窗控制"
+				"1.1.4": {
+					"en": "blinds control",
+					"de": "Jalousiekontrolle",
+					"ru": "управление жалюзи",
+					"pt": "controle de cortinas",
+					"nl": "jaloezieën controle",
+					"fr": "contrôle des stores",
+					"it": "controllo persiane",
+					"es": "control de persianas",
+					"pl": "sterowanie roletami",
+					"zh-cn": "百叶窗控制"
+				},
+				"1.1.3": {
+					"en": "setcolor cmd correction",
+					"de": "setcolor cmd Korrektur",
+					"ru": "коррекция setcolor cmd",
+					"pt": "correção de setcolor cmd",
+					"nl": "setcolor cmd correctie",
+					"fr": "correction cmd setcolor",
+					"it": "correzione cmd setcolor",
+					"es": "corrección de cmd setcolor",
+					"pl": "setcolor korekta cmd",
+					"zh-cn": "setcolor cmd校正"
+				},
+				"1.1.2": {
+					"en": "corrections and new features",
+					"de": "Korrekturen und neue Funktionen",
+					"ru": "исправления и новые функции",
+					"pt": "correções e novos recursos",
+					"nl": "correcties en nieuwe functies",
+					"fr": "corrections et nouvelles fonctionnalités",
+					"it": "correzioni e nuove funzionalità",
+					"es": "correcciones y novedades",
+					"pl": "poprawki i nowe funkcje",
+					"zh-cn": "更正和新功能"
+				},
+				"1.1.1": {
+					"en": "corrections and new features",
+					"de": "Korrekturen und neue Funktionen",
+					"ru": "исправления и новые функции",
+					"pt": "correções e novos recursos",
+					"nl": "correcties en nieuwe functies",
+					"fr": "corrections et nouvelles fonctionnalités",
+					"it": "correzioni e nuove funzionalità",
+					"es": "correcciones y novedades",
+					"pl": "poprawki i nowe funkcje",
+					"zh-cn": "更正和新功能"
+				},
+				"1.1.0": {
+					"en": "new features AVM API",
+					"de": "neue Funktionen AVM API",
+					"ru": "новые возможности AVM API",
+					"pt": "novos recursos AVM API",
+					"nl": "nieuwe functies AVM API",
+					"fr": "nouvelles fonctionnalités API AVM",
+					"it": "nuove funzionalità API AVM",
+					"es": "nuevas funciones API AVM",
+					"pl": "nowe funkcje AVM API",
+					"zh-cn": "新功能AVM API"
+				},
+				"1.0.1": {
+					"en": "bugfixes in fritz API calls",
+					"de": "Bugfixes in fritz API-Aufrufen",
+					"ru": "исправления в вызовах fritz API",
+					"pt": "correções de bugs em chamadas fritz API",
+					"nl": "bugfixes in fritz API-aanroepen",
+					"fr": "corrections de bugs dans les appels API fritz",
+					"it": "correzioni di errori nelle chiamate API fritz",
+					"es": "correcciones de errores en llamadas a la API de fritz",
+					"pl": "poprawki błędów w wywołaniach API fritz",
+					"zh-cn": "fritz API调用中的错误修正"
+				},
+				"1.0.0": {
+					"en": "breaking change, no GuestWLAN! new support of DECT500",
+					"de": "Breaking Change, kein GuestWLAN! neue Unterstützung von DECT500",
+					"ru": "без изменений, нет гостевой WLAN новая поддержка DECT500",
+					"pt": "quebra de mudança, sem GuestWLAN! novo suporte do DECT500",
+					"nl": "brekende verandering, geen GuestWLAN! nieuwe ondersteuning van DECT500",
+					"fr": "rupture du changement, pas de GuestWLAN! nouveau support du DECT500",
+					"it": "cambiamento di rottura, nessuna GuestWLAN! nuovo supporto di DECT500",
+					"es": "cambio de última hora, no GuestWLAN! nuevo soporte de DECT500",
+					"pl": "przełomowa zmiana, brak GuestWLAN! nowa obsługa DECT500",
+					"zh-cn": "零钱，没有GuestWLAN！ DECT500的新支持"
+				},
+				"0.3.2": {
+					"en": "new mode list for heater group",
+					"de": "neue Modusliste für Heizungsgruppe",
+					"ru": "новый список режимов для группы обогревателей",
+					"pt": "nova lista de modos para o grupo de aquecedores",
+					"nl": "nieuwe moduslijst voor verwarmingsgroep",
+					"fr": "nouvelle liste de modes pour le groupe de chauffage",
+					"it": "nuovo elenco delle modalità per il gruppo di riscaldamento",
+					"es": "nueva lista de modos para el grupo de calentadores",
+					"pl": "nowa lista trybów dla grupy grzejników",
+					"zh-cn": "加热器组的新模式列表"
+				},
+				"0.3.1": {
+					"en": "new mode list for thermostat",
+					"de": "neue Modusliste für Thermostat",
+					"ru": "новый список режимов для термостата",
+					"pt": "nova lista de modos para termostato",
+					"nl": "nieuwe moduslijst voor thermostaat",
+					"fr": "nouvelle liste de modes pour thermostat",
+					"it": "nuovo elenco modalità per termostato",
+					"es": "nueva lista de modos para termostato",
+					"pl": "nowa lista trybów dla termostatu",
+					"zh-cn": "恒温器的新模式列表"
+				},
+				"0.3.0": {
+					"en": "new feature DECT500",
+					"de": "neue Funktion DECT500",
+					"ru": "новая функция DECT500",
+					"pt": "novo recurso DECT500",
+					"nl": "nieuwe functie DECT500",
+					"fr": "nouvelle fonctionnalité DECT500",
+					"it": "nuova funzione DECT500",
+					"es": "nueva característica DECT500",
+					"pl": "nowa funkcja DECT500",
+					"zh-cn": "新功能DECT500"
+				},
+				"0.2.5": {
+					"en": "correction for indication of actualtemp in heater groups",
+					"de": "Korrektur zur Anzeige der Istzeit in Heizungsgruppen",
+					"ru": "поправка для индикации фактической температуры в группах обогревателей",
+					"pt": "correção para indicação de temperatura atual em grupos de aquecedores",
+					"nl": "correctie voor indicatie van werkelijke temperatuur in verwarmingsgroepen",
+					"fr": "correction pour l'indication de la température réelle dans les groupes de réchauffeurs",
+					"it": "correzione per l'indicazione del temp effettivo nei gruppi di riscaldatori",
+					"es": "corrección por indicación de temperatura actual en grupos de calentadores",
+					"pl": "korekta wskazania aktualnej temperatury w grupach grzejników",
+					"zh-cn": "校正加热器组中的实际温度"
+				},
+				"0.2.4": {
+					"en": "correction of type mismatch",
+					"de": "Korrektur von Typinkongruenzen",
+					"ru": "исправление несоответствия типов",
+					"pt": "correção de incompatibilidade de tipo",
+					"nl": "correctie van type mismatch",
+					"fr": "correction de l'inadéquation des types",
+					"it": "correzione del tipo non corrispondente",
+					"es": "corrección de tipo no coincidente",
+					"pl": "korekta niedopasowania typu",
+					"zh-cn": "纠正类型不匹配"
+				},
+				"0.2.3": {
+					"en": "skip updating values, when device not present",
+					"de": "Aktualisierungswerte überspringen, wenn das Gerät nicht vorhanden ist",
+					"ru": "пропустить обновление значений, когда устройство отсутствует",
+					"pt": "pular valores de atualização, quando o dispositivo não está presente",
+					"nl": "sla de update-waarden over wanneer het apparaat niet aanwezig is",
+					"fr": "ignorer les valeurs de mise à jour lorsque le périphérique n'est pas présent",
+					"it": "saltare i valori di aggiornamento, quando il dispositivo non è presente",
+					"es": "Saltar los valores de actualización, cuando el dispositivo no está presente",
+					"pl": "pomiń aktualizację wartości, gdy urządzenie nie jest obecne",
+					"zh-cn": "当设备不存在时，跳过更新值"
+				},
+				"0.2.2": {
+					"en": "testing nodejs12, added FritzDECT400",
+					"de": "Testknoten js 12, Fritz DECT 400 hinzugefügt",
+					"ru": "тестовый узел js 12, добавлен Fritz DECT 400",
+					"pt": "nó de teste js 12, adicionado Fritz DECT 400",
+					"nl": "testknoop js 12, toegevoegd Fritz DECT 400",
+					"fr": "noeud de test js 12, ajout de Fritz DECT 400",
+					"it": "testing node js 12, aggiunto Fritz DECT 400",
+					"es": "prueba de nodo js 12, agregó Fritz DECT 400",
+					"pl": "testowanie węzła js 12, dodano Fritz DECT 400",
+					"zh-cn": "测试节点js 12，添加了Fritz DECT 400"
+				},
+				"0.2.1": {
+					"en": "gulp, translation added, correction for DECT100 without temperature",
+					"de": "Schluck, Übersetzung hinzugefügt, Korrektur für DECT100 ohne Temperatur",
+					"ru": "глоток, добавлен перевод, исправление для DECT100 без температуры",
+					"pt": "gulp, tradução adicionada, correção para DECT100 sem temperatura",
+					"nl": "slok, vertaling toegevoegd, correctie voor DECT100 zonder temperatuur",
+					"fr": "gulp, traduction ajoutée, correction pour DECT100 sans température",
+					"it": "gulp, traduzione aggiunta, correzione per DECT100 senza temperatura",
+					"es": "Trago, traducción añadida, corrección para DECT100 sin temperatura",
+					"pl": "łyk, tłumaczenie dodane, korekta dla DECT100 bez temperatury",
+					"zh-cn": "gulp，翻译补充，校正DECT100无温度"
+				},
+				"0.2.0": {
+					"en": "change tp compact mode",
+					"de": "Wechseln Sie in den Kompaktmodus",
+					"ru": "перейти в компактный режим",
+					"pt": "mudar para o modo compacto",
+					"nl": "verander naar compacte modus",
+					"fr": "passer en mode compact",
+					"it": "passare alla modalità compatta",
+					"es": "cambiar al modo compacto",
+					"pl": "przejdź do trybu kompaktowego",
+					"zh-cn": "改变紧凑模式"
+				},
+				"0.1.5": {
+					"en": "activation of templates added",
+					"de": "Aktivierung von Vorlagen hinzugefügt",
+					"ru": "активация добавленных шаблонов",
+					"pt": "ativação de modelos adicionados",
+					"nl": "activering van toegevoegde sjablonen",
+					"fr": "activation des modèles ajoutés",
+					"it": "attivazione di modelli aggiunti",
+					"es": "activación de plantillas añadidas",
+					"pl": "aktywacja dodanych szablonów",
+					"zh-cn": "激活模板添加"
+				},
+				"0.1.4": {
+					"en": "button added",
+					"de": "Taster hinzugefügt",
+					"ru": "добавлена ​​кнопка",
+					"pt": "botão adicionado",
+					"nl": "knop toegevoegd",
+					"fr": "bouton ajouté",
+					"it": "pulsante aggiunto",
+					"es": "botón añadido",
+					"pl": "dodano przycisk",
+					"zh-cn": "按钮添加"
+				}
 			},
-			"1.1.3": {
-				"en": "setcolor cmd correction",
-				"de": "setcolor cmd Korrektur",
-				"ru": "коррекция setcolor cmd",
-				"pt": "correção de setcolor cmd",
-				"nl": "setcolor cmd correctie",
-				"fr": "correction cmd setcolor",
-				"it": "correzione cmd setcolor",
-				"es": "corrección de cmd setcolor",
-				"pl": "setcolor korekta cmd",
-				"zh-cn": "setcolor cmd校正"
+			"title": "fritzbox DECT",
+			"titleLang": {
+				"en": "fritzbox dect adapter",
+				"de": "fritzbox dect Adapter",
+				"ru": "Адаптер fritzbox dect",
+				"pt": "adaptador fritzbox dect",
+				"nl": "fritzbox dect-adapter",
+				"fr": "fritzbox dect adaptateur",
+				"it": "Adattatore per fritzbox",
+				"es": "adaptador fritzbox dect",
+				"pl": "Fritzbox adapter Dect",
+				"zh-cn": "fritzbox dect适配器"
 			},
-			"1.1.2": {
-				"en": "corrections and new features",
-				"de": "Korrekturen und neue Funktionen",
-				"ru": "исправления и новые функции",
-				"pt": "correções e novos recursos",
-				"nl": "correcties en nieuwe functies",
-				"fr": "corrections et nouvelles fonctionnalités",
-				"it": "correzioni e nuove funzionalità",
-				"es": "correcciones y novedades",
-				"pl": "poprawki i nowe funkcje",
-				"zh-cn": "更正和新功能"
+			"desc": {
+				"en": "connects DECT ULE devices (fritzdect) to ioBroker",
+				"de": "verbindet DECT ULE-Geräte (fritzdect) mit ioBroker",
+				"ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
+				"pt": "liga dispositivos DECT ULE (fritzdect) a ioBroker",
+				"nl": "verbindt DECT ULE-apparaten (fritzdect) met ioBroker",
+				"fr": "connecte les périphériques DECT ULE (fritzdect) à ioBroker",
+				"it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
+				"es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
+				"pl": "łączy urządzenia DECT ULE (fritzdect) z ioBroker",
+				"zh-cn": "将DECT ULE设备（fritzdect）连接到ioBroker"
 			},
-			"1.1.1": {
-				"en": "corrections and new features",
-				"de": "Korrekturen und neue Funktionen",
-				"ru": "исправления и новые функции",
-				"pt": "correções e novos recursos",
-				"nl": "correcties en nieuwe functies",
-				"fr": "corrections et nouvelles fonctionnalités",
-				"it": "correzioni e nuove funzionalità",
-				"es": "correcciones y novedades",
-				"pl": "poprawki i nowe funkcje",
-				"zh-cn": "更正和新功能"
+			"authors": [ "foxthefox <foxthefox@wysiwis.net>" ],
+			"docs": {
+				"de": "docs/de/install.md"
 			},
-			"1.1.0": {
-				"en": "new features AVM API",
-				"de": "neue Funktionen AVM API",
-				"ru": "новые возможности AVM API",
-				"pt": "novos recursos AVM API",
-				"nl": "nieuwe functies AVM API",
-				"fr": "nouvelles fonctionnalités API AVM",
-				"it": "nuove funzionalità API AVM",
-				"es": "nuevas funciones API AVM",
-				"pl": "nowe funkcje AVM API",
-				"zh-cn": "新功能AVM API"
-			},
-			"1.0.1": {
-				"en": "bugfixes in fritz API calls",
-				"de": "Bugfixes in fritz API-Aufrufen",
-				"ru": "исправления в вызовах fritz API",
-				"pt": "correções de bugs em chamadas fritz API",
-				"nl": "bugfixes in fritz API-aanroepen",
-				"fr": "corrections de bugs dans les appels API fritz",
-				"it": "correzioni di errori nelle chiamate API fritz",
-				"es": "correcciones de errores en llamadas a la API de fritz",
-				"pl": "poprawki błędów w wywołaniach API fritz",
-				"zh-cn": "fritz API调用中的错误修正"
-			},
-			"1.0.0": {
-				"en": "breaking change, no GuestWLAN! new support of DECT500",
-				"de": "Breaking Change, kein GuestWLAN! neue Unterstützung von DECT500",
-				"ru": "без изменений, нет гостевой WLAN новая поддержка DECT500",
-				"pt": "quebra de mudança, sem GuestWLAN! novo suporte do DECT500",
-				"nl": "brekende verandering, geen GuestWLAN! nieuwe ondersteuning van DECT500",
-				"fr": "rupture du changement, pas de GuestWLAN! nouveau support du DECT500",
-				"it": "cambiamento di rottura, nessuna GuestWLAN! nuovo supporto di DECT500",
-				"es": "cambio de última hora, no GuestWLAN! nuevo soporte de DECT500",
-				"pl": "przełomowa zmiana, brak GuestWLAN! nowa obsługa DECT500",
-				"zh-cn": "零钱，没有GuestWLAN！ DECT500的新支持"
-			},
-			"0.3.2": {
-				"en": "new mode list for heater group",
-				"de": "neue Modusliste für Heizungsgruppe",
-				"ru": "новый список режимов для группы обогревателей",
-				"pt": "nova lista de modos para o grupo de aquecedores",
-				"nl": "nieuwe moduslijst voor verwarmingsgroep",
-				"fr": "nouvelle liste de modes pour le groupe de chauffage",
-				"it": "nuovo elenco delle modalità per il gruppo di riscaldamento",
-				"es": "nueva lista de modos para el grupo de calentadores",
-				"pl": "nowa lista trybów dla grupy grzejników",
-				"zh-cn": "加热器组的新模式列表"
-			},
-			"0.3.1": {
-				"en": "new mode list for thermostat",
-				"de": "neue Modusliste für Thermostat",
-				"ru": "новый список режимов для термостата",
-				"pt": "nova lista de modos para termostato",
-				"nl": "nieuwe moduslijst voor thermostaat",
-				"fr": "nouvelle liste de modes pour thermostat",
-				"it": "nuovo elenco modalità per termostato",
-				"es": "nueva lista de modos para termostato",
-				"pl": "nowa lista trybów dla termostatu",
-				"zh-cn": "恒温器的新模式列表"
-			},
-			"0.3.0": {
-				"en": "new feature DECT500",
-				"de": "neue Funktion DECT500",
-				"ru": "новая функция DECT500",
-				"pt": "novo recurso DECT500",
-				"nl": "nieuwe functie DECT500",
-				"fr": "nouvelle fonctionnalité DECT500",
-				"it": "nuova funzione DECT500",
-				"es": "nueva característica DECT500",
-				"pl": "nowa funkcja DECT500",
-				"zh-cn": "新功能DECT500"
-			},
-			"0.2.5": {
-				"en": "correction for indication of actualtemp in heater groups",
-				"de": "Korrektur zur Anzeige der Istzeit in Heizungsgruppen",
-				"ru": "поправка для индикации фактической температуры в группах обогревателей",
-				"pt": "correção para indicação de temperatura atual em grupos de aquecedores",
-				"nl": "correctie voor indicatie van werkelijke temperatuur in verwarmingsgroepen",
-				"fr": "correction pour l'indication de la température réelle dans les groupes de réchauffeurs",
-				"it": "correzione per l'indicazione del temp effettivo nei gruppi di riscaldatori",
-				"es": "corrección por indicación de temperatura actual en grupos de calentadores",
-				"pl": "korekta wskazania aktualnej temperatury w grupach grzejników",
-				"zh-cn": "校正加热器组中的实际温度"
-			},
-			"0.2.4": {
-				"en": "correction of type mismatch",
-				"de": "Korrektur von Typinkongruenzen",
-				"ru": "исправление несоответствия типов",
-				"pt": "correção de incompatibilidade de tipo",
-				"nl": "correctie van type mismatch",
-				"fr": "correction de l'inadéquation des types",
-				"it": "correzione del tipo non corrispondente",
-				"es": "corrección de tipo no coincidente",
-				"pl": "korekta niedopasowania typu",
-				"zh-cn": "纠正类型不匹配"
-			},
-			"0.2.3": {
-				"en": "skip updating values, when device not present",
-				"de": "Aktualisierungswerte überspringen, wenn das Gerät nicht vorhanden ist",
-				"ru": "пропустить обновление значений, когда устройство отсутствует",
-				"pt": "pular valores de atualização, quando o dispositivo não está presente",
-				"nl": "sla de update-waarden over wanneer het apparaat niet aanwezig is",
-				"fr": "ignorer les valeurs de mise à jour lorsque le périphérique n'est pas présent",
-				"it": "saltare i valori di aggiornamento, quando il dispositivo non è presente",
-				"es": "Saltar los valores de actualización, cuando el dispositivo no está presente",
-				"pl": "pomiń aktualizację wartości, gdy urządzenie nie jest obecne",
-				"zh-cn": "当设备不存在时，跳过更新值"
-			},
-			"0.2.2": {
-				"en": "testing nodejs12, added FritzDECT400",
-				"de": "Testknoten js 12, Fritz DECT 400 hinzugefügt",
-				"ru": "тестовый узел js 12, добавлен Fritz DECT 400",
-				"pt": "nó de teste js 12, adicionado Fritz DECT 400",
-				"nl": "testknoop js 12, toegevoegd Fritz DECT 400",
-				"fr": "noeud de test js 12, ajout de Fritz DECT 400",
-				"it": "testing node js 12, aggiunto Fritz DECT 400",
-				"es": "prueba de nodo js 12, agregó Fritz DECT 400",
-				"pl": "testowanie węzła js 12, dodano Fritz DECT 400",
-				"zh-cn": "测试节点js 12，添加了Fritz DECT 400"
-			},
-			"0.2.1": {
-				"en": "gulp, translation added, correction for DECT100 without temperature",
-				"de": "Schluck, Übersetzung hinzugefügt, Korrektur für DECT100 ohne Temperatur",
-				"ru": "глоток, добавлен перевод, исправление для DECT100 без температуры",
-				"pt": "gulp, tradução adicionada, correção para DECT100 sem temperatura",
-				"nl": "slok, vertaling toegevoegd, correctie voor DECT100 zonder temperatuur",
-				"fr": "gulp, traduction ajoutée, correction pour DECT100 sans température",
-				"it": "gulp, traduzione aggiunta, correzione per DECT100 senza temperatura",
-				"es": "Trago, traducción añadida, corrección para DECT100 sin temperatura",
-				"pl": "łyk, tłumaczenie dodane, korekta dla DECT100 bez temperatury",
-				"zh-cn": "gulp，翻译补充，校正DECT100无温度"
-			},
-			"0.2.0": {
-				"en": "change tp compact mode",
-				"de": "Wechseln Sie in den Kompaktmodus",
-				"ru": "перейти в компактный режим",
-				"pt": "mudar para o modo compacto",
-				"nl": "verander naar compacte modus",
-				"fr": "passer en mode compact",
-				"it": "passare alla modalità compatta",
-				"es": "cambiar al modo compacto",
-				"pl": "przejdź do trybu kompaktowego",
-				"zh-cn": "改变紧凑模式"
-			},
-			"0.1.5": {
-				"en": "activation of templates added",
-				"de": "Aktivierung von Vorlagen hinzugefügt",
-				"ru": "активация добавленных шаблонов",
-				"pt": "ativação de modelos adicionados",
-				"nl": "activering van toegevoegde sjablonen",
-				"fr": "activation des modèles ajoutés",
-				"it": "attivazione di modelli aggiunti",
-				"es": "activación de plantillas añadidas",
-				"pl": "aktywacja dodanych szablonów",
-				"zh-cn": "激活模板添加"
-			},
-			"0.1.4": {
-				"en": "button added",
-				"de": "Taster hinzugefügt",
-				"ru": "добавлена ​​кнопка",
-				"pt": "botão adicionado",
-				"nl": "knop toegevoegd",
-				"fr": "bouton ajouté",
-				"it": "pulsante aggiunto",
-				"es": "botón añadido",
-				"pl": "dodano przycisk",
-				"zh-cn": "按钮添加"
-			}
+			"keywords": [ "smart home", "DECT ULE", "lighting", "heating", "switching", "fritzbox" ],
+			"license": "MIT",
+			"platform": "Javascript/Node.js",
+			"main": "main.js",
+			"icon": "fritzdect_logo.png",
+			"enabled": false,
+			"extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
+			"readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
+			"loglevel": "info",
+			"restartAdapters": [ "vis" ],
+			"localLink": "%web_protocol%://%ip%:%web_port%/vis/edit.html",
+			"mode": "daemon",
+			"type": "hardware",
+			"compact": true,
+			"messagebox": true,
+			"connectionType": "local",
+			"dataSource": "poll",
+			"materialize": true,
+			"supportCustoms": false,
+			"dependencies": [
+				{
+					"js-controller": ">=2.0.0"
+				},
+				"vis"
+			]
 		},
-		"title": "fritzbox DECT",
-		"titleLang": {
-			"en": "fritzbox dect adapter",
-			"de": "fritzbox dect Adapter",
-			"ru": "Адаптер fritzbox dect",
-			"pt": "adaptador fritzbox dect",
-			"nl": "fritzbox dect-adapter",
-			"fr": "fritzbox dect adaptateur",
-			"it": "Adattatore per fritzbox",
-			"es": "adaptador fritzbox dect",
-			"pl": "Fritzbox adapter Dect",
-			"zh-cn": "fritzbox dect适配器"
+		"native": {
+			"fritz_ip": "http://192.x.x.x",
+			"fritz_user": "admin",
+			"fritz_pw": "pw",
+			"fritz_interval": 300,
+			"fritz_strictssl": true
 		},
-		"desc": {
-			"en": "connects DECT ULE devices (fritzdect) to ioBroker",
-			"de": "verbindet DECT ULE-Geräte (fritzdect) mit ioBroker",
-			"ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
-			"pt": "liga dispositivos DECT ULE (fritzdect) a ioBroker",
-			"nl": "verbindt DECT ULE-apparaten (fritzdect) met ioBroker",
-			"fr": "connecte les périphériques DECT ULE (fritzdect) à ioBroker",
-			"it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
-			"es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
-			"pl": "łączy urządzenia DECT ULE (fritzdect) z ioBroker",
-			"zh-cn": "将DECT ULE设备（fritzdect）连接到ioBroker"
-		},
-		"authors": [ "foxthefox <foxthefox@wysiwis.net>" ],
-		"docs": {
-			"de": "docs/de/install.md"
-		},
-		"keywords": [ "smart home", "DECT ULE", "lighting", "heating", "switching", "fritzbox" ],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "fritzdect_logo.png",
-		"enabled": false,
-		"extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
-		"readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
-		"loglevel": "info",
-		"restartAdapters": [ "vis" ],
-		"localLink": "%web_protocol%://%ip%:%web_port%/vis/edit.html",
-		"mode": "daemon",
-		"type": "hardware",
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"materialize": true,
-		"supportCustoms": false,
-		"dependencies": [
+		"objects": [],
+		"instanceObjects": [
 			{
-				"js-controller": ">=2.0.0"
+				"_id": "info",
+				"type": "channel",
+				"common": {
+					"name": "Information"
+				},
+				"native": {}
 			},
-			"vis"
+			{
+				"_id": "info.connection",
+				"type": "state",
+				"common": {
+					"role": "indicator.connected",
+					"name": "Device or service connected",
+					"type": "boolean",
+					"read": true,
+					"write": false,
+					"def": false
+				},
+				"native": {}
+			}
 		]
-	},
-	"native": {
-		"fritz_ip": "http://192.x.x.x",
-		"fritz_user": "admin",
-		"fritz_pw": "pw",
-		"fritz_interval": 300,
-		"fritz_strictssl": true
-	},
-	"objects": [],
-	"instanceObjects": [
-		{
-			"_id": "info",
-			"type": "channel",
-			"common": {
-				"name": "Information"
-			},
-			"native": {}
-		},
-		{
-			"_id": "info.connection",
-			"type": "state",
-			"common": {
-				"role": "indicator.connected",
-				"name": "Device or service connected",
-				"type": "boolean",
-				"read": true,
-				"write": false,
-				"def": false
-			},
-			"native": {}
-		}
-	]
+	}
 }

@@ -935,7 +935,7 @@ class Fritzdect extends utils.Adapter {
 										devices[i].identifier.replace(/\s/g, '') +
 										' is not present, check the device connection, no values are written'
 								);
-								return;
+								continue;
 							} else {
 								if (devices[i].hkr) {
 									currentMode = 'On';

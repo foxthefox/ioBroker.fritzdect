@@ -122,8 +122,6 @@ class Fritzdect extends utils.Adapter {
 						settings.Password = this.decryptfc('Zgfr56gFe87jJOM', settings.Password);
 					}
 					// Adapter is alive, make API call
-					this.setForeignState('system.this.' + this.namespace + '.alive', false);
-
 					// Make a call to fritzboxAPI and get a list devices/groups and templates
 
 					const fritz = new Fritz(
@@ -151,7 +149,6 @@ class Fritzdect extends utils.Adapter {
 				});
 			} else {
 				this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
-				this.setForeignState('system.this.' + this.namespace + '.alive', false);
 			}
 
 			// in this template all states changes inside the adapters namespace are subscribed

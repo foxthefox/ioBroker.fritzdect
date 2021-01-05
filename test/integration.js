@@ -55,7 +55,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						// Perform the actual test:
 						harness.sendTo('fritzdect.0', 'test', 'message', (resp) => {
 							console.dir(resp);
@@ -92,7 +92,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 
 						harness.states.getState('fritzdect.0.DECT_087610006161.productname', function(err, state) {
 							if (err) console.error(err);
@@ -280,7 +280,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_117951022222.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -580,7 +580,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_117951033333.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -801,7 +801,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_119600642220.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1018,7 +1018,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_112240205290-1.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1123,7 +1123,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_119340141058-2.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1229,7 +1229,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_13096321567.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1340,7 +1340,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_34:31:C1:AB:68:53.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1529,7 +1529,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_087611016969.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1632,7 +1632,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_123456789012-1.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1962,7 +1962,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_130770000415-1.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2293,7 +2293,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_099950403922.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2415,7 +2415,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.DECT_119340395779-1.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2522,7 +2522,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 
 
 					});
@@ -2544,7 +2544,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.objects.getObject('fritzdect.0.template_tmp6F0093-39091EED0.name', (err, obj) => {
 							if (err) console.error('template_tmp6F0093-39091EED0.name ' + err);
 							expect(obj).to.exist;
@@ -2573,7 +2573,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091EED0.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2619,7 +2619,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-390920878.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2665,7 +2665,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-390920F4A.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2711,7 +2711,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091E943.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2757,7 +2757,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-391363146.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2803,7 +2803,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091E733.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2849,7 +2849,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091E428.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2895,7 +2895,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						harness.states.getState('fritzdect.0.template_tmp5665DB-3A1C9EC6F.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2942,7 +2942,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						//set a command and after fritzbix comm it should be returend in process image
 						harness.states.setState(
 							'fritzdect.0.template_tmp6F0093-391363146.toggle',
@@ -2984,7 +2984,7 @@ tests.integration(path.join(__dirname, '..'), {
 
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(2000);
+						await delay(2500);
 						//set a command and after fritzbix comm it should be returend in process image
 						harness.states.setState('fritzdect.0.DECT_087610006161', {val: false, ack: false, from: 'test.0'}, function (err) {
 							if (err) {

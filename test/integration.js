@@ -36,8 +36,9 @@ tests.integration(path.join(__dirname, '..'), {
 			before('start the emulation', () => {
 				server.setupHttpServer(function() {});
 			});
-			beforeEach('wait for something', async () => {
+			beforeEach('wait for something', async (done) => {
 				await delay(2000);
+				done();
 			});
 			/*
 			// should work but doesnt

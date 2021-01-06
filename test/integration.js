@@ -37,7 +37,7 @@ tests.integration(path.join(__dirname, '..'), {
 				server.setupHttpServer(function() {});
 			});
 			beforeEach('wait for something', async (done) => {
-				await delay(2000);
+				await delay(1500);
 				done();
 			});
 			/*

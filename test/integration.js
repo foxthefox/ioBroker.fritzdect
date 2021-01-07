@@ -36,9 +36,6 @@ tests.integration(path.join(__dirname, '..'), {
 			before('start the emulation', () => {
 				server.setupHttpServer(function() {});
 			});
-			beforeEach('WAIT BEFORE NEXT it()test ', () => {
-				delay(1500);
-			});
 			/*
 			// should work but doesnt
 			it('Should work to send a message', () => {

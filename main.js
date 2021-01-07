@@ -1693,7 +1693,7 @@ class Fritzdect extends utils.Adapter {
 								0,
 								1440,
 								'min',
-								'value.time'
+								'value'
 							);
 							//preset to 5 min
 							await this.setStateAsync('DECT_' + identifier + '.boostactivetime', {
@@ -1712,7 +1712,7 @@ class Fritzdect extends utils.Adapter {
 								0,
 								1440,
 								'min',
-								'value.time'
+								'value'
 							);
 							//preset to 5 min
 							await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {

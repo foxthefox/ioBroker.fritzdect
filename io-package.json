@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.6",
+		"version": "2.1.7",
 		"news": {
+			"2.1.7": {
+				"en": "correction of datatype boostactivetime/windowactivetime",
+				"de": "Korrektur des Datentyps boostactivetime / windowactivetime",
+				"ru": "исправление типа данных boostactivetime / windowactivetime",
+				"pt": "correção do tipo de dados boostactivetime / windowactivetime",
+				"nl": "correctie van datatype boostactivetime / windowactivetime",
+				"fr": "correction du type de données boostactivetime / windowactivetime",
+				"it": "correzione del tipo di dati boostactivetime / windowactivetime",
+				"es": "corrección de tipo de datos boostactivetime / windowactivetime",
+				"pl": "korekta typu danych boostactivetime / windowactivetime",
+				"zh-cn": "修正数据类型boostactivetime / windowactivetime"
+			},
 			"2.1.6": {
 				"en": "pbkdf2 hash calculation",
 				"de": "pbkdf2 Hash-Berechnung",

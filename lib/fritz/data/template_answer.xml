@@ -91,7 +91,7 @@
             <relay_automatic/>
         </applymask>
     </template>
-    <template>>
+    <template>
         <identifier>tmpB0C5B1-3BFD9472D</identifier>
         <id>60200</id>
         <functionbitmask>40960</functionbitmask>
@@ -105,8 +105,8 @@
                 <identifier>11324 0596882-1</identifier>
             </device>
         </devices>
-    </template>>
-    <template>>
+    </template>
+    <template>
         <identifier>tmpB0C5B1-3BFD943AE</identifier>
         <id>60100</id>
         <functionbitmask>40960</functionbitmask>
@@ -120,5 +120,5 @@
                 <identifier>11324 0596882-1</identifier>
             </device>
         </devices>
-    </template>>
+    </template>
 </templatelist>

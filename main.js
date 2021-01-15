@@ -55,6 +55,7 @@ let polling;
 514 = COLOR_CTRL
 516 = ? detected with blinds, different alert?
 517 = ? detected with blinds, different alerttimestamp
+768 = ?
 772 = SIMPLE_BUTTON
 1024 = SUOTA-Update
 */
@@ -132,8 +133,12 @@ class Fritzdect extends utils.Adapter {
 					);
 
 					await this.createDevices(fritz);
+					this.log.info('creating devices/groups finished ');
 					await this.createTemplates(fritz);
+					this.log.info('creating templates finished ');
 					await this.updateDevices(fritz);
+					this.log.info('initial updating devices/groups finished ');
+					this.log.info('going over to cyclic polling, messages to poll activity only in debug-mode ');
 					if (!polling) {
 						polling = setInterval(async () => {
 							// poll fritzbox
@@ -142,13 +147,14 @@ class Fritzdect extends utils.Adapter {
 								await this.updateDevices(fritz);
 							} catch (e) {
 								this.log.warn(`[Polling] <== ${e}`);
-								this.log.warn(`[CONNECT] Connection failed`);
 							}
 						}, (settings.intervall || 300) * 1000);
 					}
 				});
 			} else {
-				this.log.error('*** Adapter deactivated, credentials missing in Adaptper Settings !!!  ***');
+				this.log.error(
+					'*** Adapter running, but doing nothing, credentials missing in Adaptper Settings !!!  ***'
+				);
 			}
 
 			// in this template all states changes inside the adapters namespace are subscribed
@@ -495,6 +501,7 @@ class Fritzdect extends utils.Adapter {
 								});
 							}
 						}
+						// setswitch reicht scheinbar nicht bei simpleonoff, hier müsste irgendwie unterschieden werden ob DECT200 switch/state oder simpleonoff/state
 						if (dp == 'state') {
 							if (
 								state.val === 0 ||
@@ -504,13 +511,35 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'off' ||
 								state.val === 'OFF'
 							) {
-								fritz
-									.setSwitchOff(id)
-									.then(async (sid) => {
-										this.log.debug('Turned switch ' + id + ' off');
-										await this.setStateAsync('DECT_' + id + '.state', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-									})
-									.catch((e) => this.errorHandler(e));
+								this.getState('DECT_' + id + '.switchtype', async (err, switchtyp) => {
+									if (switchtyp && switchtyp.val !== null) {
+										if (switchtyp.val === 'switch') {
+											fritz
+												.setSwitchOff(id)
+												.then(async (sid) => {
+													this.log.debug('Turned switch ' + id + ' off');
+													await this.setStateAsync('DECT_' + id + '.state', {
+														val: false,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandler(e));
+										} else {
+											fritz
+												.setSimpleOff(id)
+												.then(async (sid) => {
+													this.log.debug('Turned switch ' + id + ' off');
+													await this.setStateAsync('DECT_' + id + '.state', {
+														val: false,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandler(e));
+										}
+									} else {
+										throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
+									}
+								});
 							} else if (
 								state.val === 1 ||
 								state.val === '1' ||
@@ -519,13 +548,35 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'on' ||
 								state.val === 'ON'
 							) {
-								fritz
-									.setSwitchOn(id)
-									.then(async (sid) => {
-										this.log.debug('Turned switch ' + id + ' on');
-										await this.setStateAsync('DECT_' + id + '.state', { val: true, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-									})
-									.catch((e) => this.errorHandler(e));
+								this.getState('DECT_' + id + '.switchtype', async (err, switchtyp) => {
+									if (switchtyp && switchtyp.val !== null) {
+										if (switchtyp.val === 'switch') {
+											fritz
+												.setSwitchOn(id)
+												.then(async (sid) => {
+													this.log.debug('Turned switch ' + id + ' on');
+													await this.setStateAsync('DECT_' + id + '.state', {
+														val: true,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandler(e));
+										} else {
+											fritz
+												.setSimpleOn(id)
+												.then(async (sid) => {
+													this.log.debug('Turned switch ' + id + ' on');
+													await this.setStateAsync('DECT_' + id + '.state', {
+														val: true,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandler(e));
+										}
+									} else {
+										throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
+									}
+								});
 							}
 						}
 						if (dp == 'blindsclose') {
@@ -953,12 +1004,25 @@ class Fritzdect extends utils.Adapter {
 										this.log.debug('id nachher ' + devices[i].id);
 									}
 								}
+								//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
+								//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
+								if (devices[i].simpleonoff) {
+									await this.setStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
+										{
+											val: 'simpleonoff',
+											ack: true
+										}
+									);
+								}
 								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
 								if (devices[i].functionbitmask == 1) {
 									this.log.debug(' functionbitmask 1');
 									// search and find the device id and replace fwversion
 									// todo
 									// find the device.identifier mit der etsi_id
+									//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
+									// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
 									// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
 									// reihenfolge, id immer vorher und dann erst etsi in json?
 									continue;
@@ -1392,7 +1456,6 @@ class Fritzdect extends utils.Adapter {
 			this.log.debug('TRYING on : ' + JSON.stringify(device));
 			const identifier = device.identifier.replace(/\s/g, '');
 
-			// role to be defined
 			if ((device.functionbitmask & 64) == 64) {
 				//DECT300/301
 				role = 'thermo.heat';
@@ -1412,6 +1475,10 @@ class Fritzdect extends utils.Adapter {
 			} else if (device.functionbitmask == 335888) {
 				//Blinds
 				role = 'blinds';
+			} else if ((device.functionbitmask & 8192) == 8192) {
+				//simpleonoff alleine
+				//telekom plug 40960
+				role = 'switch';
 			} else if (
 				(device.functionbitmask & 16) == 16 ||
 				(device.functionbitmask & 8) == 8 ||
@@ -1577,6 +1644,11 @@ class Fritzdect extends utils.Adapter {
 					await this.asyncForEach(Object.keys(device.switch), async (key) => {
 						if (key === 'state') {
 							await this.createSwitch(identifier, 'state', 'Switch Status and Control');
+							await this.createInfoState(identifier, 'switchtype', 'Switch Type');
+							await this.setStateAsync('DECT_' + identifier + '.switchtype', {
+								val: 'switch',
+								ack: true
+							});
 						} else if (key === 'mode') {
 							await this.createInfoState(identifier, 'mode', 'Switch Mode');
 						} else if (key === 'lock') {
@@ -1760,11 +1832,13 @@ class Fritzdect extends utils.Adapter {
 				}
 
 				// simpleonoff
+				// switchtype wird hier nochmal überschrieben
 				if (device.simpleonoff) {
 					this.log.info('setting up simpleonoff');
 					await this.asyncForEach(Object.keys(device.simpleonoff), async (key) => {
 						if (key === 'state') {
-							this.createSwitch(identifier, 'state', 'Simple ON/OFF state and cmd');
+							await this.createSwitch(identifier, 'state', 'Simple ON/OFF state and cmd');
+							await this.createInfoState(identifier, 'switchtype', 'Switch Type');
 						} else {
 							this.log.warn(' new datapoint in API detected -> ' + key);
 						}
@@ -1775,9 +1849,9 @@ class Fritzdect extends utils.Adapter {
 					this.log.info('setting up levelcontrol');
 					await this.asyncForEach(Object.keys(device.levelcontrol), async (key) => {
 						if (key === 'level') {
-							this.createValueCtrl(identifier, 'level', 'level 0..255', 0, 255, '', 'value.level');
+							await this.createValueCtrl(identifier, 'level', 'level 0..255', 0, 255, '', 'value.level');
 						} else if (key === 'levelpercentage') {
-							this.createValueCtrl(
+							await this.createValueCtrl(
 								identifier,
 								'levelpercentage',
 								'level in %',

@@ -91,4 +91,34 @@
             <relay_automatic/>
         </applymask>
     </template>
+    <template>>
+        <identifier>tmpB0C5B1-3BFD9472D</identifier>
+        <id>60200</id>
+        <functionbitmask>40960</functionbitmask>
+        <applymask>32</applymask>
+        <applymask>
+            <relay_manual></relay_manual>
+        </applymask>
+        <name>vlPlug10_Off</name>
+        <devices>
+            <device>
+                <identifier>11324 0596882-1</identifier>
+            </device>
+        </devices>
+    </template>>
+    <template>>
+        <identifier>tmpB0C5B1-3BFD943AE</identifier>
+        <id>60100</id>
+        <functionbitmask>40960</functionbitmask>
+        <applymask>32</applymask>
+        <applymask>
+            <relay_manual></relay_manual>
+        </applymask>
+        <name>vlPlug10_On</name>
+        <devices>
+            <device>
+                <identifier>11324 0596882-1</identifier>
+            </device>
+        </devices>
+    </template>>
 </templatelist>

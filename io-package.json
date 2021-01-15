@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.7",
+		"version": "2.1.8",
 		"news": {
+			"2.1.8": {
+				"en": "differentiation between switch/simpleonoff",
+				"de": "Unterscheidung zwischen Switch / Simpleonoff",
+				"ru": "различие между switch / simpleonoff",
+				"pt": "diferenciação entre switch / simpleonoff",
+				"nl": "differentiatie tussen switch / simpleonoff",
+				"fr": "différenciation entre switch / simpleonoff",
+				"it": "differenziazione tra switch / simpleonoff",
+				"es": "diferenciación entre switch / simpleonoff",
+				"pl": "rozróżnienie między przełącznikiem / prostym włączeniem",
+				"zh-cn": "切换/简单关闭之间的区别"
+			},
 			"2.1.7": {
 				"en": "correction of datatype boostactivetime/windowactivetime",
 				"de": "Korrektur des Datentyps boostactivetime / windowactivetime",

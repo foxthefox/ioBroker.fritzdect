@@ -131,7 +131,7 @@ class Fritzdect extends utils.Adapter {
 						settings.moreParam || '',
 						settings.strictSsl || true
 					);
-
+					this.log.info('fritzdect uses USER: ' + settings.Username);
 					await this.createDevices(fritz);
 					this.log.info('creating devices/groups finished ');
 					await this.createTemplates(fritz);
@@ -1205,6 +1205,7 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 						//always control if in absenk or komfort
+						//oder doch Night und Comfort vergessen?
 						const currentMode = 'Auto';
 						await this.setStateAsync('DECT_' + ain + '.operationmode', {
 							val: currentMode,

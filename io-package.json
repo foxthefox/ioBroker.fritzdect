@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.8",
+		"version": "2.1.9",
 		"news": {
+			"2.1.9": {
+				"en": "info to user which communicates with FB",
+				"de": "Informationen an den Benutzer, der mit dem FB kommuniziert",
+				"ru": "информация для пользователя, который общается с FB",
+				"pt": "informações para o usuário que se comunica com o FB",
+				"nl": "info voor gebruiker die communiceert met FB",
+				"fr": "info à l'utilisateur qui communique avec FB",
+				"it": "info all'utente che comunica con FB",
+				"es": "información al usuario que se comunica con FB",
+				"pl": "info dla użytkownika, który komunikuje się z FB",
+				"zh-cn": "与FB通讯的用户信息"
+			},
 			"2.1.8": {
 				"en": "differentiation between switch/simpleonoff",
 				"de": "Unterscheidung zwischen Switch / Simpleonoff",

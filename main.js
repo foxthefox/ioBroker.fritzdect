@@ -986,13 +986,21 @@ class Fritzdect extends utils.Adapter {
 								continue;
 							} else {
 								if (devices[i].hkr) {
-									currentMode = 'On';
+									currentMode = 'Auto';
 									if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
 										currentMode = 'Comfort';
 									}
 									if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
 										currentMode = 'Night';
 									}
+									//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
+									await this.setStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
+										{
+											val: currentMode,
+											ack: true
+										}
+									);
 								}
 								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 								// some weird id usage, the website shows the id of the etsiunit
@@ -1072,13 +1080,20 @@ class Fritzdect extends utils.Adapter {
 							);
 						} else {
 							if (device.hkr) {
-								currentMode = 'On';
+								currentMode = 'Auto';
 								if (device.hkr.tsoll === device.hkr.komfort) {
 									currentMode = 'Comfort';
 								}
 								if (device.hkr.tsoll === device.hkr.absenk) {
 									currentMode = 'Night';
 								}
+								await this.setStateAsync(
+									'DECT_' + device.identifier.replace(/\s/g, '') + '.operationmode',
+									{
+										val: currentMode,
+										ack: true
+									}
+								);
 							}
 							try {
 								this.log.debug(' calling update data .....');
@@ -1204,13 +1219,15 @@ class Fritzdect extends utils.Adapter {
 							val: 0,
 							ack: true
 						});
-						//always control if in absenk or komfort
-						//oder doch Night und Comfort vergessen?
+						//wurde schon übergeordnet gesetzt
+						//sollte nur noch durch On/Off/Summer/Holiday/Boost/Window überschrieben werden
+						/*
 						const currentMode = 'Auto';
 						await this.setStateAsync('DECT_' + ain + '.operationmode', {
 							val: currentMode,
 							ack: true
 						});
+						*/
 					} else if (value == 253) {
 						this.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?

@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.9",
+		"version": "2.1.10",
 		"news": {
+			"2.1.10": {
+				"en": "introducing Night, Comfort again",
+				"de": "Wir stellen Night, Comfort wieder vor",
+				"ru": "снова представляем Night, Comfort",
+				"pt": "apresentando Night, Comfort novamente",
+				"nl": "Introductie van Night, Comfort opnieuw",
+				"fr": "présentant à nouveau Night, Comfort",
+				"it": "presentando di nuovo Night, Comfort",
+				"es": "presentando Night, Comfort nuevamente",
+				"pl": "ponownie przedstawiamy Noc, komfort",
+				"zh-cn": "再次介绍“夜晚，舒适”"
+			},
 			"2.1.9": {
 				"en": "info to user which communicates with FB",
 				"de": "Informationen an den Benutzer, der mit dem FB kommuniziert",
@@ -290,7 +302,9 @@
 		"fritz_user": "admin",
 		"fritz_pw": "pw",
 		"fritz_interval": 300,
-		"fritz_strictssl": true
+		"fritz_strictssl": true,
+		"fritz_writeonhyst": false,
+		"fritz_hysteresis": 1
 	},
 	"objects": [],
 	"instanceObjects": []

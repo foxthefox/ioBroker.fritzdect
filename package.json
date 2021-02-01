@@ -19,7 +19,7 @@
 	"dependencies": {
 		"@iobroker/adapter-core": "^2.4.0",
 		"xml2json-light": "^1.0.6",
-		"@root/request": "^1.6.1"
+		"@root/request": "^1.7.0"
 	},
 	"devDependencies": {
 		"@iobroker/testing": "^2.4.1",

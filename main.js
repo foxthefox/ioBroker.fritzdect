@@ -1389,6 +1389,7 @@ class Fritzdect extends utils.Adapter {
 					this.log.info('create Templates ' + templates.length);
 					await this.createTemplateResponse();
 					await this.asyncForEach(templates, async (template) => {
+						console.log(JSON.stringify(template));
 						if (
 							(template.functionbitmask & 320) == 320 ||
 							(template.functionbitmask & 4160) == 4160 ||
@@ -1408,10 +1409,10 @@ class Fritzdect extends utils.Adapter {
 								role,
 								template.id
 							);
-						} else if ((template.functionbitmask & 0) == 0 && template.applymask == 256) {
+						} else if (template.functionbitmask == 0 && template.applymask == 256) {
 							//telefon template
 							typ = 'template_';
-							role = 'other';
+							role = 'switch';
 							this.log.debug('__________________________');
 							this.log.info('setting up Template ' + template.name);
 							await this.createTemplate(
@@ -1423,7 +1424,7 @@ class Fritzdect extends utils.Adapter {
 							);
 						} else {
 							this.log.debug(
-								'nix vorbereitet für diese Art von Template' +
+								'nix vorbereitet für diese Art von Template ' +
 									template.functionbitmask +
 									' -> ' +
 									template.name

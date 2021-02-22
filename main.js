@@ -1389,7 +1389,6 @@ class Fritzdect extends utils.Adapter {
 					this.log.info('create Templates ' + templates.length);
 					await this.createTemplateResponse();
 					await this.asyncForEach(templates, async (template) => {
-						console.log(JSON.stringify(template));
 						if (
 							(template.functionbitmask & 320) == 320 ||
 							(template.functionbitmask & 4160) == 4160 ||
@@ -1410,6 +1409,7 @@ class Fritzdect extends utils.Adapter {
 								template.id
 							);
 						} else if (template.functionbitmask == 0 && template.applymask[0] == 256) {
+							// no other way to identify this one, role as switch may be not right
 							//telefon template
 							typ = 'template_';
 							role = 'switch';

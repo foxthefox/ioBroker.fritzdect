@@ -6,6 +6,7 @@ Diese Meldung kann mehrere Ursachen haben und ist nicht zwingend ausschließlich
 ## mögliche Ursachen
 * USER/PW passen nicht zusammen
 * keine Berechtigung in der FB für diesen USER gesetzt
+* Anmeldung mit Benutzernamen nicht gesetzt
 * zu viele Logins zur gleichen Zeit
 * Sperrzeit nach erfolglosen login an FB. Die FB sperrt nach mehreren erfolglosen logins den Zugang. Der ablaufende Timer ist anfänglich kurz und verlängert sich, je weiter versucht wird sich anzumelden.
 * zu schnelles Polling im Adapter Config eingestellt (Voreinstellung 300s=5min), je nach Umfeld sind < 10s kritisch
@@ -16,6 +17,8 @@ Diese Meldung kann mehrere Ursachen haben und ist nicht zwingend ausschließlich
 ## Fehlersuche
 * Überprüfung USER/PW FB und ADAPTER
 * Überprüfung der Berechtigungen in der FB
+* Überprüfung ob bei Zugriff aus dem Heimnetz "Anmeldung mit Fritz!Box-Benutzernamen und Kennwort" gesetzt ist
+* über die Weboberfläche sich mit dem USER/PW einloggen
 * Überprüfung polling Intervall in der Adapter Config
 * adapter im debug-Modus starten und das log anschauen
     * wann passieren die Meldungen, in welchem Abstand (Abstand genau dem des pollings)
@@ -24,4 +27,4 @@ Diese Meldung kann mehrere Ursachen haben und ist nicht zwingend ausschließlich
     * wird das geloggt, was der Erwartungshaltung entspricht?
 * log in der FB anschauen
 * alternativ mit python ein login versuchen, Anleitung hier: [logintest](./logintest.md)
-* FB neu starten
+* ggf. FB neu starten

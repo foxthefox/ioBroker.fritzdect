@@ -1409,7 +1409,7 @@ class Fritzdect extends utils.Adapter {
 								role,
 								template.id
 							);
-						} else if (template.functionbitmask == 0 && template.applymask == 256) {
+						} else if (template.functionbitmask == 0 && template.applymask[0] == 256) {
 							//telefon template
 							typ = 'template_';
 							role = 'switch';

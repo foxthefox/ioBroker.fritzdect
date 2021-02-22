@@ -474,6 +474,52 @@ tests.integration(path.join(__dirname, '..'), {
 					});
 				});
 			}).timeout(20000);
+			it('Check values of template fritzfon, should be created', () => {
+				return new Promise((resolve) => {
+					const harness = getHarness();
+					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
+						obj.native.fritz_ip = 'http://localhost:3333';
+						obj.native.fritz_user = 'admin';
+						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
+						obj.native.fritz_pw = encrypt('Zgfr56gFe87jJOM', 'password');
+						obj.native.fritz_interval = 300;
+						obj.native.fritz_strictssl = true;
+						await harness._objects.setObjectAsync(obj._id, obj);
+
+						// Start the adapter and wait until it has started
+						await harness.startAdapterAndWait();
+						await delay(3000);
+						harness.states.getState('fritzdect.0.template_tmp7A1AB5-3C1F5CDF1.name', function(err, state) {
+							if (err) console.error(err);
+							expect(state).to.exist;
+							if (!state) {
+								console.error('state "fritzdect.0.template_tmp7A1AB5-3C1F5CDF1.name" not set');
+							} else {
+								console.log(
+									'fritzdect.0.DECT_template_tmp7A1AB5-3C1F5CDF1.name         ... ' + state.val
+								);
+							}
+							expect(state.val).to.exist;
+							expect(state.val).to.be.equal('FritzFonApp');
+							harness.states.getState('fritzdect.0.template_tmp7A1AB5-3C1F5CDF1.id', function(
+								err,
+								state
+							) {
+								if (err) console.error(err);
+								expect(state).to.exist;
+								if (!state) {
+									console.error('state "fritzdect.0.template_tmp7A1AB5-3C1F5CDF1.id" not set');
+								} else {
+									console.log('fritzdect.0.template_tmp7A1AB5-3C1F5CDF1.id ... ' + state.val);
+									expect(state.val).to.exist;
+									expect(state.val).to.be.equal('60106');
+									resolve();
+								}
+							});
+						});
+					});
+				});
+			}).timeout(20000);
 			it('set template and check last activated template ', () => {
 				return new Promise((resolve) => {
 					const harness = getHarness();

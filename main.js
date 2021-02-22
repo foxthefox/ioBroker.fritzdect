@@ -132,12 +132,15 @@ class Fritzdect extends utils.Adapter {
 						settings.strictSsl || true
 					);
 					this.log.info('fritzdect uses USER: ' + settings.Username);
+					this.log.info('start creating devices/groups');
 					await this.createDevices(fritz);
-					this.log.info('creating devices/groups finished ');
+					this.log.info('finished creating devices/groups (if any)');
+					this.log.info('start creating templates ');
 					await this.createTemplates(fritz);
-					this.log.info('creating templates finished ');
+					this.log.info('finished creating templates (if any) ');
+					this.log.info('start initial updating devices/groups');
 					await this.updateDevices(fritz);
-					this.log.info('initial updating devices/groups finished ');
+					this.log.info('finished initial updating devices/groups');
 					this.log.info('going over to cyclic polling, messages to poll activity only in debug-mode ');
 					if (!polling) {
 						polling = setInterval(async () => {
@@ -754,7 +757,13 @@ class Fritzdect extends utils.Adapter {
 					this.log.debug('msg with obj.command for test received');
 
 					// Send response in callback if required
-					if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
+					if (obj.callback)
+						this.sendTo(
+							obj.from,
+							obj.command,
+							'Message received (sendTo works). This is not an indication that FB is reachable!',
+							obj.callback
+						);
 				}
 			} else if (obj) {
 				//my own messages for detectiung are without a message
@@ -1390,6 +1399,19 @@ class Fritzdect extends utils.Adapter {
 							//heating template
 							typ = 'template_';
 							role = 'switch';
+							this.log.debug('__________________________');
+							this.log.info('setting up Template ' + template.name);
+							await this.createTemplate(
+								typ,
+								template.identifier.replace(/\s/g, ''),
+								template.name,
+								role,
+								template.id
+							);
+						} else if ((template.functionbitmask & 0) == 0 && template.applymask == 256) {
+							//telefon template
+							typ = 'template_';
+							role = 'other';
 							this.log.debug('__________________________');
 							this.log.info('setting up Template ' + template.name);
 							await this.createTemplate(

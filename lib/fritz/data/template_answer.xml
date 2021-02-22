@@ -121,4 +121,15 @@
             </device>
         </devices>
     </template>
+    <template>
+        <identifier>tmp7A1AB5-3C1F5CDF1</identifier>
+        <id>60106</id>
+        <functionbitmask>0</functionbitmask>
+        <applymask>256</applymask>
+        <applymask>
+            <dialhelper></dialhelper>
+        </applymask>
+        <name>FritzFonApp</name>
+        <devices></devices>
+  </template>
 </templatelist>

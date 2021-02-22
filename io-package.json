@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.10",
+		"version": "2.1.11",
 		"news": {
+			"2.1.11": {
+				"en": "template for fritzfanapp",
+				"de": "vorlage für fritzfanapp",
+				"ru": "шаблон для fritzfanapp",
+				"pt": "modelo para fritzfanapp",
+				"nl": "sjabloon voor fritzfanapp",
+				"fr": "modèle pour fritzfanapp",
+				"it": "modello per fritzfanapp",
+				"es": "plantilla para fritzfanapp",
+				"pl": "szablon dla fritzfanapp",
+				"zh-cn": "fritzfanapp的模板"
+			},
 			"2.1.10": {
 				"en": "introducing Night, Comfort again",
 				"de": "Wir stellen Night, Comfort wieder vor",

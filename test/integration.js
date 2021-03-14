@@ -142,7 +142,7 @@ tests.integration(path.join(__dirname, '..'), {
 												);
 											}
 											expect(state.val).to.exist;
-											expect(state.val).to.be.equal('FRITZ!DECT 500');
+											expect(state.val).to.be.equal('FRITZ!DECT Lampe');
 											harness.states.getState('fritzdect.0.DECT_130770018976-1.state', function(
 												err,
 												state

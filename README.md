@@ -182,7 +182,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * refactor to the format of as of "create adapter"
 
 ## Changelog
-### 2.1.11
+### 2.1.11 (npm)
 * template for fritzfon
 
 ### 2.1.10

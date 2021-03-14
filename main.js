@@ -1745,7 +1745,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// create humidity
 				if (device.humidity) {
-					this.log.info('setting up temperatur ');
+					this.log.info('setting up humidity ');
 					await this.asyncForEach(Object.keys(device.humidity), async (key) => {
 						if (key === 'rel_humidity') {
 							await this.createValueState(identifier, 'rel_humidity', 'relative Humidity', 0, 100, '%');

@@ -182,6 +182,9 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * refactor to the format of as of "create adapter"
 
 ## Changelog
+### 2.1.11
+* template for fritzfon
+
 ### 2.1.10
 * comfort/night is AUTO but reintroduced as operationmode
 

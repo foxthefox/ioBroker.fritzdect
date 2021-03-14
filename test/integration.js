@@ -159,7 +159,7 @@ tests.integration(path.join(__dirname, '..'), {
 													);
 												}
 												expect(state.val).to.exist;
-												expect(state.val).to.be.equal(true);
+												expect(state.val).to.be.equal(false);
 												harness.states.getState(
 													'fritzdect.0.DECT_130770018976-1.txbusy',
 													function(err, state) {

@@ -1,19 +1,31 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.11",
+		"version": "2.1.12",
 		"news": {
+			"2.1.12": {
+				"en": "new values for DECT500",
+				"de": "neue Werte für DECT500",
+				"ru": "новые значения для DECT500",
+				"pt": "novos valores para DECT500",
+				"nl": "nieuwe waarden voor DECT500",
+				"fr": "nouvelles valeurs pour DECT500",
+				"it": "nuovi valori per DECT500",
+				"es": "nuevos valores para DECT500",
+				"pl": "nowe wartości dla DECT500",
+				"zh-cn": "DECT500的新值"
+			},
 			"2.1.11": {
-				"en": "template for fritzfanapp",
-				"de": "vorlage für fritzfanapp",
-				"ru": "шаблон для fritzfanapp",
-				"pt": "modelo para fritzfanapp",
-				"nl": "sjabloon voor fritzfanapp",
-				"fr": "modèle pour fritzfanapp",
-				"it": "modello per fritzfanapp",
-				"es": "plantilla para fritzfanapp",
-				"pl": "szablon dla fritzfanapp",
-				"zh-cn": "fritzfanapp的模板"
+				"en": "template for fritzfonapp",
+				"de": "vorlage für fritzfonapp",
+				"ru": "шаблон для fritzfonapp",
+				"pt": "modelo para fritzfonapp",
+				"nl": "sjabloon voor fritzfonapp",
+				"fr": "modèle pour fritzfonapp",
+				"it": "modello per fritzfonapp",
+				"es": "plantilla para fritzfonapp",
+				"pl": "szablon dla fritzfonapp",
+				"zh-cn": "fritzfonapp的模板"
 			},
 			"2.1.10": {
 				"en": "introducing Night, Comfort again",

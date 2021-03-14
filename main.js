@@ -25,12 +25,21 @@ let polling;
 6: Der Heizkörperregler passt sich nun an den Hub des Heizungsventils an.
 */
 
+/* errorcodes blind
+alert state
+Beim Rollladen als Bitmaske auszuwerten.
+0000 0000 - Es liegt kein Fehler vor.
+0000 0001 - Hindernisalarm, der Rollladen wird gestoppt und ein kleines Stück in entgegengesetzte Richtung bewegt.
+0000 0010 - Temperaturalarm, Motor überhitzt.
+*/
+
 /* HANFUN unittypes
 256 = SIMPLE_ON_OFF_SWITCHABLE
 257 = SIMPLE_ON_OFF_SWITCH
 262 = AC_OUTLET
 263 = AC_OUTLET_SIMPLE_POWER_METERING
 264 = SIMPLE_LIGHT 265 = DIMMABLE_LIGHT
+265 = DIMMABLE_LIGHT
 266 = DIMMER_SWITCH
 273 = SIMPLE_BUTTON
 277 = COLOR_BULB
@@ -53,8 +62,8 @@ let polling;
 512 = ON_OFF
 513 = LEVEL_CTRL
 514 = COLOR_CTRL
-516 = ? detected with blinds, different alert?
-517 = ? detected with blinds, different alerttimestamp
+516 = OPEN_CLOSE ? detected with blinds, different alert -> status bits?
+517 = OPEN_CLOSE_CONFIG ? detected with blinds
 768 = ?
 772 = SIMPLE_BUTTON
 1024 = SUOTA-Update
@@ -1273,9 +1282,14 @@ class Fritzdect extends utils.Adapter {
 					key == 'holidayactive' ||
 					key == 'boostactive' ||
 					key == 'windowopenactiv' ||
-					key == 'synchronized'
+					key == 'synchronized' ||
+					key == 'fullcolorsupport' ||
+					key == 'mapped'
 				) {
-					//bool
+					// hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
+					// if ( value.length() >1 ) { await this.setStateAsync('DECT_' + ain + '.' + key, {	val: value.toString(), ack: true });} else {}
+					// oder eben alles ungleich 0 ist erstmal Fehler
+					// bool
 					const convertValue = value == 1 ? true : false;
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
 						val: convertValue,
@@ -1333,7 +1347,9 @@ class Fritzdect extends utils.Adapter {
 					key == 'temperature' ||
 					key == 'supported_modes' ||
 					key == 'current_mode' ||
-					key == 'rel_humidity'
+					key == 'rel_humidity' ||
+					key == 'unmapped_hue' ||
+					key == 'unmapped_saturation'
 				) {
 					// integer number
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
@@ -1668,6 +1684,7 @@ class Fritzdect extends utils.Adapter {
 					}
 				}
 				//create alert
+				// hier irgendwie blinds alart als string behandeln. :-((
 				if (device.alert) {
 					this.log.info('setting up alert ');
 					await this.asyncForEach(Object.keys(device.alert), async (key) => {
@@ -1915,6 +1932,10 @@ class Fritzdect extends utils.Adapter {
 							await this.createModeState(identifier, 'supported_modes', 'available color modes');
 						} else if (key === 'current_mode') {
 							await this.createModeState(identifier, 'current_mode', 'current color mode');
+						} else if (key === 'fullcolorsupport') {
+							await this.createIndicatorState(identifier, 'fullcolorsupport', 'Full Color Support');
+						} else if (key === 'mapped') {
+							await this.createIndicatorState(identifier, 'mapped', 'Mapped Indicator');
 						} else if (key === 'hue') {
 							await this.createValueCtrl(identifier, 'hue', 'HUE color', 0, 359, '°', 'value.hue');
 						} else if (key === 'saturation') {
@@ -1926,6 +1947,17 @@ class Fritzdect extends utils.Adapter {
 								255,
 								'',
 								'value.saturation'
+							);
+						} else if (key === 'unmapped_hue') {
+							await this.createValueState(identifier, 'unmapped_hue', 'unmapped hue value', 0, 359, '°');
+						} else if (key === 'unmapped_saturation>') {
+							await this.createValueState(
+								identifier,
+								'unmapped_saturation',
+								'unmapped saturation value',
+								0,
+								255,
+								''
 							);
 						} else if (key === 'temperature') {
 							await this.createValueCtrl(

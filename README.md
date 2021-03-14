@@ -135,6 +135,10 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 |*tchange*|number|-|temp with next change in °C| |DECT3x0| | | | | |
 |*endperiod*|time|-|time when next change is active| |DECT3x0| | | | | |
 |supported_modes|number|-|supported colormodes| | | | |DECT500| | |
+|*fullcolorsupport*|boolean|-|fullcolorsupport| | | | |DECT500| | |
+|*mapped*|boolean|-|indication mapped| | | | |DECT500| | |
+|*unmapped_hue*|number|-|unmapped hue value| | | | |DECT500| | |
+|*unmapped_saturation*|number|-|unmapped saturation value| | | | |DECT500| | |
 |current_mode|number|-|actual colormode| | | | |DECT500| | |
 |level|number|x|level 0-255 | | | | |DECT500|Blinds| |
 |levelpercentage|number|x|level 0-100 % | | | | |DECT500|Blinds| |
@@ -182,6 +186,9 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * refactor to the format of as of "create adapter"
 
 ## Changelog
+### 2.1.12
+* new values for DECT500
+
 ### 2.1.11 (npm)
 * template for fritzfon
 

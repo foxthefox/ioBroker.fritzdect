@@ -30,6 +30,51 @@
 			</hkr>
 		</device>
 		<device>
+			<identifier>13077 0018976</identifier>
+			<id>408</id>
+			<functionbitmask>1</functionbitmask>
+			<fwversion>34.10.16.16.015</fwversion>
+			<manufacturer>AVM</manufacturer>
+			<productname>FRITZ!DECT 500</productname>
+			<present>1</present>
+			<txbusy>0</txbusy>
+			<name>FRITZ!DECT Lampe</name>
+		</device>
+		<device>
+			<identifier>13077 0018976-1</identifier>
+			<id>2001</id>
+			<functionbitmask>237572</functionbitmask>
+			<fwversion>0.0</fwversion>
+			<manufacturer>AVM</manufacturer>
+			<productname>FRITZ!DECT 500</productname>
+			<present>1</present>
+			<txbusy>0</txbusy>
+			<name>FRITZ!DECT Lampe</name>
+			<simpleonoff>
+				<state>0</state>
+			</simpleonoff>
+			<levelcontrol>
+				<level>175</level>
+				<levelpercentage>69</levelpercentage>
+			</levelcontrol>
+			<colorcontrol>
+				<supported_modes>5</supported_modes>
+				<current_mode>1</current_mode>
+				<fullcolorsupport>1</fullcolorsupport>
+				<mapped>1</mapped>
+				<hue>35</hue>
+				<saturation>214</saturation>
+				<unmapped_hue>15</unmapped_hue>
+				<unmapped_saturation>255</unmapped_saturation>
+				<temperature></temperature>
+			</colorcontrol>
+			<etsiunitinfo>
+				<etsideviceid>408</etsideviceid>
+				<unittype>278</unittype>
+				<interfaces>512,514,513</interfaces>
+			</etsiunitinfo>
+		</device>
+		<device>
 			<identifier>08761 0006161</identifier>
 			<id>16</id>
 			<functionbitmask>2944</functionbitmask>

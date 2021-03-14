@@ -65,6 +65,464 @@ tests.integration(path.join(__dirname, '..'), {
 				});
 			}).timeout(20000);
 			*/
+			it('Check values of Lamp DECT500 color with extended states, should be created', () => {
+				return new Promise((resolve) => {
+					const harness = getHarness();
+					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
+						obj.native.fritz_ip = 'http://localhost:3333';
+						obj.native.fritz_user = 'admin';
+						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
+						obj.native.fritz_pw = encrypt('Zgfr56gFe87jJOM', 'password');
+						obj.native.fritz_interval = 300;
+						obj.native.fritz_strictssl = true;
+						await harness._objects.setObjectAsync(obj._id, obj);
+
+						// Start the adapter and wait until it has started
+						await harness.startAdapterAndWait();
+						await delay(3000);
+						harness.states.getState('fritzdect.0.DECT_130770018976-1.productname', function(err, state) {
+							if (err) console.error(err);
+							expect(state).to.exist;
+							if (!state) {
+								console.error('state "fritzdect.0.DECT_130770018976-1.productname" not set');
+							} else {
+								console.log('fritzdect.0.DECT_130770018976-1.productname     ... ' + state.val);
+							}
+							expect(state.val).to.exist;
+							expect(state.val).to.be.equal('FRITZ!DECT 500');
+							harness.states.getState('fritzdect.0.DECT_130770018976-1.manufacturer', function(
+								err,
+								state
+							) {
+								if (err) console.error(err);
+								expect(state).to.exist;
+								if (!state) {
+									console.error('state "fritzdect.0.DECT_130770018976-1.manufacturer" not set');
+								} else {
+									console.log('fritzdect.0.DECT_130770018976-1.manufacturer ... ' + state.val);
+								}
+								expect(state.val).to.exist;
+								expect(state.val).to.be.equal('AVM');
+								harness.states.getState('fritzdect.0.DECT_130770018976-1.fwversion', function(
+									err,
+									state
+								) {
+									if (err) console.error(err);
+									expect(state).to.exist;
+									if (!state) {
+										console.error('state "fritzdect.0.DECT_130770018976-1.fwversion" not set');
+									} else {
+										console.log('fritzdect.0.DECT_130770018976-1.fwversion    ... ' + state.val);
+									}
+									expect(state.val).to.exist;
+									expect(state.val).to.be.equal('0.0');
+									harness.states.getState('fritzdect.0.DECT_130770018976-1.id', function(err, state) {
+										if (err) console.error(err);
+										expect(state).to.exist;
+										if (!state) {
+											console.error('state "fritzdect.0.DECT_130770018976-1.id" not set');
+										} else {
+											console.log(
+												'fritzdect.0.DECT_130770018976-1.id             ... ' + state.val
+											);
+										}
+										expect(state.val).to.exist;
+										expect(state.val).to.be.equal('408');
+										harness.states.getState('fritzdect.0.DECT_130770018976-1.name', function(
+											err,
+											state
+										) {
+											if (err) console.error(err);
+											expect(state).to.exist;
+											if (!state) {
+												console.error('state "fritzdect.0.DECT_130770018976-1.name" not set');
+											} else {
+												console.log(
+													'fritzdect.0.DECT_130770018976-1.name     ... ' + state.val
+												);
+											}
+											expect(state.val).to.exist;
+											expect(state.val).to.be.equal('FRITZ!DECT 500');
+											harness.states.getState('fritzdect.0.DECT_130770018976-1.state', function(
+												err,
+												state
+											) {
+												if (err) console.error(err);
+												expect(state).to.exist;
+												if (!state) {
+													console.error(
+														'state "fritzdect.0.DECT_130770018976-1.state" not set'
+													);
+												} else {
+													console.log(
+														'fritzdect.0.DECT_130770018976-1.state    ... ' + state.val
+													);
+												}
+												expect(state.val).to.exist;
+												expect(state.val).to.be.equal(true);
+												harness.states.getState(
+													'fritzdect.0.DECT_130770018976-1.txbusy',
+													function(err, state) {
+														if (err) console.error(err);
+														expect(state).to.exist;
+														if (!state) {
+															console.error(
+																'state "fritzdect.0.DECT_130770018976-1.txbusy" not set'
+															);
+														} else {
+															console.log(
+																'fritzdect.0.DECT_130770018976-1.txbusy     ... ' +
+																	state.val
+															);
+														}
+														expect(state.val).to.exist;
+														expect(state.val).to.be.equal(false);
+														harness.states.getState(
+															'fritzdect.0.DECT_130770018976-1.present',
+															function(err, state) {
+																if (err) console.error(err);
+																expect(state).to.exist;
+																if (!state) {
+																	console.error(
+																		'state "fritzdect.0.DECT_130770018976-1.present not set'
+																	);
+																} else {
+																	console.log(
+																		'fritzdect.0.DECT_130770018976-1.present  ... ' +
+																			state.val
+																	);
+																}
+																expect(state.val).to.exist;
+																expect(state.val).to.be.equal(true);
+																harness.states.getState(
+																	'fritzdect.0.DECT_130770018976-1.level',
+																	function(err, state) {
+																		if (err) console.error(err);
+																		expect(state).to.exist;
+																		if (!state) {
+																			console.error(
+																				'state "fritzdect.0.DECT_130770018976-1.level" not set'
+																			);
+																		} else {
+																			console.log(
+																				'fritzdect.0.DECT_130770018976-1.level    ... ' +
+																					state.val
+																			);
+																		}
+																		expect(state.val).to.exist;
+																		expect(state.val).to.be.equal(175);
+																		harness.states.getState(
+																			'fritzdect.0.DECT_130770018976-1.levelpercentage',
+																			function(err, state) {
+																				if (err) console.error(err);
+																				expect(state).to.exist;
+																				if (!state) {
+																					console.error(
+																						'state "fritzdect.0.DECT_130770018976-1.levelpercentage" not set'
+																					);
+																				} else {
+																					console.log(
+																						'fritzdect.0.DECT_130770018976-1.levelpercentage    ... ' +
+																							state.val
+																					);
+																				}
+																				expect(state.val).to.exist;
+																				expect(state.val).to.be.equal(69);
+																				harness.states.getState(
+																					'fritzdect.0.DECT_130770018976-1.supported_modes',
+																					function(err, state) {
+																						if (err) console.error(err);
+																						expect(state).to.exist;
+																						if (!state) {
+																							console.error(
+																								'state "fritzdect.0.DECT_130770018976-1.supported_modes" not set'
+																							);
+																						} else {
+																							console.log(
+																								'fritzdect.0.DECT_130770018976-1.supported_modes    ... ' +
+																									state.val
+																							);
+																						}
+																						expect(state.val).to.exist;
+																						expect(state.val).to.be.equal(
+																							5
+																						);
+																						harness.states.getState(
+																							'fritzdect.0.DECT_130770018976-1.current_mode',
+																							function(err, state) {
+																								if (err)
+																									console.error(err);
+																								expect(state).to.exist;
+																								if (!state) {
+																									console.error(
+																										'state "fritzdect.0.DECT_130770018976-1.current_mode" not set'
+																									);
+																								} else {
+																									console.log(
+																										'fritzdect.0.DECT_130770018976-1.current_mode    ... ' +
+																											state.val
+																									);
+																								}
+																								expect(state.val).to
+																									.exist;
+																								expect(
+																									state.val
+																								).to.be.equal(1);
+																								harness.states.getState(
+																									'fritzdect.0.DECT_130770018976-1.hue',
+																									function(
+																										err,
+																										state
+																									) {
+																										if (err)
+																											console.error(
+																												err
+																											);
+																										expect(state).to
+																											.exist;
+																										if (!state) {
+																											console.error(
+																												'state "fritzdect.0.DECT_130770018976-1.hue" not set'
+																											);
+																										} else {
+																											console.log(
+																												'fritzdect.0.DECT_130770018976-1.hue    ... ' +
+																													state.val
+																											);
+																										}
+																										expect(
+																											state.val
+																										).to.exist;
+																										expect(
+																											state.val
+																										).to.be.equal(
+																											35
+																										);
+																										harness.states.getState(
+																											'fritzdect.0.DECT_130770018976-1.saturation',
+																											function(
+																												err,
+																												state
+																											) {
+																												if (err)
+																													console.error(
+																														err
+																													);
+																												expect(
+																													state
+																												).to
+																													.exist;
+																												if (
+																													!state
+																												) {
+																													console.error(
+																														'state "fritzdect.0.DECT_130770018976-1.saturation" not set'
+																													);
+																												} else {
+																													console.log(
+																														'fritzdect.0.DECT_130770018976-1.saturation    ... ' +
+																															state.val
+																													);
+																												}
+																												expect(
+																													state.val
+																												).to
+																													.exist;
+																												expect(
+																													state.val
+																												).to.be.equal(
+																													214
+																												);
+																												harness.states.getState(
+																													'fritzdect.0.DECT_130770018976-1.fullcolorsupport',
+																													function(
+																														err,
+																														state
+																													) {
+																														if (
+																															err
+																														)
+																															console.error(
+																																err
+																															);
+																														expect(
+																															state
+																														)
+																															.to
+																															.exist;
+																														if (
+																															!state
+																														) {
+																															console.error(
+																																'state "fritzdect.0.DECT_130770018976-1.fullcolorsupport" not set'
+																															);
+																														} else {
+																															console.log(
+																																'fritzdect.0.DECT_130770018976-1.fullcolorsupport   ... ' +
+																																	state.val
+																															);
+																															expect(
+																																state.val
+																															)
+																																.to
+																																.exist;
+																															expect(
+																																state.val
+																															).to.be.equal(
+																																true
+																															);
+																															harness.states.getState(
+																																'fritzdect.0.DECT_130770018976-1.mapped',
+																																function(
+																																	err,
+																																	state
+																																) {
+																																	if (
+																																		err
+																																	)
+																																		console.error(
+																																			err
+																																		);
+																																	expect(
+																																		state
+																																	)
+																																		.to
+																																		.exist;
+																																	if (
+																																		!state
+																																	) {
+																																		console.error(
+																																			'state "fritzdect.0.DECT_130770018976-1.mapped" not set'
+																																		);
+																																	} else {
+																																		console.log(
+																																			'fritzdect.0.DECT_130770018976-1.mapped   ... ' +
+																																				state.val
+																																		);
+																																		expect(
+																																			state.val
+																																		)
+																																			.to
+																																			.exist;
+																																		expect(
+																																			state.val
+																																		).to.be.equal(
+																																			true
+																																		);
+																																		harness.states.getState(
+																																			'fritzdect.0.DECT_130770018976-1.unmapped_hue',
+																																			function(
+																																				err,
+																																				state
+																																			) {
+																																				if (
+																																					err
+																																				)
+																																					console.error(
+																																						err
+																																					);
+																																				expect(
+																																					state
+																																				)
+																																					.to
+																																					.exist;
+																																				if (
+																																					!state
+																																				) {
+																																					console.error(
+																																						'state "fritzdect.0.DECT_130770018976-1.unmapped_hue" not set'
+																																					);
+																																				} else {
+																																					console.log(
+																																						'fritzdect.0.DECT_130770018976-1.unmapped_hue   ... ' +
+																																							state.val
+																																					);
+																																					expect(
+																																						state.val
+																																					)
+																																						.to
+																																						.exist;
+																																					expect(
+																																						state.val
+																																					).to.be.equal(
+																																						15
+																																					);
+																																					harness.states.getState(
+																																						'fritzdect.0.DECT_130770018976-1.unmapped_saturation',
+																																						function(
+																																							err,
+																																							state
+																																						) {
+																																							if (
+																																								err
+																																							)
+																																								console.error(
+																																									err
+																																								);
+																																							expect(
+																																								state
+																																							)
+																																								.to
+																																								.exist;
+																																							if (
+																																								!state
+																																							) {
+																																								console.error(
+																																									'state "fritzdect.0.DECT_130770018976-1.unmapped_saturation" not set'
+																																								);
+																																							} else {
+																																								console.log(
+																																									'fritzdect.0.DECT_130770018976-1.unmapped_saturation   ... ' +
+																																										state.val
+																																								);
+																																								expect(
+																																									state.val
+																																								)
+																																									.to
+																																									.exist;
+																																								expect(
+																																									state.val
+																																								).to.be.equal(
+																																									255
+																																								);
+																																								resolve();
+																																							}
+																																						}
+																																					);
+																																				}
+																																			}
+																																		);
+																																	}
+																																}
+																															);
+																														}
+																													}
+																												);
+																											}
+																										);
+																									}
+																								);
+																							}
+																						);
+																					}
+																				);
+																			}
+																		);
+																	}
+																);
+															}
+														);
+													}
+												);
+											});
+										});
+									});
+								});
+							});
+						});
+					});
+				});
+			}).timeout(20000);
 			it('Fritzdect 200 schould be created', () => {
 				return new Promise((resolve) => {
 					// Create a fresh harness instance each test!

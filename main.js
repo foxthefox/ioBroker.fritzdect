@@ -1950,7 +1950,7 @@ class Fritzdect extends utils.Adapter {
 							);
 						} else if (key === 'unmapped_hue') {
 							await this.createValueState(identifier, 'unmapped_hue', 'unmapped hue value', 0, 359, '°');
-						} else if (key === 'unmapped_saturation>') {
+						} else if (key === 'unmapped_saturation') {
 							await this.createValueState(
 								identifier,
 								'unmapped_saturation',

@@ -1541,6 +1541,7 @@ class Fritzdect extends utils.Adapter {
 			} else if (
 				(device.functionbitmask & 16) == 16 ||
 				(device.functionbitmask & 8) == 8 ||
+				(device.functionbitmask & 32768) == 32768 ||
 				(device.functionbitmask & 32) == 32
 			) {
 				//Alarm, Contact Sensor

@@ -3446,7 +3446,7 @@ tests.integration(path.join(__dirname, '..'), {
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
 						await delay(3000);
-						//set a command and after fritzbix comm it should be returend in process image
+						//set a command and after fritzbox comm it should be returend in process image
 						harness.states.setState(
 							'fritzdect.0.template_tmp6F0093-391363146.toggle',
 							{ val: true, ack: false },
@@ -3472,9 +3472,9 @@ tests.integration(path.join(__dirname, '..'), {
 					});
 				});
 			}).timeout(20000);
-			/*
+
 			it('Command to DECT200 and check the set datapoint after successful communication', () => {
-				return new Promise( (resolve) => {
+				return new Promise((resolve) => {
 					const harness = getHarness();
 					harness._objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						obj.native.fritz_ip = 'http://localhost:3333';
@@ -3488,20 +3488,33 @@ tests.integration(path.join(__dirname, '..'), {
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
 						await delay(3000);
-						//set a command and after fritzbix comm it should be returend in process image
-						harness.states.setState('fritzdect.0.DECT_087610006161', {val: false, ack: false, from: 'test.0'}, function (err) {
-							if (err) {
-								console.log(err);
+						//set a command and after fritzbox comm it should be returend in process image
+						harness.states.setState(
+							'fritzdect.0.DECT_087610006161.state',
+							{ val: false, ack: false },
+							async function(err) {
+								if (err) {
+									console.log(err);
+								}
+								await delay(1000);
+								harness.states.getState('fritzdect.0.DECT_087610006161.state', function(err, state) {
+									if (err) console.error(err);
+									expect(state).to.exist;
+									if (!state) {
+										console.error('state "fritzdect.0.DECT_087610006161.state" not set');
+									} else {
+										console.log('fritzdect.0.DECT_087610006161.state ... ' + state.val);
+										expect(state.val).to.exist;
+										expect(state.val).to.be.equal(false);
+										resolve();
+									}
+								});
 							}
-							checkValueOfState('fritzdect.0.DECT_087610006161', false, function() {
-								resolve();
-							});
-						});
-
+						);
 					});
 				});
 			}).timeout(20000);
-			*/
+
 			/*
 			it('Should work, to send a message', () => {
 				return new Promise( (resolve) => {

@@ -29,8 +29,8 @@ let polling;
 alert state
 Beim Rollladen als Bitmaske auszuwerten.
 0000 0000 - Es liegt kein Fehler vor.
-0000 0001 - Hindernisalarm, der Rollladen wird gestoppt und ein kleines Stück in entgegengesetzte Richtung bewegt.
-0000 0010 - Temperaturalarm, Motor überhitzt.
+0000 0001 - Hindernisalarm, der Rollladen wird gestoppt und ein kleines Stück in entgegengesetzte Richtung bewegt.
+0000 0010 - Temperaturalarm, Motor überhitzt.
 */
 
 /* HANFUN unittypes
@@ -1167,6 +1167,9 @@ class Fritzdect extends utils.Adapter {
 
 	async updateDatapoint(key, value, ain) {
 		this.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
+		if (this.config.fritz_writeonhyst) {
+			this.log.debug('writing only delta values !');
+		}
 		try {
 			if (!value || value == '') {
 				this.log.debug(' no value for updating in ' + key);
@@ -1175,6 +1178,8 @@ class Fritzdect extends utils.Adapter {
 					ack: true
 				});
 			} else {
+				//Altwert für alle die über "key" erreicht werden
+				const old = await this.getStateAsync('DECT_' + ain + '.' + key);
 				if (key == 'nextchange') {
 					//fasthack anstatt neue objekterkennung
 					await this.updateData(value, ain);
@@ -1190,39 +1195,50 @@ class Fritzdect extends utils.Adapter {
 					// bool mal anders herum
 					const batt = value == 0 ? false : true;
 					/*
-				if (value == 0) {
-					let batt = false;
-				} else {
-					let batt = true;
-				}
-				*/
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: batt,
-						ack: true
-					});
+					if (value == 0) {
+						let batt = false;
+					} else {
+						let batt = true;
+					}
+					*/
+					if ((old !== null && old.val !== batt) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: batt,
+							ack: true
+						});
+					}
 				} else if (key == 'celsius' || key == 'offset') {
 					//numbers
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 10,
-						ack: true
-					});
+					if ((old !== null && old.val !== parseFloat(value) / 10) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value) / 10,
+							ack: true
+						});
+					}
 				} else if (key == 'power' || key == 'voltage') {
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 1000,
-						ack: true
-					});
+					if ((old !== null && old.val !== parseFloat(value) / 1000) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value) / 1000,
+							ack: true
+						});
+					}
 				} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 2,
-						ack: true
-					});
+					if ((old !== null && old.val !== parseFloat(value) / 2) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value) / 2,
+							ack: true
+						});
+					}
 				} else if (key == 'humidity') {
 					//e.g humidity
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value),
-						ack: true
-					});
+					if ((old !== null && old.val !== parseFloat(value)) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value),
+							ack: true
+						});
+					}
 				} else if (key == 'tsoll') {
+					// hier muß nochwas zu writonhyst rein
 					if (value < 57) {
 						// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
@@ -1291,37 +1307,40 @@ class Fritzdect extends utils.Adapter {
 					// oder eben alles ungleich 0 ist erstmal Fehler
 					// bool
 					const convertValue = value == 1 ? true : false;
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: convertValue,
-						ack: true
-					});
-					if (key == 'summeractive' && convertValue == true) {
-						const currentMode = 'Summer';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
+					if ((old !== null && old.val !== convertValue) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: convertValue,
 							ack: true
 						});
-					}
-					if (key == 'holidayactive' && convertValue == true) {
-						const currentMode = 'Holiday';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-					if (key == 'boostactive' && convertValue == true) {
-						const currentMode = 'Boost';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-					if (key == 'windowopenactiv' && convertValue == true) {
-						const currentMode = 'WindowOpen';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
+						// die Prüfungen hier hineingeschoben, da ja die Änderung schonmal da sein muß und dann gibt es auch Update zu oprerationmode
+						if (key == 'summeractive' && convertValue == true) {
+							const currentMode = 'Summer';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
+						if (key == 'holidayactive' && convertValue == true) {
+							const currentMode = 'Holiday';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
+						if (key == 'boostactive' && convertValue == true) {
+							const currentMode = 'Boost';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
+						if (key == 'windowopenactiv' && convertValue == true) {
+							const currentMode = 'WindowOpen';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
 					}
 				} else if (
 					key == 'lastalertchgtimestamp' ||
@@ -1332,10 +1351,12 @@ class Fritzdect extends utils.Adapter {
 				) {
 					//time
 					const convTime = new Date(value * 1000);
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: convTime,
-						ack: true
-					});
+					if ((old !== null && old.val !== convTime) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: convTime,
+							ack: true
+						});
+					}
 				} else if (
 					key == 'errorcode' ||
 					key == 'level' ||
@@ -1352,10 +1373,12 @@ class Fritzdect extends utils.Adapter {
 					key == 'unmapped_saturation'
 				) {
 					// integer number
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseInt(value),
-						ack: true
-					});
+					if ((old !== null && old.val !== parseInt(value)) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseInt(value),
+							ack: true
+						});
+					}
 				} else if (
 					key == 'id' ||
 					key == 'fwversion' ||
@@ -1368,10 +1391,12 @@ class Fritzdect extends utils.Adapter {
 				) {
 					// || 'id' , id schon beim initialisieren gesetzt
 					// text
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: value.toString(),
-						ack: true
-					});
+					if ((old !== null && old.val !== value.toString()) || !this.config.fritz_writeonhyst) {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: value.toString(),
+							ack: true
+						});
+					}
 				} else {
 					// unbekannt
 					this.log.warn(

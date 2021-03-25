@@ -29,8 +29,8 @@ let polling;
 alert state
 Beim Rollladen als Bitmaske auszuwerten.
 0000 0000 - Es liegt kein Fehler vor.
-0000 0001 - Hindernisalarm, der Rollladen wird gestoppt und ein kleines Stück in entgegengesetzte Richtung bewegt.
-0000 0010 - Temperaturalarm, Motor überhitzt.
+0000 0001 - Hindernisalarm, der Rollladen wird gestoppt und ein kleines Stück in entgegengesetzte Richtung bewegt.
+0000 0010 - Temperaturalarm, Motor überhitzt.
 */
 
 /* HANFUN unittypes
@@ -1113,6 +1113,7 @@ class Fritzdect extends utils.Adapter {
 									}
 								);
 							}
+							//hier könnte nochmal simpleonoff rein, wenn gruppen beides hätten
 							try {
 								this.log.debug(' calling update data .....');
 								this.updateData(device, device.identifier.replace(/\s/g, ''));
@@ -1518,7 +1519,7 @@ class Fritzdect extends utils.Adapter {
 			if ((device.functionbitmask & 64) == 64) {
 				//DECT300/301
 				role = 'thermo.heat';
-			} else if ((device.functionbitmask & 512) == 512) {
+			} else if ((device.functionbitmask & 32768) == 32768 || (device.functionbitmask & 512) == 512) {
 				//DECT200/210
 				role = 'switch';
 			} else if ((device.functionbitmask & 256) == 256) {
@@ -1541,7 +1542,6 @@ class Fritzdect extends utils.Adapter {
 			} else if (
 				(device.functionbitmask & 16) == 16 ||
 				(device.functionbitmask & 8) == 8 ||
-				(device.functionbitmask & 32768) == 32768 ||
 				(device.functionbitmask & 32) == 32
 			) {
 				//Alarm, Contact Sensor
@@ -1900,6 +1900,10 @@ class Fritzdect extends utils.Adapter {
 						if (key === 'state') {
 							await this.createSwitch(identifier, 'state', 'Simple ON/OFF state and cmd');
 							await this.createInfoState(identifier, 'switchtype', 'Switch Type');
+							await this.setStateAsync('DECT_' + identifier + '.switchtype', {
+								val: 'simpleonoff',
+								ack: true
+							});
 						} else {
 							this.log.warn(' new datapoint in API detected -> ' + key);
 						}

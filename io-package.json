@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.12",
+		"version": "2.1.13",
 		"news": {
+			"2.1.13": {
+				"en": "correction at group of switches -> switchtype = simpleonoff",
+				"de": "Korrektur an der Gruppe von Schaltern -> switchtype = simpleonoff",
+				"ru": "исправление в группе переключателей -> switchtype = simpleonoff",
+				"pt": "correção no grupo de interruptores -> switchtype = simpleonoff",
+				"nl": "correctie bij groep schakelaars -> switchtype = simpleonoff",
+				"fr": "correction au niveau du groupe de commutateurs -> switchtype = simpleonoff",
+				"it": "correzione al gruppo di interruttori -> switchtype = simpleonoff",
+				"es": "corrección en grupo de interruptores -> switchtype = simpleonoff",
+				"pl": "korekta na grupie przełączników -> switchtype = simpleonoff",
+				"zh-cn": "开关组的校正-> switchtype = simpleonoff"
+			},
 			"2.1.12": {
 				"en": "new values for DECT500",
 				"de": "neue Werte für DECT500",

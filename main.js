@@ -265,13 +265,13 @@ class Fritzdect extends utils.Adapter {
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 0, ack: false }); //damit das Ventil auch regelt
 								fritz
 									.setTempTarget(id, state.val)
-									.then(async () => {
+									.then(() => {
 										this.log.debug('Set target temp ' + id + state.val + ' °C');
-										await this.setStateAsync('DECT_' + id + '.lasttarget', {
+										this.setStateAsync('DECT_' + id + '.lasttarget', {
 											val: state.val,
 											ack: true
 										}); //iobroker Tempwahl wird zum letzten Wert gespeichert
-										await this.setStateAsync('DECT_' + id + '.tsoll', {
+										this.setStateAsync('DECT_' + id + '.tsoll', {
 											val: state.val,
 											ack: true
 										}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -294,12 +294,16 @@ class Fritzdect extends utils.Adapter {
 											}
 											fritz
 												.setTempTarget(id, setTemp)
-												.then(async () => {
+												.then(() => {
 													this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
-													await this.setStateAsync('DECT_' + id + '.tsoll', {
+													this.setStateAsync('DECT_' + id + '.tsoll', {
 														val: setTemp,
 														ack: true
 													}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+													this.setStateAsync('DECT_' + id + '.operationmode', {
+														val: 'Auto',
+														ack: true
+													}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 												})
 												.catch((e) => this.errorHandler(e));
 										} else {
@@ -314,6 +318,10 @@ class Fritzdect extends utils.Adapter {
 									.setTempTarget(id, 'off')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed.');
+										this.setStateAsync('DECT_' + id + '.operationmode', {
+											val: 'Off',
+											ack: true
+										}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 									})
 									.catch((e) => this.errorHandler(e));
 							} else if (state.val === 2) {
@@ -321,6 +329,10 @@ class Fritzdect extends utils.Adapter {
 									.setTempTarget(id, 'on')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
+										this.setStateAsync('DECT_' + id + '.operationmode', {
+											val: 'On',
+											ack: true
+										}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 									})
 									.catch((e) => this.errorHandler(e));
 							}
@@ -341,12 +353,20 @@ class Fritzdect extends utils.Adapter {
 										}
 										fritz
 											.setTempTarget(id, setTemp)
-											.then(async () => {
+											.then(() => {
 												this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
-												await this.setStateAsync('DECT_' + id + '.tsoll', {
+												this.setStateAsync('DECT_' + id + '.tsoll', {
 													val: setTemp,
 													ack: true
 												}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.operationmode', {
+													val: 'Auto',
+													ack: true
+												}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.hkrmode', {
+													val: 0,
+													ack: true
+												}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 											})
 											.catch((e) => this.errorHandler(e));
 									} else {
@@ -362,6 +382,14 @@ class Fritzdect extends utils.Adapter {
 								.setTempTarget(id, 'off')
 								.then((sid) => {
 									this.log.debug('Switched Mode' + id + ' to closed.');
+									this.setStateAsync('DECT_' + id + '.operationmode', {
+										val: 'Off',
+										ack: true
+									}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+									this.setStateAsync('DECT_' + id + '.hkrmode', {
+										val: 2,
+										ack: true
+									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 								})
 								.catch((e) => this.errorHandler(e));
 						}
@@ -370,6 +398,14 @@ class Fritzdect extends utils.Adapter {
 								.setTempTarget(id, 'on')
 								.then((sid) => {
 									this.log.debug('Switched Mode' + id + ' to opened permanently');
+									this.setStateAsync('DECT_' + id + '.operationmode', {
+										val: 'On',
+										ack: true
+									}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+									this.setStateAsync('DECT_' + id + '.hkrmode', {
+										val: 1,
+										ack: true
+									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 								})
 								.catch((e) => this.errorHandler(e));
 						}
@@ -397,6 +433,7 @@ class Fritzdect extends utils.Adapter {
 											val: state.val,
 											ack: true
 										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										//kein pauschales Setzen des Operationmode, da unbekannt wohin es dann geht
 									})
 									.catch((e) => this.errorHandler(e));
 							} else if (
@@ -435,6 +472,10 @@ class Fritzdect extends utils.Adapter {
 													val: endtime,
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.operationmode', {
+													val: 'Boost',
+													ack: true
+												}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 											})
 											.catch((e) => this.errorHandler(e));
 									} else {
@@ -461,12 +502,13 @@ class Fritzdect extends utils.Adapter {
 							) {
 								fritz
 									.setWindowOpen(id, 0)
-									.then(async (sid) => {
+									.then((sid) => {
 										this.log.debug('Reset thermostat windowopen ' + id + ' to ' + state.val);
-										await this.setStateAsync('DECT_' + id + '.windowopenactiv', {
+										this.setStateAsync('DECT_' + id + '.windowopenactiv', {
 											val: state.val,
 											ack: true
 										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										//keine Nachführung operationmode, da unbekannt wohin es geht
 									})
 									.catch((e) => this.errorHandler(e));
 							} else if (
@@ -484,7 +526,7 @@ class Fritzdect extends utils.Adapter {
 										this.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
 										fritz
 											.setWindowOpen(id, ende)
-											.then(async (body) => {
+											.then((body) => {
 												const endtime = new Date(Math.floor(body * 1000));
 												this.log.debug('window ' + body + ' reading to ' + endtime);
 												this.log.debug(
@@ -497,14 +539,18 @@ class Fritzdect extends utils.Adapter {
 														' ' +
 														new Date(ende * 1000)
 												);
-												await this.setStateAsync('DECT_' + id + '.windowopenactiv', {
+												this.setStateAsync('DECT_' + id + '.windowopenactiv', {
 													val: state.val,
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-												await this.setStateAsync('DECT_' + id + '.windowopenactiveendtime', {
+												this.setStateAsync('DECT_' + id + '.windowopenactiveendtime', {
 													val: endtime,
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.operationmode', {
+													val: 'WindowOpen',
+													ack: true
+												}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 											})
 											.catch((e) => this.errorHandler(e));
 									} else {
@@ -528,9 +574,9 @@ class Fritzdect extends utils.Adapter {
 										if (switchtyp.val === 'switch') {
 											fritz
 												.setSwitchOff(id)
-												.then(async (sid) => {
+												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' off');
-													await this.setStateAsync('DECT_' + id + '.state', {
+													this.setStateAsync('DECT_' + id + '.state', {
 														val: false,
 														ack: true
 													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -539,9 +585,9 @@ class Fritzdect extends utils.Adapter {
 										} else {
 											fritz
 												.setSimpleOff(id)
-												.then(async (sid) => {
+												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' off');
-													await this.setStateAsync('DECT_' + id + '.state', {
+													this.setStateAsync('DECT_' + id + '.state', {
 														val: false,
 														ack: true
 													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -565,9 +611,9 @@ class Fritzdect extends utils.Adapter {
 										if (switchtyp.val === 'switch') {
 											fritz
 												.setSwitchOn(id)
-												.then(async (sid) => {
+												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' on');
-													await this.setStateAsync('DECT_' + id + '.state', {
+													this.setStateAsync('DECT_' + id + '.state', {
 														val: true,
 														ack: true
 													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -576,9 +622,9 @@ class Fritzdect extends utils.Adapter {
 										} else {
 											fritz
 												.setSimpleOn(id)
-												.then(async (sid) => {
+												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' on');
-													await this.setStateAsync('DECT_' + id + '.state', {
+													this.setStateAsync('DECT_' + id + '.state', {
 														val: true,
 														ack: true
 													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -612,28 +658,28 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'blindsstop') {
 							fritz
 								.setBlind(id, 'stop')
-								.then(async (sid) => {
+								.then((sid) => {
 									this.log.debug('Set blind ' + id + ' to stop');
-									await this.setStateAsync('DECT_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									this.setStateAsync('DECT_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'level') {
 							fritz
 								.setLevel(id, state.val)
-								.then(async (sid) => {
+								.then((sid) => {
 									this.log.debug('Set level' + id + ' to ' + state.val);
-									await this.setStateAsync('DECT_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									this.setStateAsync('DECT_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'levelpercentage') {
 							fritz
 								.setLevel(id, Math.floor(Number(state.val) / 100 * 255))
-								.then(async (sid) => {
+								.then((sid) => {
 									//level is in 0...255
 									this.log.debug('Set level %' + id + ' to ' + state.val);
-									await this.setStateAsync('DECT_' + id + '.levelpercentage', {
+									this.setStateAsync('DECT_' + id + '.levelpercentage', {
 										val: state.val,
 										ack: true
 									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -652,7 +698,7 @@ class Fritzdect extends utils.Adapter {
 									} else {
 										fritz
 											.setColor(id, setSaturation, state.val)
-											.then(async (sid) => {
+											.then((sid) => {
 												this.log.debug(
 													'Set lamp color hue ' +
 														id +
@@ -661,7 +707,7 @@ class Fritzdect extends utils.Adapter {
 														' and saturation of ' +
 														setSaturation
 												);
-												await this.setStateAsync('DECT_' + id + '.hue', {
+												this.setStateAsync('DECT_' + id + '.hue', {
 													val: state.val,
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -684,7 +730,7 @@ class Fritzdect extends utils.Adapter {
 									} else {
 										fritz
 											.setColor(id, state.val, setHue)
-											.then(async (sid) => {
+											.then((sid) => {
 												this.log.debug(
 													'Set lamp color saturation ' +
 														id +
@@ -693,7 +739,7 @@ class Fritzdect extends utils.Adapter {
 														' and hue of ' +
 														setHue
 												);
-												await this.setStateAsync('DECT_' + id + '.saturation', {
+												this.setStateAsync('DECT_' + id + '.saturation', {
 													val: state.val,
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -708,9 +754,9 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'temperature') {
 							fritz
 								.setColorTemperature(id, state.val)
-								.then(async (sid) => {
+								.then((sid) => {
 									this.log.debug('Set lamp color temperature ' + id + ' to ' + state.val);
-									await this.setStateAsync('DECT_' + id + '.temperature', {
+									this.setStateAsync('DECT_' + id + '.temperature', {
 										val: state.val,
 										ack: true
 									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -732,10 +778,10 @@ class Fritzdect extends utils.Adapter {
 							) {
 								fritz
 									.applyTemplate(id)
-									.then(async (sid) => {
+									.then((sid) => {
 										this.log.debug('cmd Toggle to template ' + id + ' on');
 										this.log.debug('response ' + sid);
-										await this.setStateAsync('template.lasttemplate', { val: sid, ack: true }); //when successfull toggle, the API returns the id of the template
+										this.setStateAsync('template.lasttemplate', { val: sid, ack: true }); //when successfull toggle, the API returns the id of the template
 									})
 									.catch((e) => this.errorHandler(e));
 							}
@@ -1238,12 +1284,14 @@ class Fritzdect extends utils.Adapter {
 							val: 0,
 							ack: true
 						});
-						//wurde eigentlich schon übergeordnet gesetzt
+						//wurde eigentlich schon übergeordnet gesetzt, hier würde es ggf. Night und Comfort überschreiben
+						/*
 						const currentMode = 'Auto';
 						await this.setStateAsync('DECT_' + ain + '.operationmode', {
 							val: currentMode,
 							ack: true
 						});
+						*/
 					} else if (value == 253) {
 						this.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?

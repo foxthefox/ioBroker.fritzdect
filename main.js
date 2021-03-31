@@ -1238,15 +1238,12 @@ class Fritzdect extends utils.Adapter {
 							val: 0,
 							ack: true
 						});
-						//wurde schon übergeordnet gesetzt
-						//sollte nur noch durch On/Off/Summer/Holiday/Boost/Window überschrieben werden
-						/*
+						//wurde eigentlich schon übergeordnet gesetzt
 						const currentMode = 'Auto';
 						await this.setStateAsync('DECT_' + ain + '.operationmode', {
 							val: currentMode,
 							ack: true
 						});
-						*/
 					} else if (value == 253) {
 						this.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?

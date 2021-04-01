@@ -387,7 +387,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 									this.setStateAsync('DECT_' + id + '.hkrmode', {
-										val: 2,
+										val: 1,
 										ack: true
 									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 								})
@@ -403,7 +403,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 									this.setStateAsync('DECT_' + id + '.hkrmode', {
-										val: 1,
+										val: 2,
 										ack: true
 									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 								})

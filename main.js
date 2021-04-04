@@ -1395,7 +1395,8 @@ class Fritzdect extends utils.Adapter {
 					key == 'current_mode' ||
 					key == 'rel_humidity' ||
 					key == 'unmapped_hue' ||
-					key == 'unmapped_saturation'
+					key == 'unmapped_saturation' ||
+					key == 'enpositionsset'
 				) {
 					// integer number
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
@@ -1813,6 +1814,19 @@ class Fritzdect extends utils.Adapter {
 					await this.asyncForEach(Object.keys(device.humidity), async (key) => {
 						if (key === 'rel_humidity') {
 							await this.createValueState(identifier, 'rel_humidity', 'relative Humidity', 0, 100, '%');
+						} else {
+							this.log.warn(' new datapoint in API detected -> ' + key);
+						}
+					});
+				}
+				// create blind
+				if (device.blind) {
+					this.log.info('setting up blind ');
+					await this.asyncForEach(Object.keys(device.blind), async (key) => {
+						if (key === 'endpositionsset') {
+							await this.createValueState(identifier, 'endpositionsset', 'Endposition Setting', 0, 10, '');
+						} else if (key === 'mode') {
+							await this.createInfoState(identifier, 'mode', 'Blind Mode');
 						} else {
 							this.log.warn(' new datapoint in API detected -> ' + key);
 						}

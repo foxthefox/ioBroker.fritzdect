@@ -1396,7 +1396,7 @@ class Fritzdect extends utils.Adapter {
 					key == 'rel_humidity' ||
 					key == 'unmapped_hue' ||
 					key == 'unmapped_saturation' ||
-					key == 'enpositionsset'
+					key == 'endpositionsset'
 				) {
 					// integer number
 					await this.setStateAsync('DECT_' + ain + '.' + key, {

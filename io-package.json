@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.13",
+		"version": "2.1.14",
 		"news": {
+			"2.1.14": {
+			    "en": "extended datapoint for blinds, enhancement for status tracking",
+			    "de": "erweiterter Datenpunkt für Jalousien, Erweiterung für Statusverfolgung",
+			    "ru": "расширенная точка данных для жалюзи, улучшение для отслеживания статуса",
+			    "pt": "ponto de dados estendido para persianas, aprimoramento para rastreamento de status",
+			    "nl": "uitgebreid datapunt voor jaloezieën, verbetering voor statusregistratie",
+			    "fr": "point de données étendu pour les stores, amélioration du suivi de l'état",
+			    "it": "datapoint esteso per tende, miglioramento per il monitoraggio dello stato",
+			    "es": "punto de datos extendido para persianas, mejora para seguimiento de estado",
+			    "pl": "rozszerzony punkt danych dla niewidomych, ulepszenie śledzenia statusu",
+			    "zh-cn": "扩展百叶窗数据点，增强状态跟踪功能"
+			},
 			"2.1.13": {
 				"en": "correction at group of switches -> switchtype = simpleonoff",
 				"de": "Korrektur an der Gruppe von Schaltern -> switchtype = simpleonoff",

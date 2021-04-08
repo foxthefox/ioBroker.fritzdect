@@ -1330,7 +1330,8 @@ class Fritzdect extends utils.Adapter {
 					key == 'windowopenactiv' ||
 					key == 'synchronized' ||
 					key == 'fullcolorsupport' ||
-					key == 'mapped'
+					key == 'mapped'||
+					key == 'endpositionsset'
 				) {
 					// hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
 					// if ( value.length() >1 ) { await this.setStateAsync('DECT_' + ain + '.' + key, {	val: value.toString(), ack: true });} else {}
@@ -1395,8 +1396,7 @@ class Fritzdect extends utils.Adapter {
 					key == 'current_mode' ||
 					key == 'rel_humidity' ||
 					key == 'unmapped_hue' ||
-					key == 'unmapped_saturation' ||
-					key == 'endpositionsset'
+					key == 'unmapped_saturation' 
 				) {
 					// integer number
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
@@ -1824,7 +1824,7 @@ class Fritzdect extends utils.Adapter {
 					this.log.info('setting up blind ');
 					await this.asyncForEach(Object.keys(device.blind), async (key) => {
 						if (key === 'endpositionsset') {
-							await this.createValueState(identifier, 'endpositionsset', 'Endposition Setting', 0, 10, '');
+							await this.createIndicatorState(identifier, 'endpositionsset', 'Endposition Setting');
 						} else if (key === 'mode') {
 							await this.createInfoState(identifier, 'mode', 'Blind Mode');
 						} else {

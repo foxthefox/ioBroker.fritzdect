@@ -1458,6 +1458,7 @@ class Fritzdect extends utils.Adapter {
 							(template.functionbitmask & 2688) == 2688 ||
 							(template.functionbitmask & 40960) == 40960 ||
 							(template.functionbitmask & 36864) == 36864 ||
+							(template.functionbitmask & 335888) == 335888 ||
 							(template.functionbitmask & 2944) == 2944
 						) {
 							//heating template

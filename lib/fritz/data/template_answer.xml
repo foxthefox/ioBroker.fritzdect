@@ -132,4 +132,25 @@
         <name>FritzFonApp</name>
         <devices></devices>
   </template>
+  <template>
+    <identifier>tmp43F432-3C42DDCB0</identifier>
+    <id>60300</id>
+    <functionbitmask>335888</functionbitmask>
+    <applymask>64</applymask>
+    <applymask>
+      <relay_automatic></relay_automatic>
+    </applymask>
+    <name>EG_Rolladen_Astro</name>
+    <devices>
+      <device>
+        <identifier>14276 0470139-1</identifier>
+      </device>
+      <device>
+        <identifier>14276 0470142-1</identifier>
+      </device>
+      <device>
+        <identifier>14276 0470135-1</identifier>
+      </device>
+    </devices>
+  </template>
 </templatelist>

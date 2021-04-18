@@ -1042,6 +1042,13 @@ class Fritzdect extends utils.Adapter {
 								devices[i].present === 0 ||
 								devices[i].present === false
 							) {
+								await this.setStateAsync(
+									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
+									{
+										val: false,
+										ack: true
+									}
+								);
 								this.log.debug(
 									'DECT_' +
 										devices[i].identifier.replace(/\s/g, '') +

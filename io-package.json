@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.1.14",
+		"version": "2.1.15",
 		"news": {
+			  "2.1.15": {
+			    "en": "correction datetime as string and bump dependabot",
+			    "de": "Korrektur datetime als String- und Bump-Dependabot",
+			    "ru": "Дата и время коррекции в виде строки и выпуклости в зависимости от",
+			    "pt": "data e hora de correção como string e bump dependabot",
+			    "nl": "correctie datetime als string en bump afhankelijk",
+			    "fr": "correction datetime en tant que chaîne et dépendant du bump",
+			    "it": "correzione data / ora come stringa e bump dependabot",
+			    "es": "corrección datetime como cadena y bump dependdabot",
+			    "pl": "korekta datetime jako string i bump dependabot",
+			    "zh-cn": "更正日期时间为字符串和颠簸的Dependabot"
+			  },
 			"2.1.14": {
 			    "en": "extended datapoint for blinds, enhancement for status tracking",
 			    "de": "erweiterter Datenpunkt für Jalousien, Erweiterung für Statusverfolgung",

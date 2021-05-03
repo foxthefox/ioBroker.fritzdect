@@ -102,16 +102,16 @@
 		},
 		"title": "fritzbox DECT",
 		"titleLang": {
-			"en": "fritzbox dect adapter",
-			"de": "fritzbox dect Adapter",
-			"ru": "Адаптер fritzbox dect",
-			"pt": "adaptador fritzbox dect",
-			"nl": "fritzbox dect-adapter",
-			"fr": "fritzbox dect adaptateur",
-			"it": "Adattatore per fritzbox",
-			"es": "adaptador fritzbox dect",
-			"pl": "Fritzbox adapter Dect",
-			"zh-cn": "fritzbox dect适配器"
+			"en": "fritzbox dect ",
+			"de": "fritzbox dect ",
+			"ru": "fritzbox dect",
+			"pt": "fritzbox dect",
+			"nl": "fritzbox dect",
+			"fr": "fritzbox dect",
+			"it": "fritzbox dect",
+			"es": "fritzbox dect",
+			"pl": "Fritzbox Dect",
+			"zh-cn": "fritzbox dect"
 		},
 		"desc": {
 			"en": "connects DECT ULE devices (fritzdect) to ioBroker",

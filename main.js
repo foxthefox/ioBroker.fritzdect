@@ -2118,7 +2118,7 @@ class Fritzdect extends utils.Adapter {
 			type: 'state',
 			common: {
 				name: name,
-				type: 'number',
+				type: 'string',
 				read: true,
 				write: false,
 				role: 'date',

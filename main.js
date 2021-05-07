@@ -1803,12 +1803,12 @@ class Fritzdect extends utils.Adapter {
 						}
 					});
 				}
-				// create themosensor
+				// create thermosensor
 				if (device.temperature) {
 					this.log.info('setting up temperatur ');
 					await this.asyncForEach(Object.keys(device.temperature), async (key) => {
 						if (key === 'celsius') {
-							await this.createValueState(identifier, 'celsius', 'Temperature', 8, 32, '°C');
+							await this.createValueState(identifier, 'celsius', 'Temperature', 0, 32, '°C');
 						} else if (key === 'offset') {
 							await this.createValueState(identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
 						} else {

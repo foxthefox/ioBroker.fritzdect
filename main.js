@@ -469,7 +469,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 												this.setStateAsync('DECT_' + id + '.boostactiveendtime', {
-													val: endtime,
+													val: String(endtime),
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 												this.setStateAsync('DECT_' + id + '.operationmode', {
@@ -544,7 +544,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 												this.setStateAsync('DECT_' + id + '.windowopenactiveendtime', {
-													val: endtime,
+													val: String(endtime),
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 												this.setStateAsync('DECT_' + id + '.operationmode', {
@@ -1387,7 +1387,7 @@ class Fritzdect extends utils.Adapter {
 					//time
 					const convTime = new Date(value * 1000);
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: convTime,
+						val: String(convTime),
 						ack: true
 					});
 				} else if (

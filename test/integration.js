@@ -528,7 +528,7 @@ tests.integration(path.join(__dirname, '..'), {
 																												expect(
 																													state.val
 																												).to.be.equal(
-																													'2034-01-04T07:00:00.000Z'
+																													'Wed Jan 04 2034 07:00:00 GMT+0000 (Coordinated Universal Time)'
 																												);
 																												resolve();
 																											}
@@ -1202,7 +1202,7 @@ tests.integration(path.join(__dirname, '..'), {
 																state.val
 														);
 														expect(state.val).to.exist;
-														expect(state.val).to.be.equal('2018-10-01T20:41:32.000Z');
+														expect(state.val).to.be.equal('Mon Oct 01 2018 20:41:32 GMT+0000 (Coordinated Universal Time)');
 														resolve();
 													}
 												}
@@ -1310,7 +1310,7 @@ tests.integration(path.join(__dirname, '..'), {
 																);
 																expect(state.val).to.exist;
 																expect(state.val).to.be.equal(
-																	'2019-02-03T12:06:35.000Z'
+																	'Sun Feb 03 2019 12:06:35 GMT+0000 (Coordinated Universal Time)'
 																);
 																resolve();
 															}

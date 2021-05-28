@@ -1847,7 +1847,7 @@ class Fritzdect extends utils.Adapter {
 					await this.asyncForEach(Object.keys(device.hkr), async (key) => {
 						//create datapoints from the data
 						if (key === 'tist') {
-							await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 32, '°C');
+							await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 65, '°C');
 						} else if (key === 'tsoll') {
 							await this.createValueCtrl(
 								identifier,

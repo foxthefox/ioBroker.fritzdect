@@ -22,7 +22,7 @@
 		"@root/request": "^1.7.0"
 	},
 	"devDependencies": {
-		"@iobroker/testing": "^2.5.2",
+		"@iobroker/testing": "^2.4.4",
 		"@types/chai": "^4.2.21",
 		"@types/chai-as-promised": "^7.1.4",
 		"@types/gulp": "^4.0.9",

@@ -1854,7 +1854,7 @@ class Fritzdect extends utils.Adapter {
 								'tsoll',
 								'Setpoint Temperature',
 								0,
-								32,
+								128,
 								'°C',
 								'value.temperature'
 							);
@@ -1864,11 +1864,11 @@ class Fritzdect extends utils.Adapter {
 								'absenk',
 								'reduced (night) temperature',
 								0,
-								32,
+								128,
 								'°C'
 							);
 						} else if (key === 'komfort') {
-							await this.createValueState(identifier, 'komfort', 'comfort temperature', 0, 32, '°C');
+							await this.createValueState(identifier, 'komfort', 'comfort temperature', 0, 128, '°C');
 						} else if (key === 'lock') {
 							await this.createIndicatorState(identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
 						} else if (key === 'devicelock') {
@@ -1940,8 +1940,8 @@ class Fritzdect extends utils.Adapter {
 											identifier,
 											'tchange',
 											'Temp after next change',
-											8,
-											32,
+											0,
+											128,
 											'°C'
 										);
 									} else {

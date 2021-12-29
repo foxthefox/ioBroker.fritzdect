@@ -1337,7 +1337,7 @@ class Fritzdect extends utils.Adapter {
 					key == 'windowopenactiv' ||
 					key == 'synchronized' ||
 					key == 'fullcolorsupport' ||
-					key == 'mapped'||
+					key == 'mapped' ||
 					key == 'endpositionsset'
 				) {
 					// hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
@@ -1403,7 +1403,7 @@ class Fritzdect extends utils.Adapter {
 					key == 'current_mode' ||
 					key == 'rel_humidity' ||
 					key == 'unmapped_hue' ||
-					key == 'unmapped_saturation' 
+					key == 'unmapped_saturation'
 				) {
 					// integer number
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
@@ -1782,7 +1782,7 @@ class Fritzdect extends utils.Adapter {
 						if (key === 'power') {
 							await this.createValueState(identifier, 'power', 'actual Power', 0, 4000, 'W');
 						} else if (key === 'voltage') {
-							await this.createValueState(identifier, 'voltage', 'actual Voltage', 0, 250, 'V');
+							await this.createValueState(identifier, 'voltage', 'actual Voltage', 0, 255, 'V');
 						} else if (key === 'energy') {
 							await this.createValueState(identifier, 'energy', 'Energy consumption', 0, 999999999, 'Wh');
 						} else {

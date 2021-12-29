@@ -186,9 +186,14 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
+### 2.2.0
+* refactoring of API to FB
+
 ### 2.1.16 WIP
-* temperature range in sockets 0..32°C -> -60..60°C
+* temperature range in sockets 0..32°C -> -20..50°C
 * fast hack for OFF/ON feedback via temperature 254/255*0,5 -> upper range tchange, absenk, komfort = 128
+* fast mod for fwversion for HAN-FUN
+* present message correction
 
 ### 2.1.15 (npm)
 * correction in timestamp as date/string

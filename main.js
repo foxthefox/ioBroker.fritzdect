@@ -95,6 +95,7 @@ class Fritzdect extends utils.Adapter {
 		this.on('message', this.onMessage.bind(this));
 		this.on('unload', this.onUnload.bind(this));
 		this.systemConfig = {};
+		this.fritz = null;
 	}
 
 	/**
@@ -134,33 +135,44 @@ class Fritzdect extends utils.Adapter {
 					// Adapter is alive, make API call
 					// Make a call to fritzboxAPI and get a list devices/groups and templates
 
-					const fritz = new Fritz(
+					this.fritz = new Fritz(
 						settings.Username,
 						settings.Password,
 						settings.moreParam || '',
 						settings.strictSsl || true
 					);
 					this.log.info('fritzdect uses USER: ' + settings.Username);
-					this.log.info('start creating devices/groups');
-					await this.createDevices(fritz);
-					this.log.info('finished creating devices/groups (if any)');
-					this.log.info('start creating templates ');
-					await this.createTemplates(fritz);
-					this.log.info('finished creating templates (if any) ');
-					this.log.info('start initial updating devices/groups');
-					await this.updateDevices(fritz);
-					this.log.info('finished initial updating devices/groups');
-					this.log.info('going over to cyclic polling, messages to poll activity only in debug-mode ');
-					if (!polling) {
-						polling = setInterval(async () => {
-							// poll fritzbox
-							try {
-								this.log.debug('polling! fritzdect is alive');
-								await this.updateDevices(fritz);
-							} catch (e) {
-								this.log.warn(`[Polling] <== ${e}`);
+					try {
+						const login = await this.fritz.login_SID();
+						if (login) {
+							this.log.info('start creating devices/groups');
+							await this.createDevices(this.fritz);
+							this.log.info('finished creating devices/groups (if any)');
+							this.log.info('start creating templates ');
+							await this.createTemplates(this.fritz);
+							this.log.info('finished creating templates (if any) ');
+							this.log.info('start initial updating devices/groups');
+							await this.updateDevices(this.fritz);
+							this.log.info('finished initial updating devices/groups');
+							this.log.info(
+								'going over to cyclic polling, messages to poll activity only in debug-mode '
+							);
+							if (!polling) {
+								polling = setInterval(async () => {
+									// poll fritzbox
+									try {
+										this.log.debug('polling! fritzdect is alive');
+										await this.updateDevices(this.fritz);
+									} catch (e) {
+										this.log.warn(`[Polling] <== ${e}`);
+									}
+								}, (settings.intervall || 300) * 1000);
 							}
-						}, (settings.intervall || 300) * 1000);
+						} else {
+							this.log.error('login not possible, check user and permissions');
+						}
+					} catch (error) {
+						return Promise.reject(error);
 					}
 				});
 			} else {
@@ -189,6 +201,7 @@ class Fritzdect extends utils.Adapter {
 			// ...
 			// clearInterval(interval1);
 			if (polling) clearInterval(polling);
+			this.fritz.logout_SID();
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
@@ -222,12 +235,24 @@ class Fritzdect extends utils.Adapter {
 		if (state) {
 			// The state was changed
 			this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-			const fritz = new Fritz(
-				settings.Username,
-				settings.Password,
-				settings.moreParam || '',
-				settings.strictSsl || true
-			);
+			if (!this.fritz) {
+				this.fritz = new Fritz(
+					settings.Username,
+					settings.Password,
+					settings.moreParam || '',
+					settings.strictSsl || true
+				);
+				try {
+					const login = await this.fritz.login_SID();
+					if (login) {
+						this.log.debug('login in stateChange success');
+					} else {
+						this.log.error('login not possible, check user and permissions');
+					}
+				} catch (error) {
+					return Promise.reject(error);
+				}
+			}
 			//const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 
 			// you can use the ack flag to detect if it is status (true) or command (false)
@@ -246,7 +271,7 @@ class Fritzdect extends utils.Adapter {
 							if (state.val < 8) {
 								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 1, ack: false }); //damit das Ventil auch regelt
-								fritz
+								this.fritz
 									.setTempTarget(id, 'off')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed');
@@ -255,7 +280,7 @@ class Fritzdect extends utils.Adapter {
 							} else if (state.val > 28) {
 								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt
-								fritz
+								this.fritz
 									.setTempTarget(id, 'on')
 									.then(() => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
@@ -263,7 +288,7 @@ class Fritzdect extends utils.Adapter {
 									.catch((e) => this.errorHandler(e));
 							} else {
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 0, ack: false }); //damit das Ventil auch regelt
-								fritz
+								this.fritz
 									.setTempTarget(id, state.val)
 									.then(() => {
 										this.log.debug('Set target temp ' + id + state.val + ' °C');
@@ -292,7 +317,7 @@ class Fritzdect extends utils.Adapter {
 												this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
 												setTemp = 28;
 											}
-											fritz
+											this.fritz
 												.setTempTarget(id, setTemp)
 												.then(() => {
 													this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
@@ -314,7 +339,7 @@ class Fritzdect extends utils.Adapter {
 									}
 								});
 							} else if (state.val === 1) {
-								fritz
+								this.fritz
 									.setTempTarget(id, 'off')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed.');
@@ -325,7 +350,7 @@ class Fritzdect extends utils.Adapter {
 									})
 									.catch((e) => this.errorHandler(e));
 							} else if (state.val === 2) {
-								fritz
+								this.fritz
 									.setTempTarget(id, 'on')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
@@ -351,7 +376,7 @@ class Fritzdect extends utils.Adapter {
 											this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
 											setTemp = 28;
 										}
-										fritz
+										this.fritz
 											.setTempTarget(id, setTemp)
 											.then(() => {
 												this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
@@ -378,7 +403,7 @@ class Fritzdect extends utils.Adapter {
 							});
 						}
 						if (dp === 'setmodeoff') {
-							fritz
+							this.fritz
 								.setTempTarget(id, 'off')
 								.then((sid) => {
 									this.log.debug('Switched Mode' + id + ' to closed.');
@@ -394,7 +419,7 @@ class Fritzdect extends utils.Adapter {
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp === 'setmodeon') {
-							fritz
+							this.fritz
 								.setTempTarget(id, 'on')
 								.then((sid) => {
 									this.log.debug('Switched Mode' + id + ' to opened permanently');
@@ -425,7 +450,7 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'off' ||
 								state.val === 'OFF'
 							) {
-								fritz
+								this.fritz
 									.setHkrBoost(id, 0)
 									.then(() => {
 										this.log.debug('Reset thermostat boost ' + id + ' to ' + state.val);
@@ -449,7 +474,7 @@ class Fritzdect extends utils.Adapter {
 										const jetzt = +new Date();
 										const ende = Math.floor(jetzt / 1000 + Number(minutes.val) * 60); //time for fritzbox is in seconds
 										this.log.debug(' unix returned ' + ende + ' real ' + new Date(ende * 1000));
-										fritz
+										this.fritz
 											.setHkrBoost(id, ende)
 											.then((body) => {
 												const endtime = new Date(Math.floor(body * 1000));
@@ -500,7 +525,7 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'off' ||
 								state.val === 'OFF'
 							) {
-								fritz
+								this.fritz
 									.setWindowOpen(id, 0)
 									.then((sid) => {
 										this.log.debug('Reset thermostat windowopen ' + id + ' to ' + state.val);
@@ -524,7 +549,7 @@ class Fritzdect extends utils.Adapter {
 										const jetzt = +new Date();
 										const ende = Math.floor(jetzt / 1000 + Number(minutes.val) * 60); //time for fritzbox is in seconds
 										this.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
-										fritz
+										this.fritz
 											.setWindowOpen(id, ende)
 											.then((body) => {
 												const endtime = new Date(Math.floor(body * 1000));
@@ -572,7 +597,7 @@ class Fritzdect extends utils.Adapter {
 								this.getState('DECT_' + id + '.switchtype', async (err, switchtyp) => {
 									if (switchtyp && switchtyp.val !== null) {
 										if (switchtyp.val === 'switch') {
-											fritz
+											this.fritz
 												.setSwitchOff(id)
 												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' off');
@@ -583,7 +608,7 @@ class Fritzdect extends utils.Adapter {
 												})
 												.catch((e) => this.errorHandler(e));
 										} else {
-											fritz
+											this.fritz
 												.setSimpleOff(id)
 												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' off');
@@ -609,7 +634,7 @@ class Fritzdect extends utils.Adapter {
 								this.getState('DECT_' + id + '.switchtype', async (err, switchtyp) => {
 									if (switchtyp && switchtyp.val !== null) {
 										if (switchtyp.val === 'switch') {
-											fritz
+											this.fritz
 												.setSwitchOn(id)
 												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' on');
@@ -620,7 +645,7 @@ class Fritzdect extends utils.Adapter {
 												})
 												.catch((e) => this.errorHandler(e));
 										} else {
-											fritz
+											this.fritz
 												.setSimpleOn(id)
 												.then((sid) => {
 													this.log.debug('Turned switch ' + id + ' on');
@@ -638,7 +663,7 @@ class Fritzdect extends utils.Adapter {
 							}
 						}
 						if (dp == 'blindsclose') {
-							fritz
+							this.fritz
 								.setBlind(id, 'close')
 								.then(async (sid) => {
 									this.log.debug('Started blind ' + id + ' to close');
@@ -647,7 +672,7 @@ class Fritzdect extends utils.Adapter {
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'blindsopen') {
-							fritz
+							this.fritz
 								.setBlind(id, 'open')
 								.then(async (sid) => {
 									this.log.debug('Started blind ' + id + ' to open');
@@ -656,7 +681,7 @@ class Fritzdect extends utils.Adapter {
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'blindsstop') {
-							fritz
+							this.fritz
 								.setBlind(id, 'stop')
 								.then((sid) => {
 									this.log.debug('Set blind ' + id + ' to stop');
@@ -665,7 +690,7 @@ class Fritzdect extends utils.Adapter {
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'level') {
-							fritz
+							this.fritz
 								.setLevel(id, state.val)
 								.then((sid) => {
 									this.log.debug('Set level' + id + ' to ' + state.val);
@@ -674,7 +699,7 @@ class Fritzdect extends utils.Adapter {
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp == 'levelpercentage') {
-							fritz
+							this.fritz
 								.setLevel(id, Math.floor(Number(state.val) / 100 * 255))
 								.then((sid) => {
 									//level is in 0...255
@@ -696,7 +721,7 @@ class Fritzdect extends utils.Adapter {
 											'No saturation value exists when setting hue, please set saturation to a value '
 										);
 									} else {
-										fritz
+										this.fritz
 											.setColor(id, setSaturation, state.val)
 											.then((sid) => {
 												this.log.debug(
@@ -728,7 +753,7 @@ class Fritzdect extends utils.Adapter {
 											'No hue value exists when setting saturation, please set hue to a value '
 										);
 									} else {
-										fritz
+										this.fritz
 											.setColor(id, state.val, setHue)
 											.then((sid) => {
 												this.log.debug(
@@ -752,7 +777,7 @@ class Fritzdect extends utils.Adapter {
 							});
 						}
 						if (dp == 'temperature') {
-							fritz
+							this.fritz
 								.setColorTemperature(id, state.val)
 								.then((sid) => {
 									this.log.debug('Set lamp color temperature ' + id + ' to ' + state.val);
@@ -776,7 +801,7 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'on' ||
 								state.val === 'ON'
 							) {
-								fritz
+								this.fritz
 									.applyTemplate(id)
 									.then((sid) => {
 										this.log.debug('cmd Toggle to template ' + id + ' on');
@@ -1097,6 +1122,9 @@ class Fritzdect extends utils.Adapter {
 								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
 								if (devices[i].functionbitmask == 1) {
 									this.log.debug(' functionbitmask 1');
+									//fasthack
+									//einfach hier die fwversion aus dem Nachfolgedatensatz setzen
+									devices[i].fwversion = devices[i + 1].fwversion;
 									// search and find the device id and replace fwversion
 									// todo
 									// find the device.identifier mit der etsi_id

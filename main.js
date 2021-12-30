@@ -987,8 +987,7 @@ class Fritzdect extends utils.Adapter {
 						this.fritz
 							.getColorDefaults()
 							.then(function(colorinfos) {
-								const color = parser.xml2json(colorinfos);
-								result = color;
+								result = colorinfos;
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);

@@ -1180,9 +1180,6 @@ class Fritzdect extends utils.Adapter {
 							// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
 							if (devices[i].functionbitmask == 1) {
 								this.log.debug(' functionbitmask 1');
-								//fasthack
-								//einfach hier die fwversion aus dem Nachfolgedatensatz setzen
-								devices[i + 1].fwversion = devices[i].fwversion;
 								// search and find the device id and replace fwversion
 								// todo
 								// find the device.identifier mit der etsi_id

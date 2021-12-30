@@ -2007,7 +2007,7 @@ tests.integration(path.join(__dirname, '..'), {
 										console.log('fritzdect.0.DECT_130770000415-1.fwversion    ... ' + state.val);
 									}
 									expect(state.val).to.exist;
-									expect(state.val).to.be.equal('34.10.16.16.011');
+									expect(state.val).to.be.equal('0.0');
 									harness.states.getState('fritzdect.0.DECT_130770000415-1.id', function(err, state) {
 										if (err) console.error(err);
 										expect(state).to.exist;
@@ -2338,7 +2338,7 @@ tests.integration(path.join(__dirname, '..'), {
 										console.log('fritzdect.0.DECT_130770018976-1.fwversion    ... ' + state.val);
 									}
 									expect(state.val).to.exist;
-									expect(state.val).to.be.equal('34.10.16.16.015');
+									expect(state.val).to.be.equal('0.0');
 									harness.states.getState('fritzdect.0.DECT_130770018976-1.id', function(err, state) {
 										if (err) console.error(err);
 										expect(state).to.exist;

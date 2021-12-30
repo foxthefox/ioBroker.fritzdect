@@ -12,7 +12,6 @@ const utils = require('@iobroker/adapter-core');
 // const fs = require("fs");
 const Fritz = require('./lib/fritzhttp.js');
 const parser = require('xml2json-light');
-// const { resolve } = require('path/posix');
 
 let polling;
 
@@ -146,6 +145,10 @@ class Fritzdect extends utils.Adapter {
 					try {
 						const login = await this.fritz.login_SID();
 						if (login) {
+							this.log.info('checking user permissions');
+							const resp = await this.fritz.check_SID().catch((e) => this.errorHandler(e));
+							const rights = parser.xml2json(resp.rights);
+							this.log.info('the rights are : ' + rights);
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandler(e));
 							this.log.info('finished creating devices/groups (if any)');

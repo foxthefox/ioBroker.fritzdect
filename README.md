@@ -48,8 +48,6 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 
  2. using https would result in:
 
-      Log messages if the form of:
-
           { error: { [Error: self signed certificate] code: 'DEPTH_ZERO_SELF_SIGNED_CERT' }
 
       to overcome this, the option "rejectUnauthorized: false" is used in the https.request. 
@@ -184,11 +182,12 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
-### 2.2.0
+### 2.2.0 (npm)
 * refactoring of API to FB
+* refactoring main.js
 * using http.request instead of deprecated @root/request
 
-### 2.1.16 WIP
+### 2.1.16
 * temperature range in sockets 0..32°C -> -20..50°C
 * fast hack for OFF/ON feedback via temperature 254/255*0,5 -> upper range tchange, absenk, komfort = 128
 * fast mod for fwversion for HAN-FUN

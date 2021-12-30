@@ -166,12 +166,11 @@
 		]
 	},
 	"native": {
-		"fritz_ip": "http://192.x.x.x",
+		"fritz_ip": "http://localhost:3333",
 		"fritz_user": "admin",
-		"fritz_pw": "pw",
-		"fritz_sid": "",
+		"fritz_pw": "password",
 		"fritz_interval": 300,
-		"fritz_strictssl": true,
+		"fritz_options": null,
 		"fritz_writeonhyst": false,
 		"fritz_hysteresis": 1
 	},

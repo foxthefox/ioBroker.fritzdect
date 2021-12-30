@@ -1,6 +1,6 @@
 {
 	"name": "iobroker.fritzdect",
-	"version": "2.1.15",
+	"version": "2.2.0",
 	"description": "ioBroker fritzbox DECT Adapter",
 	"author": {
 		"name": "foxthefox",
@@ -18,8 +18,7 @@
 	},
 	"dependencies": {
 		"@iobroker/adapter-core": "^2.5.1",
-		"xml2json-light": "^1.0.6",
-		"@root/request": "^1.8.0"
+		"xml2json-light": "^1.0.6"
 	},
 	"devDependencies": {
 		"@iobroker/testing": "^2.5.2",

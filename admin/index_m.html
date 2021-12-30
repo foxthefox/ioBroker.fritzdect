@@ -18,17 +18,17 @@
 	<script type="text/javascript" src="words.js"></script>
 
 	<script type="text/javascript">
-	    var secret;
+		var secret;
 		function encrypt(key, value) {
 			var result = '';
-			for(var i = 0; i < value.length; ++i) {
+			for (var i = 0; i < value.length; ++i) {
 				result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
 			}
 			return result;
 		}
 		function decrypt(key, value) {
 			var result = '';
-			for(var i = 0; i < value.length; ++i) {
+			for (var i = 0; i < value.length; ++i) {
 				result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
 			}
 			return result;
@@ -91,7 +91,7 @@
 			$('#testg').addClass('disabled');
 			sendTo(null, 'groups', null, function (result) {
 				$('#testg').removeClass('disabled');
-				console.log("result is "+ JSON.stringify(result));
+				console.log("result is " + JSON.stringify(result));
 				showMessage(JSON.stringify(result), _('Result: '));
 			});
 		}
@@ -107,9 +107,9 @@
 			$('#testd').addClass('disabled');
 			sendTo(null, 'devices', null, function (result) {
 				$('#testd').removeClass('disabled');
-				console.log("result is "+ JSON.stringify(result));
+				console.log("result is " + JSON.stringify(result));
 				showMessage(JSON.stringify(result), _('Result: '));
-			});            
+			});
 		}
 		function testt() {
 			if (!common.enabled) {
@@ -123,9 +123,9 @@
 			$('#testt').addClass('disabled');
 			sendTo(null, 'templates', null, function (result) {
 				$('#testt').removeClass('disabled');
-				console.log("result is "+ JSON.stringify(result));
+				console.log("result is " + JSON.stringify(result));
 				showMessage(JSON.stringify(result), _('Result: '));
-			});            
+			});
 		}
 		function tests() {
 			if (!common.enabled) {
@@ -139,9 +139,9 @@
 			$('#tests').addClass('disabled');
 			sendTo(null, 'statistic', null, function (result) {
 				$('#tests').removeClass('disabled');
-				console.log("result is "+ JSON.stringify(result));
+				console.log("result is " + JSON.stringify(result));
 				showMessage(JSON.stringify(result), _('Result: '));
-			});            
+			});
 		}
 		function testc() {
 			if (!common.enabled) {
@@ -155,9 +155,9 @@
 			$('#testc').addClass('disabled');
 			sendTo(null, 'color', null, function (result) {
 				$('#testc').removeClass('disabled');
-				console.log("result is "+ JSON.stringify(result));
+				console.log("result is " + JSON.stringify(result));
 				showMessage(JSON.stringify(result), _('Result: '));
-			});            
+			});
 		}
 		function testo() {
 			if (!common.enabled) {
@@ -169,11 +169,11 @@
 				return;
 			}
 			$('#testo').addClass('disabled');
-			sendTo(null, 'test', 'message in a bottle', function (result) {
+			sendTo(null, 'rights', null, function (result) {
 				$('#testo').removeClass('disabled');
-				console.log("result is "+ JSON.stringify(result));
+				console.log("result is " + JSON.stringify(result));
 				showMessage(JSON.stringify(result), _('Result: '));
-			});            
+			});
 		}
 		// This will be called by the admin adapter when the user presses the save button
 		function save(callback) {
@@ -220,16 +220,18 @@
 			</div>
 			<div class="row">
 				<div class="col s12">
-					<input class="value" id="fritz_ip"/><label for="fritz_ip" class="translate">Fritzbox IP</label>
+					<input class="value" id="fritz_ip" /><label for="fritz_ip" class="translate">Fritzbox IP</label>
 				</div>
 			</div>
-	
-			<div class="row">     
+
+			<div class="row">
 				<div class="col s6">
-					<input class="value" id="fritz_user"/><label for="fritz_user" class="translate">Fritzbox User</label>
+					<input class="value" id="fritz_user" /><label for="fritz_user" class="translate">Fritzbox
+						User</label>
 				</div>
 				<div class="col s6">
-					<input class="value" id="fritz_pw" type="password"/><label for="fritz_pw" class="translate">Fritzbox Password</label>
+					<input class="value" id="fritz_pw" type="password" /><label for="fritz_pw"
+						class="translate">Fritzbox Password</label>
 				</div>
 			</div>
 		</div>
@@ -241,38 +243,40 @@
 			</div>
 			<div class="row">
 				<div class="col s6">
-					<input class="value" id="fritz_interval" /><label for="fritz_interval" class="translate">Fritzbox Polling Interval (sek.)</label>
+					<input class="value" id="fritz_interval" /><label for="fritz_interval" class="translate">Fritzbox
+						Polling Interval (sek.)</label>
 				</div>
 			</div>
 			<div class="row s6">
-				<input class="value" id="fritz_strictssl" type="checkbox"/><span class="translate">must be unchecked (false) if https is used</span>
-			<div>
-		</div>
-		<div class="section">
-			<div class="row">
-				<div class="col s12">
-					<h6 class="translate sub-title">FritzBox Adapter Debugging</h6>
+				<input class="value" id="fritz_options" /><label class="translate">options for the http.request (usually
+					empty, unless you make test)</label>
+				<div>
+				</div>
+				<div class="section">
+					<div class="row">
+						<div class="col s12">
+							<h6 class="translate sub-title">FritzBox Adapter Debugging</h6>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col s2">
+							<a id="testd" class="btn"><span class="translate">My Devices</span></a>
+						</div>
+						<div class="col s2">
+							<a id="testg" class="btn"><span class="translate">My Groups</span></a>
+						</div>
+						<div class="col s2">
+							<a id="testt" class="btn"><span class="translate">My Templates</span></a>
+						</div>
+						<div class="col s2">
+							<a id="testc" class="btn"><span class="translate">My Color</span></a>
+						</div>
+						<div class="col s2">
+							<a id="testo" class="btn"><span class="translate">My Rights</span></a>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col s2">
-					<a id="testd" class="btn"><span class="translate">My Devices</span></a>
-				</div>
-				<div class="col s2">
-					<a id="testg" class="btn"><span class="translate">My Groups</span></a>
-				</div>
-				<div class="col s2">
-					<a id="testt" class="btn"><span class="translate">My Templates</span></a>
-				</div>
-				<div class="col s2">
-					<a id="testc" class="btn"><span class="translate">My Color</span></a>
-				</div>
-				<div class="col s2">
-					<a id="testo" class="btn"><span class="translate">Adapter Conn Test</span></a>
-				</div>
-			</div>
-		</div>	
-	</div>
 </body>
 
 </html>

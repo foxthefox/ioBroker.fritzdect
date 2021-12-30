@@ -170,16 +170,28 @@ systemDictionary = {
 		pl: 'Moje grupy',
 		'zh-cn': '我的团队'
 	},
-	'must be unchecked (false) if https is used': {
-		en: 'must be unchecked (false) if https is used',
-		de: 'muss deaktiviert sein (false), wenn https verwendet wird',
-		ru: 'должен быть снят (false), если используется https',
-		pt: 'deve ser desmarcado (falso) se https for usado',
-		nl: 'moet uitgeschakeld zijn (false) als https wordt gebruikt',
-		fr: 'doit être décochée (false) si https est utilisé',
-		it: 'deve essere deselezionato (falso) se viene utilizzato https',
-		es: 'debe estar sin marcar (falso) si se usa https',
-		pl: 'musi być odznaczone (false), jeśli używany jest protokół https',
-		'zh-cn': '如果使用https，则必须取消选中（false）'
+	'My Rights': {
+		en: 'My Rights',
+		de: 'Meine Rechte',
+		ru: 'Мои права',
+		pt: 'Meus direitos',
+		nl: 'Mijn rechten',
+		fr: 'Mes droits',
+		it: 'I miei diritti',
+		es: 'Mis derechos',
+		pl: 'Moje prawa',
+		'zh-cn': '我的权利'
+	},
+	'options for the http.request (usually empty, unless you make test)': {
+		en: 'options for the http.request (usually empty, unless you make test)',
+		de: 'Optionen für http.request (normalerweise leer, es sei denn, Sie machen einen Test)',
+		ru: 'параметры для http.request (обычно пустые, если вы не проводите тест)',
+		pt: 'opções para http.request (geralmente vazio, a menos que você faça um teste)',
+		nl: 'opties voor het http.request (meestal leeg, tenzij je een test maakt)',
+		fr: 'options pour le http.request (généralement vide, sauf si vous faites un test)',
+		it: 'opzioni per http.request (normalmente vuoto, a meno che non si faccia un test)',
+		es: 'opciones para http.request (generalmente vacío, a menos que realice una prueba)',
+		pl: 'opcje dla http.request (zwykle puste, chyba że robisz test)',
+		'zh-cn': 'http.request 的选项（通常为空，除非您进行测试）'
 	}
 };

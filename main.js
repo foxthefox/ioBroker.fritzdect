@@ -78,7 +78,7 @@ Beim Rollladen als Bitmaske auszuwerten.
 5 =
 */
 
-const settings = { Username: '', Password: '', moreParam: '', strictSsl: true, intervall: 300 };
+const settings = { Username: '', Password: '', Url: '', options: {}, intervall: 300 };
 
 class Fritzdect extends utils.Adapter {
 	/**
@@ -107,8 +107,8 @@ class Fritzdect extends utils.Adapter {
 			// Load user settings
 			settings.Username = this.config.fritz_user;
 			settings.Password = this.config.fritz_pw;
-			settings.moreParam = this.config.fritz_ip;
-			settings.strictSsl = this.config.fritz_strictssl;
+			settings.Url = this.config.fritz_ip;
+			//settings.options = this.config.fritz_options;
 			settings.intervall = this.config.fritz_interval;
 
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
@@ -138,21 +138,21 @@ class Fritzdect extends utils.Adapter {
 					this.fritz = new Fritz(
 						settings.Username,
 						settings.Password,
-						settings.moreParam || '',
-						settings.strictSsl || true
+						settings.Url || '',
+						settings.options || {}
 					);
 					this.log.info('fritzdect uses USER: ' + settings.Username);
 					try {
 						const login = await this.fritz.login_SID();
 						if (login) {
 							this.log.info('start creating devices/groups');
-							await this.createDevices(this.fritz);
+							await this.createDevices(this.fritz).catch((e) => this.errorHandler(e));
 							this.log.info('finished creating devices/groups (if any)');
 							this.log.info('start creating templates ');
-							await this.createTemplates(this.fritz);
+							await this.createTemplates(this.fritz).catch((e) => this.errorHandler(e));
 							this.log.info('finished creating templates (if any) ');
 							this.log.info('start initial updating devices/groups');
-							await this.updateDevices(this.fritz);
+							await this.updateDevices(this.fritz).catch((e) => this.errorHandler(e));
 							this.log.info('finished initial updating devices/groups');
 							this.log.info(
 								'going over to cyclic polling, messages to poll activity only in debug-mode '
@@ -172,7 +172,8 @@ class Fritzdect extends utils.Adapter {
 							this.log.error('login not possible, check user and permissions');
 						}
 					} catch (error) {
-						return Promise.reject(error);
+						//from login
+						this.errorHandler(error);
 					}
 				});
 			} else {
@@ -250,7 +251,7 @@ class Fritzdect extends utils.Adapter {
 						this.log.error('login not possible, check user and permissions');
 					}
 				} catch (error) {
-					return Promise.reject(error);
+					this.errorHandler(error);
 				}
 			}
 			//const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
@@ -826,7 +827,7 @@ class Fritzdect extends utils.Adapter {
 	//  * Using this method requires "common.messagebox" property to be set to true in io-package.json
 	//  * @param {ioBroker.Message} obj
 	//  */
-	onMessage(obj) {
+	async onMessage(obj) {
 		let wait = false;
 		this.log.debug('messagebox received ' + JSON.stringify(obj));
 		try {
@@ -848,17 +849,29 @@ class Fritzdect extends utils.Adapter {
 			} else if (obj) {
 				//my own messages for detectiung are without a message
 				let result = [];
-				const fritz = new Fritz(
-					settings.Username,
-					settings.Password,
-					settings.moreParam || '',
-					settings.strictSsl || true
-				);
+				if (!this.fritz) {
+					this.fritz = new Fritz(
+						settings.Username,
+						settings.Password,
+						settings.moreParam || '',
+						settings.strictSsl || true
+					);
+					try {
+						const login = await this.fritz.login_SID();
+						if (login) {
+							this.log.debug('login in stateChange success');
+						} else {
+							this.log.error('login not possible, check user and permissions');
+						}
+					} catch (error) {
+						this.errorHandler(error);
+					}
+				}
 				// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 
 				switch (obj.command) {
 					case 'devices':
-						fritz
+						this.fritz
 							.getDeviceListInfos()
 							.then((devicelistinfos) => {
 								let devices = parser.xml2json(devicelistinfos);
@@ -884,7 +897,7 @@ class Fritzdect extends utils.Adapter {
 						wait = true;
 						break;
 					case 'groups':
-						fritz
+						this.fritz
 							.getDeviceListInfos()
 							.then((devicelistinfos) => {
 								let groups = parser.xml2json(devicelistinfos);
@@ -909,7 +922,7 @@ class Fritzdect extends utils.Adapter {
 						wait = true;
 						break;
 					case 'templates':
-						fritz
+						this.fritz
 							.getTemplateListInfos()
 							.then(function(templatelistinfos) {
 								let templates = parser.xml2json(templatelistinfos);
@@ -936,7 +949,7 @@ class Fritzdect extends utils.Adapter {
 						wait = true;
 						break;
 					case 'statistic':
-						fritz
+						this.fritz
 							.getBasicDeviceStats(obj.message) //ain muß übergeben werden aus message
 							.then(function(statisticinfos) {
 								//obj.message should be ain of device requested
@@ -957,7 +970,7 @@ class Fritzdect extends utils.Adapter {
 						wait = true;
 						break;
 					case 'color':
-						fritz
+						this.fritz
 							.getColorDefaults()
 							.then(function(colorinfos) {
 								result = colorinfos;
@@ -969,6 +982,25 @@ class Fritzdect extends utils.Adapter {
 								this.log.debug('error calling in msgbox');
 								throw {
 									msg: 'issue getting color',
+									function: 'onMessage',
+									error: e
+								};
+							});
+						wait = true;
+						break;
+					case 'rights':
+						this.fritz
+							.getUserPermissions()
+							.then(function(rights) {
+								result = rights;
+							})
+							.then(async () => {
+								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+							})
+							.catch((e) => {
+								this.log.debug('error calling in msgbox');
+								throw {
+									msg: 'issue getting UserRights',
 									function: 'onMessage',
 									error: e
 								};

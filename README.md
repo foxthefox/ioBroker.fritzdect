@@ -41,18 +41,18 @@ The widget requires that also vis-metro and vis-jqui-mfd are installed
 
   1. Fritzbox returned '00000000' no login possible. possible reasons:
 
-        The fritzbox allows only a limited number of logins in a timeframe. So very fast polling (update) attempts may lead to blocking of logins.
+        The fritzbox allows only a limited number of logins in a timeframe.
         There are no appropriate user rights set in the fritzbox.
         There is a time elapsing in the fritzbox blocking the logins.
         A german doc is available here: [troubleshooting](./docs/de/troubleshooting.md)
 
- 2. no login to the FritzBox, when using https
+ 2. using https would result in:
 
       Log messages if the form of:
 
           { error: { [Error: self signed certificate] code: 'DEPTH_ZERO_SELF_SIGNED_CERT' }
 
-      indicate that there are SSL security problems (certificate). Use the `"strictSSL": false` option (no tick in checkbox) in the admin page of adapter to disable the respective check (experimental). 
+      to overcome this, the option "rejectUnauthorized: false" is used in the https.request. 
 
 ## Thermostat
 ### Fritzbox AHA API
@@ -168,7 +168,6 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 
 
 ## API limitations
-* too many login attempts to FB are refused by providing '00000000' as response
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command
 * updates to the thermostat are within a 15min range, depending on the previous communication of thermostat with fritzbox the next cycle is sooner or later, but definitely not imediately after an ioBroker intervention
 * if a windowopenactiv is set on a thermostat, which is part of a group, then the whole group and its thermostats is set to windowopenactiv (function inside the FB)
@@ -178,7 +177,6 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 
 ## Known Adapter Limitations:
 * Not all FW-versions of fritz.box support all objects.
-* https (DEPTH_ZERO_SELF_SIGNED_CERT -> strictSSL: false necessary) see above
 
 ## TODO:
 * map of data input from user to valid predefined colors (nearest match)
@@ -188,6 +186,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 ## Changelog
 ### 2.2.0
 * refactoring of API to FB
+* using http.request instead of deprecated @root/request
 
 ### 2.1.16 WIP
 * temperature range in sockets 0..32°C -> -20..50°C

@@ -284,7 +284,7 @@ class Fritzdect extends utils.Adapter {
 									.catch((e) => this.errorHandler(e));
 							} else if (state.val > 28) {
 								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt
+								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt (false= Befehl und nochmaliger Einsprung )
 								this.fritz
 									.setTempTarget(id, 'on')
 									.then(() => {
@@ -1323,10 +1323,34 @@ class Fritzdect extends utils.Adapter {
 						ack: true
 					});
 				} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 2,
-						ack: true
-					});
+					if (value == 253) {
+						this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Closed');
+						await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
+							val: 1,
+							ack: true
+						});
+						const currentMode = 'Off';
+						await this.setStateAsync('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
+					} else if (value == 254) {
+						this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Opened');
+						await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
+							val: 2,
+							ack: true
+						});
+						const currentMode = 'On';
+						await this.setStateAsync('DECT_' + ain + '.operationmode', {
+							val: currentMode,
+							ack: true
+						});
+					} else {
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value) / 2,
+							ack: true
+						});
+					}
 				} else if (key == 'humidity') {
 					//e.g humidity
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
@@ -1357,7 +1381,7 @@ class Fritzdect extends utils.Adapter {
 						});
 						*/
 					} else if (value == 253) {
-						this.log.debug('DECT_' + ain + ' : ' + 'mode: Closed');
+						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
 							val: 1,
@@ -1369,7 +1393,7 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 					} else if (value == 254) {
-						this.log.debug('DECT_' + ain + ' : ' + 'mode : Opened');
+						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
 							val: 2,
@@ -1978,8 +2002,8 @@ class Fritzdect extends utils.Adapter {
 										identifier,
 										'tsoll',
 										'Setpoint Temperature',
-										0,
-										128,
+										8,
+										32,
 										'°C',
 										'value.temperature'
 									);
@@ -1988,8 +2012,8 @@ class Fritzdect extends utils.Adapter {
 										identifier,
 										'absenk',
 										'reduced (night) temperature',
-										0,
-										128,
+										8,
+										32,
 										'°C'
 									);
 								} else if (key === 'komfort') {
@@ -1997,8 +2021,8 @@ class Fritzdect extends utils.Adapter {
 										identifier,
 										'komfort',
 										'comfort temperature',
-										0,
-										128,
+										8,
+										32,
 										'°C'
 									);
 								} else if (key === 'lock') {

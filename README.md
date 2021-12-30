@@ -183,13 +183,15 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 
 ## Changelog
 ### 2.2.0 (npm)
-* refactoring of API to FB
+* refactoring of API to FB, single instance with relogin after experied session
 * refactoring main.js
 * using http.request instead of deprecated @root/request
+* log the user permissions
+* remove fasthack for OFF/ON, upper range tchange, absenk, komfort = 32
 
 ### 2.1.16
 * temperature range in sockets 0..32°C -> -20..50°C
-* fast hack for OFF/ON feedback via temperature 254/255*0,5 -> upper range tchange, absenk, komfort = 128
+* fast hack for OFF/ON feedback via temperature 253/254*0,5 -> upper range tchange, absenk, komfort = 128
 * fast mod for fwversion for HAN-FUN
 * present message correction
 

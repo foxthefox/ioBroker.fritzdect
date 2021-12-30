@@ -148,7 +148,7 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('checking user permissions');
 							const resp = await this.fritz.check_SID().catch((e) => this.errorHandler(e));
 							const rights = parser.xml2json(resp.rights);
-							this.log.info('the rights are : ' + rights);
+							this.log.info('the rights are : ' + JSON.stringify(rights));
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandler(e));
 							this.log.info('finished creating devices/groups (if any)');
@@ -462,6 +462,10 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 										//kein pauschales Setzen des Operationmode, da unbekannt wohin es dann geht
+										this.setStateAsync('DECT_' + id + '.boostactiveendtime', {
+											val: 0,
+											ack: true
+										});
 									})
 									.catch((e) => this.errorHandler(e));
 							} else if (
@@ -474,8 +478,12 @@ class Fritzdect extends utils.Adapter {
 							) {
 								const minutes = await this.getStateAsync('DECT_' + id + '.boostactivetime');
 								if (minutes && minutes.val !== null) {
+									let activetime = minutes.val;
 									const jetzt = +new Date();
-									const ende = Math.floor(jetzt / 1000 + Number(minutes.val) * 60); //time for fritzbox is in seconds
+									if (minutes.val > 1440) {
+										activetime = 1440;
+									}
+									const ende = Math.floor(jetzt / 1000 + Number(activetime) * 60); //time for fritzbox is in seconds
 									this.log.debug(' unix returned ' + ende + ' real ' + new Date(ende * 1000));
 									this.fritz
 										.setHkrBoost(id, ende)
@@ -536,6 +544,10 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 										//keine Nachführung operationmode, da unbekannt wohin es geht
+										this.setStateAsync('DECT_' + id + '.windowopenactiveendtime', {
+											val: 0,
+											ack: true
+										});
 									})
 									.catch((e) => this.errorHandler(e));
 							} else if (
@@ -548,8 +560,12 @@ class Fritzdect extends utils.Adapter {
 							) {
 								const minutes = await this.getStateAsync('DECT_' + id + '.windowopenactivetime');
 								if (minutes && minutes.val !== null) {
+									let activetime = minutes.val;
 									const jetzt = +new Date();
-									const ende = Math.floor(jetzt / 1000 + Number(minutes.val) * 60); //time for fritzbox is in seconds
+									if (minutes.val > 1440) {
+										activetime = 1440;
+									}
+									const ende = Math.floor(jetzt / 1000 + Number(activetime) * 60); //time for fritzbox is in seconds
 									this.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
 									this.fritz
 										.setWindowOpen(id, ende)

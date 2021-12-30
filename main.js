@@ -12,6 +12,7 @@ const utils = require('@iobroker/adapter-core');
 // const fs = require("fs");
 const Fritz = require('./lib/fritzhttp.js');
 const parser = require('xml2json-light');
+// const { resolve } = require('path/posix');
 
 let polling;
 
@@ -973,7 +974,8 @@ class Fritzdect extends utils.Adapter {
 						this.fritz
 							.getColorDefaults()
 							.then(function(colorinfos) {
-								result = colorinfos;
+								const color = parser.xml2json(colorinfos);
+								result = color;
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -992,7 +994,8 @@ class Fritzdect extends utils.Adapter {
 						this.fritz
 							.getUserPermissions()
 							.then(function(rights) {
-								result = rights;
+								const permission = parser.xml2json(rights);
+								result = permission;
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1075,174 +1078,170 @@ class Fritzdect extends utils.Adapter {
 	async updateDevices(fritz) {
 		this.log.debug('__________________________');
 		this.log.debug('updating Devices / Groups ');
-		await fritz
-			.getDeviceListInfos()
-			.then(async (devicelistinfos) => {
-				let currentMode = null;
-				let devices = parser.xml2json(devicelistinfos);
-				// devices
-				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
-					// remove spaces in AINs
-					//device.identifier = device.identifier.replace(/\s/g, '');
-					return device;
-				});
-				this.log.debug('devices\n');
-				this.log.debug(JSON.stringify(devices));
-				if (devices.length) {
-					this.log.debug('update Devices ' + devices.length);
-					try {
-						for (let i = 0; i < devices.length; i++) {
-							this.log.debug('_____________________________________________');
-							this.log.debug('updating Device ' + devices[i].name);
-							if (
-								devices[i].present === '0' ||
-								devices[i].present === 0 ||
-								devices[i].present === false
-							) {
-								await this.setStateAsync(
-									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
-									{
-										val: false,
-										ack: true
-									}
-								);
-								this.log.debug(
-									'DECT_' +
-										devices[i].identifier.replace(/\s/g, '') +
-										' is not present, check the device connection, no values are written'
-								);
-								continue;
-							} else {
-								if (devices[i].hkr) {
-									currentMode = 'Auto';
-									if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
-										currentMode = 'Comfort';
-									}
-									if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
-										currentMode = 'Night';
-									}
-									//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
-									await this.setStateAsync(
-										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
-										{
-											val: currentMode,
-											ack: true
-										}
-									);
-								}
-								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
-								// some weird id usage, the website shows the id of the etsiunit
-								if (devices[i].etsiunitinfo) {
-									if (devices[i].etsiunitinfo.etsideviceid) {
-										//replace id with etsi
-										this.log.debug('id vorher ' + devices[i].id);
-										devices[i].id = devices[i].etsiunitinfo.etsideviceid;
-										this.log.debug('id nachher ' + devices[i].id);
-									}
-								}
-								//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
-								//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
-								if (devices[i].simpleonoff) {
-									await this.setStateAsync(
-										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
-										{
-											val: 'simpleonoff',
-											ack: true
-										}
-									);
-								}
-								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
-								if (devices[i].functionbitmask == 1) {
-									this.log.debug(' functionbitmask 1');
-									//fasthack
-									//einfach hier die fwversion aus dem Nachfolgedatensatz setzen
-									devices[i].fwversion = devices[i + 1].fwversion;
-									// search and find the device id and replace fwversion
-									// todo
-									// find the device.identifier mit der etsi_id
-									//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
-									// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
-									// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
-									// reihenfolge, id immer vorher und dann erst etsi in json?
-									continue;
-								} else {
-									this.log.debug(' calling update data .....');
-									try {
-										await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
-									} catch (e) {
-										this.log.error(' issue updating device ' + JSON.stringify(e));
-										throw {
-											msg: 'issue updating device',
-											function: 'updateDevices',
-											error: e
-										};
-									}
-								}
-							}
-						}
-					} catch (e) {
-						this.log.error(' issue updating device ' + JSON.stringify(e));
-						throw {
-							msg: 'issue updating device',
-							function: 'updateDevices',
-							error: e
-						};
-					}
-				}
+		try {
+			const devicelistinfos = await fritz.getDeviceListInfos();
+			let currentMode = null;
 
-				// groups
-				let groups = parser.xml2json(devicelistinfos);
-				groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
-					// remove spaces in AINs
-					// group.identifier = group.identifier.replace(/\s/g, '');
-					return group;
-				});
-				this.log.debug('groups\n');
-				this.log.debug(JSON.stringify(groups));
-				if (groups.length) {
-					this.log.debug('update Groups ' + groups.length);
-					groups.forEach(async (device) => {
-						this.log.debug('updating Group ' + groups.name);
-						if (device.present === '0' || device.present === 0 || device.present === false) {
+			let devices = parser.xml2json(devicelistinfos);
+			// devices
+			devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
+				// remove spaces in AINs
+				//device.identifier = device.identifier.replace(/\s/g, '');
+				return device;
+			});
+			this.log.debug('devices\n');
+			this.log.debug(JSON.stringify(devices));
+			if (devices.length) {
+				this.log.debug('update Devices ' + devices.length);
+				try {
+					for (let i = 0; i < devices.length; i++) {
+						this.log.debug('_____________________________________________');
+						this.log.debug('updating Device ' + devices[i].name);
+						if (devices[i].present === '0' || devices[i].present === 0 || devices[i].present === false) {
+							await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
+								val: false,
+								ack: true
+							});
 							this.log.debug(
 								'DECT_' +
-									device.identifier.replace(/\s/g, '') +
+									devices[i].identifier.replace(/\s/g, '') +
 									' is not present, check the device connection, no values are written'
 							);
+							continue;
 						} else {
-							if (device.hkr) {
+							if (devices[i].hkr) {
 								currentMode = 'Auto';
-								if (device.hkr.tsoll === device.hkr.komfort) {
+								if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
 									currentMode = 'Comfort';
 								}
-								if (device.hkr.tsoll === device.hkr.absenk) {
+								if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
 									currentMode = 'Night';
 								}
+								//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
 								await this.setStateAsync(
-									'DECT_' + device.identifier.replace(/\s/g, '') + '.operationmode',
+									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
 									{
 										val: currentMode,
 										ack: true
 									}
 								);
 							}
-							//hier könnte nochmal simpleonoff rein, wenn gruppen beides hätten
-							try {
+							// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
+							// some weird id usage, the website shows the id of the etsiunit
+							if (devices[i].etsiunitinfo) {
+								if (devices[i].etsiunitinfo.etsideviceid) {
+									//replace id with etsi
+									this.log.debug('id vorher ' + devices[i].id);
+									devices[i].id = devices[i].etsiunitinfo.etsideviceid;
+									this.log.debug('id nachher ' + devices[i].id);
+								}
+							}
+							//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
+							//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
+							if (devices[i].simpleonoff) {
+								await this.setStateAsync(
+									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
+									{
+										val: 'simpleonoff',
+										ack: true
+									}
+								);
+							}
+							// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
+							if (devices[i].functionbitmask == 1) {
+								this.log.debug(' functionbitmask 1');
+								//fasthack
+								//einfach hier die fwversion aus dem Nachfolgedatensatz setzen
+								devices[i].fwversion = devices[i + 1].fwversion;
+								// search and find the device id and replace fwversion
+								// todo
+								// find the device.identifier mit der etsi_id
+								//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
+								// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
+								// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
+								// reihenfolge, id immer vorher und dann erst etsi in json?
+								continue;
+							} else {
 								this.log.debug(' calling update data .....');
-								this.updateData(device, device.identifier.replace(/\s/g, ''));
-							} catch (e) {
-								this.log.error(' issue updating group ' + JSON.stringify(e));
-								throw {
-									msg: 'issue updating group',
-									function: 'updateDevices',
-									error: e
-								};
+								try {
+									await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
+								} catch (e) {
+									this.log.error(' issue updating device ' + JSON.stringify(e));
+									throw {
+										msg: 'issue updating device',
+										function: 'updateDevices',
+										error: e
+									};
+								}
 							}
 						}
-					});
+					}
+				} catch (e) {
+					this.log.error(' issue updating device ' + JSON.stringify(e));
+					throw {
+						msg: 'issue updating device',
+						function: 'updateDevices',
+						error: e
+					};
 				}
-			})
-			.catch((e) => this.errorHandler(e));
+			}
+
+			// groups
+			let groups = parser.xml2json(devicelistinfos);
+			groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
+				// remove spaces in AINs
+				// group.identifier = group.identifier.replace(/\s/g, '');
+				return group;
+			});
+			this.log.debug('groups\n');
+			this.log.debug(JSON.stringify(groups));
+			if (groups.length) {
+				this.log.debug('update Groups ' + groups.length);
+				//await this.asyncForEach(groups, async (device) => {
+				groups.forEach(async (device) => {
+					this.log.debug('updating Group ' + groups.name);
+					if (device.present === '0' || device.present === 0 || device.present === false) {
+						this.log.debug(
+							'DECT_' +
+								device.identifier.replace(/\s/g, '') +
+								' is not present, check the device connection, no values are written'
+						);
+					} else {
+						if (device.hkr) {
+							currentMode = 'Auto';
+							if (device.hkr.tsoll === device.hkr.komfort) {
+								currentMode = 'Comfort';
+							}
+							if (device.hkr.tsoll === device.hkr.absenk) {
+								currentMode = 'Night';
+							}
+							await this.setStateAsync(
+								'DECT_' + device.identifier.replace(/\s/g, '') + '.operationmode',
+								{
+									val: currentMode,
+									ack: true
+								}
+							);
+						}
+						//hier könnte nochmal simpleonoff rein, wenn gruppen beides hätten
+						try {
+							this.log.debug(' calling update data .....');
+							this.updateData(device, device.identifier.replace(/\s/g, ''));
+						} catch (e) {
+							this.log.error(' issue updating group ' + JSON.stringify(e));
+							throw {
+								msg: 'issue updating group',
+								function: 'updateDevices',
+								error: e
+							};
+						}
+					}
+				});
+			}
+			return Promise.resolve();
+		} catch (e) {
+			return Promise.reject(this.errorHandler(e));
+		}
 	}
 	async updateData(array, ident) {
 		this.log.debug('======================================');
@@ -1503,115 +1502,114 @@ class Fritzdect extends utils.Adapter {
 		}
 	}
 	async createTemplates(fritz) {
-		await fritz
-			.getTemplateListInfos()
-			.then(async (templatelistinfos) => {
-				let typ = '';
-				let role = '';
-				let templates = parser.xml2json(templatelistinfos);
-				templates = [].concat((templates.templatelist || {}).template || []).map((template) => {
-					return template;
+		try {
+			const templatelistinfos = await fritz.getTemplateListInfos();
+			let typ = '';
+			let role = '';
+			let templates = parser.xml2json(templatelistinfos);
+			templates = [].concat((templates.templatelist || {}).template || []).map((template) => {
+				return template;
+			});
+			this.log.debug('__________________________');
+			this.log.debug('templates\n');
+			this.log.debug(JSON.stringify(templates));
+			if (templates.length) {
+				this.log.info('create Templates ' + templates.length);
+				await this.createTemplateResponse();
+				await this.asyncForEach(templates, async (template) => {
+					if (
+						(template.functionbitmask & 320) == 320 ||
+						(template.functionbitmask & 4160) == 4160 ||
+						(template.functionbitmask & 2688) == 2688 ||
+						(template.functionbitmask & 40960) == 40960 ||
+						(template.functionbitmask & 36864) == 36864 ||
+						(template.functionbitmask & 335888) == 335888 ||
+						(template.functionbitmask & 2944) == 2944
+					) {
+						//heating template
+						typ = 'template_';
+						role = 'switch';
+						this.log.debug('__________________________');
+						this.log.info('setting up Template ' + template.name);
+						await this.createTemplate(
+							typ,
+							template.identifier.replace(/\s/g, ''),
+							template.name,
+							role,
+							template.id
+						);
+					} else if (template.functionbitmask == 0 && template.applymask[0] == 256) {
+						// no other way to identify this one, role as switch may be not right
+						//telefon template
+						typ = 'template_';
+						role = 'switch';
+						this.log.debug('__________________________');
+						this.log.info('setting up Template ' + template.name);
+						await this.createTemplate(
+							typ,
+							template.identifier.replace(/\s/g, ''),
+							template.name,
+							role,
+							template.id
+						);
+					} else {
+						this.log.debug(
+							'nix vorbereitet für diese Art von Template ' +
+								template.functionbitmask +
+								' -> ' +
+								template.name
+						);
+					}
 				});
-				this.log.debug('__________________________');
-				this.log.debug('templates\n');
-				this.log.debug(JSON.stringify(templates));
-				if (templates.length) {
-					this.log.info('create Templates ' + templates.length);
-					await this.createTemplateResponse();
-					await this.asyncForEach(templates, async (template) => {
-						if (
-							(template.functionbitmask & 320) == 320 ||
-							(template.functionbitmask & 4160) == 4160 ||
-							(template.functionbitmask & 2688) == 2688 ||
-							(template.functionbitmask & 40960) == 40960 ||
-							(template.functionbitmask & 36864) == 36864 ||
-							(template.functionbitmask & 335888) == 335888 ||
-							(template.functionbitmask & 2944) == 2944
-						) {
-							//heating template
-							typ = 'template_';
-							role = 'switch';
-							this.log.debug('__________________________');
-							this.log.info('setting up Template ' + template.name);
-							await this.createTemplate(
-								typ,
-								template.identifier.replace(/\s/g, ''),
-								template.name,
-								role,
-								template.id
-							);
-						} else if (template.functionbitmask == 0 && template.applymask[0] == 256) {
-							// no other way to identify this one, role as switch may be not right
-							//telefon template
-							typ = 'template_';
-							role = 'switch';
-							this.log.debug('__________________________');
-							this.log.info('setting up Template ' + template.name);
-							await this.createTemplate(
-								typ,
-								template.identifier.replace(/\s/g, ''),
-								template.name,
-								role,
-								template.id
-							);
-						} else {
-							this.log.debug(
-								'nix vorbereitet für diese Art von Template ' +
-									template.functionbitmask +
-									' -> ' +
-									template.name
-							);
-						}
-					});
-				}
-			})
-			.catch((e) => this.errorHandler(e));
+			}
+			return Promise.resolve();
+		} catch (e) {
+			return Promise.reject(this.errorHandler(e));
+		}
 	}
 	async createDevices(fritz) {
-		await fritz
-			.getDeviceListInfos()
-			.then(async (devicelistinfos) => {
-				let devices = parser.xml2json(devicelistinfos);
-				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
-					// remove spaces in AINs
-					// device.identifier = device.identifier.replace(/\s/g, '');
-					return device;
-				});
-				this.log.debug('devices\n');
-				this.log.debug(JSON.stringify(devices));
-				if (devices.length) {
-					this.log.info('CREATE Devices ' + devices.length);
-					try {
-						await this.createData(devices);
-					} catch (e) {
-						this.log.debug(' issue creating devices ' + JSON.stringify(e));
-						throw e;
-					}
+		try {
+			const devicelistinfos = await fritz.getDeviceListInfos();
+
+			let devices = parser.xml2json(devicelistinfos);
+			devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
+				// remove spaces in AINs
+				// device.identifier = device.identifier.replace(/\s/g, '');
+				return device;
+			});
+			this.log.debug('devices\n');
+			this.log.debug(JSON.stringify(devices));
+			if (devices.length) {
+				this.log.info('CREATE Devices ' + devices.length);
+				try {
+					await this.createData(devices);
+				} catch (e) {
+					this.log.debug(' issue creating devices ' + JSON.stringify(e));
+					throw e;
 				}
-				let groups = parser.xml2json(devicelistinfos);
-				groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
-					// remove spaces in AINs
-					//group.identifier = group.identifier.replace(/\s/g, '');
-					return group;
-				});
-				this.log.debug('groups\n');
-				this.log.debug(JSON.stringify(groups));
-				if (groups.length) {
-					this.log.info('CREATE groups ' + groups.length);
-					try {
-						await this.createData(groups);
-					} catch (e) {
-						this.log.debug(' issue creating groups ' + JSON.stringify(e));
-						throw e;
-					}
+			}
+
+			let groups = parser.xml2json(devicelistinfos);
+			groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
+				// remove spaces in AINs
+				//group.identifier = group.identifier.replace(/\s/g, '');
+				return group;
+			});
+			this.log.debug('groups\n');
+			this.log.debug(JSON.stringify(groups));
+			if (groups.length) {
+				this.log.info('CREATE groups ' + groups.length);
+				try {
+					await this.createData(groups);
+				} catch (e) {
+					this.log.debug(' issue creating groups ' + JSON.stringify(e));
+					throw e;
 				}
-			})
-			/*
-			.then(function() {
-				pollFritzData();
-			})
-			*/
-			.catch((e) => this.errorHandler(e));
+			}
+			return Promise.resolve();
+		} catch (e) {
+			return Promise.reject(this.errorHandler(e));
+		}
 	}
 	async asyncForEach(array, callback) {
 		for (let index = 0; index < array.length; index++) {
@@ -2113,7 +2111,7 @@ class Fritzdect extends utils.Adapter {
 	async createObject(typ, newId, name, role) {
 		this.log.debug('____________________________________________');
 		this.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
-		await this.setObjectNotExists(typ + newId, {
+		await this.setObjectNotExistsAsync(typ + newId, {
 			type: 'channel',
 			common: {
 				name: name,
@@ -2126,7 +2124,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createInfoState(newId, datapoint, name) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2141,7 +2139,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createIndicatorState(newId, datapoint, name) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2156,7 +2154,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createValueState(newId, datapoint, name, min, max, unit) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2174,7 +2172,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createTimeState(newId, datapoint, name) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2189,7 +2187,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createButton(newId, datapoint, name) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2204,7 +2202,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createSwitch(newId, datapoint, name) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2219,7 +2217,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createModeState(newId, datapoint, name) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2234,7 +2232,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createValueCtrl(newId, datapoint, name, min, max, unit, role) {
 		this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
-		await this.setObjectNotExists('DECT_' + newId + '.' + datapoint, {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
 			type: 'state',
 			common: {
 				name: name,
@@ -2252,7 +2250,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createTemplateResponse() {
 		this.log.debug('create template.lasttemplate for response ');
-		await this.setObjectNotExists('template', {
+		await this.setObjectNotExistsAsync('template', {
 			type: 'channel',
 			common: {
 				name: 'template response',
@@ -2260,7 +2258,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('template.lasttemplate', {
+		await this.setObjectNotExistsAsync('template.lasttemplate', {
 			type: 'state',
 			common: {
 				name: 'template set',
@@ -2275,7 +2273,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createTemplate(typ, newId, name, role, id) {
 		this.log.debug('create Template objects ');
-		await this.setObjectNotExists(typ + newId, {
+		await this.setObjectNotExistsAsync(typ + newId, {
 			type: 'channel',
 			common: {
 				name: name,
@@ -2285,7 +2283,7 @@ class Fritzdect extends utils.Adapter {
 				aid: newId
 			}
 		});
-		await this.setObjectNotExists(typ + newId + '.id', {
+		await this.setObjectNotExistsAsync(typ + newId + '.id', {
 			type: 'state',
 			common: {
 				name: 'ID',
@@ -2298,7 +2296,7 @@ class Fritzdect extends utils.Adapter {
 			native: {}
 		});
 		await this.setStateAsync(typ + newId + '.id', { val: id, ack: true });
-		await this.setObjectNotExists(typ + newId + '.name', {
+		await this.setObjectNotExistsAsync(typ + newId + '.name', {
 			type: 'state',
 			common: {
 				name: 'Name',
@@ -2311,7 +2309,7 @@ class Fritzdect extends utils.Adapter {
 			native: {}
 		});
 		await this.setStateAsync(typ + newId + '.name', { val: name, ack: true });
-		await this.setObjectNotExists(typ + newId + '.toggle', {
+		await this.setObjectNotExistsAsync(typ + newId + '.toggle', {
 			type: 'state',
 			common: {
 				name: 'Toggle template',
@@ -2326,7 +2324,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createThermostat(newId) {
 		this.log.debug('create Thermostat objects');
-		await this.setObjectNotExists('DECT_' + newId + '.hkrmode', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.hkrmode', {
 			type: 'state',
 			common: {
 				name: 'Thermostat operation mode (0=auto, 1=closed, 2=open)',
@@ -2340,7 +2338,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.lasttarget', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.lasttarget', {
 			type: 'state',
 			common: {
 				name: 'last setting of target temp',
@@ -2353,7 +2351,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.operationlist', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.operationlist', {
 			type: 'state',
 			common: {
 				name: 'List of operation modes',
@@ -2369,7 +2367,7 @@ class Fritzdect extends utils.Adapter {
 			val: `Auto, On, Off, Holiday, Summer, Boost, WindowOpen`,
 			ack: true
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.operationmode', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.operationmode', {
 			type: 'state',
 			common: {
 				name: 'Current operation mode',
@@ -2381,7 +2379,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.setmodeoff', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.setmodeoff', {
 			type: 'state',
 			common: {
 				name: 'Switch MODE OFF',
@@ -2393,7 +2391,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.setmodeon', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.setmodeon', {
 			type: 'state',
 			common: {
 				name: 'Switch MODE ON',
@@ -2405,7 +2403,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.setmodeauto', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.setmodeauto', {
 			type: 'state',
 			common: {
 				name: 'Switch MODE AUTO',
@@ -2420,7 +2418,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createBlind(newId) {
 		this.log.debug('create Blinds objects');
-		await this.setObjectNotExists('DECT_' + newId + '.blindsopen', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.blindsopen', {
 			type: 'state',
 			common: {
 				name: 'Switch open',
@@ -2432,7 +2430,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.blindsclose', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.blindsclose', {
 			type: 'state',
 			common: {
 				name: 'Switch close',
@@ -2444,7 +2442,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
-		await this.setObjectNotExists('DECT_' + newId + '.blindsstop', {
+		await this.setObjectNotExistsAsync('DECT_' + newId + '.blindsstop', {
 			type: 'state',
 			common: {
 				name: 'Switch STOP',

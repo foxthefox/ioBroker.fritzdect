@@ -621,7 +621,7 @@
 					<interfaces>512,768</interfaces>
 				</etsiunitinfo>
 			</device>
-		  	<device
+		  	<device>
 			    <identifier>14276 0470139</identifier>
 			    <id>407</id>
 			    <functionbitmask>1</functionbitmask>

@@ -1109,10 +1109,29 @@ class Fritzdect extends utils.Adapter {
 						this.log.debug('_____________________________________________');
 						this.log.debug('updating Device ' + devices[i].name);
 						if (devices[i].present === '0' || devices[i].present === 0 || devices[i].present === false) {
+							/*
 							await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
 								val: false,
 								ack: true
 							});
+							*/
+							// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
+							const obj = await this.getForeignObjectAsync(
+								this.namespace + '.DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present'
+							);
+							if (!obj || !obj.common) {
+								this.log.debug(
+									'DECT_' +
+										devices[i].identifier.replace(/\s/g, '') +
+										'.present is not present, check the device connection, no values are written'
+								);
+							} else {
+								await this.setStateAsync(
+									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
+									{ val: false, ack: true }
+								);
+							}
+
 							this.log.debug(
 								'DECT_' +
 									devices[i].identifier.replace(/\s/g, '') +
@@ -1163,7 +1182,7 @@ class Fritzdect extends utils.Adapter {
 								this.log.debug(' functionbitmask 1');
 								//fasthack
 								//einfach hier die fwversion aus dem Nachfolgedatensatz setzen
-								devices[i].fwversion = devices[i + 1].fwversion;
+								devices[i + 1].fwversion = devices[i].fwversion;
 								// search and find the device id and replace fwversion
 								// todo
 								// find the device.identifier mit der etsi_id

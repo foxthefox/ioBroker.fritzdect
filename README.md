@@ -189,6 +189,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * log the user permissions
 * remove fasthack for OFF/ON, upper range tchange, absenk, komfort = 32
 * limitation of boost/windowopen activation to 24h
+* correction of "present" (issue #224) 
 
 ### 2.1.16
 * temperature range in sockets 0..32°C -> -20..50°C

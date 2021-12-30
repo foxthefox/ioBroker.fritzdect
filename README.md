@@ -58,7 +58,7 @@ The API of fritzbox has the following access:
 * sethkrtsoll
     * 8-28°C for automatic control
     * greater 28°C (254=ON)
-    * greater 28°C (255=OFF)
+    * greater 28°C (253=OFF)
 
 These settings are covered by the hkrmode and the 3 buttons. The activation lasts as long there is no other command or programmed sequence.
 
@@ -67,6 +67,13 @@ Additionally there is the access to:
 * boostactive
 
 These are indications as well as commands (sethkrwindowopen,sethkrboost) and when commanded they act with the provided time limit (max. 24h).
+For activation of boost/windowopen the following sequence applies:
+* set the activetime to the desired value in minutes
+* activate the activ (from false -> true)
+* the acteendtime changes to the target
+For deactivation of boost/windowopen the following sequence applies:
+* deactivate the activ (from true -> false)
+* the acteendtime changes to unixtime=0
 
 ### fritzdect implementation
 From the above API possibilities the thermostat has different modes in point of view of iobroker.adapter:

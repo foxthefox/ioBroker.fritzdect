@@ -441,4 +441,4 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 
 The MIT License (MIT)
 
-Copyright (c) 2018 - 2021 foxthefox <foxthefox@wysiwis.net>
+Copyright (c) 2018 - 2022 foxthefox <foxthefox@wysiwis.net>

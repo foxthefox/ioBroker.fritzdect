@@ -26,5 +26,6 @@ Diese Meldung kann mehrere Ursachen haben und ist nicht zwingend ausschließlich
     * Meldung, wenn Skripte zu einem Ergbenis kamen
     * wird das geloggt, was der Erwartungshaltung entspricht?
 * log in der FB anschauen
+* mit nodejs ein login versuchen, Anleitung hier: [logintest](./logintest_js.md)
 * alternativ mit python ein login versuchen, Anleitung hier: [logintest](./logintest.md)
 * ggf. FB neu starten

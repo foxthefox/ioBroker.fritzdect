@@ -1,4 +1,4 @@
-const Fritz = require('../fritzhttp.js');
+const Fritz = require('../../lib/fritzhttp.js');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
 const parser = require('xml2json-light');
@@ -83,14 +83,6 @@ if (
 			});
 			console.log('\n your groups\n');
 			console.table(groups);
-			await fritz
-				.getUserPermissions()
-				.then(function(response) {
-					console.log('Rights : ' + response);
-				})
-				.catch((e) => {
-					console.log('Fehler getUserPermissions', e);
-				});
 
 			await fritz
 				.check_SID()
@@ -112,25 +104,8 @@ if (
 					console.log('Fehler logout_SID', e);
 				});
 		} else {
-			console.log('your login is not successful ');
+			console.log('your login was not successful ');
 		}
-		//with relogin
-		await fritz
-			.getDeviceListInfos()
-			.then(function(response) {
-				console.log('Devices' + response);
-			})
-			.catch((e) => {
-				console.log('Fehler Devicelist ', e);
-			});
-		await fritz
-			.logout_SID()
-			.then(function(response) {
-				console.log('logout : ' + response);
-			})
-			.catch((e) => {
-				console.log('Fehler logout_SID', e);
-			});
 	}
 	test();
 }

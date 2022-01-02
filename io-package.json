@@ -1,19 +1,31 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.2.1",
+		"version": "2.2.2",
 		"news": {
+			"2.2.2": {
+				"en": "license 2022, doc correction",
+				"de": "Lizenz 2022, Dokumentkorrektur",
+				"ru": "лицензия 2022 г., коррекция документов",
+				"pt": "licença 2022, correção de doc",
+				"nl": "licentie 2022, doc correctie",
+				"fr": "licence 2022, correction doc",
+				"it": "licenza 2022, correzione del documento",
+				"es": "licencia 2022, corrección doc",
+				"pl": "licencja 2022, poprawka dok.",
+				"zh-cn": "许可证 2022，文档更正"
+			},
 			"2.2.1": {
-			    "en": "corrections, added testscript for login check",
-			    "de": "Korrekturen, Testskript für Login-Check hinzugefügt",
-			    "ru": "исправления, добавлен тестовый скрипт для проверки входа в систему",
-			    "pt": "correções, script de teste adicionado para verificação de login",
-			    "nl": "correcties, testscript toegevoegd voor inlogcontrole",
-			    "fr": "corrections, ajout de script de test pour la vérification de connexion",
-			    "it": "correzioni, aggiunto testscript per il controllo del login",
-			    "es": "correcciones, testcript añadido para comprobar el inicio de sesión",
-			    "pl": "poprawki, dodany testscript do sprawdzania logowania",
-			    "zh-cn": "更正，添加了用于登录检查的测试脚本"
+				"en": "corrections, added testscript for login check",
+				"de": "Korrekturen, Testskript für Login-Check hinzugefügt",
+				"ru": "исправления, добавлен тестовый скрипт для проверки входа в систему",
+				"pt": "correções, script de teste adicionado para verificação de login",
+				"nl": "correcties, testscript toegevoegd voor inlogcontrole",
+				"fr": "corrections, ajout de script de test pour la vérification de connexion",
+				"it": "correzioni, aggiunto testscript per il controllo del login",
+				"es": "correcciones, testcript añadido para comprobar el inicio de sesión",
+				"pl": "poprawki, dodany testscript do sprawdzania logowania",
+				"zh-cn": "更正，添加了用于登录检查的测试脚本"
 			},
 			"2.2.0": {
 				"en": "refactor of API, https support, fault fixes",

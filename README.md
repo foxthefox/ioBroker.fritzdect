@@ -189,7 +189,7 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 * improvement of thermostat mode to text representation (auto, off, boost, comfort, night), comfort and night are also auto mode, but preset to the parametrized value
 
 ## Changelog
-### 2.2.2
+### 2.2.2 (npm)
 * license update
 * corrected doc/de
 

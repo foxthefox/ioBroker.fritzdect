@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.2.2",
+		"version": "2.2.3",
 		"news": {
+			"2.2.3": {
+				"en": "default time setting in admin config for open window or boost activation, setmodeon/off/auto initial value= false",
+				"de": "Standardzeiteinstellung in der Admin-Konfiguration für offenes Fenster oder Boost-Aktivierung, setmodeon/off/auto initial value=false",
+				"ru": "установка времени по умолчанию в конфигурации администратора для открытого окна или ускоренной активации, setmodeon / off / auto начальное значение = false",
+				"pt": "configuração de tempo padrão na configuração do administrador para janela aberta ou ativação de impulso, setmodeon / off / valor inicial automático = falso",
+				"nl": "standaard tijdinstelling in admin-configuratie voor open venster of boost-activering, setmodeon/off/auto initiële waarde= false",
+				"fr": "réglage de l'heure par défaut dans la configuration d'administration pour l'activation de la fenêtre ouverte ou du boost, setmodeon/off/auto valeur initiale = false",
+				"it": "impostazione dell'ora predefinita nella configurazione dell'amministratore per la finestra aperta o l'attivazione boost, setmodeon/off/auto valore iniziale = false",
+				"es": "configuración de tiempo predeterminada en la configuración de administrador para la ventana abierta o la activación de impulso, setmodeon / off / auto initial value = false",
+				"pl": "domyślne ustawienie czasu w konfiguracji administratora dla otwartego okna lub aktywacji doładowania, setmodeon/off/auto wartość początkowa = false",
+				"zh-cn": "管理配置中用于打开窗口或增强激活的默认时间设置，setmodeon/off/auto 初始值= false"
+			},
 			"2.2.2": {
 				"en": "license 2022, doc correction",
 				"de": "Lizenz 2022, Dokumentkorrektur",
@@ -196,7 +208,9 @@
 		"fritz_interval": 300,
 		"fritz_options": null,
 		"fritz_writeonhyst": false,
-		"fritz_hysteresis": 1
+		"fritz_hysteresis": 1,
+		"fritz_boosttime": 5,
+		"fritz_windowtime": 5
 	},
 	"objects": [],
 	"instanceObjects": []

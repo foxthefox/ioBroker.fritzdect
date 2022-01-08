@@ -96,6 +96,8 @@ class Fritzdect extends utils.Adapter {
 		this.on('unload', this.onUnload.bind(this));
 		this.systemConfig = {};
 		this.fritz = null;
+		this.boosttime = 5;
+		this.windowtime = 5;
 	}
 
 	/**
@@ -110,6 +112,8 @@ class Fritzdect extends utils.Adapter {
 			settings.Url = this.config.fritz_ip;
 			//settings.options = this.config.fritz_options;
 			settings.intervall = this.config.fritz_interval;
+			this.boosttime = this.config.fritz_boosttime;
+			this.windowtime = this.config.fritz_windowtime;
 
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
 			// this.config:
@@ -310,7 +314,9 @@ class Fritzdect extends utils.Adapter {
 							}
 						} else if (dp === 'hkrmode') {
 							if (state.val === 0) {
-								const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll');
+								const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll').catch((e) => {
+									this.log.warn('problem getting the tsoll status ' + e);
+								});
 								// oder hier die Verwendung von lasttarget
 								if (targettemp && targettemp.val !== null) {
 									if (targettemp.val) {
@@ -368,6 +374,11 @@ class Fritzdect extends utils.Adapter {
 						}
 						//no need to check the state.val, it is a button
 						if (dp === 'setmodeauto') {
+							//zurücksetzen wegen toggle/button click
+							await this.setStateAsync('DECT_' + id + '.setmodeauto', {
+								val: false,
+								ack: true
+							});
 							const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll');
 							// oder hier die Verwendung von lasttarget
 							if (targettemp && targettemp.val !== null) {
@@ -406,6 +417,11 @@ class Fritzdect extends utils.Adapter {
 							}
 						}
 						if (dp === 'setmodeoff') {
+							//zurücksetzen wegen toggle/button click
+							await this.setStateAsync('DECT_' + id + '.setmodeoff', {
+								val: false,
+								ack: true
+							});
 							await this.fritz
 								.setTempTarget(id, 'off')
 								.then((sid) => {
@@ -422,6 +438,11 @@ class Fritzdect extends utils.Adapter {
 								.catch((e) => this.errorHandler(e));
 						}
 						if (dp === 'setmodeon') {
+							//zurücksetzen wegen toggle/button click
+							await this.setStateAsync('DECT_' + id + '.setmodeon', {
+								val: false,
+								ack: true
+							});
 							await this.fritz
 								.setTempTarget(id, 'on')
 								.then((sid) => {
@@ -2094,7 +2115,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.boostactivetime', {
-										val: 5,
+										val: this.boosttime,
 										ack: true
 									});
 								} else if (key === 'boostactiveendtime') {
@@ -2121,7 +2142,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
-										val: 5,
+										val: this.windowtime,
 										ack: true
 									});
 								} else if (key === 'windowopenactiveendtime') {
@@ -2590,6 +2611,10 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
+		await this.setStateAsync('DECT_' + newId + '.setmodeoff', {
+			val: false,
+			ack: true
+		});
 		await this.setObjectNotExistsAsync('DECT_' + newId + '.setmodeon', {
 			type: 'state',
 			common: {
@@ -2602,6 +2627,10 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
+		await this.setStateAsync('DECT_' + newId + '.setmodeon', {
+			val: false,
+			ack: true
+		});
 		await this.setObjectNotExistsAsync('DECT_' + newId + '.setmodeauto', {
 			type: 'state',
 			common: {
@@ -2613,6 +2642,10 @@ class Fritzdect extends utils.Adapter {
 				desc: 'Switch MODE AUTO'
 			},
 			native: {}
+		});
+		await this.setStateAsync('DECT_' + newId + '.setmodeauto', {
+			val: false,
+			ack: true
 		});
 		return;
 	}

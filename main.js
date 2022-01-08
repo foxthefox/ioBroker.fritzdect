@@ -314,7 +314,9 @@ class Fritzdect extends utils.Adapter {
 							}
 						} else if (dp === 'hkrmode') {
 							if (state.val === 0) {
-								const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll');
+								const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll').catch((e) => {
+									this.log.warn('problem getting the tsoll status ' + e);
+								});
 								// oder hier die Verwendung von lasttarget
 								if (targettemp && targettemp.val !== null) {
 									if (targettemp.val) {

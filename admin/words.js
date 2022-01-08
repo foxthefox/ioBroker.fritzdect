@@ -193,5 +193,29 @@ systemDictionary = {
 		es: 'opciones para http.request (generalmente vacío, a menos que realice una prueba)',
 		pl: 'opcje dla http.request (zwykle puste, chyba że robisz test)',
 		'zh-cn': 'http.request 的选项（通常为空，除非您进行测试）'
+	},
+	'default time (minutes) for boost activation': {
+		en: 'default time (minutes) for boost activation',
+		de: 'Standardzeit (Minuten) für die Boost-Aktivierung',
+		ru: 'время по умолчанию (в минутах) для активации ускорения',
+		pt: 'tempo padrão (minutos) para ativação de reforço',
+		nl: 'standaardtijd (minuten) voor activering van boost',
+		fr: "temps par défaut (minutes) pour l'activation du boost",
+		it: "tempo predefinito (minuti) per l'attivazione boost",
+		es: 'tiempo predeterminado (minutos) para la activación de refuerzo',
+		pl: 'domyślny czas (minuty) aktywacji doładowania',
+		'zh-cn': '增强激活的默认时间（分钟）'
+	},
+	'default time (minutes) for open window activation': {
+		en: 'default time (minutes) for open window activation',
+		de: 'Standardzeit (Minuten) für die Aktivierung des offenen Fensters',
+		ru: 'время по умолчанию (минуты) для активации открытого окна',
+		pt: 'tempo padrão (minutos) para ativação de janela aberta',
+		nl: 'standaardtijd (minuten) voor activering van open venster',
+		fr: "temps par défaut (minutes) pour l'activation de la fenêtre ouverte",
+		it: "tempo predefinito (minuti) per l'attivazione della finestra aperta",
+		es: 'tiempo predeterminado (minutos) para la activación de la ventana abierta',
+		pl: 'domyślny czas (minuty) aktywacji otwartego okna',
+		'zh-cn': '打开窗口激活的默认时间（分钟）'
 	}
 };

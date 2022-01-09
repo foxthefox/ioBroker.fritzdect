@@ -210,7 +210,8 @@
 		"fritz_writeonhyst": false,
 		"fritz_hysteresis": 1,
 		"fritz_boosttime": 5,
-		"fritz_windowtime": 5
+		"fritz_windowtime": 5,
+		"fritz_tsolldefault": 23
 	},
 	"objects": [],
 	"instanceObjects": []

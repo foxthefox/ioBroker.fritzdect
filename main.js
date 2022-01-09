@@ -78,7 +78,7 @@ Beim Rollladen als Bitmaske auszuwerten.
 5 =
 */
 
-const settings = { Username: '', Password: '', Url: '', options: {}, intervall: 300 };
+const settings = { Username: '', Password: '', Url: '', options: {}, intervall: 300, boosttime: 5, windowtime: 5 };
 
 class Fritzdect extends utils.Adapter {
 	/**
@@ -112,8 +112,8 @@ class Fritzdect extends utils.Adapter {
 			settings.Url = this.config.fritz_ip;
 			//settings.options = this.config.fritz_options;
 			settings.intervall = this.config.fritz_interval;
-			this.boosttime = this.config.fritz_boosttime;
-			this.windowtime = this.config.fritz_windowtime;
+			settings.boosttime = this.boosttime = this.config.fritz_boosttime;
+			settings.windowtime = this.windowtime = this.config.fritz_windowtime;
 
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
 			// this.config:
@@ -267,6 +267,7 @@ class Fritzdect extends utils.Adapter {
 			// you can use the ack flag to detect if it is status (true) or command (false)
 			if (state && !state.ack && state.val !== null && id !== null) {
 				this.log.debug('ack is not set! -> command');
+				//hier noch eine Abfrage ob das Gerät present=false hat und Fehlermeldung das man Nichterreichbares Gerät bedienen wiil
 				const tmp = id.split('.');
 				const dp = tmp.pop();
 				const idx = tmp.pop(); //is the name after fritzdect.x.
@@ -280,7 +281,7 @@ class Fritzdect extends utils.Adapter {
 							if (state.val < 8) {
 								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 1, ack: false }); //damit das Ventil auch regelt
-								this.fritz
+								await this.fritz
 									.setTempTarget(id, 'off')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed');
@@ -289,7 +290,7 @@ class Fritzdect extends utils.Adapter {
 							} else if (state.val > 28) {
 								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt (false= Befehl und nochmaliger Einsprung )
-								this.fritz
+								await this.fritz
 									.setTempTarget(id, 'on')
 									.then(() => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
@@ -297,7 +298,7 @@ class Fritzdect extends utils.Adapter {
 									.catch((e) => this.errorHandler(e));
 							} else {
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 0, ack: false }); //damit das Ventil auch regelt
-								this.fritz
+								await this.fritz
 									.setTempTarget(id, state.val)
 									.then(() => {
 										this.log.debug('Set target temp ' + id + state.val + ' °C');
@@ -322,10 +323,10 @@ class Fritzdect extends utils.Adapter {
 									if (targettemp.val) {
 										let setTemp = targettemp.val;
 										if (setTemp < 8) {
-											this.setStateAsync('DECT_' + id + '.tsoll', { val: 8, ack: true });
+											await this.setStateAsync('DECT_' + id + '.tsoll', { val: 8, ack: true });
 											setTemp = 8;
 										} else if (setTemp > 28) {
-											this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
+											await this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
 											setTemp = 28;
 										}
 										await this.fritz
@@ -349,7 +350,7 @@ class Fritzdect extends utils.Adapter {
 									throw { error: ' targettemp is NULL ' };
 								}
 							} else if (state.val === 1) {
-								this.fritz
+								await this.fritz
 									.setTempTarget(id, 'off')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed.');
@@ -360,7 +361,7 @@ class Fritzdect extends utils.Adapter {
 									})
 									.catch((e) => this.errorHandler(e));
 							} else if (state.val === 2) {
-								this.fritz
+								await this.fritz
 									.setTempTarget(id, 'on')
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
@@ -385,10 +386,10 @@ class Fritzdect extends utils.Adapter {
 								if (targettemp.val) {
 									let setTemp = targettemp.val;
 									if (setTemp < 8) {
-										this.setStateAsync('DECT_' + id + '.tsoll', { val: 8, ack: true });
+										await this.setStateAsync('DECT_' + id + '.tsoll', { val: 8, ack: true });
 										setTemp = 8;
 									} else if (setTemp > 28) {
-										this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
+										await this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
 										setTemp = 28;
 									}
 									this.fritz
@@ -1437,6 +1438,14 @@ class Fritzdect extends utils.Adapter {
 					} else if (value == 253) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						await this.setStateAsync('DECT_' + ain + '.tsoll', {
+							val: 4,
+							ack: true
+						});
+						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+							val: 4,
+							ack: true
+						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
 							val: 1,
 							ack: true
@@ -1449,6 +1458,14 @@ class Fritzdect extends utils.Adapter {
 					} else if (value == 254) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						await this.setStateAsync('DECT_' + ain + '.tsoll', {
+							val: 32,
+							ack: true
+						});
+						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+							val: 32,
+							ack: true
+						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
 							val: 2,
 							ack: true
@@ -1458,6 +1475,8 @@ class Fritzdect extends utils.Adapter {
 							val: currentMode,
 							ack: true
 						});
+					} else {
+						this.log.warn('undefined tsoll submitted from fritzbox !');
 					}
 				} else if (
 					key == 'state' ||
@@ -2056,8 +2075,8 @@ class Fritzdect extends utils.Adapter {
 										identifier,
 										'tsoll',
 										'Setpoint Temperature',
-										8,
-										32,
+										0,
+										35,
 										'°C',
 										'value.temperature'
 									);
@@ -2115,7 +2134,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.boostactivetime', {
-										val: this.boosttime,
+										val: this.boosttime || settings.boosttime,
 										ack: true
 									});
 								} else if (key === 'boostactiveendtime') {
@@ -2142,7 +2161,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
-										val: this.windowtime,
+										val: this.windowtime || settings.windowtime,
 										ack: true
 									});
 								} else if (key === 'windowopenactiveendtime') {

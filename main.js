@@ -1438,6 +1438,14 @@ class Fritzdect extends utils.Adapter {
 					} else if (value == 253) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						await this.setStateAsync('DECT_' + ain + '.tsoll', {
+							val: 4,
+							ack: true
+						});
+						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+							val: 4,
+							ack: true
+						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
 							val: 1,
 							ack: true
@@ -1450,6 +1458,14 @@ class Fritzdect extends utils.Adapter {
 					} else if (value == 254) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						await this.setStateAsync('DECT_' + ain + '.tsoll', {
+							val: 32,
+							ack: true
+						});
+						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+							val: 32,
+							ack: true
+						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
 							val: 2,
 							ack: true
@@ -2059,8 +2075,8 @@ class Fritzdect extends utils.Adapter {
 										identifier,
 										'tsoll',
 										'Setpoint Temperature',
-										8,
-										32,
+										0,
+										35,
 										'°C',
 										'value.temperature'
 									);

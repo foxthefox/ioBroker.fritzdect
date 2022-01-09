@@ -217,5 +217,17 @@ systemDictionary = {
 		es: 'tiempo predeterminado (minutos) para la activación de la ventana abierta',
 		pl: 'domyślny czas (minuty) aktywacji otwartego okna',
 		'zh-cn': '打开窗口激活的默认时间（分钟）'
+	},
+	'default target temperature': {
+		en: 'default target temperature',
+		de: 'voreingestellte Zieltemperatur',
+		ru: 'заданная температура по умолчанию',
+		pt: 'temperatura alvo padrão',
+		nl: 'standaard doeltemperatuur',
+		fr: 'température cible par défaut',
+		it: 'temperatura target predefinita',
+		es: 'temperatura objetivo predeterminada',
+		pl: 'domyślna temperatura docelowa',
+		'zh-cn': '默认目标温度'
 	}
 };

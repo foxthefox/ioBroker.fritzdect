@@ -78,7 +78,16 @@ Beim Rollladen als Bitmaske auszuwerten.
 5 =
 */
 
-const settings = { Username: '', Password: '', Url: '', options: {}, intervall: 300, boosttime: 5, windowtime: 5 };
+const settings = {
+	Username: '',
+	Password: '',
+	Url: '',
+	options: {},
+	intervall: 300,
+	boosttime: 5,
+	windowtime: 5,
+	tsolldefault: 23
+};
 
 class Fritzdect extends utils.Adapter {
 	/**
@@ -98,6 +107,7 @@ class Fritzdect extends utils.Adapter {
 		this.fritz = null;
 		this.boosttime = 5;
 		this.windowtime = 5;
+		this.tsolldefault = 23;
 	}
 
 	/**
@@ -114,6 +124,7 @@ class Fritzdect extends utils.Adapter {
 			settings.intervall = this.config.fritz_interval;
 			settings.boosttime = this.boosttime = this.config.fritz_boosttime;
 			settings.windowtime = this.windowtime = this.config.fritz_windowtime;
+			settings.tsolldefault = this.tsolldefault = this.config.fritz_tsolldefault;
 
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
 			// this.config:
@@ -1437,13 +1448,14 @@ class Fritzdect extends utils.Adapter {
 						*/
 					} else if (value == 253) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
+						this.log.debug('DECT_' + ain + ' tsoll will be set to default vaule');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
-							val: 4,
+							val: settings.tsolldefault || this.tsolldefault,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-							val: 4,
+							val: settings.tsolldefault || this.tsolldefault,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
@@ -1457,13 +1469,14 @@ class Fritzdect extends utils.Adapter {
 						});
 					} else if (value == 254) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
+						this.log.debug('DECT_' + ain + ' tsoll will be set to default vaule');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
-							val: 32,
+							val: settings.tsolldefault || this.tsolldefault,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-							val: 32,
+							val: settings.tsolldefault || this.tsolldefault,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {

@@ -1424,6 +1424,8 @@ class Fritzdect extends utils.Adapter {
 						ack: true
 					});
 				} else if (key == 'tsoll') {
+					let targettemp;
+					let tsoll;
 					if (value < 57) {
 						// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
@@ -1450,12 +1452,18 @@ class Fritzdect extends utils.Adapter {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
 						this.log.debug('DECT_' + ain + ' tsoll will be set to default vaule');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll');
+						if (targettemp && targettemp.val !== null) {
+							tsoll = targettemp.val;
+						} else {
+							tsoll = settings.tsolldefault || this.tsolldefault;
+						}
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
-							val: settings.tsolldefault || this.tsolldefault,
+							val: tsoll,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-							val: settings.tsolldefault || this.tsolldefault,
+							val: tsoll,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
@@ -1471,12 +1479,18 @@ class Fritzdect extends utils.Adapter {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
 						this.log.debug('DECT_' + ain + ' tsoll will be set to default vaule');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll');
+						if (targettemp && targettemp.val !== null) {
+							tsoll = targettemp.val;
+						} else {
+							tsoll = settings.tsolldefault || this.tsolldefault;
+						}
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
-							val: settings.tsolldefault || this.tsolldefault,
+							val: tsoll,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-							val: settings.tsolldefault || this.tsolldefault,
+							val: tsoll,
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + ain + '.hkrmode', {

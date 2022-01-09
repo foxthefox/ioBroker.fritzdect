@@ -391,7 +391,9 @@ class Fritzdect extends utils.Adapter {
 								val: false,
 								ack: true
 							});
-							const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll');
+							const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll').catch((e) => {
+								this.log.warn('problem getting the tsoll status ' + e);
+							});
 							// oder hier die Verwendung von lasttarget
 							if (targettemp && targettemp.val !== null) {
 								if (targettemp.val) {
@@ -1450,13 +1452,15 @@ class Fritzdect extends utils.Adapter {
 						*/
 					} else if (value == 253) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
-						this.log.debug('DECT_' + ain + ' tsoll will be set to default vaule');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll');
+						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
+							this.log.warn('problem getting the tsoll status ' + e);
+						});
 						if (targettemp && targettemp.val !== null) {
 							tsoll = targettemp.val;
 						} else {
 							tsoll = settings.tsolldefault || this.tsolldefault;
+							this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
 						}
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
 							val: tsoll,
@@ -1477,13 +1481,15 @@ class Fritzdect extends utils.Adapter {
 						});
 					} else if (value == 254) {
 						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
-						this.log.debug('DECT_' + ain + ' tsoll will be set to default vaule');
 						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll');
+						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
+							this.log.warn('problem getting the tsoll status ' + e);
+						});
 						if (targettemp && targettemp.val !== null) {
 							tsoll = targettemp.val;
 						} else {
 							tsoll = settings.tsolldefault || this.tsolldefault;
+							this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
 						}
 						await this.setStateAsync('DECT_' + ain + '.tsoll', {
 							val: tsoll,

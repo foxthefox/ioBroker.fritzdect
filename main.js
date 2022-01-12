@@ -2715,6 +2715,10 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
+		await this.setStateAsync('DECT_' + newId + '.blindsopen', {
+			val: false,
+			ack: true
+		});
 		await this.setObjectNotExistsAsync('DECT_' + newId + '.blindsclose', {
 			type: 'state',
 			common: {
@@ -2727,6 +2731,10 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
+		await this.setStateAsync('DECT_' + newId + '.blindsclose', {
+			val: false,
+			ack: true
+		});
 		await this.setObjectNotExistsAsync('DECT_' + newId + '.blindsstop', {
 			type: 'state',
 			common: {
@@ -2738,6 +2746,10 @@ class Fritzdect extends utils.Adapter {
 				desc: 'Switch STOP'
 			},
 			native: {}
+		});
+		await this.setStateAsync('DECT_' + newId + '.blindsstop', {
+			val: false,
+			ack: true
 		});
 		return;
 	}

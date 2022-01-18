@@ -2031,7 +2031,7 @@ class Fritzdect extends utils.Adapter {
 					}
 					// create thermosensor
 					if (device.temperature) {
-						this.log.info('setting up temperatur ');
+						this.log.info('setting up temperature ');
 						await Promise.all(
 							Object.keys(device.temperature).map(async (key) => {
 								//await this.asyncForEach(Object.keys(device.temperature), async (key) => {
@@ -2167,7 +2167,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.boostactivetime', {
-										val: this.boosttime || settings.boosttime,
+										val: parseInt(this.boosttime) || parseInt(settings.boosttime),
 										ack: true
 									});
 								} else if (key === 'boostactiveendtime') {
@@ -2194,7 +2194,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
-										val: this.windowtime || settings.windowtime,
+										val: parseInt(this.windowtime) || parseInt(settings.windowtime),
 										ack: true
 									});
 								} else if (key === 'windowopenactiveendtime') {

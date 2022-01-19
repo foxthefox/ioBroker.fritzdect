@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.2.3",
+		"version": "2.2.4",
 		"news": {
+			"2.2.4": {
+				"en": "correction: number format from admin page for time and tsoll",
+				"de": "Korrektur: Zahlenformat von der Admin-Seite für Zeit und Tsoll",
+				"ru": "исправление: числовой формат со страницы администратора для времени и цолл",
+				"pt": "correção: formato numérico da página de administração para hora e tsoll",
+				"nl": "correctie: getalnotatie van beheerderspagina voor tijd en tsoll",
+				"fr": "correction : format numérique de la page d'administration pour l'heure et tsoll",
+				"it": "correzione: formato numerico dalla pagina di amministrazione per ora e tsoll",
+				"es": "corrección: formato de número de la página de administración para tiempo y tsoll",
+				"pl": "poprawka: format liczb ze strony administratora dla czasu i tsoll",
+				"zh-cn": "更正：时间和 tsoll 管理页面中的数字格式"
+			},
 			"2.2.3": {
 				"en": "default time setting in admin config for open window or boost activation, setmodeon/off/auto initial value= false",
 				"de": "Standardzeiteinstellung in der Admin-Konfiguration für offenes Fenster oder Boost-Aktivierung, setmodeon/off/auto initial value=false",

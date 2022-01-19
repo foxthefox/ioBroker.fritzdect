@@ -2167,7 +2167,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.boostactivetime', {
-										val: parseInt(this.boosttime) || parseInt(settings.boosttime),
+										val: this.boosttime || settings.boosttime,
 										ack: true
 									});
 								} else if (key === 'boostactiveendtime') {
@@ -2194,7 +2194,7 @@ class Fritzdect extends utils.Adapter {
 									);
 									//preset to 5 min
 									await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
-										val: parseInt(this.windowtime) || parseInt(settings.windowtime),
+										val: this.windowtime || settings.windowtime,
 										ack: true
 									});
 								} else if (key === 'windowopenactiveendtime') {

@@ -2031,7 +2031,7 @@ class Fritzdect extends utils.Adapter {
 					}
 					// create thermosensor
 					if (device.temperature) {
-						this.log.info('setting up temperatur ');
+						this.log.info('setting up temperature ');
 						await Promise.all(
 							Object.keys(device.temperature).map(async (key) => {
 								//await this.asyncForEach(Object.keys(device.temperature), async (key) => {

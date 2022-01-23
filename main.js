@@ -162,8 +162,14 @@ class Fritzdect extends utils.Adapter {
 						if (login) {
 							this.log.info('checking user permissions');
 							const resp = await this.fritz.check_SID().catch((e) => this.errorHandler(e));
-							const rights = parser.xml2json(resp.rights);
-							this.log.info('the rights are : ' + JSON.stringify(rights));
+							this.log.info('raw perm =>' + resp);
+							try {
+								const rights = parser.xml2json(resp.rights);
+								this.log.info('the rights are : ' + JSON.stringify(rights));
+							} catch (error) {
+								this.log.error('permission xml2json ' + error);
+							}
+
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandler(e));
 							this.log.info('finished creating devices/groups (if any)');

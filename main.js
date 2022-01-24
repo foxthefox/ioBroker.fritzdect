@@ -161,6 +161,8 @@ class Fritzdect extends utils.Adapter {
 						const login = await this.fritz.login_SID();
 						if (login) {
 							this.log.info('checking user permissions');
+							/**
+							 * leere Rückmeldungen abfangen
 							const resp = await this.fritz.check_SID().catch((e) => this.errorHandler(e));
 							this.log.info('raw perm =>' + resp);
 							try {
@@ -169,7 +171,7 @@ class Fritzdect extends utils.Adapter {
 							} catch (error) {
 								this.log.error('permission xml2json ' + error);
 							}
-
+							*/
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandler(e));
 							this.log.info('finished creating devices/groups (if any)');

@@ -161,25 +161,27 @@ class Fritzdect extends utils.Adapter {
 						const login = await this.fritz.login_SID();
 						if (login) {
 							this.log.info('checking user permissions');
-							/**
-							 * leere Rückmeldungen abfangen
-							const resp = await this.fritz.check_SID().catch((e) => this.errorHandler(e));
+							const resp = await this.fritz.check_SID().catch((e) => this.errorHandlerApi(e));
 							this.log.info('raw perm =>' + resp);
 							try {
-								const rights = parser.xml2json(resp.rights);
+								let rights = '';
+								if (resp.rights.indexOf('ights') == -1) {
+									rights = parser.xml2json(''.concat('<Rights>', resp.rights, '</Rights>'));
+								} else {
+									rights = parser.xml2json(resp.rights);
+								}
 								this.log.info('the rights are : ' + JSON.stringify(rights));
 							} catch (error) {
-								this.log.error('permission xml2json ' + error);
+								this.log.error('error in permission xml2json ' + error);
 							}
-							*/
 							this.log.info('start creating devices/groups');
-							await this.createDevices(this.fritz).catch((e) => this.errorHandler(e));
+							await this.createDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished creating devices/groups (if any)');
 							this.log.info('start creating templates ');
-							await this.createTemplates(this.fritz).catch((e) => this.errorHandler(e));
+							await this.createTemplates(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished creating templates (if any) ');
 							this.log.info('start initial updating devices/groups');
-							await this.updateDevices(this.fritz).catch((e) => this.errorHandler(e));
+							await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished initial updating devices/groups');
 							this.log.info(
 								'going over to cyclic polling, messages to poll activity only in debug-mode '
@@ -189,7 +191,7 @@ class Fritzdect extends utils.Adapter {
 									// poll fritzbox
 									try {
 										this.log.debug('polling! fritzdect is alive');
-										await this.updateDevices(this.fritz);
+										await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 									} catch (e) {
 										this.log.warn(`[Polling] <== ${e}`);
 									}
@@ -200,7 +202,10 @@ class Fritzdect extends utils.Adapter {
 						}
 					} catch (error) {
 						//from login
-						this.errorHandler(error);
+						this.log.error('try/catch error in onReady ' + error);
+					}
+					if (err) {
+						this.log.error('error getting system.config ' + err);
 					}
 				});
 			} else {
@@ -221,7 +226,7 @@ class Fritzdect extends utils.Adapter {
 	 * Is called when adapter shuts down - callback has to be called under any circumstances!
 	 * @param {() => void} callback
 	 */
-	onUnload(callback) {
+	async onUnload(callback) {
 		try {
 			// Here you must clear all timeouts or intervals that may still be active
 			// clearTimeout(timeout1);
@@ -229,7 +234,7 @@ class Fritzdect extends utils.Adapter {
 			// ...
 			// clearInterval(interval1);
 			if (polling) clearInterval(polling);
-			this.fritz.logout_SID();
+			// await this.fritz.logout_SID().catch((e) => this.errorHandlerApi(e));
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
@@ -278,7 +283,7 @@ class Fritzdect extends utils.Adapter {
 						this.log.error('login not possible, check user and permissions');
 					}
 				} catch (error) {
-					this.errorHandler(error);
+					this.errorHandlerApi(error);
 				}
 			}
 			//const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
@@ -305,7 +310,7 @@ class Fritzdect extends utils.Adapter {
 									.then((sid) => {
 										this.log.debug('Switched Mode' + id + ' to closed');
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							} else if (state.val > 28) {
 								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt (false= Befehl und nochmaliger Einsprung )
@@ -314,7 +319,7 @@ class Fritzdect extends utils.Adapter {
 									.then(() => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							} else {
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 0, ack: false }); //damit das Ventil auch regelt
 								await this.fritz
@@ -330,7 +335,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							}
 						} else if (dp === 'hkrmode') {
 							if (state.val === 0) {
@@ -361,7 +366,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 											})
-											.catch((e) => this.errorHandler(e));
+											.catch((e) => this.errorHandlerApi(e));
 									} else {
 										this.log.error('no data in targettemp for setting mode');
 									}
@@ -378,7 +383,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							} else if (state.val === 2) {
 								await this.fritz
 									.setTempTarget(id, 'on')
@@ -389,7 +394,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							}
 						}
 						//no need to check the state.val, it is a button
@@ -430,7 +435,7 @@ class Fritzdect extends utils.Adapter {
 												ack: true
 											}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 										})
-										.catch((e) => this.errorHandler(e));
+										.catch((e) => this.errorHandlerApi(e));
 								} else {
 									this.log.error('no data in targettemp for setting mode');
 								}
@@ -457,7 +462,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp === 'setmodeon') {
 							//zurücksetzen wegen toggle/button click
@@ -478,7 +483,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp == 'boostactivetime') {
 							this.log.debug(
@@ -511,7 +516,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										});
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							} else if (
 								state.val === 1 ||
 								state.val === '1' ||
@@ -557,7 +562,7 @@ class Fritzdect extends utils.Adapter {
 												ack: true
 											}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 										})
-										.catch((e) => this.errorHandler(e));
+										.catch((e) => this.errorHandlerApi(e));
 								} else {
 									throw { error: 'minutes were NULL' };
 								}
@@ -594,7 +599,7 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										});
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							} else if (
 								state.val === 1 ||
 								state.val === '1' ||
@@ -640,7 +645,7 @@ class Fritzdect extends utils.Adapter {
 												ack: true
 											}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
 										})
-										.catch((e) => this.errorHandler(e));
+										.catch((e) => this.errorHandlerApi(e));
 								} else {
 									throw { error: 'minutes were NULL' };
 								}
@@ -668,7 +673,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch((e) => this.errorHandler(e));
+											.catch((e) => this.errorHandlerApi(e));
 									} else {
 										this.fritz
 											.setSimpleOff(id)
@@ -679,7 +684,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch((e) => this.errorHandler(e));
+											.catch((e) => this.errorHandlerApi(e));
 									}
 								} else {
 									throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
@@ -704,7 +709,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch((e) => this.errorHandler(e));
+											.catch((e) => this.errorHandlerApi(e));
 									} else {
 										this.fritz
 											.setSimpleOn(id)
@@ -715,7 +720,7 @@ class Fritzdect extends utils.Adapter {
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
-											.catch((e) => this.errorHandler(e));
+											.catch((e) => this.errorHandlerApi(e));
 									}
 								} else {
 									throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
@@ -729,7 +734,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Started blind ' + id + ' to close');
 									await this.setStateAsync('DECT_' + id + '.blindsclose', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp == 'blindsopen') {
 							this.fritz
@@ -738,7 +743,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Started blind ' + id + ' to open');
 									await this.setStateAsync('DECT_' + id + '.blindsopen', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp == 'blindsstop') {
 							this.fritz
@@ -747,7 +752,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Set blind ' + id + ' to stop');
 									this.setStateAsync('DECT_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp == 'level') {
 							this.fritz
@@ -756,7 +761,7 @@ class Fritzdect extends utils.Adapter {
 									this.log.debug('Set level' + id + ' to ' + state.val);
 									this.setStateAsync('DECT_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp == 'levelpercentage') {
 							this.fritz
@@ -769,7 +774,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp == 'hue') {
 							const saturation = await this.getStateAsync('DECT_' + id + '.saturation');
@@ -797,7 +802,7 @@ class Fritzdect extends utils.Adapter {
 												ack: true
 											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 										})
-										.catch((e) => this.errorHandler(e));
+										.catch((e) => this.errorHandlerApi(e));
 								}
 							} else {
 								throw { error: 'minutes were NULL' };
@@ -828,7 +833,7 @@ class Fritzdect extends utils.Adapter {
 												ack: true
 											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 										})
-										.catch((e) => this.errorHandler(e));
+										.catch((e) => this.errorHandlerApi(e));
 								}
 							} else {
 								throw { error: 'hue were NULL' };
@@ -844,7 +849,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
-								.catch((e) => this.errorHandler(e));
+								.catch((e) => this.errorHandlerApi(e));
 						}
 					} else if (idx.startsWith('template_')) {
 						//must be fritzbox template
@@ -866,7 +871,7 @@ class Fritzdect extends utils.Adapter {
 										this.log.debug('response ' + sid);
 										this.setStateAsync('template.lasttemplate', { val: sid, ack: true }); //when successfull toggle, the API returns the id of the template
 									})
-									.catch((e) => this.errorHandler(e));
+									.catch((e) => this.errorHandlerApi(e));
 							}
 						}
 					}
@@ -921,7 +926,7 @@ class Fritzdect extends utils.Adapter {
 							this.log.error('login not possible, check user and permissions');
 						}
 					} catch (error) {
-						this.errorHandler(error);
+						this.errorHandlerApi(error);
 					}
 				}
 				// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
@@ -1076,8 +1081,7 @@ class Fritzdect extends utils.Adapter {
 				this.sendTo(obj.from, obj.command, obj.message, obj.callback);
 			}
 		} catch (e) {
-			this.log.debug('messagebox error occured');
-			this.errorHandler(e);
+			this.log.debug('try/catch messagebox error occured ' + e);
 		}
 	}
 
@@ -1089,11 +1093,14 @@ class Fritzdect extends utils.Adapter {
 		return result;
 	}
 
-	errorHandler(error) {
+	errorHandlerApi(error) {
 		try {
-			this.log.error('fritzbox returned this ' + JSON.stringify(error));
+			this.log.error('--------------- error calling the fritzbox -----------');
+			this.log.error('API msg   => ' + error.msg);
+			this.log.error('API funct => ' + error.function);
+
 			if (error == '0000000000000000') {
-				this.log.error('Did not get session id- invalid username or password?');
+				this.log.error('Did not get session id -> invalid username or password?');
 			} else if (!error.response) {
 				this.log.error('no response part in returned message');
 			} else if (error.response.statusCode) {
@@ -1101,220 +1108,212 @@ class Fritzdect extends utils.Adapter {
 					this.log.error(
 						'no permission for this call (403), has user all the rights and access to fritzbox?'
 					);
-					this.log.error('error calling the fritzbox ' + JSON.stringify(error));
 				} else if (error.response.statusCode == 404) {
 					this.log.error('call to API does not exist! (404)');
-					this.log.error('error calling the fritzbox ' + JSON.stringify(error));
 				} else if (error.response.statusCode == 400) {
 					this.log.error('bad request (400), ain correct?');
-					this.log.error('error calling the fritzbox ' + JSON.stringify(error));
 				} else if (error.response.statusCode == 500) {
 					this.log.error('internal fritzbox error (500)');
-					this.log.error('error calling the fritzbox ' + JSON.stringify(error));
 				} else if (error.response.statusCode == 503) {
 					this.log.error('service unavailable (503)');
-					this.log.error('error calling the fritzbox ' + JSON.stringify(error));
 				} else if (error.response.statusCode == 303) {
 					this.log.error('unknwon error (303)');
-					this.log.error('error calling the fritzbox ' + JSON.stringify(error));
 				} else {
-					this.log.error('statuscode not in errorHandler of fritzdect');
-					this.log.error('error calling the fritzbox ' + JSON.stringify(error));
+					this.log.error('statuscode not in errorHandlerApi of fritzdect');
 				}
-			} else {
-				this.log.error('error calling the fritzbox ' + JSON.stringify(error));
 			}
+			this.log.error('API  err  => ' + error.error);
 		} catch (e) {
-			this.log.error('errorHandler' + e);
-			throw e;
+			this.log.error('try/catch error in function errorHandlerApi() ' + e);
 		}
 	}
 
+	errorHandlerAdapter(error) {
+		try {
+			this.log.error('--------------- error calling the fritzbox -----------');
+			this.log.error('iob  err  => ' + error);
+			//this.log.error('iob msg   => ' + error.msg);
+			//this.log.error('iob funct => ' + error.function);
+			//this.log.error('iob  err  => ' + error.error);
+		} catch (e) {
+			this.log.error('try/catch error in function errorHandlerAdapter' + e);
+		}
+	}
 	async updateDevices(fritz) {
 		this.log.debug('__________________________');
 		this.log.debug('updating Devices / Groups ');
 		try {
-			const devicelistinfos = await fritz.getDeviceListInfos();
+			const devicelistinfos = await fritz.getDeviceListInfos().catch((e) => this.errorHandlerApi(e));
 			let currentMode = null;
+			if (devicelistinfos) {
+				let devices = parser.xml2json(devicelistinfos);
+				// devices
+				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
+					// remove spaces in AINs
+					//device.identifier = device.identifier.replace(/\s/g, '');
+					return device;
+				});
+				this.log.debug('devices\n');
+				this.log.debug(JSON.stringify(devices));
+				if (devices.length) {
+					this.log.debug('update Devices ' + devices.length);
+					try {
+						for (let i = 0; i < devices.length; i++) {
+							this.log.debug('_____________________________________________');
+							this.log.debug('updating Device ' + devices[i].name);
+							if (
+								devices[i].present === '0' ||
+								devices[i].present === 0 ||
+								devices[i].present === false
+							) {
+								/*
+								await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
+									val: false,
+									ack: true
+								});
+								*/
+								// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
+								const obj = await this.getForeignObjectAsync(
+									this.namespace + '.DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present'
+								);
+								if (!obj || !obj.common) {
+									this.log.debug(
+										'DECT_' +
+											devices[i].identifier.replace(/\s/g, '') +
+											'.present is not present, check the device connection, no values are written'
+									);
+								} else {
+									await this.setStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
+										{ val: false, ack: true }
+									);
+								}
 
-			let devices = parser.xml2json(devicelistinfos);
-			// devices
-			devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
-				// remove spaces in AINs
-				//device.identifier = device.identifier.replace(/\s/g, '');
-				return device;
-			});
-			this.log.debug('devices\n');
-			this.log.debug(JSON.stringify(devices));
-			if (devices.length) {
-				this.log.debug('update Devices ' + devices.length);
-				try {
-					for (let i = 0; i < devices.length; i++) {
-						this.log.debug('_____________________________________________');
-						this.log.debug('updating Device ' + devices[i].name);
-						if (devices[i].present === '0' || devices[i].present === 0 || devices[i].present === false) {
-							/*
-							await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
-								val: false,
-								ack: true
-							});
-							*/
-							// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
-							const obj = await this.getForeignObjectAsync(
-								this.namespace + '.DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present'
-							);
-							if (!obj || !obj.common) {
 								this.log.debug(
 									'DECT_' +
 										devices[i].identifier.replace(/\s/g, '') +
-										'.present is not present, check the device connection, no values are written'
+										' is not present, check the device connection, no values are written'
 								);
-							} else {
-								await this.setStateAsync(
-									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
-									{ val: false, ack: true }
-								);
-							}
-
-							this.log.debug(
-								'DECT_' +
-									devices[i].identifier.replace(/\s/g, '') +
-									' is not present, check the device connection, no values are written'
-							);
-							continue;
-						} else {
-							if (devices[i].hkr) {
-								currentMode = 'Auto';
-								if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
-									currentMode = 'Comfort';
-								}
-								if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
-									currentMode = 'Night';
-								}
-								//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
-								await this.setStateAsync(
-									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
-									{
-										val: currentMode,
-										ack: true
-									}
-								);
-							}
-							// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
-							// some weird id usage, the website shows the id of the etsiunit
-							if (devices[i].etsiunitinfo) {
-								if (devices[i].etsiunitinfo.etsideviceid) {
-									//replace id with etsi
-									this.log.debug('id vorher ' + devices[i].id);
-									devices[i].id = devices[i].etsiunitinfo.etsideviceid;
-									this.log.debug('id nachher ' + devices[i].id);
-								}
-							}
-							//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
-							//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
-							if (devices[i].simpleonoff) {
-								await this.setStateAsync(
-									'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
-									{
-										val: 'simpleonoff',
-										ack: true
-									}
-								);
-							}
-							// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
-							if (devices[i].functionbitmask == 1) {
-								this.log.debug(' functionbitmask 1');
-								// search and find the device id and replace fwversion
-								// todo
-								// find the device.identifier mit der etsi_id
-								//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
-								// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
-								// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
-								// reihenfolge, id immer vorher und dann erst etsi in json?
 								continue;
 							} else {
-								this.log.debug(' calling update data .....');
-								try {
-									await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
-								} catch (e) {
-									this.log.error(' issue updating device ' + JSON.stringify(e));
-									throw {
-										msg: 'issue updating device',
-										function: 'updateDevices',
-										error: e
-									};
-								}
-							}
-						}
-					}
-				} catch (e) {
-					this.log.error(' issue updating device ' + JSON.stringify(e));
-					throw {
-						msg: 'issue updating device',
-						function: 'updateDevices',
-						error: e
-					};
-				}
-			}
-
-			// groups
-			let groups = parser.xml2json(devicelistinfos);
-			groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
-				// remove spaces in AINs
-				// group.identifier = group.identifier.replace(/\s/g, '');
-				return group;
-			});
-			this.log.debug('groups\n');
-			this.log.debug(JSON.stringify(groups));
-			if (groups.length) {
-				this.log.debug('update Groups ' + groups.length);
-				//await this.asyncForEach(groups, async (device) => {
-				await Promise.all(
-					groups.map(async (device) => {
-						//groups.forEach(async (device) => {
-						this.log.debug('updating Group ' + device.name);
-						if (device.present === '0' || device.present === 0 || device.present === false) {
-							this.log.debug(
-								'DECT_' +
-									device.identifier.replace(/\s/g, '') +
-									' is not present, check the device connection, no values are written'
-							);
-						} else {
-							if (device.hkr) {
-								currentMode = 'Auto';
-								if (device.hkr.tsoll === device.hkr.komfort) {
-									currentMode = 'Comfort';
-								}
-								if (device.hkr.tsoll === device.hkr.absenk) {
-									currentMode = 'Night';
-								}
-								await this.setStateAsync(
-									'DECT_' + device.identifier.replace(/\s/g, '') + '.operationmode',
-									{
-										val: currentMode,
-										ack: true
+								if (devices[i].hkr) {
+									currentMode = 'Auto';
+									if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
+										currentMode = 'Comfort';
 									}
-								);
-							}
-							//hier könnte nochmal simpleonoff rein, wenn gruppen beides hätten
-							try {
-								this.log.debug(' calling update data .....');
-								await this.updateData(device, device.identifier.replace(/\s/g, ''));
-							} catch (e) {
-								this.log.error(' issue updating group ' + JSON.stringify(e));
-								throw {
-									msg: 'issue updating group',
-									function: 'updateDevices',
-									error: e
-								};
+									if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
+										currentMode = 'Night';
+									}
+									//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
+									await this.setStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
+										{
+											val: currentMode,
+											ack: true
+										}
+									);
+								}
+								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
+								// some weird id usage, the website shows the id of the etsiunit
+								if (devices[i].etsiunitinfo) {
+									if (devices[i].etsiunitinfo.etsideviceid) {
+										//replace id with etsi
+										this.log.debug('id vorher ' + devices[i].id);
+										devices[i].id = devices[i].etsiunitinfo.etsideviceid;
+										this.log.debug('id nachher ' + devices[i].id);
+									}
+								}
+								//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
+								//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
+								if (devices[i].simpleonoff) {
+									await this.setStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
+										{
+											val: 'simpleonoff',
+											ack: true
+										}
+									);
+								}
+								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
+								if (devices[i].functionbitmask == 1) {
+									this.log.debug(' functionbitmask 1');
+									// search and find the device id and replace fwversion
+									// todo
+									// find the device.identifier mit der etsi_id
+									//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
+									// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
+									// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
+									// reihenfolge, id immer vorher und dann erst etsi in json?
+									continue;
+								} else {
+									this.log.debug(' calling update data .....');
+									try {
+										await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
+									} catch (e) {
+										this.log.error(' issue updating device calling updateData' + e);
+									}
+								}
 							}
 						}
-					})
-				);
+					} catch (e) {
+						this.log.error('try/catch issue updating device in updateDevices ' + e);
+					}
+				}
+
+				// groups
+				let groups = parser.xml2json(devicelistinfos);
+				groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
+					// remove spaces in AINs
+					// group.identifier = group.identifier.replace(/\s/g, '');
+					return group;
+				});
+				this.log.debug('groups\n');
+				this.log.debug(JSON.stringify(groups));
+				if (groups.length) {
+					this.log.debug('update Groups ' + groups.length);
+					//await this.asyncForEach(groups, async (device) => {
+					await Promise.all(
+						groups.map(async (device) => {
+							//groups.forEach(async (device) => {
+							this.log.debug('updating Group ' + device.name);
+							if (device.present === '0' || device.present === 0 || device.present === false) {
+								this.log.debug(
+									'DECT_' +
+										device.identifier.replace(/\s/g, '') +
+										' is not present, check the device connection, no values are written'
+								);
+							} else {
+								if (device.hkr) {
+									currentMode = 'Auto';
+									if (device.hkr.tsoll === device.hkr.komfort) {
+										currentMode = 'Comfort';
+									}
+									if (device.hkr.tsoll === device.hkr.absenk) {
+										currentMode = 'Night';
+									}
+									await this.setStateAsync(
+										'DECT_' + device.identifier.replace(/\s/g, '') + '.operationmode',
+										{
+											val: currentMode,
+											ack: true
+										}
+									);
+								}
+								//hier könnte nochmal simpleonoff rein, wenn gruppen beides hätten
+								try {
+									this.log.debug(' calling update data .....');
+									await this.updateData(device, device.identifier.replace(/\s/g, ''));
+								} catch (e) {
+									this.log.error(' issue updating groups calling updateData ' + e);
+								}
+							}
+						})
+					);
+				}
 			}
 			return Promise.resolve();
 		} catch (e) {
-			return Promise.reject(this.errorHandler(e));
+			return Promise.reject(this.log.error('try/catch updateGroups ' + e));
 		}
 	}
 	async updateData(array, ident) {
@@ -1343,7 +1342,7 @@ class Fritzdect extends utils.Adapter {
 				}
 			});
 		} catch (e) {
-			this.log.debug(' issue in update data ' + JSON.stringify(e));
+			this.log.debug(' issue in updateData ' + e);
 			throw {
 				msg: 'issue updating data',
 				function: 'updateData',
@@ -1629,7 +1628,7 @@ class Fritzdect extends utils.Adapter {
 				}
 			}
 		} catch (e) {
-			this.log.debug(' issue in update datapoint ' + JSON.stringify(e));
+			this.log.debug(' issue in update datapoint ' + e);
 			throw {
 				msg: 'issue updating datapoint',
 				function: 'updateDatapoint',
@@ -1639,115 +1638,118 @@ class Fritzdect extends utils.Adapter {
 	}
 	async createTemplates(fritz) {
 		try {
-			const templatelistinfos = await fritz.getTemplateListInfos();
+			const templatelistinfos = await fritz.getTemplateListInfos().catch((e) => this.errorHandlerApi(e));
 			let typ = '';
 			let role = '';
-			let templates = parser.xml2json(templatelistinfos);
-			templates = [].concat((templates.templatelist || {}).template || []).map((template) => {
-				return template;
-			});
-			this.log.debug('__________________________');
-			this.log.debug('templates\n');
-			this.log.debug(JSON.stringify(templates));
-			if (templates.length) {
-				this.log.info('create Templates ' + templates.length);
-				await this.createTemplateResponse();
-				//await this.asyncForEach(templates, async (template) => {
-				await Promise.all(
-					templates.map(async (template) => {
-						if (
-							(template.functionbitmask & 320) == 320 ||
-							(template.functionbitmask & 4160) == 4160 ||
-							(template.functionbitmask & 2688) == 2688 ||
-							(template.functionbitmask & 40960) == 40960 ||
-							(template.functionbitmask & 36864) == 36864 ||
-							(template.functionbitmask & 335888) == 335888 ||
-							(template.functionbitmask & 2944) == 2944
-						) {
-							//heating template
-							typ = 'template_';
-							role = 'switch';
-							this.log.debug('__________________________');
-							this.log.info('setting up Template ' + template.name);
-							await this.createTemplate(
-								typ,
-								template.identifier.replace(/\s/g, ''),
-								template.name,
-								role,
-								template.id
-							);
-						} else if (template.functionbitmask == 0 && template.applymask[0] == 256) {
-							// no other way to identify this one, role as switch may be not right
-							//telefon template
-							typ = 'template_';
-							role = 'switch';
-							this.log.debug('__________________________');
-							this.log.info('setting up Template ' + template.name);
-							await this.createTemplate(
-								typ,
-								template.identifier.replace(/\s/g, ''),
-								template.name,
-								role,
-								template.id
-							);
-						} else {
-							this.log.debug(
-								'nix vorbereitet für diese Art von Template ' +
-									template.functionbitmask +
-									' -> ' +
-									template.name
-							);
-						}
-					})
-				);
+			if (templatelistinfos) {
+				let templates = parser.xml2json(templatelistinfos);
+				templates = [].concat((templates.templatelist || {}).template || []).map((template) => {
+					return template;
+				});
+				this.log.debug('__________________________');
+				this.log.debug('templates\n');
+				this.log.debug(JSON.stringify(templates));
+				if (templates.length) {
+					this.log.info('create Templates ' + templates.length);
+					await this.createTemplateResponse();
+					//await this.asyncForEach(templates, async (template) => {
+					await Promise.all(
+						templates.map(async (template) => {
+							if (
+								(template.functionbitmask & 320) == 320 ||
+								(template.functionbitmask & 4160) == 4160 ||
+								(template.functionbitmask & 2688) == 2688 ||
+								(template.functionbitmask & 40960) == 40960 ||
+								(template.functionbitmask & 36864) == 36864 ||
+								(template.functionbitmask & 335888) == 335888 ||
+								(template.functionbitmask & 2944) == 2944
+							) {
+								//heating template
+								typ = 'template_';
+								role = 'switch';
+								this.log.debug('__________________________');
+								this.log.info('setting up Template ' + template.name);
+								await this.createTemplate(
+									typ,
+									template.identifier.replace(/\s/g, ''),
+									template.name,
+									role,
+									template.id
+								);
+							} else if (template.functionbitmask == 0 && template.applymask[0] == 256) {
+								// no other way to identify this one, role as switch may be not right
+								//telefon template
+								typ = 'template_';
+								role = 'switch';
+								this.log.debug('__________________________');
+								this.log.info('setting up Template ' + template.name);
+								await this.createTemplate(
+									typ,
+									template.identifier.replace(/\s/g, ''),
+									template.name,
+									role,
+									template.id
+								);
+							} else {
+								this.log.debug(
+									'nix vorbereitet für diese Art von Template ' +
+										template.functionbitmask +
+										' -> ' +
+										template.name
+								);
+							}
+						})
+					);
+				}
 			}
 			return Promise.resolve();
 		} catch (e) {
-			return Promise.reject(this.errorHandler(e));
+			return Promise.reject(this.log.error('try/catch createTemplates ' + e));
 		}
 	}
 	async createDevices(fritz) {
 		try {
-			const devicelistinfos = await fritz.getDeviceListInfos();
-
-			let devices = parser.xml2json(devicelistinfos);
-			devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
-				// remove spaces in AINs
-				// device.identifier = device.identifier.replace(/\s/g, '');
-				return device;
-			});
-			this.log.debug('devices\n');
-			this.log.debug(JSON.stringify(devices));
-			if (devices.length) {
-				this.log.info('CREATE Devices ' + devices.length);
-				try {
-					await this.createData(devices);
-				} catch (e) {
-					this.log.debug(' issue creating devices ' + JSON.stringify(e));
-					throw e;
+			const devicelistinfos = await fritz.getDeviceListInfos().catch((e) => this.errorHandlerApi(e));
+			if (devicelistinfos) {
+				let devices = parser.xml2json(devicelistinfos);
+				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
+					// remove spaces in AINs
+					// device.identifier = device.identifier.replace(/\s/g, '');
+					return device;
+				});
+				this.log.debug('devices\n');
+				this.log.debug(JSON.stringify(devices));
+				if (devices.length) {
+					this.log.info('CREATE Devices ' + devices.length);
+					try {
+						await this.createData(devices);
+					} catch (e) {
+						this.log.debug(' issue creating devices calling createData' + e);
+						throw e;
+					}
 				}
-			}
 
-			let groups = parser.xml2json(devicelistinfos);
-			groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
-				// remove spaces in AINs
-				//group.identifier = group.identifier.replace(/\s/g, '');
-				return group;
-			});
-			this.log.debug('groups\n');
-			this.log.debug(JSON.stringify(groups));
-			if (groups.length) {
-				this.log.info('CREATE groups ' + groups.length);
-				try {
-					await this.createData(groups);
-				} catch (e) {
-					this.log.debug(' issue creating groups ' + JSON.stringify(e));
-					throw e;
+				let groups = parser.xml2json(devicelistinfos);
+				groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
+					// remove spaces in AINs
+					//group.identifier = group.identifier.replace(/\s/g, '');
+					return group;
+				});
+				this.log.debug('groups\n');
+				this.log.debug(JSON.stringify(groups));
+				if (groups.length) {
+					this.log.info('CREATE groups ' + groups.length);
+					try {
+						await this.createData(groups);
+					} catch (e) {
+						this.log.debug(' issue creating groups calling createData' + e);
+						throw e;
+					}
 				}
 			}
 			return Promise.resolve();
 		} catch (e) {
-			return Promise.reject(this.errorHandler(e));
+			return Promise.reject(this.log.error('try/catch createDevices ' + e));
 		}
 	}
 

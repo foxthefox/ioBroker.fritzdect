@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.2.4",
+		"version": "2.2.5",
 		"news": {
+			"2.2.5": {
+				"en": "improvement in error handling",
+				"de": "Verbesserung der Fehlerbehandlung",
+				"ru": "улучшение обработки ошибок",
+				"pt": "melhoria no tratamento de erros",
+				"nl": "verbetering in foutafhandeling",
+				"fr": "amélioration de la gestion des erreurs",
+				"it": "miglioramento nella gestione degli errori",
+				"es": "mejora en el manejo de errores",
+				"pl": "poprawa obsługi błędów",
+				"zh-cn": "错误处理的改进"
+			},
 			"2.2.4": {
 				"en": "correction: number format from admin page for time and tsoll",
 				"de": "Korrektur: Zahlenformat von der Admin-Seite für Zeit und Tsoll",

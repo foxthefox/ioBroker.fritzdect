@@ -11,7 +11,16 @@
 	},
 	"homepage": "https://github.com/foxthefox/ioBroker.fritzdect",
 	"license": "MIT",
-	"keywords": [ "ioBroker", "DECT2x0", "DECT3x0", "DECT4x0", "DECT500", "Contacts", "Blinds", "fritzbox" ],
+	"keywords": [
+		"ioBroker",
+		"DECT2x0",
+		"DECT3x0",
+		"DECT4x0",
+		"DECT500",
+		"Contacts",
+		"Blinds",
+		"fritzbox"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/foxthefox/ioBroker.fritzdect"
@@ -23,7 +32,9 @@
 		"xml2json-light": "^1.0.6"
 	},
 	"devDependencies": {
-		"@iobroker/testing": "^2.5.3",
+
+		"@iobroker/testing": "^2.5.4",
+
 		"@types/chai": "^4.3.0",
 		"@types/chai-as-promised": "^7.1.4",
 		"@types/gulp": "^4.0.9",

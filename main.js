@@ -2251,10 +2251,10 @@ class Fritzdect extends utils.Adapter {
 										'adaptive Heating Running status'
 									);
 								} else if (key === 'adaptiveHeatingActive') {
-									await this.createSwitch(
+									await this.createIndicatorState(
 										identifier,
 										'adaptiveHeatingActive',
-										'adaptive Heating active status and cmd'
+										'adaptive Heating active status'
 									);
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);

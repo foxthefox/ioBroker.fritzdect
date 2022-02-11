@@ -1532,7 +1532,9 @@ class Fritzdect extends utils.Adapter {
 					key == 'synchronized' ||
 					key == 'fullcolorsupport' ||
 					key == 'mapped' ||
-					key == 'endpositionsset'
+					key == 'endpositionsset' ||
+					key == 'adaptiveHeatingRunning' ||
+					key == 'adaptiveHeatingActive'
 				) {
 					// hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
 					// if ( value.length() >1 ) { await this.setStateAsync('DECT_' + ain + '.' + key, {	val: value.toString(), ack: true });} else {}

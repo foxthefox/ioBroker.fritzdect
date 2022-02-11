@@ -2244,6 +2244,18 @@ class Fritzdect extends utils.Adapter {
 											' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
 										);
 									}
+								} else if (key === 'adaptiveHeatingRunning') {
+									await this.createIndicatorState(
+										identifier,
+										'adaptiveHeatingRunning',
+										'adaptive Heating Running status'
+									);
+								} else if (key === 'adaptiveHeatingActive') {
+									await this.createSwitch(
+										identifier,
+										'adaptiveHeatingActive',
+										'adaptive Heating active status and cmd'
+									);
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}

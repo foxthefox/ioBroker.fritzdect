@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.2.5",
+		"version": "2.2.6",
 		"news": {
+			"2.2.6": {
+				"en": "new objects for thermostat",
+				"de": "neue Objekte für Thermostat",
+				"ru": "новые объекты для термостата",
+				"pt": "novos objetos para termostato",
+				"nl": "nieuwe objecten voor thermostaat",
+				"fr": "nouveaux objets pour thermostat",
+				"it": "nuovi oggetti per termostato",
+				"es": "nuevos objetos para termostato",
+				"pl": "nowe obiekty do termostatu",
+				"zh-cn": "恒温器的新对象"
+			},
 			"2.2.5": {
 				"en": "improvement in error handling",
 				"de": "Verbesserung der Fehlerbehandlung",

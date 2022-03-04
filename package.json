@@ -17,7 +17,7 @@
 		"url": "https://github.com/foxthefox/ioBroker.fritzdect"
 	},
 	"dependencies": {
-		"@iobroker/adapter-core": "^2.5.1",
+		"@iobroker/adapter-core": "^2.6.0",
 		"command-line-args": "^5.2.1",
 		"command-line-usage": "^6.1.1",
 		"xml2json-light": "^1.0.6"

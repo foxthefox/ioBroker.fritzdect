@@ -95,7 +95,7 @@ tests.integration(path.join(__dirname, '..'), {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						//await delay(3000);
+						await delay(3000);
 
 						harness.states.getState('fritzdect.0.DECT_087610006161.productname', function(err, state) {
 							if (err) console.error(err);
@@ -259,7 +259,7 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(2000);
+			}).timeout(5000);
 			it('Fritzdect 300 (Comet) should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {

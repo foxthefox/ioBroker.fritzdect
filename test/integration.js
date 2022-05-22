@@ -31,10 +31,23 @@ tests.integration(path.join(__dirname, '..'), {
 
 	// Define your own tests inside defineAdditionalTests
 	// Since the tests are heavily instrumented, you need to create and use a so called "harness" to control the tests.
-	defineAdditionalTests(getHarness) {
-		describe('Test creation of devices', () => {
-			before('start the emulation', () => {
+	defineAdditionalTests({ suite }) {
+		suite('Test creation of devices', (getHarness) => {
+			let harness;
+			before('start the emulation', async () => {
 				server.setupHttpServer(function() {});
+				harness = getHarness();
+				const obj = {
+					native: {
+						fritz_ip: 'http://localhost:3333',
+						fritz_user: 'admin',
+						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
+						fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
+						fritz_interval: 300,
+						fritz_strictssl: true
+					}
+				};
+				await harness.changeAdapterConfig('fritzdect', obj);
 			});
 			/*
 			// should work but doesnt
@@ -69,25 +82,14 @@ tests.integration(path.join(__dirname, '..'), {
 			it('Fritzdect 200 schould be created', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
-					const harness = getHarness();
 					// modification of some starting values
 
 					//schon Teil des iobroker/testing :-)
 					//config.common.enabled = true;
 					//config.common.loglevel = 'debug';
 					// systemConfig.native.secret ='Zgfr56gFe87jJOM'
+					await harness.startAdapterAndWait();
 
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -259,18 +261,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Fritzdect 300 (Comet) should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -556,18 +546,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Fritzdect 300 Comet2 should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -781,18 +759,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Fritzdect Comet wo battcharge should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -1002,18 +968,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Contact should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -1111,18 +1065,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Button should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -1224,18 +1166,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of 2nd Button from FD400, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -1342,18 +1272,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Powerlineshould be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -1535,18 +1453,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Repeater should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -1642,18 +1548,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Lamp DECT500 white, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -1976,18 +1870,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Lamp DECT500 color, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -2311,18 +2193,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Lamp DECT500 color with extended states, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -2773,18 +2643,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of DECT440, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -2899,18 +2757,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of Blinds, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3036,18 +2882,6 @@ tests.integration(path.join(__dirname, '..'), {
 			//hier für template ein neues describe?
 			it('Objects must exist for template_tmp6F0093-39091EED0', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3069,18 +2903,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 1, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3119,18 +2941,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 2, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3169,18 +2979,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 3, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3219,18 +3017,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 4 should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3269,18 +3055,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 5, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3319,18 +3093,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 6,should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3369,18 +3131,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 7, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3419,18 +3169,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template 8, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3469,18 +3207,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('Check values of template fritzfon, should be created', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3519,18 +3245,6 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			it('set template and check last activated template ', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
@@ -3565,18 +3279,6 @@ tests.integration(path.join(__dirname, '..'), {
 
 			it('Command to DECT200 and check the set datapoint after successful communication', () => {
 				return new Promise(async (resolve) => {
-					const harness = getHarness();
-					const obj = {
-						native: {
-							fritz_ip: 'http://localhost:3333',
-							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
-							fritz_interval: 300,
-							fritz_strictssl: true
-						}
-					};
-					await harness.changeAdapterConfig('fritzdect', obj);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started

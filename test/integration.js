@@ -88,13 +88,14 @@ tests.integration(path.join(__dirname, '..'), {
 					//config.common.enabled = true;
 					//config.common.loglevel = 'debug';
 					// systemConfig.native.secret ='Zgfr56gFe87jJOM'
-					await harness.startAdapterAndWait();
 
+					//await harness.startAdapterAndWait();
+					//await delay(3000);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await delay(3000);
 
 						harness.states.getState('fritzdect.0.DECT_087610006161.productname', function(err, state) {
 							if (err) console.error(err);
@@ -258,14 +259,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Fritzdect 300 (Comet) should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_117951022222.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -543,14 +544,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Fritzdect 300 Comet2 should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_117951033333.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -756,14 +757,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Fritzdect Comet wo battcharge should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_119600642220.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -965,14 +966,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Contact should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_112240205290-1.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1062,14 +1063,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Button should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_119340141058-2.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1163,14 +1164,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of 2nd Button from FD400, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_13096321567.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1269,14 +1270,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Powerlineshould be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_34:31:C1:AB:68:53.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1450,14 +1451,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Repeater should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_087611016969.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1545,14 +1546,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Lamp DECT500 white, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_123456789012-1.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -1867,14 +1868,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Lamp DECT500 color, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_130770000415-1.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2190,14 +2191,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Lamp DECT500 color with extended states, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_130770018976-1.productname', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2640,14 +2641,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of DECT440, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_099950403922.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2754,14 +2755,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of Blinds, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.DECT_119340395779-1.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2852,7 +2853,7 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			/* Vorlage
 			it(' should be created', () => {
 				return new Promise(async (resolve) => {
@@ -2880,34 +2881,13 @@ tests.integration(path.join(__dirname, '..'), {
 			}).timeout(20000);
 			*/
 			//hier für template ein neues describe?
-			it('Objects must exist for template_tmp6F0093-39091EED0', () => {
-				return new Promise(async (resolve) => {
-					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
-						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
-						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
-						harness.objects.getObject('fritzdect.0.template_tmp6F0093-39091EED0.name', (err, obj) => {
-							if (err) console.error('template_tmp6F0093-39091EED0.name ' + err);
-							expect(obj).to.exist;
-							expect(obj).to.be.ok;
-							harness.objects.getObject('fritzdect.0.template_tmp6F0093-39091EED0.id', (err, obj) => {
-								if (err) console.error('template_tmp6F0093-39091EED0.name ' + err);
-								expect(obj).to.exist;
-								expect(obj).to.be.ok;
-								resolve();
-							});
-						});
-					});
-				});
-			}).timeout(20000);
 			it('Check values of template 1, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091EED0.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2938,14 +2918,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template 2, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-390920878.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -2976,14 +2956,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template 3, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-390920F4A.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -3014,14 +2994,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template 4 should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091E943.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -3052,14 +3032,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template 5, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-391363146.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -3090,14 +3070,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template 6,should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091E733.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -3128,14 +3108,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template 7, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp6F0093-39091E428.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -3166,14 +3146,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template 8, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp5665DB-3A1C9EC6F.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -3204,14 +3184,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('Check values of template fritzfon, should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						harness.states.getState('fritzdect.0.template_tmp7A1AB5-3C1F5CDF1.name', function(err, state) {
 							if (err) console.error(err);
 							expect(state).to.exist;
@@ -3242,14 +3222,14 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 			it('set template and check last activated template ', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						//set a command and after fritzbox comm it should be returend in process image
 						harness.states.setState(
 							'fritzdect.0.template_tmp6F0093-391363146.toggle',
@@ -3275,15 +3255,15 @@ tests.integration(path.join(__dirname, '..'), {
 						);
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 
 			it('Command to DECT200 and check the set datapoint after successful communication', () => {
 				return new Promise(async (resolve) => {
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
-						await harness.startAdapterAndWait();
-						await delay(3000);
+						//await harness.startAdapterAndWait();
+						//await delay(3000);
 						//set a command and after fritzbox comm it should be returend in process image
 						harness.states.setState(
 							'fritzdect.0.DECT_087610006161.state',
@@ -3309,7 +3289,7 @@ tests.integration(path.join(__dirname, '..'), {
 						);
 					});
 				});
-			}).timeout(20000);
+			}).timeout(2000);
 
 			/*
 			it('Should work, to send a message', () => {

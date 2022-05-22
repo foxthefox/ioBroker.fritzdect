@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 
-		"@iobroker/testing": "^2.6.0",
+		"@iobroker/testing": "^3.0.2",
 
 		"@types/chai": "^4.3.1",
 		"@types/chai-as-promised": "^7.1.5",

@@ -92,7 +92,7 @@ tests.integration(path.join(__dirname, '..'), {
 					//await harness.startAdapterAndWait();
 					//await delay(3000);
 					harness.objects.getObject('system.adapter.fritzdect.0', async (err, obj) => {
-						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
+						//console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
 						await delay(3000);

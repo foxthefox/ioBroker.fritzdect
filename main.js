@@ -125,6 +125,7 @@ class Fritzdect extends utils.Adapter {
 			settings.boosttime = this.boosttime = this.config.fritz_boosttime;
 			settings.windowtime = this.windowtime = this.config.fritz_windowtime;
 			settings.tsolldefault = this.tsolldefault = this.config.fritz_tsolldefault;
+			settings.fritz_writeonhyst = this.fritz_writeonhyst = this.config.fritz_writeonhyst;
 
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
 			// this.config:
@@ -1352,15 +1353,17 @@ class Fritzdect extends utils.Adapter {
 	}
 
 	async updateDatapoint(key, value, ain) {
-		this.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
 		try {
 			if (!value || value == '') {
 				this.log.debug(' no value for updating in ' + key);
+				//wirklich mit "null" beschreiben?
 				await this.setStateAsync('DECT_' + ain + '.' + key, {
 					val: null,
 					ack: true
 				});
 			} else {
+				const old = await this.getStateAsync('DECT_' + ain + '.' + key);
+				//if old.val == null or undefined
 				if (key == 'nextchange') {
 					//fasthack anstatt neue objekterkennung
 					await this.updateData(value, ain);
@@ -1376,27 +1379,58 @@ class Fritzdect extends utils.Adapter {
 					// bool mal anders herum
 					const batt = value == 0 ? false : true;
 					/*
-				if (value == 0) {
-					let batt = false;
-				} else {
-					let batt = true;
-				}
-				*/
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: batt,
-						ack: true
-					});
+					if (value == 0) {
+						let batt = false;
+					} else {
+						let batt = true;
+					}
+					*/
+					// immer das gleiche Schema
+					// entweder Unterschied oder writeonhyst=0
+					if (old.val !== batt || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' + ain + ' : ' + key + ' new: ' + batt + ' old: ' + old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: batt,
+							ack: true
+						});
+					}
 				} else if (key == 'celsius' || key == 'offset') {
 					//numbers
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 10,
-						ack: true
-					});
+					if (old.val !== parseFloat(value) / 10 || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' +
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								parseFloat(value) / 10 +
+								' old: ' +
+								old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value) / 10,
+							ack: true
+						});
+					}
 				} else if (key == 'power' || key == 'voltage') {
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 1000,
-						ack: true
-					});
+					if (old.val !== parseFloat(value) / 1000 || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' +
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								parseFloat(value) / 1000 +
+								' old: ' +
+								old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value) / 1000,
+							ack: true
+						});
+					}
 				} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
 					if (value == 253) {
 						this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Closed');
@@ -1421,17 +1455,41 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 					} else {
-						await this.setStateAsync('DECT_' + ain + '.' + key, {
-							val: parseFloat(value) / 2,
-							ack: true
-						});
+						if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
+							this.log.debug(
+								'updating data DECT_' +
+									ain +
+									' : ' +
+									key +
+									' new: ' +
+									parseFloat(value) / 2 +
+									' old: ' +
+									old.val
+							);
+							await this.setStateAsync('DECT_' + ain + '.' + key, {
+								val: parseFloat(value) / 2,
+								ack: true
+							});
+						}
 					}
 				} else if (key == 'humidity') {
 					//e.g humidity
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value),
-						ack: true
-					});
+					if (old.val !== parseFloat(value) || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' +
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								parseFloat(value) +
+								' old: ' +
+								old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseFloat(value),
+							ack: true
+						});
+					}
 				} else if (key == 'tsoll') {
 					let targettemp;
 					let tsoll;
@@ -1541,37 +1599,42 @@ class Fritzdect extends utils.Adapter {
 					// oder eben alles ungleich 0 ist erstmal Fehler
 					// bool
 					const convertValue = value == 1 ? true : false;
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: convertValue,
-						ack: true
-					});
-					if (key == 'summeractive' && convertValue == true) {
-						const currentMode = 'Summer';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
+					if (old.val !== convertValue || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' + ain + ' : ' + key + ' new: ' + convertValue + ' old: ' + old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: convertValue,
 							ack: true
 						});
-					}
-					if (key == 'holidayactive' && convertValue == true) {
-						const currentMode = 'Holiday';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-					if (key == 'boostactive' && convertValue == true) {
-						const currentMode = 'Boost';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-					if (key == 'windowopenactiv' && convertValue == true) {
-						const currentMode = 'WindowOpen';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
+						if (key == 'summeractive' && convertValue == true) {
+							const currentMode = 'Summer';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
+						if (key == 'holidayactive' && convertValue == true) {
+							const currentMode = 'Holiday';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
+						if (key == 'boostactive' && convertValue == true) {
+							const currentMode = 'Boost';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
+						if (key == 'windowopenactiv' && convertValue == true) {
+							const currentMode = 'WindowOpen';
+							await this.setStateAsync('DECT_' + ain + '.operationmode', {
+								val: currentMode,
+								ack: true
+							});
+						}
 					}
 				} else if (
 					key == 'lastalertchgtimestamp' ||
@@ -1581,11 +1644,16 @@ class Fritzdect extends utils.Adapter {
 					key == 'endperiod'
 				) {
 					//time
-					const convTime = new Date(value * 1000);
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: String(convTime),
-						ack: true
-					});
+					const convTime = String(new Date(value * 1000));
+					if (old.val !== convTime || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' + ain + ' : ' + key + ' new: ' + convTime + ' old: ' + old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: convTime,
+							ack: true
+						});
+					}
 				} else if (
 					key == 'errorcode' ||
 					key == 'level' ||
@@ -1602,10 +1670,15 @@ class Fritzdect extends utils.Adapter {
 					key == 'unmapped_saturation'
 				) {
 					// integer number
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseInt(value),
-						ack: true
-					});
+					if (old.val !== parseInt(value) || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' + ain + ' : ' + key + ' new: ' + parseInt(value) + ' old: ' + old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: parseInt(value),
+							ack: true
+						});
+					}
 				} else if (
 					key == 'id' ||
 					key == 'fwversion' ||
@@ -1618,10 +1691,15 @@ class Fritzdect extends utils.Adapter {
 				) {
 					// || 'id' , id schon beim initialisieren gesetzt
 					// text
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: value.toString(),
-						ack: true
-					});
+					if (old.val !== value.toString() || !this.config.fritz_writeonhyst) {
+						this.log.debug(
+							'updating data DECT_' + ain + ' : ' + key + ' new: ' + value.toString() + ' old: ' + old.val
+						);
+						await this.setStateAsync('DECT_' + ain + '.' + key, {
+							val: value.toString(),
+							ack: true
+						});
+					}
 				} else {
 					// unbekannt
 					this.log.warn(

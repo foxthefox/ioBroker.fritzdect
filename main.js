@@ -2055,7 +2055,7 @@ class Fritzdect extends utils.Adapter {
 											'last button Time Stamp'
 										);
 										await this.setStateAsync('DECT_' + identifier + '.lastpressedtimestamp', {
-											val: String(new Date(value * 1000)),
+											val: value !== null ? String(new Date(value * 1000)) : null,
 											ack: true
 										});
 									} else if (key === 'id') {
@@ -2104,7 +2104,10 @@ class Fritzdect extends utils.Adapter {
 														button.identifier.replace(/\s/g, '') +
 														'.lastpressedtimestamp',
 													{
-														val: String(new Date(button.lastpressedtimestamp * 1000)),
+														val:
+															button.lastpressedtimestamp !== null
+																? String(new Date(button.lastpressedtimestamp * 1000))
+																: null,
 														ack: true
 													}
 												);
@@ -2169,7 +2172,10 @@ class Fritzdect extends utils.Adapter {
 								} else if (key === 'lastalertchgtimestamp') {
 									await this.createTimeState(identifier, 'lastalertchgtimestamp', 'Alert last Time');
 									await this.setStateAsync('DECT_' + identifier + '.lastalertchgtimestamp', {
-										val: String(new Date(device.alert.lastalertchgtimestamp * 1000)),
+										val:
+											device.alert.lastalertchgtimestamp !== null
+												? String(new Date(device.alert.lastalertchgtimestamp * 1000))
+												: null,
 										ack: true
 									});
 								} else {
@@ -2504,7 +2510,10 @@ class Fritzdect extends utils.Adapter {
 									);
 									//String(new Date(value * 1000))
 									await this.setStateAsync('DECT_' + identifier + '.boostactiveendtime', {
-										val: String(new Date(device.hkr.boostactiveendtime * 1000)),
+										val:
+											device.hkr.boostactiveendtime !== null
+												? String(new Date(device.hkr.boostactiveendtime * 1000))
+												: null,
 										ack: true
 									});
 								} else if (key === 'windowopenactiv') {
@@ -2539,7 +2548,10 @@ class Fritzdect extends utils.Adapter {
 										'window open active end time'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
-										val: String(new Date(device.hkr.windowopenactivetime * 1000)),
+										val:
+											device.hkr.windowopenactivetime !== null
+												? String(new Date(device.hkr.windowopenactivetime * 1000))
+												: null,
 										ack: true
 									});
 								} else if (key === 'nextchange') {
@@ -2555,7 +2567,12 @@ class Fritzdect extends utils.Adapter {
 														'next time for Temp change'
 													);
 													await this.setStateAsync('DECT_' + identifier + '.endperiod', {
-														val: String(new Date(device.hkr.nextchange.endperiod * 1000)),
+														val:
+															device.hkr.nextchange.endperiod !== null
+																? String(
+																		new Date(device.hkr.nextchange.endperiod * 1000)
+																	)
+																: null,
 														ack: true
 													});
 												} else if (key === 'tchange') {
@@ -2717,7 +2734,8 @@ class Fritzdect extends utils.Adapter {
 										'value.hue'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.hue', {
-										val: parseInt(device.colorcontrol.hue),
+										val:
+											device.colorcontrol.hue !== null ? parseInt(device.colorcontrol.hue) : null,
 										ack: true
 									});
 								} else if (key === 'saturation') {
@@ -2731,7 +2749,10 @@ class Fritzdect extends utils.Adapter {
 										'value.saturation'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.saturation', {
-										val: parseInt(device.colorcontrol.saturation),
+										val:
+											device.colorcontrol.saturation !== null
+												? parseInt(device.colorcontrol.saturation)
+												: null,
 										ack: true
 									});
 								} else if (key === 'unmapped_hue') {
@@ -2771,7 +2792,10 @@ class Fritzdect extends utils.Adapter {
 										'value.temperature'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.temperature', {
-										val: parseInt(device.colorcontrol.temperature),
+										val:
+											device.colorcontrol.temperature !== null
+												? parseInt(device.colorcontrol.temperature)
+												: null,
 										ack: true
 									});
 								} else {
@@ -3007,6 +3031,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
+		await this.setStateAsync(typ + newId + '.toggle', { val: false, ack: true });
 		return;
 	}
 	async createThermostat(newId) {
@@ -3065,6 +3090,10 @@ class Fritzdect extends utils.Adapter {
 				desc: 'Current operation mode'
 			},
 			native: {}
+		});
+		await this.setStateAsync('DECT_' + newId + '.operationmode', {
+			val: 'waiting',
+			ack: true
 		});
 		await this.setObjectNotExistsAsync('DECT_' + newId + '.setmodeoff', {
 			type: 'state',

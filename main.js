@@ -2138,7 +2138,7 @@ class Fritzdect extends utils.Adapter {
 														identifier +
 														+'.button.' +
 														button.identifier.replace(/\s/g, '') +
-														'.lastpressedtimestamp',
+														'.name',
 													{
 														val: button.name.toString(),
 														ack: true
@@ -2227,8 +2227,16 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
 								if (key === 'power') {
 									await this.createValueState(identifier, 'power', 'actual Power', 0, 4000, 'W');
+									await this.setStateAsync('DECT_' + identifier + '.power', {
+										val: parseFloat(device.powermeter.power) / 1000,
+										ack: true
+									});
 								} else if (key === 'voltage') {
 									await this.createValueState(identifier, 'voltage', 'actual Voltage', 0, 255, 'V');
+									await this.setStateAsync('DECT_' + identifier + '.voltage', {
+										val: parseFloat(device.powermeter.voltage) / 1000,
+										ack: true
+									});
 								} else if (key === 'energy') {
 									await this.createValueState(
 										identifier,
@@ -2238,6 +2246,10 @@ class Fritzdect extends utils.Adapter {
 										999999999,
 										'Wh'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.energy', {
+										val: parseInt(device.powermeter.energy),
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2252,8 +2264,16 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.groupinfo), async (key) => {
 								if (key === 'masterdeviceid') {
 									await this.createInfoState(identifier, 'masterdeviceid', 'ID of the group');
+									await this.setStateAsync('DECT_' + identifier + '.masterdeviceid', {
+										val: device.groupinfo.masterdeviceid.toString(),
+										ack: true
+									});
 								} else if (key === 'members') {
 									await this.createInfoState(identifier, 'members', 'member of the group');
+									await this.setStateAsync('DECT_' + identifier + '.members', {
+										val: device.groupinfo.members.toString(),
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2307,7 +2327,7 @@ class Fritzdect extends utils.Adapter {
 										'%'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.rel_humidity', {
-										val: parseInt(device.humidity.rel_humidity),
+										val: parseFloat(device.humidity.rel_humidity),
 										ack: true
 									});
 								} else {
@@ -2328,6 +2348,10 @@ class Fritzdect extends utils.Adapter {
 										'endpositionsset',
 										'Endposition Setting'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.endpositionsset', {
+										val: device.blind.endpositionsset == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'mode') {
 									await this.createInfoState(identifier, 'mode', 'Blind Mode');
 									await this.setStateAsync('DECT_' + identifier + '.mode', {

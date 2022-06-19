@@ -1363,7 +1363,7 @@ class Fritzdect extends utils.Adapter {
 				});
 			} else {
 				const old = await this.getStateAsync('DECT_' + ain + '.' + key).catch((e) => {
-					this.log.debug('error retrieving old value');
+					this.log.debug('error retrieving old value' + e);
 				});
 				//if old.val == null or undefined
 				if (key == 'nextchange') {

@@ -1362,7 +1362,9 @@ class Fritzdect extends utils.Adapter {
 					ack: true
 				});
 			} else {
-				const old = await this.getStateAsync('DECT_' + ain + '.' + key);
+				const old = await this.getStateAsync('DECT_' + ain + '.' + key).catch((e) => {
+					this.log.debug('error retrieving old value');
+				});
 				//if old.val == null or undefined
 				if (key == 'nextchange') {
 					//fasthack anstatt neue objekterkennung

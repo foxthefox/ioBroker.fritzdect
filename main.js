@@ -1354,7 +1354,6 @@ class Fritzdect extends utils.Adapter {
 
 	async updateDatapoint(key, value, ain) {
 		let old;
-		this.log.debug('try ' + 'DECT_' + ain + '.' + key);
 		try {
 			if (!value || value == '') {
 				this.log.debug(' no value for updating in ' + ain + '  ' + key);
@@ -2231,24 +2230,52 @@ class Fritzdect extends utils.Adapter {
 					// create general
 					if (device.fwversion) {
 						await this.createInfoState(identifier, 'fwversion', 'Firmware Version');
+						await this.setStateAsync('DECT_' + identifier + '.fwversion', {
+							val: device.fwversion,
+							ack: true
+						});
 					}
 					if (device.manufacturer) {
 						await this.createInfoState(identifier, 'manufacturer', 'Manufacturer');
+						await this.setStateAsync('DECT_' + identifier + '.manufacturer', {
+							val: device.manufacturer,
+							ack: true
+						});
 					}
 					if (device.productname) {
 						await this.createInfoState(identifier, 'productname', 'Product Name');
+						await this.setStateAsync('DECT_' + identifier + '.productname', {
+							val: device.productname,
+							ack: true
+						});
 					}
 					if (device.present) {
 						await this.createIndicatorState(identifier, 'present', 'device present');
+						await this.setStateAsync('DECT_' + identifier + '.present', {
+							val: device.present == 1 ? true : false,
+							ack: true
+						});
 					}
 					if (device.name) {
 						await this.createInfoState(identifier, 'name', 'Device Name');
+						await this.setStateAsync('DECT_' + identifier + '.name', {
+							val: device.name,
+							ack: true
+						});
 					}
 					if (device.txbusy) {
 						await this.createIndicatorState(identifier, 'txbusy', 'Trasmitting active');
+						await this.setStateAsync('DECT_' + identifier + '.txbusy', {
+							val: device.txbusy == 1 ? true : false,
+							ack: true
+						});
 					}
 					if (device.synchronized) {
 						await this.createIndicatorState(identifier, 'synchronized', 'Synchronized Status');
+						await this.setStateAsync('DECT_' + identifier + '.synchronized', {
+							val: device.synchronized == 1 ? true : false,
+							ack: true
+						});
 					}
 					//always ID
 					await this.createInfoState(identifier, 'id', 'Device ID');
@@ -2285,9 +2312,17 @@ class Fritzdect extends utils.Adapter {
 					// create battery devices
 					if (device.battery) {
 						await this.createValueState(identifier, 'battery', 'Battery Charge State', 0, 100, '%');
+						await this.setStateAsync('DECT_' + identifier + '.battery', {
+							val: parseInt(device.battery),
+							ack: true
+						});
 					}
 					if (device.batterylow) {
 						await this.createIndicatorState(identifier, 'batterylow', 'Battery Low State');
+						await this.setStateAsync('DECT_' + identifier + '.batterylow', {
+							val: device.batterylow == 1 ? true : false,
+							ack: true
+						});
 					}
 
 					// create button parts
@@ -2302,10 +2337,22 @@ class Fritzdect extends utils.Adapter {
 											'lastpressedtimestamp',
 											'last button Time Stamp'
 										);
+										await this.setStateAsync('DECT_' + identifier + '.lastpressedtimestamp', {
+											val: String(new Date(device.button.lastpressedtimestamp * 1000)),
+											ack: true
+										});
 									} else if (key === 'id') {
 										await this.createInfoState(identifier, 'id', 'Button ID');
+										await this.setStateAsync('DECT_' + identifier + '.id', {
+											val: parseInt(device.button.id),
+											ack: true
+										});
 									} else if (key === 'name') {
 										await this.createInfoState(identifier, 'name', 'Button Name');
+										await this.setStateAsync('DECT_' + identifier + '.name', {
+											val: device.button.name.toString(),
+											ack: true
+										});
 									} else {
 										this.log.warn(' new datapoint in API detected -> ' + key);
 									}
@@ -2332,6 +2379,19 @@ class Fritzdect extends utils.Adapter {
 													identifier + '.button.' + button.identifier.replace(/\s/g, ''),
 													'lastpressedtimestamp',
 													'last button Time Stamp'
+												);
+												await this.setStateAsync(
+													'DECT_' +
+														identifier +
+														+'.button.' +
+														button.identifier.replace(/\s/g, '') +
+														'.lastpressedtimestamp',
+													{
+														val: String(
+															new Date(device.button.lastpressedtimestamp * 1000)
+														),
+														ack: true
+													}
 												);
 											} else if (key === 'identifier') {
 												//already part of the object
@@ -2365,8 +2425,16 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.alert), async (key) => {
 								if (key === 'state') {
 									await this.createIndicatorState(identifier, 'state', 'Alert State');
+									await this.setStateAsync('DECT_' + identifier + '.state', {
+										val: device.alert.state == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'lastalertchgtimestamp') {
 									await this.createTimeState(identifier, 'lastalertchgtimestamp', 'Alert last Time');
+									await this.setStateAsync('DECT_' + identifier + '.lastalertchgtimestamp', {
+										val: String(new Date(device.alert.lastalertchgtimestamp * 1000)),
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2381,6 +2449,10 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.switch), async (key) => {
 								if (key === 'state') {
 									await this.createSwitch(identifier, 'state', 'Switch Status and Control');
+									await this.setStateAsync('DECT_' + identifier + '.state', {
+										val: device.switch.state == 1 ? true : false,
+										ack: true
+									});
 									await this.createInfoState(identifier, 'switchtype', 'Switch Type');
 									await this.setStateAsync('DECT_' + identifier + '.switchtype', {
 										val: 'switch',
@@ -2388,10 +2460,22 @@ class Fritzdect extends utils.Adapter {
 									});
 								} else if (key === 'mode') {
 									await this.createInfoState(identifier, 'mode', 'Switch Mode');
+									await this.setStateAsync('DECT_' + identifier + '.mode', {
+										val: device.switch.mode.toString(),
+										ack: true
+									});
 								} else if (key === 'lock') {
 									await this.createIndicatorState(identifier, 'lock', 'API Lock');
+									await this.setStateAsync('DECT_' + identifier + '.lock', {
+										val: device.switch.lock == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'devicelock') {
 									await this.createIndicatorState(identifier, 'devicelock', 'Device (Button)lock');
+									await this.setStateAsync('DECT_' + identifier + '.devicelock', {
+										val: device.switch.devicelock == 1 ? true : false,
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2447,6 +2531,10 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.temperature), async (key) => {
 								if (key === 'celsius') {
 									await this.createValueState(identifier, 'celsius', 'Temperature', -30, 50, '°C');
+									await this.setStateAsync('DECT_' + identifier + '.celsius', {
+										val: parseFloat(device.temperature.celsius) / 10,
+										ack: true
+									});
 								} else if (key === 'offset') {
 									await this.createValueState(
 										identifier,
@@ -2456,6 +2544,10 @@ class Fritzdect extends utils.Adapter {
 										10,
 										'°C'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.offset', {
+										val: parseFloat(device.temperature.offset) / 10,
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2477,6 +2569,10 @@ class Fritzdect extends utils.Adapter {
 										100,
 										'%'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.rel_humidity', {
+										val: parseInt(device.humidity.rel_humidity),
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2497,6 +2593,10 @@ class Fritzdect extends utils.Adapter {
 									);
 								} else if (key === 'mode') {
 									await this.createInfoState(identifier, 'mode', 'Blind Mode');
+									await this.setStateAsync('DECT_' + identifier + '.mode', {
+										val: device.blind.mode.toString(),
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2513,6 +2613,10 @@ class Fritzdect extends utils.Adapter {
 								//create datapoints from the data
 								if (key === 'tist') {
 									await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 65, '°C');
+									await this.setStateAsync('DECT_' + identifier + '.tist', {
+										val: parseFloat(device.hkr.tist) / 2,
+										ack: true
+									});
 								} else if (key === 'tsoll') {
 									await this.createValueCtrl(
 										identifier,
@@ -2523,6 +2627,17 @@ class Fritzdect extends utils.Adapter {
 										'°C',
 										'value.temperature'
 									);
+									if (device.hkr.tsoll < 57) {
+										await this.setStateAsync('DECT_' + identifier + '.tsoll', {
+											val: parseFloat(device.hkr.tsoll) / 2,
+											ack: true
+										});
+									} else {
+										await this.setStateAsync('DECT_' + identifier + '.tsoll', {
+											val: this.config.fritz_tsolldefault,
+											ack: true
+										});
+									}
 								} else if (key === 'absenk') {
 									await this.createValueState(
 										identifier,
@@ -2532,6 +2647,10 @@ class Fritzdect extends utils.Adapter {
 										32,
 										'°C'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.absenk', {
+										val: parseFloat(device.hkr.absenk) / 2,
+										ack: true
+									});
 								} else if (key === 'komfort') {
 									await this.createValueState(
 										identifier,
@@ -2541,30 +2660,66 @@ class Fritzdect extends utils.Adapter {
 										32,
 										'°C'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.komfort', {
+										val: parseFloat(device.hkr.komfort) / 2,
+										ack: true
+									});
 								} else if (key === 'lock') {
 									await this.createIndicatorState(identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
+									await this.setStateAsync('DECT_' + identifier + '.lock', {
+										val: device.hkr.lock == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'devicelock') {
 									await this.createIndicatorState(
 										identifier,
 										'devicelock',
 										'device lock, button lock'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.devicelock', {
+										val: device.hkr.devicelock == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'errorcode') {
 									await this.createModeState(identifier, 'errorcode', 'Error Code');
+									await this.setStateAsync('DECT_' + identifier + '.errorcode', {
+										val: parseInt(device.hkr.errorcode) / 2,
+										ack: true
+									});
 								} else if (key === 'batterylow') {
 									await this.createIndicatorState(identifier, 'batterylow', 'battery low');
+									await this.setStateAsync('DECT_' + identifier + '.batterylow', {
+										val: device.hkr.batterylow == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'battery') {
 									await this.createValueState(identifier, 'battery', 'battery status', 0, 100, '%');
+									await this.setStateAsync('DECT_' + identifier + '.battery', {
+										val: parseInt(device.hkr.battery),
+										ack: true
+									});
 								} else if (key === 'summeractive') {
 									await this.createIndicatorState(identifier, 'summeractive', 'summer active status');
+									await this.setStateAsync('DECT_' + identifier + '.summeractive', {
+										val: device.hkr.summeractive == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'holidayactive') {
 									await this.createIndicatorState(
 										identifier,
 										'holidayactive',
 										'Holiday Active status'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.holidayactive', {
+										val: device.hkr.holidayactive == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'boostactive') {
 									await this.createSwitch(identifier, 'boostactive', 'Boost active status and cmd');
+									await this.setStateAsync('DECT_' + identifier + '.boostactive', {
+										val: device.hkr.boostactive == 1 ? true : false,
+										ack: true
+									});
 									//create the user definde end time for manual setting the window open active state
 									await this.createValueCtrl(
 										identifier,
@@ -2586,12 +2741,21 @@ class Fritzdect extends utils.Adapter {
 										'boostactiveendtime',
 										'Boost active end time'
 									);
+									//String(new Date(value * 1000))
+									await this.setStateAsync('DECT_' + identifier + '.boostactiveendtime', {
+										val: String(new Date(device.hkr.boostactiveendtime * 1000)),
+										ack: true
+									});
 								} else if (key === 'windowopenactiv') {
 									await this.createSwitch(
 										identifier,
 										'windowopenactiv',
 										'Window open status and cmd'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.windowopenactiv', {
+										val: device.hkr.windowopenactiv == 1 ? true : false,
+										ack: true
+									});
 									//create the user definde end time for manual setting the window open active state
 									await this.createValueCtrl(
 										identifier,
@@ -2613,6 +2777,10 @@ class Fritzdect extends utils.Adapter {
 										'windowopenactiveendtime',
 										'window open active end time'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
+										val: String(new Date(device.hkr.windowopenactivetime * 1000)),
+										ack: true
+									});
 								} else if (key === 'nextchange') {
 									this.log.info('setting up thermostat nextchange');
 									try {
@@ -2625,6 +2793,10 @@ class Fritzdect extends utils.Adapter {
 														'endperiod',
 														'next time for Temp change'
 													);
+													await this.setStateAsync('DECT_' + identifier + '.endperiod', {
+														val: String(new Date(device.hkr.nextchange.endperiod * 1000)),
+														ack: true
+													});
 												} else if (key === 'tchange') {
 													await this.createValueState(
 														identifier,
@@ -2634,6 +2806,10 @@ class Fritzdect extends utils.Adapter {
 														128,
 														'°C'
 													);
+													await this.setStateAsync('DECT_' + identifier + '.tchange', {
+														val: parseFloat(device.hkr.tchange) / 2,
+														ack: true
+													});
 												} else {
 													this.log.warn(' new datapoint in API detected -> ' + key);
 												}
@@ -2650,12 +2826,20 @@ class Fritzdect extends utils.Adapter {
 										'adaptiveHeatingRunning',
 										'adaptive Heating Running status'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.adaptiveHeatingRunning', {
+										val: device.hkr.adaptiveHeatingRunning == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'adaptiveHeatingActive') {
 									await this.createIndicatorState(
 										identifier,
 										'adaptiveHeatingActive',
 										'adaptive Heating active status'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.adaptiveHeatingActive', {
+										val: device.hkr.adaptiveHeatingActive == 1 ? true : false,
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2672,6 +2856,10 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.simpleonoff), async (key) => {
 								if (key === 'state') {
 									await this.createSwitch(identifier, 'state', 'Simple ON/OFF state and cmd');
+									await this.setStateAsync('DECT_' + identifier + '.state', {
+										val: device.simpleonoff.state == 1 ? true : false,
+										ack: true
+									});
 									await this.createInfoState(identifier, 'switchtype', 'Switch Type');
 									await this.setStateAsync('DECT_' + identifier + '.switchtype', {
 										val: 'simpleonoff',
@@ -2699,6 +2887,10 @@ class Fritzdect extends utils.Adapter {
 										'',
 										'value.level'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.level', {
+										val: parseInt(device.levelcontrol.level),
+										ack: true
+									});
 								} else if (key === 'levelpercentage') {
 									await this.createValueCtrl(
 										identifier,
@@ -2709,6 +2901,10 @@ class Fritzdect extends utils.Adapter {
 										'%',
 										'value.level'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.levelpercentage', {
+										val: parseInt(device.levelcontrol.levelpercentage),
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}
@@ -2723,16 +2919,32 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.colorcontrol), async (key) => {
 								if (key === 'supported_modes') {
 									await this.createModeState(identifier, 'supported_modes', 'available color modes');
+									await this.setStateAsync('DECT_' + identifier + '.supported_mode', {
+										val: parseInt(device.colorcontrol.supported_mode),
+										ack: true
+									});
 								} else if (key === 'current_mode') {
 									await this.createModeState(identifier, 'current_mode', 'current color mode');
+									await this.setStateAsync('DECT_' + identifier + '.current_mode', {
+										val: parseInt(device.colorcontrol.current_mode),
+										ack: true
+									});
 								} else if (key === 'fullcolorsupport') {
 									await this.createIndicatorState(
 										identifier,
 										'fullcolorsupport',
 										'Full Color Support'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.fullcolorsupport', {
+										val: device.colorcontrol.fullcolorsupport == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'mapped') {
 									await this.createIndicatorState(identifier, 'mapped', 'Mapped Indicator');
+									await this.setStateAsync('DECT_' + identifier + '.mapped', {
+										val: device.colorcontrol.mapped == 1 ? true : false,
+										ack: true
+									});
 								} else if (key === 'hue') {
 									await this.createValueCtrl(
 										identifier,
@@ -2743,6 +2955,10 @@ class Fritzdect extends utils.Adapter {
 										'°',
 										'value.hue'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.hue', {
+										val: parseInt(device.colorcontrol.hue),
+										ack: true
+									});
 								} else if (key === 'saturation') {
 									await this.createValueCtrl(
 										identifier,
@@ -2753,6 +2969,10 @@ class Fritzdect extends utils.Adapter {
 										'',
 										'value.saturation'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.saturation', {
+										val: parseInt(device.colorcontrol.saturation),
+										ack: true
+									});
 								} else if (key === 'unmapped_hue') {
 									await this.createValueState(
 										identifier,
@@ -2762,6 +2982,10 @@ class Fritzdect extends utils.Adapter {
 										359,
 										'°'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.unmapped_hue', {
+										val: parseInt(device.colorcontrol.unmapped_hue),
+										ack: true
+									});
 								} else if (key === 'unmapped_saturation') {
 									await this.createValueState(
 										identifier,
@@ -2771,6 +2995,10 @@ class Fritzdect extends utils.Adapter {
 										255,
 										''
 									);
+									await this.setStateAsync('DECT_' + identifier + '.unmapped_saturation', {
+										val: parseInt(device.colorcontrol.unmapped_saturation),
+										ack: true
+									});
 								} else if (key === 'temperature') {
 									await this.createValueCtrl(
 										identifier,
@@ -2781,6 +3009,10 @@ class Fritzdect extends utils.Adapter {
 										'K',
 										'value.temperature'
 									);
+									await this.setStateAsync('DECT_' + identifier + '.temperature', {
+										val: parseInt(device.colorcontrol.temperature),
+										ack: true
+									});
 								} else {
 									this.log.warn(' new datapoint in API detected -> ' + key);
 								}

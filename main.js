@@ -1365,290 +1365,7 @@ class Fritzdect extends utils.Adapter {
 			} else {
 				try {
 					old = await this.getStateAsync('DECT_' + ain + '.' + key);
-					if (old === null) {
-						this.log.debug(
-							'on purpose updating data (no old value) DECT_' + ain + ' : ' + key + ' new: ' + value
-						);
-						if (key == 'nextchange') {
-							//fasthack anstatt neue objekterkennung
-							await this.updateData(value, ain);
-						} else if (
-							key == 'identifier' ||
-							key == 'functionbitmask' ||
-							key == 'etsideviceid' ||
-							key == 'unittype' ||
-							key == 'interfaces'
-						) {
-							// skip it
-						} else if (key === 'batterylow') {
-							// bool mal anders herum
-							const batt = value == 0 ? false : true;
-							/*
-							if (value == 0) {
-								let batt = false;
-							} else {
-								let batt = true;
-							}
-							*/
-							// immer das gleiche Schema
-							// entweder Unterschied oder writeonhyst=0
-
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: batt,
-								ack: true
-							});
-						} else if (key == 'celsius' || key == 'offset') {
-							//numbers
-
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: parseFloat(value) / 10,
-								ack: true
-							});
-						} else if (key == 'power' || key == 'voltage') {
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: parseFloat(value) / 1000,
-								ack: true
-							});
-						} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
-							if (value == 253) {
-								this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Closed');
-								await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
-									val: 1,
-									ack: true
-								});
-								const currentMode = 'Off';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							} else if (value == 254) {
-								this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Opened');
-								await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
-									val: 2,
-									ack: true
-								});
-								const currentMode = 'On';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							} else {
-								await this.setStateAsync('DECT_' + ain + '.' + key, {
-									val: parseFloat(value) / 2,
-									ack: true
-								});
-							}
-						} else if (key == 'humidity') {
-							//e.g humidity
-
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: parseFloat(value),
-								ack: true
-							});
-						} else if (key == 'tsoll') {
-							let targettemp;
-							let tsoll;
-							if (value < 57) {
-								// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-								await this.setStateAsync('DECT_' + ain + '.tsoll', {
-									val: parseFloat(value) / 2,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-									val: parseFloat(value) / 2,
-									ack: true
-								}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-									val: 0,
-									ack: true
-								});
-								//wurde eigentlich schon übergeordnet gesetzt, hier würde es ggf. Night und Comfort überschreiben
-								/*
-								const currentMode = 'Auto';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-								*/
-							} else if (value == 253) {
-								this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
-								// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-								targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
-									this.log.warn('problem getting the tsoll status ' + e);
-								});
-								if (targettemp && targettemp.val !== null) {
-									tsoll = targettemp.val;
-								} else {
-									tsoll = settings.tsolldefault || this.tsolldefault;
-									this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
-								}
-								await this.setStateAsync('DECT_' + ain + '.tsoll', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-									val: 1,
-									ack: true
-								});
-								const currentMode = 'Off';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							} else if (value == 254) {
-								this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
-								// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-								targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
-									this.log.warn('problem getting the tsoll status ' + e);
-								});
-								if (targettemp && targettemp.val !== null) {
-									tsoll = targettemp.val;
-								} else {
-									tsoll = settings.tsolldefault || this.tsolldefault;
-									this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
-								}
-								await this.setStateAsync('DECT_' + ain + '.tsoll', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-									val: 2,
-									ack: true
-								});
-								const currentMode = 'On';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							} else {
-								this.log.warn('undefined tsoll submitted from fritzbox !');
-							}
-						} else if (
-							key == 'state' ||
-							key == 'simpleonoff' ||
-							key == 'lock' ||
-							key == 'devicelock' ||
-							key == 'txbusy' ||
-							key == 'present' ||
-							key == 'summeractive' ||
-							key == 'holidayactive' ||
-							key == 'boostactive' ||
-							key == 'windowopenactiv' ||
-							key == 'synchronized' ||
-							key == 'fullcolorsupport' ||
-							key == 'mapped' ||
-							key == 'endpositionsset' ||
-							key == 'adaptiveHeatingRunning' ||
-							key == 'adaptiveHeatingActive'
-						) {
-							// hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
-							// if ( value.length() >1 ) { await this.setStateAsync('DECT_' + ain + '.' + key, {	val: value.toString(), ack: true });} else {}
-							// oder eben alles ungleich 0 ist erstmal Fehler
-							// bool
-							const convertValue = value == 1 ? true : false;
-
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: convertValue,
-								ack: true
-							});
-							if (key == 'summeractive' && convertValue == true) {
-								const currentMode = 'Summer';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							}
-							if (key == 'holidayactive' && convertValue == true) {
-								const currentMode = 'Holiday';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							}
-							if (key == 'boostactive' && convertValue == true) {
-								const currentMode = 'Boost';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							}
-							if (key == 'windowopenactiv' && convertValue == true) {
-								const currentMode = 'WindowOpen';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							}
-						} else if (
-							key == 'lastalertchgtimestamp' ||
-							key == 'lastpressedtimestamp' ||
-							key == 'boostactiveendtime' ||
-							key == 'windowopenactiveendtime' ||
-							key == 'endperiod'
-						) {
-							//time
-							const convTime = String(new Date(value * 1000));
-
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: convTime,
-								ack: true
-							});
-						} else if (
-							key == 'errorcode' ||
-							key == 'level' ||
-							key == 'levelpercentage' ||
-							key == 'battery' ||
-							key == 'energy' ||
-							key == 'hue' ||
-							key == 'saturation' ||
-							key == 'temperature' ||
-							key == 'supported_modes' ||
-							key == 'current_mode' ||
-							key == 'rel_humidity' ||
-							key == 'unmapped_hue' ||
-							key == 'unmapped_saturation'
-						) {
-							// integer number
-
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: parseInt(value),
-								ack: true
-							});
-						} else if (
-							key == 'id' ||
-							key == 'fwversion' ||
-							key == 'manufacturer' ||
-							key == 'name' ||
-							key == 'productname' ||
-							key == 'members' ||
-							key == 'masterdeviceid' ||
-							key == 'mode'
-						) {
-							// || 'id' , id schon beim initialisieren gesetzt
-							// text
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: value.toString(),
-								ack: true
-							});
-						} else {
-							// unbekannt
-							this.log.warn(
-								'unknown datapoint DECT_' +
-									ain +
-									'.' +
-									key +
-									' please inform devloper and open issue in github'
-							);
-						}
-					} else if (old !== null || !this.config.fritz_writeonhyst) {
+					if (old !== null || !this.config.fritz_writeonhyst) {
 						if (key == 'nextchange') {
 							//fasthack anstatt neue objekterkennung
 							await this.updateData(value, ain);
@@ -2329,7 +2046,7 @@ class Fritzdect extends utils.Adapter {
 					if (device.button) {
 						if (!Array.isArray(device.button)) {
 							await Promise.all(
-								Object.keys(device.button).map(async (key) => {
+								Object.entries(device.button).map(async ([ key, value ]) => {
 									//await this.asyncForEach(Object.keys(device.button), async (key) => {
 									if (key === 'lastpressedtimestamp') {
 										await this.createTimeState(
@@ -2338,19 +2055,19 @@ class Fritzdect extends utils.Adapter {
 											'last button Time Stamp'
 										);
 										await this.setStateAsync('DECT_' + identifier + '.lastpressedtimestamp', {
-											val: String(new Date(device.button.lastpressedtimestamp * 1000)),
+											val: String(new Date(value * 1000)),
 											ack: true
 										});
 									} else if (key === 'id') {
 										await this.createInfoState(identifier, 'id', 'Button ID');
 										await this.setStateAsync('DECT_' + identifier + '.id', {
-											val: parseInt(device.button.id),
+											val: parseInt(value),
 											ack: true
 										});
 									} else if (key === 'name') {
 										await this.createInfoState(identifier, 'name', 'Button Name');
 										await this.setStateAsync('DECT_' + identifier + '.name', {
-											val: device.button.name.toString(),
+											val: value.toString(),
 											ack: true
 										});
 									} else {
@@ -2387,9 +2104,7 @@ class Fritzdect extends utils.Adapter {
 														button.identifier.replace(/\s/g, '') +
 														'.lastpressedtimestamp',
 													{
-														val: String(
-															new Date(device.button.lastpressedtimestamp * 1000)
-														),
+														val: String(new Date(button.lastpressedtimestamp * 1000)),
 														ack: true
 													}
 												);
@@ -2401,11 +2116,33 @@ class Fritzdect extends utils.Adapter {
 													'id',
 													'Button ID'
 												);
+												await this.setStateAsync(
+													'DECT_' +
+														identifier +
+														+'.button.' +
+														button.identifier.replace(/\s/g, '') +
+														'.id',
+													{
+														val: parseInt(button.id),
+														ack: true
+													}
+												);
 											} else if (key === 'name') {
 												await this.createInfoState(
 													identifier + '.button.' + button.identifier.replace(/\s/g, ''),
 													'name',
 													'Button Name'
+												);
+												await this.setStateAsync(
+													'DECT_' +
+														identifier +
+														+'.button.' +
+														button.identifier.replace(/\s/g, '') +
+														'.lastpressedtimestamp',
+													{
+														val: button.name.toString(),
+														ack: true
+													}
 												);
 											} else {
 												this.log.warn(' new datapoint in API detected -> ' + key);
@@ -2919,7 +2656,7 @@ class Fritzdect extends utils.Adapter {
 								//await this.asyncForEach(Object.keys(device.colorcontrol), async (key) => {
 								if (key === 'supported_modes') {
 									await this.createModeState(identifier, 'supported_modes', 'available color modes');
-									await this.setStateAsync('DECT_' + identifier + '.supported_mode', {
+									await this.setStateAsync('DECT_' + identifier + '.supported_modes', {
 										val: parseInt(device.colorcontrol.supported_mode),
 										ack: true
 									});

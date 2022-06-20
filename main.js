@@ -2018,7 +2018,7 @@ class Fritzdect extends utils.Adapter {
 						} else {
 							//device.id
 							await this.setStateAsync('DECT_' + identifier + '.id', {
-								val: device.id.toString(),
+								val: device.id !== null ? device.id.toString() : null,
 								ack: true
 							});
 						}
@@ -2070,7 +2070,7 @@ class Fritzdect extends utils.Adapter {
 									} else if (key === 'name') {
 										await this.createInfoState(identifier, 'name', 'Button Name');
 										await this.setStateAsync('DECT_' + identifier + '.name', {
-											val: value.toString(),
+											val: value !== null ? value.toString() : null,
 											ack: true
 										});
 									} else {
@@ -2146,7 +2146,7 @@ class Fritzdect extends utils.Adapter {
 														button.identifier.replace(/\s/g, '') +
 														'.name',
 													{
-														val: button.name.toString(),
+														val: button.name !== null ? button.name.toString() : null,
 														ack: true
 													}
 												);
@@ -2207,7 +2207,7 @@ class Fritzdect extends utils.Adapter {
 								} else if (key === 'mode') {
 									await this.createInfoState(identifier, 'mode', 'Switch Mode');
 									await this.setStateAsync('DECT_' + identifier + '.mode', {
-										val: device.switch.mode.toString(),
+										val: device.switch.mode !== null ? device.switch.mode.toString() : null,
 										ack: true
 									});
 								} else if (key === 'lock') {
@@ -2274,13 +2274,19 @@ class Fritzdect extends utils.Adapter {
 								if (key === 'masterdeviceid') {
 									await this.createInfoState(identifier, 'masterdeviceid', 'ID of the group');
 									await this.setStateAsync('DECT_' + identifier + '.masterdeviceid', {
-										val: device.groupinfo.masterdeviceid.toString(),
+										val:
+											device.groupinfo.masterdeviceid !== null
+												? device.groupinfo.masterdeviceid.toString()
+												: null,
 										ack: true
 									});
 								} else if (key === 'members') {
 									await this.createInfoState(identifier, 'members', 'member of the group');
 									await this.setStateAsync('DECT_' + identifier + '.members', {
-										val: device.groupinfo.members.toString(),
+										val:
+											device.groupinfo.members !== null
+												? device.groupinfo.members.toString()
+												: null,
 										ack: true
 									});
 								} else {
@@ -2364,7 +2370,7 @@ class Fritzdect extends utils.Adapter {
 								} else if (key === 'mode') {
 									await this.createInfoState(identifier, 'mode', 'Blind Mode');
 									await this.setStateAsync('DECT_' + identifier + '.mode', {
-										val: device.blind.mode.toString(),
+										val: device.blind.mode !== null ? device.blind.mode.toString() : null,
 										ack: true
 									});
 								} else {

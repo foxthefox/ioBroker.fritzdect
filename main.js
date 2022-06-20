@@ -1948,21 +1948,21 @@ class Fritzdect extends utils.Adapter {
 					if (device.fwversion) {
 						await this.createInfoState(identifier, 'fwversion', 'Firmware Version');
 						await this.setStateAsync('DECT_' + identifier + '.fwversion', {
-							val: device.fwversion.toString(),
+							val: device.fwversion !== null ? device.fwversion.toString() : null,
 							ack: true
 						});
 					}
 					if (device.manufacturer) {
 						await this.createInfoState(identifier, 'manufacturer', 'Manufacturer');
 						await this.setStateAsync('DECT_' + identifier + '.manufacturer', {
-							val: device.manufacturer.toString(),
+							val: device.manufacturer !== null ? device.manufacturer.toString() : null,
 							ack: true
 						});
 					}
 					if (device.productname) {
 						await this.createInfoState(identifier, 'productname', 'Product Name');
 						await this.setStateAsync('DECT_' + identifier + '.productname', {
-							val: device.productname.toString(),
+							val: device.productname !== null ? device.productname.toString() : null,
 							ack: true
 						});
 					}
@@ -1976,7 +1976,7 @@ class Fritzdect extends utils.Adapter {
 					if (device.name) {
 						await this.createInfoState(identifier, 'name', 'Device Name');
 						await this.setStateAsync('DECT_' + identifier + '.name', {
-							val: device.name.toString(),
+							val: device.name !== null ? device.name.toString() : null,
 							ack: true
 						});
 					}
@@ -2009,7 +2009,10 @@ class Fritzdect extends utils.Adapter {
 							});
 							// noch nicht perfekt da dies überschrieben wird
 							await this.setStateAsync('DECT_' + identifier + '.fwversion', {
-								val: device.etsiunitinfo.fwversion.toString(),
+								val:
+									device.etsiunitinfo.fwversion !== null
+										? device.etsiunitinfo.fwversion.toString()
+										: null,
 								ack: true
 							});
 						} else {

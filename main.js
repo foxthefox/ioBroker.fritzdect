@@ -2018,11 +2018,13 @@ class Fritzdect extends utils.Adapter {
 						});
 					} else {
 						//device.id
-						this.log.debug('device.id ' + device.id);
-						await this.setStateAsync('DECT_' + identifier + '.id', {
-							val: device.id !== null || undefined ? device.id.toString() : null,
-							ack: true
-						});
+						this.log.debug('device.id ' + JSON.stringify(device));
+						if (device.id) {
+							await this.setStateAsync('DECT_' + identifier + '.id', {
+								val: device.id !== null || undefined ? device.id.toString() : null,
+								ack: true
+							});
+						}
 					}
 					//check for blinds control
 					if (device.etsiunitinfo.unittype == 281) {

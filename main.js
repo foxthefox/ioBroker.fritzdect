@@ -2010,10 +2010,7 @@ class Fritzdect extends utils.Adapter {
 						});
 						// noch nicht perfekt da dies überschrieben wird
 						await this.setStateAsync('DECT_' + identifier + '.fwversion', {
-							val:
-								device.etsiunitinfo.fwversion !== null
-									? device.etsiunitinfo.fwversion.toString()
-									: null,
+							val: device.etsiunitinfo.fwversion,
 							ack: true
 						});
 					} else {
@@ -2021,7 +2018,7 @@ class Fritzdect extends utils.Adapter {
 						this.log.debug('device.id ' + JSON.stringify(device));
 						if (device.id) {
 							await this.setStateAsync('DECT_' + identifier + '.id', {
-								val: device.id !== null || undefined ? device.id.toString() : null,
+								val: device.id,
 								ack: true
 							});
 						}

@@ -2206,7 +2206,7 @@ class Fritzdect extends utils.Adapter {
 								await this.setStateAsync('DECT_' + identifier + '.mode', {
 									val: device.switch.mode !== null ? device.switch.mode.toString() : null,
 									ack: true
-								}).catch(e);
+								});
 							} else if (key === 'lock') {
 								await this.createIndicatorState(identifier, 'lock', 'API Lock');
 								await this.setStateAsync('DECT_' + identifier + '.lock', {

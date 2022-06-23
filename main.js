@@ -2103,6 +2103,7 @@ class Fritzdect extends utils.Adapter {
 											);
 											await this.setStateAsync(
 												'DECT_'.concat(
+													identifier,
 													'.button.',
 													button.identifier.replace(/\s/g, ''),
 													'.lastpressedtimestamp'
@@ -2124,7 +2125,12 @@ class Fritzdect extends utils.Adapter {
 												'Button ID'
 											);
 											await this.setStateAsync(
-												'DECT_'.concat('.button.', button.identifier.replace(/\s/g, ''), '.id'),
+												'DECT_'.concat(
+													identifier,
+													'.button.',
+													button.identifier.replace(/\s/g, ''),
+													'.id'
+												),
 												{
 													val: parseInt(button.id),
 													ack: true
@@ -2138,6 +2144,7 @@ class Fritzdect extends utils.Adapter {
 											);
 											await this.setStateAsync(
 												'DECT_'.concat(
+													identifier,
 													'.button.',
 													button.identifier.replace(/\s/g, ''),
 													'.name'

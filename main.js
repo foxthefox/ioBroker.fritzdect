@@ -2082,6 +2082,7 @@ class Fritzdect extends utils.Adapter {
 						);
 					} else if (Array.isArray(device.button)) {
 						//Unterobjekte anlegen
+						//DECT440
 						this.log.info('setting up button(s) ');
 						await Promise.all(
 							device.button.map(async (button) => {
@@ -2090,11 +2091,13 @@ class Fritzdect extends utils.Adapter {
 								await this.createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
 								await Promise.all(
 									Object.keys(button).map(async (key) => {
-										this.log.debug('button ' + button + button.identifier);
+										this.log.debug(
+											'button ' + identifier + JSON.stringify(button) + button.identifier
+										);
 										//await this.asyncForEach(Object.keys(button), async (key) => {
 										if (key === 'lastpressedtimestamp') {
 											await this.createTimeState(
-												identifier + '.button.' + button.identifier.replace(/\s/g, ''),
+												identifier.concat('.button.', button.identifier.replace(/\s/g, '')),
 												'lastpressedtimestamp',
 												'last button Time Stamp'
 											);
@@ -2116,7 +2119,7 @@ class Fritzdect extends utils.Adapter {
 											//already part of the object
 										} else if (key === 'id') {
 											await this.createInfoState(
-												identifier + '.button.' + button.identifier.replace(/\s/g, ''),
+												identifier.concat('.button.', button.identifier.replace(/\s/g, '')),
 												'id',
 												'Button ID'
 											);
@@ -2133,7 +2136,7 @@ class Fritzdect extends utils.Adapter {
 											);
 										} else if (key === 'name') {
 											await this.createInfoState(
-												identifier + '.button.' + button.identifier.replace(/\s/g, ''),
+												identifier.concat('.button.', button.identifier.replace(/\s/g, '')),
 												'name',
 												'Button Name'
 											);

@@ -2559,7 +2559,7 @@ class Fritzdect extends utils.Adapter {
 													'°C'
 												);
 												await this.setStateAsync('DECT_' + identifier + '.tchange', {
-													val: parseFloat(device.hkr.tchange) / 2,
+													val: parseFloat(device.hkr.nextchange.tchange) / 2,
 													ack: true
 												});
 											} else {
@@ -2672,7 +2672,7 @@ class Fritzdect extends utils.Adapter {
 							if (key === 'supported_modes') {
 								await this.createModeState(identifier, 'supported_modes', 'available color modes');
 								await this.setStateAsync('DECT_' + identifier + '.supported_modes', {
-									val: parseInt(device.colorcontrol.supported_mode),
+									val: parseInt(device.colorcontrol.supported_modes),
 									ack: true
 								});
 							} else if (key === 'current_mode') {

@@ -255,7 +255,7 @@
 		"fritz_pw": "pw",
 		"fritz_interval": 300,
 		"fritz_options": null,
-		"fritz_writeonhyst": true,
+		"fritz_writeonhyst": false,
 		"fritz_analogchange": true,
 		"fritz_hysteresis": 1,
 		"fritz_boosttime": 5,

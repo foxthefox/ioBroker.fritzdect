@@ -2066,13 +2066,13 @@ class Fritzdect extends utils.Adapter {
 								} else if (key === 'id') {
 									await this.createInfoState(identifier, 'id', 'Button ID');
 									await this.setStateAsync('DECT_' + identifier + '.id', {
-										val: parseInt(value),
+										val: value,
 										ack: true
 									});
 								} else if (key === 'name') {
 									await this.createInfoState(identifier, 'name', 'Button Name');
 									await this.setStateAsync('DECT_' + identifier + '.name', {
-										val: value !== null ? value.toString() : null,
+										val: value,
 										ack: true
 									});
 								} else {
@@ -2132,7 +2132,7 @@ class Fritzdect extends utils.Adapter {
 													'.id'
 												),
 												{
-													val: parseInt(button.id),
+													val: button.id,
 													ack: true
 												}
 											);

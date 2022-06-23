@@ -2097,7 +2097,7 @@ class Fritzdect extends utils.Adapter {
 										//await this.asyncForEach(Object.keys(button), async (key) => {
 										if (key === 'lastpressedtimestamp') {
 											await this.createTimeState(
-												identifier.concat('.button.', button.identifier.replace(/\s/g, '')),
+												''.concat(identifier, '.button.', button.identifier.replace(/\s/g, '')),
 												'lastpressedtimestamp',
 												'last button Time Stamp'
 											);
@@ -2119,7 +2119,7 @@ class Fritzdect extends utils.Adapter {
 											//already part of the object
 										} else if (key === 'id') {
 											await this.createInfoState(
-												identifier.concat('.button.', button.identifier.replace(/\s/g, '')),
+												''.concat(identifier, '.button.', button.identifier.replace(/\s/g, '')),
 												'id',
 												'Button ID'
 											);
@@ -2132,7 +2132,7 @@ class Fritzdect extends utils.Adapter {
 											);
 										} else if (key === 'name') {
 											await this.createInfoState(
-												identifier.concat('.button.', button.identifier.replace(/\s/g, '')),
+												''.concat(identifier, '.button.', button.identifier.replace(/\s/g, '')),
 												'name',
 												'Button Name'
 											);
@@ -2143,7 +2143,7 @@ class Fritzdect extends utils.Adapter {
 													'.name'
 												),
 												{
-													val: button.name !== null ? button.name.toString() : null,
+													val: button.name,
 													ack: true
 												}
 											);
@@ -2516,10 +2516,10 @@ class Fritzdect extends utils.Adapter {
 									'windowopenactiveendtime',
 									'window open active end time'
 								);
-								await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
+								await this.setStateAsync('DECT_' + identifier + '.windowopenactiveendtime', {
 									val:
-										device.hkr.windowopenactivetime !== null
-											? String(new Date(device.hkr.windowopenactivetime * 1000))
+										device.hkr.windowopenactiveendtime !== null
+											? String(new Date(device.hkr.windowopenactiveendtime * 1000))
 											: null,
 									ack: true
 								});

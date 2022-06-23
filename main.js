@@ -2013,20 +2013,21 @@ class Fritzdect extends utils.Adapter {
 							val: device.etsiunitinfo.fwversion,
 							ack: true
 						});
-					} else {
-						//device.id
-						this.log.debug('device.id ' + JSON.stringify(device));
-						if (device.id) {
-							await this.setStateAsync('DECT_' + identifier + '.id', {
-								val: device.id,
-								ack: true
-							});
-						}
 					}
+
 					//check for blinds control
 					if (device.etsiunitinfo.unittype == 281) {
 						//additional blind datapoints
 						await this.createBlind(identifier);
+					}
+				} else {
+					//device.id
+					this.log.debug('device.id ' + JSON.stringify(device));
+					if (device.id) {
+						await this.setStateAsync('DECT_' + identifier + '.id', {
+							val: device.id,
+							ack: true
+						});
 					}
 				}
 

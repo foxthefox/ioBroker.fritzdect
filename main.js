@@ -168,22 +168,24 @@ class Fritzdect extends utils.Adapter {
 					);
 					this.log.info('fritzdect uses USER: ' + settings.Username);
 					try {
-						const login = await this.fritz.login_SID();
+						const login = await this.fritz.login_SID().catch((e) => this.errorHandlerApi(e));
 						if (login) {
 							this.log.info('checking user permissions');
 							const resp = await this.fritz.check_SID().catch((e) => this.errorHandlerApi(e));
 							// wird zu try/catch error
-							this.log.info('raw perm =>' + resp);
-							try {
-								let rights = '';
-								if (resp.rights.indexOf('ights') == -1) {
-									rights = parser.xml2json(''.concat('<Rights>', resp.rights, '</Rights>'));
-								} else {
-									rights = parser.xml2json(resp.rights);
+							if (resp) {
+								this.log.debug('raw perm =>' + JSON.stringify(resp));
+								try {
+									let rights = '';
+									if (resp.rights.indexOf('ights') == -1) {
+										rights = parser.xml2json(''.concat('<Rights>', resp.rights, '</Rights>'));
+									} else {
+										rights = parser.xml2json(resp.rights);
+									}
+									this.log.info('the rights are : ' + JSON.stringify(rights));
+								} catch (error) {
+									this.log.error('error in permission xml2json ' + error);
 								}
-								this.log.info('the rights are : ' + JSON.stringify(rights));
-							} catch (error) {
-								this.log.error('error in permission xml2json ' + error);
 							}
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
@@ -1137,7 +1139,7 @@ class Fritzdect extends utils.Adapter {
 			}
 			this.log.error('API  err  => ' + error.error);
 		} catch (e) {
-			this.log.error('try/catch error in function errorHandlerApi() ' + e);
+			this.log.error('catched error in function errorHandlerApi() ' + e);
 		}
 	}
 

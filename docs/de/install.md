@@ -3,24 +3,19 @@
 
 ## FritzBox Einstellungen
 
-es muß ein Benutzer angelegt sein, der Zugriff auf die DECT Objecte hat
+es muß ein Benutzer sein, der Zugriff auf die Fritzbox und Smarthome hat
 
-
-![fritzbox](fritzdect_einstellung.PNG)
-
-
-falls ein spezieller user angelegt wurde (also nicht admin für iobroker benutzt wird), dann sind die Berechtigungen zu setzen und die Voreinstellung das sich nur admin anmeldet, muß auf Benutzer umgestellt werden.
-
-![fritzbox](fritz_iobroker_user.PNG)
-
-![fritzbox](fritz_user.PNG)
-
+# Passwort
+möglicherweise kann es Probleme geben:
+- Passwort länger als 32 Zeichen
+- Verwendung von Sonderzeichen
+- Verwendung von erweiterten ASCII
+Falls es Probleme gibt, dann eventuell erstmal ein kürzeres und einfaches PW nehmen um grundsätzlich den login-Mechanismus des Adapters zu testen, dann sukzessive erweitern.
 
 ## Adapter Einstellungen
 
 * IP mit vorangestellten "http://" eingeben
 * Polling Intervall kann beliebig gewählt werden (Voreinstellung 5min=300sec). Dies ist notwendig um Bedienung ausserhalb von ioBroker nachzuführen, da die FritzBox keine automatischen Updates liefert.
-![admin](fritzdect_admin.PNG)
 
 
 ## Adapter Start

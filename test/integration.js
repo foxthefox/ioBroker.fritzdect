@@ -1,7 +1,7 @@
 const path = require('path');
 const { tests } = require('@iobroker/testing');
 
-const server = require('../lib/fritz/fritz_mockserver.js');
+const FritzEmu = require('fritzdect-aha-nodejs').FritzEmu;
 
 const expect = require('chai').expect;
 
@@ -35,7 +35,10 @@ tests.integration(path.join(__dirname, '..'), {
 		suite('Test creation of devices', (getHarness) => {
 			let harness;
 			before('start the emulation', async () => {
-				server.setupHttpServer(function() {});
+				let testfile = 'testFBall.xml';
+				let port = 3333;
+				const emulation = new FritzEmu(testfile, port, false);
+				emulation.setupHttpServer(function() {});
 				harness = getHarness();
 				const obj = {
 					native: {

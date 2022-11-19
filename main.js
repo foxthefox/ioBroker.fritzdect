@@ -10,7 +10,16 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
-const Fritz = require('./lib/fritzhttp.js');
+const Fritz = require('fritzdect-aha-nodejs').Fritz;
+
+/*
+let Fritz;
+
+(async () => {
+	let fb = await import('fritzdect-aha-nodejs');
+	Fritz = fb.Fritz;
+})().catch((err) => console.error(err));
+*/
 const parser = require('xml2json-light');
 
 let polling;
@@ -163,6 +172,7 @@ class Fritzdect extends utils.Adapter {
 						if (login) {
 							this.log.info('checking user permissions');
 							const resp = await this.fritz.check_SID().catch((e) => this.errorHandlerApi(e));
+							// wird zu try/catch error
 							this.log.info('raw perm =>' + resp);
 							try {
 								let rights = '';
@@ -203,7 +213,9 @@ class Fritzdect extends utils.Adapter {
 						}
 					} catch (error) {
 						//from login
-						this.log.error('try/catch error in onReady ' + error);
+						this.log.warn(
+							'catched error in onReady (most likely no connection to FB or wrong credentials)' + error
+						);
 					}
 					if (err) {
 						this.log.error('error getting system.config ' + err);
@@ -1659,7 +1671,7 @@ class Fritzdect extends utils.Adapter {
 									'updating data DECT_' + ain + ' : ' + key + ' new: ' + convTime + ' old: ' + old.val
 								);
 								await this.setStateAsync('DECT_' + ain + '.' + key, {
-									val: convTime,
+									val: convTime, //Str()
 									ack: true
 								});
 							}
@@ -1766,7 +1778,7 @@ class Fritzdect extends utils.Adapter {
 				this.log.debug('templates\n');
 				this.log.debug(JSON.stringify(templates));
 				if (templates.length) {
-					this.log.info('create Templates ' + templates.length);
+					this.log.info('CREATE Templates ' + templates.length);
 					await this.createTemplateResponse();
 					//await this.asyncForEach(templates, async (template) => {
 					await Promise.all(
@@ -1784,7 +1796,7 @@ class Fritzdect extends utils.Adapter {
 								typ = 'template_';
 								role = 'switch';
 								this.log.debug('__________________________');
-								this.log.info('setting up Template ' + template.name);
+								this.log.debug('setting up Template ' + template.name);
 								await this.createTemplate(
 									typ,
 									template.identifier.replace(/\s/g, ''),
@@ -1798,7 +1810,7 @@ class Fritzdect extends utils.Adapter {
 								typ = 'template_';
 								role = 'switch';
 								this.log.debug('__________________________');
-								this.log.info('setting up Template ' + template.name);
+								this.log.debug('setting up Template ' + template.name);
 								await this.createTemplate(
 									typ,
 									template.identifier.replace(/\s/g, ''),
@@ -2083,7 +2095,7 @@ class Fritzdect extends utils.Adapter {
 					} else if (Array.isArray(device.button)) {
 						//Unterobjekte anlegen
 						//DECT440
-						this.log.info('setting up button(s) ');
+						this.log.debug('setting up button(s) ');
 						await Promise.all(
 							device.button.map(async (button) => {
 								//await this.asyncForEach(device.button, async (button) => {
@@ -2166,7 +2178,7 @@ class Fritzdect extends utils.Adapter {
 				//create alert
 				// hier irgendwie blinds alart als string behandeln. :-((
 				if (device.alert) {
-					this.log.info('setting up alert ');
+					this.log.debug('setting up alert ');
 					await Promise.all(
 						Object.keys(device.alert).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.alert), async (key) => {
@@ -2193,7 +2205,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// create switch
 				if (device.switch) {
-					this.log.info('setting up switch ');
+					this.log.debug('setting up switch ');
 					await Promise.all(
 						Object.keys(device.switch).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.switch), async (key) => {
@@ -2234,7 +2246,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// powermeter
 				if (device.powermeter) {
-					this.log.info('setting up powermeter ');
+					this.log.debug('setting up powermeter ');
 					await Promise.all(
 						Object.keys(device.powermeter).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
@@ -2271,7 +2283,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// groups
 				if (device.groupinfo) {
-					this.log.info('setting up groupinfo ');
+					this.log.debug('setting up groupinfo ');
 					await Promise.all(
 						Object.keys(device.groupinfo).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.groupinfo), async (key) => {
@@ -2298,7 +2310,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// create thermosensor
 				if (device.temperature) {
-					this.log.info('setting up temperature ');
+					this.log.debug('setting up temperature ');
 					await Promise.all(
 						Object.keys(device.temperature).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.temperature), async (key) => {
@@ -2322,7 +2334,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// create humidity
 				if (device.humidity) {
-					this.log.info('setting up humidity ');
+					this.log.debug('setting up humidity ');
 					await Promise.all(
 						Object.keys(device.humidity).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.humidity), async (key) => {
@@ -2347,7 +2359,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// create blind
 				if (device.blind) {
-					this.log.info('setting up blind ');
+					this.log.debug('setting up blind ');
 					await Promise.all(
 						Object.keys(device.blind).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.blind), async (key) => {
@@ -2371,7 +2383,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// create thermostat
 				if (device.hkr) {
-					this.log.info('setting up thermostat ');
+					this.log.debug('setting up thermostat ');
 					await this.createThermostat(identifier); //additional datapoints of thermostats
 					await Promise.all(
 						Object.keys(device.hkr).map(async (key) => {
@@ -2531,7 +2543,7 @@ class Fritzdect extends utils.Adapter {
 									ack: true
 								});
 							} else if (key === 'nextchange') {
-								this.log.info('setting up thermostat nextchange');
+								this.log.debug('setting up thermostat nextchange');
 								try {
 									await Promise.all(
 										Object.keys(device.hkr.nextchange).map(async (key) => {
@@ -2602,7 +2614,7 @@ class Fritzdect extends utils.Adapter {
 				// simpleonoff
 				// switchtype wird hier nochmal überschrieben
 				if (device.simpleonoff) {
-					this.log.info('setting up simpleonoff');
+					this.log.debug('setting up simpleonoff');
 					await Promise.all(
 						Object.keys(device.simpleonoff).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.simpleonoff), async (key) => {
@@ -2625,7 +2637,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// levelcontrol
 				if (device.levelcontrol) {
-					this.log.info('setting up levelcontrol');
+					this.log.debug('setting up levelcontrol');
 					await Promise.all(
 						Object.keys(device.levelcontrol).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.levelcontrol), async (key) => {
@@ -2665,7 +2677,7 @@ class Fritzdect extends utils.Adapter {
 				}
 				// colorcontrol
 				if (device.colorcontrol) {
-					this.log.info('setting up thermostat ');
+					this.log.debug('setting up thermostat ');
 					await Promise.all(
 						Object.keys(device.colorcontrol).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.colorcontrol), async (key) => {
@@ -2771,8 +2783,8 @@ class Fritzdect extends utils.Adapter {
 		}
 	}
 	async createObject(typ, newId, name, role) {
-		this.log.debug('____________________________________________');
-		this.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
+		this.log.info('____________________________________________');
+		this.log.info('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
 		await this.setObjectNotExistsAsync(typ + newId, {
 			type: 'channel',
 			common: {

@@ -197,6 +197,7 @@ otherwise it is more complex and individually to be parametrized.
 ## Changelog
 ### 2.3.0
 * option to set for logging only when a difference to the old value is detected
+* fritzdect-aha-nodejs as dependency
 
 ### 2.2.6
 * new objects for thermostat adaptiveHeatingRunning, adaptiveHeatingActive

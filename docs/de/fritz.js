@@ -1,4 +1,4 @@
-const Fritz = require('../../lib/fritzhttp.js');
+const Fritz = require('fritzdect-aha-nodejs');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
 const parser = require('xml2json-light');

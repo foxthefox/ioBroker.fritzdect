@@ -98,11 +98,11 @@ tests.integration(path.join(__dirname, '..'), {
 						console.log(' ADAPTER SETTINGS ', JSON.stringify(obj));
 						// Start the adapter and wait until it has started
 						await harness.startAdapterAndWait();
-						await delay(3000);
+						await delay(4000);
 						resolve();
 					});
 				});
-			}).timeout(5000);
+			}).timeout(7000);
 			it('Fritzdect 200 schould be created', () => {
 				return new Promise(async (resolve) => {
 					// Create a fresh harness instance each test!
@@ -525,7 +525,7 @@ tests.integration(path.join(__dirname, '..'), {
 						});
 					});
 				});
-			}).timeout(2000);
+			}).timeout(4000);
 			it('Fritzdect 300 Comet2 should be created', () => {
 				return new Promise(async (resolve) => {
 					harness.states.getState('fritzdect.0.DECT_117951033333.productname', function(err, state) {
@@ -2854,6 +2854,7 @@ tests.integration(path.join(__dirname, '..'), {
 				});
 			}).timeout(2000);
 			it('set template and check last activated template ', () => {
+				// it starts before the datapoints are created
 				return new Promise(async (resolve) => {
 					//set a command and after fritzbox comm it should be returend in process image
 					harness.states.setState(

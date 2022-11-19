@@ -282,7 +282,7 @@ class Fritzdect extends utils.Adapter {
 	async onStateChange(id, state) {
 		if (state) {
 			// The state was changed
-			this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+			this.log.debug(`onStateChange => state ${id} changed: ${state.val} (ack = ${state.ack})`);
 			if (!this.fritz) {
 				this.fritz = new Fritz(
 					settings.Username,
@@ -1227,12 +1227,14 @@ class Fritzdect extends utils.Adapter {
 											ack: true
 										}
 									);
+									this.log.debug('preset oprationmode ' + currentMode);
 								}
 								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 								// some weird id usage, the website shows the id of the etsiunit
 								if (devices[i].etsiunitinfo) {
 									if (devices[i].etsiunitinfo.etsideviceid) {
 										//replace id with etsi
+										this.log.debug('shifting etsideviceid in dataset');
 										this.log.debug('id vorher ' + devices[i].id);
 										devices[i].id = devices[i].etsiunitinfo.etsideviceid;
 										this.log.debug('id nachher ' + devices[i].id);
@@ -1241,13 +1243,19 @@ class Fritzdect extends utils.Adapter {
 								//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
 								//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
 								if (devices[i].simpleonoff) {
-									await this.setStateAsync(
-										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
-										{
-											val: 'simpleonoff',
-											ack: true
-										}
+									let switchtype = await this.getStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype'
 									);
+									if (switchtype.val !== 'simpleonoff') {
+										await this.setStateAsync(
+											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
+											{
+												val: 'simpleonoff',
+												ack: true
+											}
+										);
+										this.log.debug('switchtype simpleonoff set for ' + devices[i].id);
+									}
 								}
 								// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
 								if (devices[i].functionbitmask == 1) {
@@ -1448,6 +1456,8 @@ class Fritzdect extends utils.Adapter {
 								});
 							}
 						} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
+							// if.old?
+
 							if (value == 253) {
 								this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Closed');
 								await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
@@ -1507,90 +1517,93 @@ class Fritzdect extends utils.Adapter {
 								});
 							}
 						} else if (key == 'tsoll') {
-							let targettemp;
-							let tsoll;
-							if (value < 57) {
-								// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-								await this.setStateAsync('DECT_' + ain + '.tsoll', {
-									val: parseFloat(value) / 2,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-									val: parseFloat(value) / 2,
-									ack: true
-								}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-									val: 0,
-									ack: true
-								});
-								//wurde eigentlich schon übergeordnet gesetzt, hier würde es ggf. Night und Comfort überschreiben
-								/*
+							//neu 2.3.0c
+							if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
+								let targettemp;
+								let tsoll;
+								if (value < 57) {
+									// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+									await this.setStateAsync('DECT_' + ain + '.tsoll', {
+										val: parseFloat(value) / 2,
+										ack: true
+									});
+									await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+										val: parseFloat(value) / 2,
+										ack: true
+									}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+									await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+										val: 0,
+										ack: true
+									});
+									//wurde eigentlich schon übergeordnet gesetzt, hier würde es ggf. Night und Comfort überschreiben
+									/*
 								const currentMode = 'Auto';
 								await this.setStateAsync('DECT_' + ain + '.operationmode', {
 									val: currentMode,
 									ack: true
 								});
 								*/
-							} else if (value == 253) {
-								this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
-								// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-								targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
-									this.log.warn('problem getting the tsoll status ' + e);
-								});
-								if (targettemp && targettemp.val !== null) {
-									tsoll = targettemp.val;
+								} else if (value == 253) {
+									this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
+									// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+									targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
+										this.log.warn('problem getting the tsoll status ' + e);
+									});
+									if (targettemp && targettemp.val !== null) {
+										tsoll = targettemp.val;
+									} else {
+										tsoll = settings.tsolldefault || this.tsolldefault;
+										this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
+									}
+									await this.setStateAsync('DECT_' + ain + '.tsoll', {
+										val: tsoll,
+										ack: true
+									});
+									await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+										val: tsoll,
+										ack: true
+									});
+									await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+										val: 1,
+										ack: true
+									});
+									const currentMode = 'Off';
+									await this.setStateAsync('DECT_' + ain + '.operationmode', {
+										val: currentMode,
+										ack: true
+									});
+								} else if (value == 254) {
+									this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
+									// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+									targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
+										this.log.warn('problem getting the tsoll status ' + e);
+									});
+									if (targettemp && targettemp.val !== null) {
+										tsoll = targettemp.val;
+									} else {
+										tsoll = settings.tsolldefault || this.tsolldefault;
+										this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
+									}
+									await this.setStateAsync('DECT_' + ain + '.tsoll', {
+										val: tsoll,
+										ack: true
+									});
+									await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+										val: tsoll,
+										ack: true
+									});
+									await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+										val: 2,
+										ack: true
+									});
+									const currentMode = 'On';
+									await this.setStateAsync('DECT_' + ain + '.operationmode', {
+										val: currentMode,
+										ack: true
+									});
 								} else {
-									tsoll = settings.tsolldefault || this.tsolldefault;
-									this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
+									this.log.warn('undefined tsoll submitted from fritzbox !');
 								}
-								await this.setStateAsync('DECT_' + ain + '.tsoll', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-									val: 1,
-									ack: true
-								});
-								const currentMode = 'Off';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							} else if (value == 254) {
-								this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
-								// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-								targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
-									this.log.warn('problem getting the tsoll status ' + e);
-								});
-								if (targettemp && targettemp.val !== null) {
-									tsoll = targettemp.val;
-								} else {
-									tsoll = settings.tsolldefault || this.tsolldefault;
-									this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
-								}
-								await this.setStateAsync('DECT_' + ain + '.tsoll', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-									val: tsoll,
-									ack: true
-								});
-								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-									val: 2,
-									ack: true
-								});
-								const currentMode = 'On';
-								await this.setStateAsync('DECT_' + ain + '.operationmode', {
-									val: currentMode,
-									ack: true
-								});
-							} else {
-								this.log.warn('undefined tsoll submitted from fritzbox !');
 							}
 						} else if (
 							key == 'state' ||

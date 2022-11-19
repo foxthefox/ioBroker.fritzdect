@@ -10,7 +10,16 @@ const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
 // const fs = require("fs");
-const Fritz = require('./lib/fritzhttp.js');
+const Fritz = require('fritzdect-aha-nodejs').Fritz;
+
+/*
+let Fritz;
+
+(async () => {
+	let fb = await import('fritzdect-aha-nodejs');
+	Fritz = fb.Fritz;
+})().catch((err) => console.error(err));
+*/
 const parser = require('xml2json-light');
 
 let polling;
@@ -125,6 +134,7 @@ class Fritzdect extends utils.Adapter {
 			settings.boosttime = this.boosttime = this.config.fritz_boosttime;
 			settings.windowtime = this.windowtime = this.config.fritz_windowtime;
 			settings.tsolldefault = this.tsolldefault = this.config.fritz_tsolldefault;
+			settings.fritz_writeonhyst = this.fritz_writeonhyst = this.config.fritz_writeonhyst;
 
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
 			// this.config:
@@ -162,6 +172,7 @@ class Fritzdect extends utils.Adapter {
 						if (login) {
 							this.log.info('checking user permissions');
 							const resp = await this.fritz.check_SID().catch((e) => this.errorHandlerApi(e));
+							// wird zu try/catch error
 							this.log.info('raw perm =>' + resp);
 							try {
 								let rights = '';
@@ -202,7 +213,9 @@ class Fritzdect extends utils.Adapter {
 						}
 					} catch (error) {
 						//from login
-						this.log.error('try/catch error in onReady ' + error);
+						this.log.warn(
+							'catched error in onReady (most likely no connection to FB or wrong credentials)' + error
+						);
 					}
 					if (err) {
 						this.log.error('error getting system.config ' + err);
@@ -1352,281 +1365,394 @@ class Fritzdect extends utils.Adapter {
 	}
 
 	async updateDatapoint(key, value, ain) {
-		this.log.debug('updating data DECT_' + ain + ' : ' + key + ' : ' + value);
+		let old;
 		try {
 			if (!value || value == '') {
-				this.log.debug(' no value for updating in ' + key);
+				this.log.debug(' no value for updating in ' + ain + '  ' + key);
+				//wirklich mit "null" beschreiben?
 				await this.setStateAsync('DECT_' + ain + '.' + key, {
 					val: null,
 					ack: true
 				});
 			} else {
-				if (key == 'nextchange') {
-					//fasthack anstatt neue objekterkennung
-					await this.updateData(value, ain);
-				} else if (
-					key == 'identifier' ||
-					key == 'functionbitmask' ||
-					key == 'etsideviceid' ||
-					key == 'unittype' ||
-					key == 'interfaces'
-				) {
-					// skip it
-				} else if (key === 'batterylow') {
-					// bool mal anders herum
-					const batt = value == 0 ? false : true;
-					/*
-				if (value == 0) {
-					let batt = false;
-				} else {
-					let batt = true;
-				}
-				*/
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: batt,
-						ack: true
-					});
-				} else if (key == 'celsius' || key == 'offset') {
-					//numbers
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 10,
-						ack: true
-					});
-				} else if (key == 'power' || key == 'voltage') {
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value) / 1000,
-						ack: true
-					});
-				} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
-					if (value == 253) {
-						this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Closed');
-						await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
-							val: 1,
-							ack: true
-						});
-						const currentMode = 'Off';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					} else if (value == 254) {
-						this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Opened');
-						await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
-							val: 2,
-							ack: true
-						});
-						const currentMode = 'On';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					} else {
-						await this.setStateAsync('DECT_' + ain + '.' + key, {
-							val: parseFloat(value) / 2,
-							ack: true
-						});
-					}
-				} else if (key == 'humidity') {
-					//e.g humidity
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseFloat(value),
-						ack: true
-					});
-				} else if (key == 'tsoll') {
-					let targettemp;
-					let tsoll;
-					if (value < 57) {
-						// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-						await this.setStateAsync('DECT_' + ain + '.tsoll', {
-							val: parseFloat(value) / 2,
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-							val: parseFloat(value) / 2,
-							ack: true
-						}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
-						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-							val: 0,
-							ack: true
-						});
-						//wurde eigentlich schon übergeordnet gesetzt, hier würde es ggf. Night und Comfort überschreiben
-						/*
-						const currentMode = 'Auto';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-						*/
-					} else if (value == 253) {
-						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
-						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
-							this.log.warn('problem getting the tsoll status ' + e);
-						});
-						if (targettemp && targettemp.val !== null) {
-							tsoll = targettemp.val;
+				try {
+					old = await this.getStateAsync('DECT_' + ain + '.' + key);
+					if (old !== null || !this.config.fritz_writeonhyst) {
+						if (key == 'nextchange') {
+							//fasthack anstatt neue objekterkennung
+							await this.updateData(value, ain);
+						} else if (
+							key == 'identifier' ||
+							key == 'functionbitmask' ||
+							key == 'etsideviceid' ||
+							key == 'unittype' ||
+							key == 'interfaces'
+						) {
+							// skip it
+						} else if (key === 'batterylow') {
+							// bool mal anders herum
+							const batt = value == 0 ? false : true;
+							/*
+							if (value == 0) {
+								let batt = false;
+							} else {
+								let batt = true;
+							}
+							*/
+							// immer das gleiche Schema
+							// entweder Unterschied oder writeonhyst=0
+							if (old.val !== batt || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' + ain + ' : ' + key + ' new: ' + batt + ' old: ' + old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: batt,
+									ack: true
+								});
+							}
+						} else if (key == 'celsius' || key == 'offset') {
+							//numbers
+							if (old.val !== parseFloat(value) / 10 || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' +
+										ain +
+										' : ' +
+										key +
+										' new: ' +
+										parseFloat(value) / 10 +
+										' old: ' +
+										old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: parseFloat(value) / 10,
+									ack: true
+								});
+							}
+						} else if (key == 'power' || key == 'voltage') {
+							if (old.val !== parseFloat(value) / 1000 || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' +
+										ain +
+										' : ' +
+										key +
+										' new: ' +
+										parseFloat(value) / 1000 +
+										' old: ' +
+										old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: parseFloat(value) / 1000,
+									ack: true
+								});
+							}
+						} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
+							if (value == 253) {
+								this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Closed');
+								await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
+									val: 1,
+									ack: true
+								});
+								const currentMode = 'Off';
+								await this.setStateAsync('DECT_' + ain + '.operationmode', {
+									val: currentMode,
+									ack: true
+								});
+							} else if (value == 254) {
+								this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Opened');
+								await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
+									val: 2,
+									ack: true
+								});
+								const currentMode = 'On';
+								await this.setStateAsync('DECT_' + ain + '.operationmode', {
+									val: currentMode,
+									ack: true
+								});
+							} else {
+								if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
+									this.log.debug(
+										'updating data DECT_' +
+											ain +
+											' : ' +
+											key +
+											' new: ' +
+											parseFloat(value) / 2 +
+											' old: ' +
+											old.val
+									);
+									await this.setStateAsync('DECT_' + ain + '.' + key, {
+										val: parseFloat(value) / 2,
+										ack: true
+									});
+								}
+							}
+						} else if (key == 'humidity') {
+							//e.g humidity
+							if (old.val !== parseFloat(value) || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' +
+										ain +
+										' : ' +
+										key +
+										' new: ' +
+										parseFloat(value) +
+										' old: ' +
+										old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: parseFloat(value),
+									ack: true
+								});
+							}
+						} else if (key == 'tsoll') {
+							let targettemp;
+							let tsoll;
+							if (value < 57) {
+								// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
+								await this.setStateAsync('DECT_' + ain + '.tsoll', {
+									val: parseFloat(value) / 2,
+									ack: true
+								});
+								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+									val: parseFloat(value) / 2,
+									ack: true
+								}); // zum Nachführen der Soll-Temperatur wenn außerhalb von iobroker gesetzt
+								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+									val: 0,
+									ack: true
+								});
+								//wurde eigentlich schon übergeordnet gesetzt, hier würde es ggf. Night und Comfort überschreiben
+								/*
+								const currentMode = 'Auto';
+								await this.setStateAsync('DECT_' + ain + '.operationmode', {
+									val: currentMode,
+									ack: true
+								});
+								*/
+							} else if (value == 253) {
+								this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
+								// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+								targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
+									this.log.warn('problem getting the tsoll status ' + e);
+								});
+								if (targettemp && targettemp.val !== null) {
+									tsoll = targettemp.val;
+								} else {
+									tsoll = settings.tsolldefault || this.tsolldefault;
+									this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
+								}
+								await this.setStateAsync('DECT_' + ain + '.tsoll', {
+									val: tsoll,
+									ack: true
+								});
+								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+									val: tsoll,
+									ack: true
+								});
+								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+									val: 1,
+									ack: true
+								});
+								const currentMode = 'Off';
+								await this.setStateAsync('DECT_' + ain + '.operationmode', {
+									val: currentMode,
+									ack: true
+								});
+							} else if (value == 254) {
+								this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
+								// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
+								targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
+									this.log.warn('problem getting the tsoll status ' + e);
+								});
+								if (targettemp && targettemp.val !== null) {
+									tsoll = targettemp.val;
+								} else {
+									tsoll = settings.tsolldefault || this.tsolldefault;
+									this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
+								}
+								await this.setStateAsync('DECT_' + ain + '.tsoll', {
+									val: tsoll,
+									ack: true
+								});
+								await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+									val: tsoll,
+									ack: true
+								});
+								await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+									val: 2,
+									ack: true
+								});
+								const currentMode = 'On';
+								await this.setStateAsync('DECT_' + ain + '.operationmode', {
+									val: currentMode,
+									ack: true
+								});
+							} else {
+								this.log.warn('undefined tsoll submitted from fritzbox !');
+							}
+						} else if (
+							key == 'state' ||
+							key == 'simpleonoff' ||
+							key == 'lock' ||
+							key == 'devicelock' ||
+							key == 'txbusy' ||
+							key == 'present' ||
+							key == 'summeractive' ||
+							key == 'holidayactive' ||
+							key == 'boostactive' ||
+							key == 'windowopenactiv' ||
+							key == 'synchronized' ||
+							key == 'fullcolorsupport' ||
+							key == 'mapped' ||
+							key == 'endpositionsset' ||
+							key == 'adaptiveHeatingRunning' ||
+							key == 'adaptiveHeatingActive'
+						) {
+							// hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
+							// if ( value.length() >1 ) { await this.setStateAsync('DECT_' + ain + '.' + key, {	val: value.toString(), ack: true });} else {}
+							// oder eben alles ungleich 0 ist erstmal Fehler
+							// bool
+							const convertValue = value == 1 ? true : false;
+							if (old.val !== convertValue || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' +
+										ain +
+										' : ' +
+										key +
+										' new: ' +
+										convertValue +
+										' old: ' +
+										old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: convertValue,
+									ack: true
+								});
+								if (key == 'summeractive' && convertValue == true) {
+									const currentMode = 'Summer';
+									await this.setStateAsync('DECT_' + ain + '.operationmode', {
+										val: currentMode,
+										ack: true
+									});
+								}
+								if (key == 'holidayactive' && convertValue == true) {
+									const currentMode = 'Holiday';
+									await this.setStateAsync('DECT_' + ain + '.operationmode', {
+										val: currentMode,
+										ack: true
+									});
+								}
+								if (key == 'boostactive' && convertValue == true) {
+									const currentMode = 'Boost';
+									await this.setStateAsync('DECT_' + ain + '.operationmode', {
+										val: currentMode,
+										ack: true
+									});
+								}
+								if (key == 'windowopenactiv' && convertValue == true) {
+									const currentMode = 'WindowOpen';
+									await this.setStateAsync('DECT_' + ain + '.operationmode', {
+										val: currentMode,
+										ack: true
+									});
+								}
+							}
+						} else if (
+							key == 'lastalertchgtimestamp' ||
+							key == 'lastpressedtimestamp' ||
+							key == 'boostactiveendtime' ||
+							key == 'windowopenactiveendtime' ||
+							key == 'endperiod'
+						) {
+							//time
+							const convTime = String(new Date(value * 1000));
+							if (old.val !== convTime || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' + ain + ' : ' + key + ' new: ' + convTime + ' old: ' + old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: convTime, //Str()
+									ack: true
+								});
+							}
+						} else if (
+							key == 'errorcode' ||
+							key == 'level' ||
+							key == 'levelpercentage' ||
+							key == 'battery' ||
+							key == 'energy' ||
+							key == 'hue' ||
+							key == 'saturation' ||
+							key == 'temperature' ||
+							key == 'supported_modes' ||
+							key == 'current_mode' ||
+							key == 'rel_humidity' ||
+							key == 'unmapped_hue' ||
+							key == 'unmapped_saturation'
+						) {
+							// integer number
+							if (old.val !== parseInt(value) || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' +
+										ain +
+										' : ' +
+										key +
+										' new: ' +
+										parseInt(value) +
+										' old: ' +
+										old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: parseInt(value),
+									ack: true
+								});
+							}
+						} else if (
+							key == 'id' ||
+							key == 'fwversion' ||
+							key == 'manufacturer' ||
+							key == 'name' ||
+							key == 'productname' ||
+							key == 'members' ||
+							key == 'masterdeviceid' ||
+							key == 'mode'
+						) {
+							// || 'id' , id schon beim initialisieren gesetzt
+							// text
+							if (old.val !== value.toString() || !this.config.fritz_writeonhyst) {
+								this.log.debug(
+									'updating data DECT_' +
+										ain +
+										' : ' +
+										key +
+										' new: ' +
+										value.toString() +
+										' old: ' +
+										old.val
+								);
+								await this.setStateAsync('DECT_' + ain + '.' + key, {
+									val: value.toString(),
+									ack: true
+								});
+							}
 						} else {
-							tsoll = settings.tsolldefault || this.tsolldefault;
-							this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
+							// unbekannt
+							this.log.warn(
+								'unknown datapoint DECT_' +
+									ain +
+									'.' +
+									key +
+									' please inform devloper and open issue in github'
+							);
 						}
-						await this.setStateAsync('DECT_' + ain + '.tsoll', {
-							val: tsoll,
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-							val: tsoll,
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-							val: 1,
-							ack: true
-						});
-						const currentMode = 'Off';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					} else if (value == 254) {
-						this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
-						// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
-						targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
-							this.log.warn('problem getting the tsoll status ' + e);
-						});
-						if (targettemp && targettemp.val !== null) {
-							tsoll = targettemp.val;
-						} else {
-							tsoll = settings.tsolldefault || this.tsolldefault;
-							this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
-						}
-						await this.setStateAsync('DECT_' + ain + '.tsoll', {
-							val: tsoll,
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-							val: tsoll,
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-							val: 2,
-							ack: true
-						});
-						const currentMode = 'On';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					} else {
-						this.log.warn('undefined tsoll submitted from fritzbox !');
 					}
-				} else if (
-					key == 'state' ||
-					key == 'simpleonoff' ||
-					key == 'lock' ||
-					key == 'devicelock' ||
-					key == 'txbusy' ||
-					key == 'present' ||
-					key == 'summeractive' ||
-					key == 'holidayactive' ||
-					key == 'boostactive' ||
-					key == 'windowopenactiv' ||
-					key == 'synchronized' ||
-					key == 'fullcolorsupport' ||
-					key == 'mapped' ||
-					key == 'endpositionsset' ||
-					key == 'adaptiveHeatingRunning' ||
-					key == 'adaptiveHeatingActive'
-				) {
-					// hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
-					// if ( value.length() >1 ) { await this.setStateAsync('DECT_' + ain + '.' + key, {	val: value.toString(), ack: true });} else {}
-					// oder eben alles ungleich 0 ist erstmal Fehler
-					// bool
-					const convertValue = value == 1 ? true : false;
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: convertValue,
-						ack: true
-					});
-					if (key == 'summeractive' && convertValue == true) {
-						const currentMode = 'Summer';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-					if (key == 'holidayactive' && convertValue == true) {
-						const currentMode = 'Holiday';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-					if (key == 'boostactive' && convertValue == true) {
-						const currentMode = 'Boost';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-					if (key == 'windowopenactiv' && convertValue == true) {
-						const currentMode = 'WindowOpen';
-						await this.setStateAsync('DECT_' + ain + '.operationmode', {
-							val: currentMode,
-							ack: true
-						});
-					}
-				} else if (
-					key == 'lastalertchgtimestamp' ||
-					key == 'lastpressedtimestamp' ||
-					key == 'boostactiveendtime' ||
-					key == 'windowopenactiveendtime' ||
-					key == 'endperiod'
-				) {
-					//time
-					const convTime = new Date(value * 1000);
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: String(convTime),
-						ack: true
-					});
-				} else if (
-					key == 'errorcode' ||
-					key == 'level' ||
-					key == 'levelpercentage' ||
-					key == 'battery' ||
-					key == 'energy' ||
-					key == 'hue' ||
-					key == 'saturation' ||
-					key == 'temperature' ||
-					key == 'supported_modes' ||
-					key == 'current_mode' ||
-					key == 'rel_humidity' ||
-					key == 'unmapped_hue' ||
-					key == 'unmapped_saturation'
-				) {
-					// integer number
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: parseInt(value),
-						ack: true
-					});
-				} else if (
-					key == 'id' ||
-					key == 'fwversion' ||
-					key == 'manufacturer' ||
-					key == 'name' ||
-					key == 'productname' ||
-					key == 'members' ||
-					key == 'masterdeviceid' ||
-					key == 'mode'
-				) {
-					// || 'id' , id schon beim initialisieren gesetzt
-					// text
-					await this.setStateAsync('DECT_' + ain + '.' + key, {
-						val: value.toString(),
-						ack: true
-					});
-				} else {
-					// unbekannt
-					this.log.warn(
-						'unknown datapoint DECT_' + ain + '.' + key + ' please inform devloper and open issue in github'
-					);
+				} catch (e) {
+					this.log.debug(' issue in update datapoint ' + ain + '.' + key + e);
+					throw {
+						msg: ' issue in update datapoint ',
+						function: 'updateDatapoint',
+						error: e
+					};
 				}
 			}
 		} catch (e) {
@@ -1652,7 +1778,7 @@ class Fritzdect extends utils.Adapter {
 				this.log.debug('templates\n');
 				this.log.debug(JSON.stringify(templates));
 				if (templates.length) {
-					this.log.info('create Templates ' + templates.length);
+					this.log.info('CREATE Templates ' + templates.length);
 					await this.createTemplateResponse();
 					//await this.asyncForEach(templates, async (template) => {
 					await Promise.all(
@@ -1670,7 +1796,7 @@ class Fritzdect extends utils.Adapter {
 								typ = 'template_';
 								role = 'switch';
 								this.log.debug('__________________________');
-								this.log.info('setting up Template ' + template.name);
+								this.log.debug('setting up Template ' + template.name);
 								await this.createTemplate(
 									typ,
 									template.identifier.replace(/\s/g, ''),
@@ -1684,7 +1810,7 @@ class Fritzdect extends utils.Adapter {
 								typ = 'template_';
 								role = 'switch';
 								this.log.debug('__________________________');
-								this.log.info('setting up Template ' + template.name);
+								this.log.debug('setting up Template ' + template.name);
 								await this.createTemplate(
 									typ,
 									template.identifier.replace(/\s/g, ''),
@@ -1767,635 +1893,898 @@ class Fritzdect extends utils.Adapter {
 		let typ = '';
 		let role = '';
 		//await this.asyncForEach(devices, async (device) => {
-		await Promise.all(
-			devices.map(async (device) => {
-				typ = 'DECT_';
-				role = '';
-				this.log.debug('======================================');
-				this.log.debug('TRYING on : ' + JSON.stringify(device));
-				const identifier = device.identifier.replace(/\s/g, '');
+		//await Promise.all(
+		//devices.map(async (device) => {
+		for (let device of devices) {
+			typ = 'DECT_';
+			role = '';
+			this.log.debug('======================================');
+			this.log.debug('TRYING on : ' + JSON.stringify(device));
+			const identifier = device.identifier.replace(/\s/g, '');
 
-				if ((device.functionbitmask & 64) == 64) {
-					//DECT300/301
-					role = 'thermo.heat';
-				} else if ((device.functionbitmask & 32768) == 32768 || (device.functionbitmask & 512) == 512) {
-					//DECT200/210
-					role = 'switch';
-				} else if ((device.functionbitmask & 256) == 256) {
-					// == 1024 || 1024)
-					// Repeater
-					role = 'thermo';
-				} else if (device.functionbitmask == 288 || device.functionbitmask == 1048864) {
-					// DECT440
-					role = 'thermo';
-				} else if (device.functionbitmask == 237572 || (device.functionbitmask & 131072) == 131072) {
-					// DECT500
-					role = 'light';
-				} else if (device.functionbitmask == 335888) {
-					//Blinds
-					role = 'blinds';
-				} else if ((device.functionbitmask & 8192) == 8192) {
-					//simpleonoff alleine
-					//telekom plug 40960
-					role = 'switch';
-				} else if (
-					(device.functionbitmask & 16) == 16 ||
-					(device.functionbitmask & 8) == 8 ||
-					(device.functionbitmask & 32) == 32
-				) {
-					//Alarm, Contact Sensor
-					role = 'sensor';
-				} else if (device.functionbitmask == 1) {
-					role = 'etsi';
-					// replace id, fwversion in vorher erzeugten device, spätestens beim update
-					this.log.debug('skipping etsi !!!');
-				} else {
-					role = 'other';
-					this.log.warn(' unknown functionbitmask, please open issue on github ' + device.functionbitmask);
+			if ((device.functionbitmask & 64) == 64) {
+				//DECT300/301
+				role = 'thermo.heat';
+			} else if ((device.functionbitmask & 32768) == 32768 || (device.functionbitmask & 512) == 512) {
+				//DECT200/210
+				role = 'switch';
+			} else if ((device.functionbitmask & 256) == 256) {
+				// == 1024 || 1024)
+				// Repeater
+				role = 'thermo';
+			} else if (device.functionbitmask == 288 || device.functionbitmask == 1048864) {
+				// DECT440
+				role = 'thermo';
+			} else if (device.functionbitmask == 237572 || (device.functionbitmask & 131072) == 131072) {
+				// DECT500
+				role = 'light';
+			} else if (device.functionbitmask == 335888) {
+				//Blinds
+				role = 'blinds';
+			} else if ((device.functionbitmask & 8192) == 8192) {
+				//simpleonoff alleine
+				//telekom plug 40960
+				role = 'switch';
+			} else if (
+				(device.functionbitmask & 16) == 16 ||
+				(device.functionbitmask & 8) == 8 ||
+				(device.functionbitmask & 32) == 32
+			) {
+				//Alarm, Contact Sensor
+				role = 'sensor';
+			} else if (device.functionbitmask == 1) {
+				role = 'etsi';
+				// replace id, fwversion in vorher erzeugten device, spätestens beim update
+				this.log.debug('skipping etsi !!!');
+			} else {
+				role = 'other';
+				this.log.warn(' unknown functionbitmask, please open issue on github ' + device.functionbitmask);
+			}
+			// no break in else if
+			// so we use all except etsi and other
+			// other might be created, but better to warn, if during runtime it changes the updates will work until restart and new creation of datapoints
+			this.log.debug(
+				'device ' +
+					identifier +
+					' named ' +
+					device.name +
+					' mask ' +
+					device.functionbitmask +
+					' assigned to ' +
+					role
+			);
+			if (role != 'etsi') {
+				// create Master Object
+				await this.createObject(typ, identifier, device.name, role);
+
+				// create general
+				if (device.fwversion) {
+					await this.createInfoState(identifier, 'fwversion', 'Firmware Version');
+					await this.setStateAsync('DECT_' + identifier + '.fwversion', {
+						val: device.fwversion !== null ? device.fwversion.toString() : null,
+						ack: true
+					});
 				}
-				// no break in else if
-				// so we use all except etsi and other
-				// other might be created, but better to warn, if during runtime it changes the updates will work until restart and new creation of datapoints
-				this.log.debug(
-					'device ' +
-						identifier +
-						' named ' +
-						device.name +
-						' mask ' +
-						device.functionbitmask +
-						' assigned to ' +
-						role
-				);
-				if (role != 'etsi') {
-					// create Master Object
-					await this.createObject(typ, identifier, device.name, role);
-
-					// create general
-					if (device.fwversion) {
-						await this.createInfoState(identifier, 'fwversion', 'Firmware Version');
-					}
-					if (device.manufacturer) {
-						await this.createInfoState(identifier, 'manufacturer', 'Manufacturer');
-					}
-					if (device.productname) {
-						await this.createInfoState(identifier, 'productname', 'Product Name');
-					}
-					if (device.present) {
-						await this.createIndicatorState(identifier, 'present', 'device present');
-					}
-					if (device.name) {
-						await this.createInfoState(identifier, 'name', 'Device Name');
-					}
-					if (device.txbusy) {
-						await this.createIndicatorState(identifier, 'txbusy', 'Trasmitting active');
-					}
-					if (device.synchronized) {
-						await this.createIndicatorState(identifier, 'synchronized', 'Synchronized Status');
-					}
-					//always ID
-					await this.createInfoState(identifier, 'id', 'Device ID');
-					//etsideviceid im gleichen Object
-					if (device.etsiunitinfo) {
-						this.log.debug('etsi part');
-						if (device.etsiunitinfo.etsideviceid) {
-							//replace id with etsi
-							this.log.debug('etsideviceid to be replaced');
-							this.log.debug('etsideviceid ' + device.etsiunitinfo.etsideviceid);
-							await this.setStateAsync('DECT_' + identifier + '.id', {
-								val: device.etsiunitinfo.etsideviceid,
-								ack: true
-							});
-							// noch nicht perfekt da dies überschrieben wird
-							await this.setStateAsync('DECT_' + identifier + '.fwversion', {
-								val: device.etsiunitinfo.fwversion,
-								ack: true
-							});
-						} else {
-							//device.id
-							await this.setStateAsync('DECT_' + identifier + '.id', {
-								val: device.id,
-								ack: true
-							});
-						}
-						//check for blinds control
-						if (device.etsiunitinfo.unittype == 281) {
-							//additional blind datapoints
-							await this.createBlind(identifier);
-						}
+				if (device.manufacturer) {
+					await this.createInfoState(identifier, 'manufacturer', 'Manufacturer');
+					await this.setStateAsync('DECT_' + identifier + '.manufacturer', {
+						val: device.manufacturer !== null ? device.manufacturer.toString() : null,
+						ack: true
+					});
+				}
+				if (device.productname) {
+					await this.createInfoState(identifier, 'productname', 'Product Name');
+					await this.setStateAsync('DECT_' + identifier + '.productname', {
+						val: device.productname !== null ? device.productname.toString() : null,
+						ack: true
+					});
+				}
+				if (device.present) {
+					await this.createIndicatorState(identifier, 'present', 'device present');
+					await this.setStateAsync('DECT_' + identifier + '.present', {
+						val: device.present == 1 ? true : false,
+						ack: true
+					});
+				}
+				if (device.name) {
+					await this.createInfoState(identifier, 'name', 'Device Name');
+					await this.setStateAsync('DECT_' + identifier + '.name', {
+						val: device.name !== null ? device.name.toString() : null,
+						ack: true
+					});
+				}
+				if (device.txbusy) {
+					await this.createIndicatorState(identifier, 'txbusy', 'Trasmitting active');
+					await this.setStateAsync('DECT_' + identifier + '.txbusy', {
+						val: device.txbusy == 1 ? true : false,
+						ack: true
+					});
+				}
+				if (device.synchronized) {
+					await this.createIndicatorState(identifier, 'synchronized', 'Synchronized Status');
+					await this.setStateAsync('DECT_' + identifier + '.synchronized', {
+						val: device.synchronized == 1 ? true : false,
+						ack: true
+					});
+				}
+				//always ID
+				await this.createInfoState(identifier, 'id', 'Device ID');
+				//etsideviceid im gleichen Object
+				if (device.etsiunitinfo) {
+					this.log.debug('etsi part');
+					if (device.etsiunitinfo.etsideviceid) {
+						//replace id with etsi
+						this.log.debug('etsideviceid to be replaced');
+						this.log.debug('etsideviceid ' + device.etsiunitinfo.etsideviceid);
+						await this.setStateAsync('DECT_' + identifier + '.id', {
+							val: device.etsiunitinfo.etsideviceid,
+							ack: true
+						});
+						// noch nicht perfekt da dies überschrieben wird
+						await this.setStateAsync('DECT_' + identifier + '.fwversion', {
+							val: device.etsiunitinfo.fwversion,
+							ack: true
+						});
 					}
 
-					// create battery devices
-					if (device.battery) {
-						await this.createValueState(identifier, 'battery', 'Battery Charge State', 0, 100, '%');
+					//check for blinds control
+					if (device.etsiunitinfo.unittype == 281) {
+						//additional blind datapoints
+						await this.createBlind(identifier);
 					}
-					if (device.batterylow) {
-						await this.createIndicatorState(identifier, 'batterylow', 'Battery Low State');
+				} else {
+					//device.id
+					this.log.debug('device.id ' + JSON.stringify(device));
+					if (device.id) {
+						await this.setStateAsync('DECT_' + identifier + '.id', {
+							val: device.id,
+							ack: true
+						});
 					}
+				}
 
-					// create button parts
-					if (device.button) {
-						if (!Array.isArray(device.button)) {
-							await Promise.all(
-								Object.keys(device.button).map(async (key) => {
-									//await this.asyncForEach(Object.keys(device.button), async (key) => {
-									if (key === 'lastpressedtimestamp') {
-										await this.createTimeState(
-											identifier,
-											'lastpressedtimestamp',
-											'last button Time Stamp'
+				// create battery devices
+				if (device.battery) {
+					await this.createValueState(identifier, 'battery', 'Battery Charge State', 0, 100, '%');
+					await this.setStateAsync('DECT_' + identifier + '.battery', {
+						val: parseInt(device.battery),
+						ack: true
+					});
+				}
+				if (device.batterylow) {
+					await this.createIndicatorState(identifier, 'batterylow', 'Battery Low State');
+					await this.setStateAsync('DECT_' + identifier + '.batterylow', {
+						val: device.batterylow == 1 ? true : false,
+						ack: true
+					});
+				}
+
+				// create button parts
+				if (device.button) {
+					if (!Array.isArray(device.button)) {
+						await Promise.all(
+							Object.entries(device.button).map(async ([ key, value ]) => {
+								//await this.asyncForEach(Object.keys(device.button), async (key) => {
+								if (key === 'lastpressedtimestamp') {
+									await this.createTimeState(
+										identifier,
+										'lastpressedtimestamp',
+										'last button Time Stamp'
+									);
+									await this.setStateAsync('DECT_' + identifier + '.lastpressedtimestamp', {
+										val: value !== null ? String(new Date(value * 1000)) : null,
+										ack: true
+									});
+								} else if (key === 'id') {
+									await this.createInfoState(identifier, 'id', 'Button ID');
+									await this.setStateAsync('DECT_' + identifier + '.id', {
+										val: value,
+										ack: true
+									});
+								} else if (key === 'name') {
+									await this.createInfoState(identifier, 'name', 'Button Name');
+									await this.setStateAsync('DECT_' + identifier + '.name', {
+										val: value,
+										ack: true
+									});
+								} else {
+									this.log.warn(' new datapoint in API detected -> ' + key);
+								}
+							})
+						);
+					} else if (Array.isArray(device.button)) {
+						//Unterobjekte anlegen
+						//DECT440
+						this.log.debug('setting up button(s) ');
+						await Promise.all(
+							device.button.map(async (button) => {
+								//await this.asyncForEach(device.button, async (button) => {
+								typ = 'DECT_' + identifier + '.button.';
+								await this.createObject(typ, button.identifier.replace(/\s/g, ''), 'Buttons', 'button'); //rolr button?
+								await Promise.all(
+									Object.keys(button).map(async (key) => {
+										this.log.debug(
+											'button ' + identifier + JSON.stringify(button) + button.identifier
 										);
-									} else if (key === 'id') {
-										await this.createInfoState(identifier, 'id', 'Button ID');
-									} else if (key === 'name') {
-										await this.createInfoState(identifier, 'name', 'Button Name');
-									} else {
-										this.log.warn(' new datapoint in API detected -> ' + key);
-									}
-								})
-							);
-						} else if (Array.isArray(device.button)) {
-							//Unterobjekte anlegen
-							this.log.info('setting up button(s) ');
-							await Promise.all(
-								device.button.map(async (button) => {
-									//await this.asyncForEach(device.button, async (button) => {
-									typ = 'DECT_' + identifier + '.button.';
-									await this.createObject(
-										typ,
-										button.identifier.replace(/\s/g, ''),
-										'Buttons',
-										'button'
-									); //rolr button?
+										//await this.asyncForEach(Object.keys(button), async (key) => {
+										if (key === 'lastpressedtimestamp') {
+											await this.createTimeState(
+												''.concat(identifier, '.button.', button.identifier.replace(/\s/g, '')),
+												'lastpressedtimestamp',
+												'last button Time Stamp'
+											);
+											await this.setStateAsync(
+												'DECT_'.concat(
+													identifier,
+													'.button.',
+													button.identifier.replace(/\s/g, ''),
+													'.lastpressedtimestamp'
+												),
+												{
+													val:
+														button.lastpressedtimestamp !== null
+															? String(new Date(button.lastpressedtimestamp * 1000))
+															: null,
+													ack: true
+												}
+											);
+										} else if (key === 'identifier') {
+											//already part of the object
+										} else if (key === 'id') {
+											await this.createInfoState(
+												''.concat(identifier, '.button.', button.identifier.replace(/\s/g, '')),
+												'id',
+												'Button ID'
+											);
+											await this.setStateAsync(
+												'DECT_'.concat(
+													identifier,
+													'.button.',
+													button.identifier.replace(/\s/g, ''),
+													'.id'
+												),
+												{
+													val: button.id,
+													ack: true
+												}
+											);
+										} else if (key === 'name') {
+											await this.createInfoState(
+												''.concat(identifier, '.button.', button.identifier.replace(/\s/g, '')),
+												'name',
+												'Button Name'
+											);
+											await this.setStateAsync(
+												'DECT_'.concat(
+													identifier,
+													'.button.',
+													button.identifier.replace(/\s/g, ''),
+													'.name'
+												),
+												{
+													val: button.name,
+													ack: true
+												}
+											);
+										} else {
+											this.log.warn(' new datapoint in API detected -> ' + key);
+										}
+									})
+								);
+							})
+						);
+					}
+				}
+				//create alert
+				// hier irgendwie blinds alart als string behandeln. :-((
+				if (device.alert) {
+					this.log.debug('setting up alert ');
+					await Promise.all(
+						Object.keys(device.alert).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.alert), async (key) => {
+							if (key === 'state') {
+								await this.createIndicatorState(identifier, 'state', 'Alert State');
+								await this.setStateAsync('DECT_' + identifier + '.state', {
+									val: device.alert.state == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'lastalertchgtimestamp') {
+								await this.createTimeState(identifier, 'lastalertchgtimestamp', 'Alert last Time');
+								await this.setStateAsync('DECT_' + identifier + '.lastalertchgtimestamp', {
+									val:
+										device.alert.lastalertchgtimestamp !== null
+											? String(new Date(device.alert.lastalertchgtimestamp * 1000))
+											: null,
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// create switch
+				if (device.switch) {
+					this.log.debug('setting up switch ');
+					await Promise.all(
+						Object.keys(device.switch).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.switch), async (key) => {
+							if (key === 'state') {
+								await this.createSwitch(identifier, 'state', 'Switch Status and Control');
+								await this.setStateAsync('DECT_' + identifier + '.state', {
+									val: device.switch.state == 1 ? true : false,
+									ack: true
+								});
+								await this.createInfoState(identifier, 'switchtype', 'Switch Type');
+								await this.setStateAsync('DECT_' + identifier + '.switchtype', {
+									val: 'switch',
+									ack: true
+								});
+							} else if (key === 'mode') {
+								await this.createInfoState(identifier, 'mode', 'Switch Mode');
+								await this.setStateAsync('DECT_' + identifier + '.mode', {
+									val: device.switch.mode !== null ? device.switch.mode.toString() : null,
+									ack: true
+								});
+							} else if (key === 'lock') {
+								await this.createIndicatorState(identifier, 'lock', 'API Lock');
+								await this.setStateAsync('DECT_' + identifier + '.lock', {
+									val: device.switch.lock == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'devicelock') {
+								await this.createIndicatorState(identifier, 'devicelock', 'Device (Button)lock');
+								await this.setStateAsync('DECT_' + identifier + '.devicelock', {
+									val: device.switch.devicelock == 1 ? true : false,
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// powermeter
+				if (device.powermeter) {
+					this.log.debug('setting up powermeter ');
+					await Promise.all(
+						Object.keys(device.powermeter).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
+							if (key === 'power') {
+								await this.createValueState(identifier, 'power', 'actual Power', 0, 4000, 'W');
+								await this.setStateAsync('DECT_' + identifier + '.power', {
+									val: parseFloat(device.powermeter.power) / 1000,
+									ack: true
+								});
+							} else if (key === 'voltage') {
+								await this.createValueState(identifier, 'voltage', 'actual Voltage', 0, 255, 'V');
+								await this.setStateAsync('DECT_' + identifier + '.voltage', {
+									val: parseFloat(device.powermeter.voltage) / 1000,
+									ack: true
+								});
+							} else if (key === 'energy') {
+								await this.createValueState(
+									identifier,
+									'energy',
+									'Energy consumption',
+									0,
+									999999999,
+									'Wh'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.energy', {
+									val: parseInt(device.powermeter.energy),
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// groups
+				if (device.groupinfo) {
+					this.log.debug('setting up groupinfo ');
+					await Promise.all(
+						Object.keys(device.groupinfo).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.groupinfo), async (key) => {
+							if (key === 'masterdeviceid') {
+								await this.createInfoState(identifier, 'masterdeviceid', 'ID of the group');
+								await this.setStateAsync('DECT_' + identifier + '.masterdeviceid', {
+									val:
+										device.groupinfo.masterdeviceid !== null
+											? device.groupinfo.masterdeviceid.toString()
+											: null,
+									ack: true
+								});
+							} else if (key === 'members') {
+								await this.createInfoState(identifier, 'members', 'member of the group');
+								await this.setStateAsync('DECT_' + identifier + '.members', {
+									val: device.groupinfo.members !== null ? device.groupinfo.members.toString() : null,
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// create thermosensor
+				if (device.temperature) {
+					this.log.debug('setting up temperature ');
+					await Promise.all(
+						Object.keys(device.temperature).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.temperature), async (key) => {
+							if (key === 'celsius') {
+								await this.createValueState(identifier, 'celsius', 'Temperature', -30, 50, '°C');
+								await this.setStateAsync('DECT_' + identifier + '.celsius', {
+									val: parseFloat(device.temperature.celsius) / 10,
+									ack: true
+								});
+							} else if (key === 'offset') {
+								await this.createValueState(identifier, 'offset', 'Temperature Offset', -10, 10, '°C');
+								await this.setStateAsync('DECT_' + identifier + '.offset', {
+									val: parseFloat(device.temperature.offset) / 10,
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// create humidity
+				if (device.humidity) {
+					this.log.debug('setting up humidity ');
+					await Promise.all(
+						Object.keys(device.humidity).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.humidity), async (key) => {
+							if (key === 'rel_humidity') {
+								await this.createValueState(
+									identifier,
+									'rel_humidity',
+									'relative Humidity',
+									0,
+									100,
+									'%'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.rel_humidity', {
+									val: parseFloat(device.humidity.rel_humidity),
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// create blind
+				if (device.blind) {
+					this.log.debug('setting up blind ');
+					await Promise.all(
+						Object.keys(device.blind).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.blind), async (key) => {
+							if (key === 'endpositionsset') {
+								await this.createIndicatorState(identifier, 'endpositionsset', 'Endposition Setting');
+								await this.setStateAsync('DECT_' + identifier + '.endpositionsset', {
+									val: device.blind.endpositionsset == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'mode') {
+								await this.createInfoState(identifier, 'mode', 'Blind Mode');
+								await this.setStateAsync('DECT_' + identifier + '.mode', {
+									val: device.blind.mode !== null ? device.blind.mode.toString() : null,
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// create thermostat
+				if (device.hkr) {
+					this.log.debug('setting up thermostat ');
+					await this.createThermostat(identifier); //additional datapoints of thermostats
+					await Promise.all(
+						Object.keys(device.hkr).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.hkr), async (key) => {
+							//create datapoints from the data
+							if (key === 'tist') {
+								await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 65, '°C');
+								await this.setStateAsync('DECT_' + identifier + '.tist', {
+									val: parseFloat(device.hkr.tist) / 2,
+									ack: true
+								});
+							} else if (key === 'tsoll') {
+								await this.createValueCtrl(
+									identifier,
+									'tsoll',
+									'Setpoint Temperature',
+									0,
+									35,
+									'°C',
+									'value.temperature'
+								);
+								if (device.hkr.tsoll < 57) {
+									await this.setStateAsync('DECT_' + identifier + '.tsoll', {
+										val: parseFloat(device.hkr.tsoll) / 2,
+										ack: true
+									});
+								} else {
+									await this.setStateAsync('DECT_' + identifier + '.tsoll', {
+										val: this.config.fritz_tsolldefault,
+										ack: true
+									});
+								}
+							} else if (key === 'absenk') {
+								await this.createValueState(
+									identifier,
+									'absenk',
+									'reduced (night) temperature',
+									8,
+									32,
+									'°C'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.absenk', {
+									val: parseFloat(device.hkr.absenk) / 2,
+									ack: true
+								});
+							} else if (key === 'komfort') {
+								await this.createValueState(identifier, 'komfort', 'comfort temperature', 8, 32, '°C');
+								await this.setStateAsync('DECT_' + identifier + '.komfort', {
+									val: parseFloat(device.hkr.komfort) / 2,
+									ack: true
+								});
+							} else if (key === 'lock') {
+								await this.createIndicatorState(identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
+								await this.setStateAsync('DECT_' + identifier + '.lock', {
+									val: device.hkr.lock == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'devicelock') {
+								await this.createIndicatorState(identifier, 'devicelock', 'device lock, button lock');
+								await this.setStateAsync('DECT_' + identifier + '.devicelock', {
+									val: device.hkr.devicelock == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'errorcode') {
+								await this.createModeState(identifier, 'errorcode', 'Error Code');
+								await this.setStateAsync('DECT_' + identifier + '.errorcode', {
+									val: parseInt(device.hkr.errorcode) / 2,
+									ack: true
+								});
+							} else if (key === 'batterylow') {
+								await this.createIndicatorState(identifier, 'batterylow', 'battery low');
+								await this.setStateAsync('DECT_' + identifier + '.batterylow', {
+									val: device.hkr.batterylow == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'battery') {
+								await this.createValueState(identifier, 'battery', 'battery status', 0, 100, '%');
+								await this.setStateAsync('DECT_' + identifier + '.battery', {
+									val: parseInt(device.hkr.battery),
+									ack: true
+								});
+							} else if (key === 'summeractive') {
+								await this.createIndicatorState(identifier, 'summeractive', 'summer active status');
+								await this.setStateAsync('DECT_' + identifier + '.summeractive', {
+									val: device.hkr.summeractive == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'holidayactive') {
+								await this.createIndicatorState(identifier, 'holidayactive', 'Holiday Active status');
+								await this.setStateAsync('DECT_' + identifier + '.holidayactive', {
+									val: device.hkr.holidayactive == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'boostactive') {
+								await this.createSwitch(identifier, 'boostactive', 'Boost active status and cmd');
+								await this.setStateAsync('DECT_' + identifier + '.boostactive', {
+									val: device.hkr.boostactive == 1 ? true : false,
+									ack: true
+								});
+								//create the user definde end time for manual setting the window open active state
+								await this.createValueCtrl(
+									identifier,
+									'boostactivetime',
+									'boost active time for cmd',
+									0,
+									1440,
+									'min',
+									'value'
+								);
+								//preset to 5 min
+								await this.setStateAsync('DECT_' + identifier + '.boostactivetime', {
+									val: this.boosttime || settings.boosttime,
+									ack: true
+								});
+							} else if (key === 'boostactiveendtime') {
+								await this.createTimeState(identifier, 'boostactiveendtime', 'Boost active end time');
+								//String(new Date(value * 1000))
+								await this.setStateAsync('DECT_' + identifier + '.boostactiveendtime', {
+									val:
+										device.hkr.boostactiveendtime !== null
+											? String(new Date(device.hkr.boostactiveendtime * 1000))
+											: null,
+									ack: true
+								});
+							} else if (key === 'windowopenactiv') {
+								await this.createSwitch(identifier, 'windowopenactiv', 'Window open status and cmd');
+								await this.setStateAsync('DECT_' + identifier + '.windowopenactiv', {
+									val: device.hkr.windowopenactiv == 1 ? true : false,
+									ack: true
+								});
+								//create the user definde end time for manual setting the window open active state
+								await this.createValueCtrl(
+									identifier,
+									'windowopenactivetime',
+									'window open active time for cmd',
+									0,
+									1440,
+									'min',
+									'value'
+								);
+								//preset to 5 min
+								await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
+									val: this.windowtime || settings.windowtime,
+									ack: true
+								});
+							} else if (key === 'windowopenactiveendtime') {
+								await this.createTimeState(
+									identifier,
+									'windowopenactiveendtime',
+									'window open active end time'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.windowopenactiveendtime', {
+									val:
+										device.hkr.windowopenactiveendtime !== null
+											? String(new Date(device.hkr.windowopenactiveendtime * 1000))
+											: null,
+									ack: true
+								});
+							} else if (key === 'nextchange') {
+								this.log.debug('setting up thermostat nextchange');
+								try {
 									await Promise.all(
-										Object.keys(button).map(async (key) => {
-											//await this.asyncForEach(Object.keys(button), async (key) => {
-											if (key === 'lastpressedtimestamp') {
+										Object.keys(device.hkr.nextchange).map(async (key) => {
+											//await this.asyncForEach(Object.keys(device.hkr.nextchange), async (key) => {
+											if (key === 'endperiod') {
 												await this.createTimeState(
-													identifier + '.button.' + button.identifier.replace(/\s/g, ''),
-													'lastpressedtimestamp',
-													'last button Time Stamp'
+													identifier,
+													'endperiod',
+													'next time for Temp change'
 												);
-											} else if (key === 'identifier') {
-												//already part of the object
-											} else if (key === 'id') {
-												await this.createInfoState(
-													identifier + '.button.' + button.identifier.replace(/\s/g, ''),
-													'id',
-													'Button ID'
+												await this.setStateAsync('DECT_' + identifier + '.endperiod', {
+													val:
+														device.hkr.nextchange.endperiod !== null
+															? String(new Date(device.hkr.nextchange.endperiod * 1000))
+															: null,
+													ack: true
+												});
+											} else if (key === 'tchange') {
+												await this.createValueState(
+													identifier,
+													'tchange',
+													'Temp after next change',
+													0,
+													128,
+													'°C'
 												);
-											} else if (key === 'name') {
-												await this.createInfoState(
-													identifier + '.button.' + button.identifier.replace(/\s/g, ''),
-													'name',
-													'Button Name'
-												);
+												await this.setStateAsync('DECT_' + identifier + '.tchange', {
+													val: parseFloat(device.hkr.nextchange.tchange) / 2,
+													ack: true
+												});
 											} else {
 												this.log.warn(' new datapoint in API detected -> ' + key);
 											}
 										})
 									);
-								})
-							);
-						}
-					}
-					//create alert
-					// hier irgendwie blinds alart als string behandeln. :-((
-					if (device.alert) {
-						this.log.info('setting up alert ');
-						await Promise.all(
-							Object.keys(device.alert).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.alert), async (key) => {
-								if (key === 'state') {
-									await this.createIndicatorState(identifier, 'state', 'Alert State');
-								} else if (key === 'lastalertchgtimestamp') {
-									await this.createTimeState(identifier, 'lastalertchgtimestamp', 'Alert last Time');
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
+								} catch (e) {
+									this.log.debug(
+										' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
+									);
 								}
-							})
-						);
-					}
-					// create switch
-					if (device.switch) {
-						this.log.info('setting up switch ');
-						await Promise.all(
-							Object.keys(device.switch).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.switch), async (key) => {
-								if (key === 'state') {
-									await this.createSwitch(identifier, 'state', 'Switch Status and Control');
-									await this.createInfoState(identifier, 'switchtype', 'Switch Type');
-									await this.setStateAsync('DECT_' + identifier + '.switchtype', {
-										val: 'switch',
-										ack: true
-									});
-								} else if (key === 'mode') {
-									await this.createInfoState(identifier, 'mode', 'Switch Mode');
-								} else if (key === 'lock') {
-									await this.createIndicatorState(identifier, 'lock', 'API Lock');
-								} else if (key === 'devicelock') {
-									await this.createIndicatorState(identifier, 'devicelock', 'Device (Button)lock');
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// powermeter
-					if (device.powermeter) {
-						this.log.info('setting up powermeter ');
-						await Promise.all(
-							Object.keys(device.powermeter).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
-								if (key === 'power') {
-									await this.createValueState(identifier, 'power', 'actual Power', 0, 4000, 'W');
-								} else if (key === 'voltage') {
-									await this.createValueState(identifier, 'voltage', 'actual Voltage', 0, 255, 'V');
-								} else if (key === 'energy') {
-									await this.createValueState(
-										identifier,
-										'energy',
-										'Energy consumption',
-										0,
-										999999999,
-										'Wh'
-									);
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// groups
-					if (device.groupinfo) {
-						this.log.info('setting up groupinfo ');
-						await Promise.all(
-							Object.keys(device.groupinfo).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.groupinfo), async (key) => {
-								if (key === 'masterdeviceid') {
-									await this.createInfoState(identifier, 'masterdeviceid', 'ID of the group');
-								} else if (key === 'members') {
-									await this.createInfoState(identifier, 'members', 'member of the group');
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// create thermosensor
-					if (device.temperature) {
-						this.log.info('setting up temperature ');
-						await Promise.all(
-							Object.keys(device.temperature).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.temperature), async (key) => {
-								if (key === 'celsius') {
-									await this.createValueState(identifier, 'celsius', 'Temperature', -30, 50, '°C');
-								} else if (key === 'offset') {
-									await this.createValueState(
-										identifier,
-										'offset',
-										'Temperature Offset',
-										-10,
-										10,
-										'°C'
-									);
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// create humidity
-					if (device.humidity) {
-						this.log.info('setting up humidity ');
-						await Promise.all(
-							Object.keys(device.humidity).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.humidity), async (key) => {
-								if (key === 'rel_humidity') {
-									await this.createValueState(
-										identifier,
-										'rel_humidity',
-										'relative Humidity',
-										0,
-										100,
-										'%'
-									);
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// create blind
-					if (device.blind) {
-						this.log.info('setting up blind ');
-						await Promise.all(
-							Object.keys(device.blind).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.blind), async (key) => {
-								if (key === 'endpositionsset') {
-									await this.createIndicatorState(
-										identifier,
-										'endpositionsset',
-										'Endposition Setting'
-									);
-								} else if (key === 'mode') {
-									await this.createInfoState(identifier, 'mode', 'Blind Mode');
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// create thermostat
-					if (device.hkr) {
-						this.log.info('setting up thermostat ');
-						await this.createThermostat(identifier); //additional datapoints of thermostats
-						await Promise.all(
-							Object.keys(device.hkr).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.hkr), async (key) => {
-								//create datapoints from the data
-								if (key === 'tist') {
-									await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 65, '°C');
-								} else if (key === 'tsoll') {
-									await this.createValueCtrl(
-										identifier,
-										'tsoll',
-										'Setpoint Temperature',
-										0,
-										35,
-										'°C',
-										'value.temperature'
-									);
-								} else if (key === 'absenk') {
-									await this.createValueState(
-										identifier,
-										'absenk',
-										'reduced (night) temperature',
-										8,
-										32,
-										'°C'
-									);
-								} else if (key === 'komfort') {
-									await this.createValueState(
-										identifier,
-										'komfort',
-										'comfort temperature',
-										8,
-										32,
-										'°C'
-									);
-								} else if (key === 'lock') {
-									await this.createIndicatorState(identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
-								} else if (key === 'devicelock') {
-									await this.createIndicatorState(
-										identifier,
-										'devicelock',
-										'device lock, button lock'
-									);
-								} else if (key === 'errorcode') {
-									await this.createModeState(identifier, 'errorcode', 'Error Code');
-								} else if (key === 'batterylow') {
-									await this.createIndicatorState(identifier, 'batterylow', 'battery low');
-								} else if (key === 'battery') {
-									await this.createValueState(identifier, 'battery', 'battery status', 0, 100, '%');
-								} else if (key === 'summeractive') {
-									await this.createIndicatorState(identifier, 'summeractive', 'summer active status');
-								} else if (key === 'holidayactive') {
-									await this.createIndicatorState(
-										identifier,
-										'holidayactive',
-										'Holiday Active status'
-									);
-								} else if (key === 'boostactive') {
-									await this.createSwitch(identifier, 'boostactive', 'Boost active status and cmd');
-									//create the user definde end time for manual setting the window open active state
-									await this.createValueCtrl(
-										identifier,
-										'boostactivetime',
-										'boost active time for cmd',
-										0,
-										1440,
-										'min',
-										'value'
-									);
-									//preset to 5 min
-									await this.setStateAsync('DECT_' + identifier + '.boostactivetime', {
-										val: this.boosttime || settings.boosttime,
-										ack: true
-									});
-								} else if (key === 'boostactiveendtime') {
-									await this.createTimeState(
-										identifier,
-										'boostactiveendtime',
-										'Boost active end time'
-									);
-								} else if (key === 'windowopenactiv') {
-									await this.createSwitch(
-										identifier,
-										'windowopenactiv',
-										'Window open status and cmd'
-									);
-									//create the user definde end time for manual setting the window open active state
-									await this.createValueCtrl(
-										identifier,
-										'windowopenactivetime',
-										'window open active time for cmd',
-										0,
-										1440,
-										'min',
-										'value'
-									);
-									//preset to 5 min
-									await this.setStateAsync('DECT_' + identifier + '.windowopenactivetime', {
-										val: this.windowtime || settings.windowtime,
-										ack: true
-									});
-								} else if (key === 'windowopenactiveendtime') {
-									await this.createTimeState(
-										identifier,
-										'windowopenactiveendtime',
-										'window open active end time'
-									);
-								} else if (key === 'nextchange') {
-									this.log.info('setting up thermostat nextchange');
-									try {
-										await Promise.all(
-											Object.keys(device.hkr.nextchange).map(async (key) => {
-												//await this.asyncForEach(Object.keys(device.hkr.nextchange), async (key) => {
-												if (key === 'endperiod') {
-													await this.createTimeState(
-														identifier,
-														'endperiod',
-														'next time for Temp change'
-													);
-												} else if (key === 'tchange') {
-													await this.createValueState(
-														identifier,
-														'tchange',
-														'Temp after next change',
-														0,
-														128,
-														'°C'
-													);
-												} else {
-													this.log.warn(' new datapoint in API detected -> ' + key);
-												}
-											})
-										);
-									} catch (e) {
-										this.log.debug(
-											' hkr.nextchange problem ' + JSON.stringify(device.hkr.nextchange) + ' ' + e
-										);
-									}
-								} else if (key === 'adaptiveHeatingRunning') {
-									await this.createIndicatorState(
-										identifier,
-										'adaptiveHeatingRunning',
-										'adaptive Heating Running status'
-									);
-								} else if (key === 'adaptiveHeatingActive') {
-									await this.createIndicatorState(
-										identifier,
-										'adaptiveHeatingActive',
-										'adaptive Heating active status'
-									);
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-
-					// simpleonoff
-					// switchtype wird hier nochmal überschrieben
-					if (device.simpleonoff) {
-						this.log.info('setting up simpleonoff');
-						await Promise.all(
-							Object.keys(device.simpleonoff).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.simpleonoff), async (key) => {
-								if (key === 'state') {
-									await this.createSwitch(identifier, 'state', 'Simple ON/OFF state and cmd');
-									await this.createInfoState(identifier, 'switchtype', 'Switch Type');
-									await this.setStateAsync('DECT_' + identifier + '.switchtype', {
-										val: 'simpleonoff',
-										ack: true
-									});
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// levelcontrol
-					if (device.levelcontrol) {
-						this.log.info('setting up levelcontrol');
-						await Promise.all(
-							Object.keys(device.levelcontrol).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.levelcontrol), async (key) => {
-								if (key === 'level') {
-									await this.createValueCtrl(
-										identifier,
-										'level',
-										'level 0..255',
-										0,
-										255,
-										'',
-										'value.level'
-									);
-								} else if (key === 'levelpercentage') {
-									await this.createValueCtrl(
-										identifier,
-										'levelpercentage',
-										'level in %',
-										0,
-										100,
-										'%',
-										'value.level'
-									);
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
-					// colorcontrol
-					if (device.colorcontrol) {
-						this.log.info('setting up thermostat ');
-						await Promise.all(
-							Object.keys(device.colorcontrol).map(async (key) => {
-								//await this.asyncForEach(Object.keys(device.colorcontrol), async (key) => {
-								if (key === 'supported_modes') {
-									await this.createModeState(identifier, 'supported_modes', 'available color modes');
-								} else if (key === 'current_mode') {
-									await this.createModeState(identifier, 'current_mode', 'current color mode');
-								} else if (key === 'fullcolorsupport') {
-									await this.createIndicatorState(
-										identifier,
-										'fullcolorsupport',
-										'Full Color Support'
-									);
-								} else if (key === 'mapped') {
-									await this.createIndicatorState(identifier, 'mapped', 'Mapped Indicator');
-								} else if (key === 'hue') {
-									await this.createValueCtrl(
-										identifier,
-										'hue',
-										'HUE color',
-										0,
-										359,
-										'°',
-										'value.hue'
-									);
-								} else if (key === 'saturation') {
-									await this.createValueCtrl(
-										identifier,
-										'saturation',
-										'Saturation',
-										0,
-										255,
-										'',
-										'value.saturation'
-									);
-								} else if (key === 'unmapped_hue') {
-									await this.createValueState(
-										identifier,
-										'unmapped_hue',
-										'unmapped hue value',
-										0,
-										359,
-										'°'
-									);
-								} else if (key === 'unmapped_saturation') {
-									await this.createValueState(
-										identifier,
-										'unmapped_saturation',
-										'unmapped saturation value',
-										0,
-										255,
-										''
-									);
-								} else if (key === 'temperature') {
-									await this.createValueCtrl(
-										identifier,
-										'temperature',
-										'color temperature',
-										2700,
-										6500,
-										'K',
-										'value.temperature'
-									);
-								} else {
-									this.log.warn(' new datapoint in API detected -> ' + key);
-								}
-							})
-						);
-					}
+							} else if (key === 'adaptiveHeatingRunning') {
+								await this.createIndicatorState(
+									identifier,
+									'adaptiveHeatingRunning',
+									'adaptive Heating Running status'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.adaptiveHeatingRunning', {
+									val: device.hkr.adaptiveHeatingRunning == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'adaptiveHeatingActive') {
+								await this.createIndicatorState(
+									identifier,
+									'adaptiveHeatingActive',
+									'adaptive Heating active status'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.adaptiveHeatingActive', {
+									val: device.hkr.adaptiveHeatingActive == 1 ? true : false,
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
 				}
-			})
-		);
+
+				// simpleonoff
+				// switchtype wird hier nochmal überschrieben
+				if (device.simpleonoff) {
+					this.log.debug('setting up simpleonoff');
+					await Promise.all(
+						Object.keys(device.simpleonoff).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.simpleonoff), async (key) => {
+							if (key === 'state') {
+								await this.createSwitch(identifier, 'state', 'Simple ON/OFF state and cmd');
+								await this.setStateAsync('DECT_' + identifier + '.state', {
+									val: device.simpleonoff.state == 1 ? true : false,
+									ack: true
+								});
+								await this.createInfoState(identifier, 'switchtype', 'Switch Type');
+								await this.setStateAsync('DECT_' + identifier + '.switchtype', {
+									val: 'simpleonoff',
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// levelcontrol
+				if (device.levelcontrol) {
+					this.log.debug('setting up levelcontrol');
+					await Promise.all(
+						Object.keys(device.levelcontrol).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.levelcontrol), async (key) => {
+							if (key === 'level') {
+								await this.createValueCtrl(
+									identifier,
+									'level',
+									'level 0..255',
+									0,
+									255,
+									'',
+									'value.level'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.level', {
+									val: parseInt(device.levelcontrol.level),
+									ack: true
+								});
+							} else if (key === 'levelpercentage') {
+								await this.createValueCtrl(
+									identifier,
+									'levelpercentage',
+									'level in %',
+									0,
+									100,
+									'%',
+									'value.level'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.levelpercentage', {
+									val: parseInt(device.levelcontrol.levelpercentage),
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+				// colorcontrol
+				if (device.colorcontrol) {
+					this.log.debug('setting up thermostat ');
+					await Promise.all(
+						Object.keys(device.colorcontrol).map(async (key) => {
+							//await this.asyncForEach(Object.keys(device.colorcontrol), async (key) => {
+							if (key === 'supported_modes') {
+								await this.createModeState(identifier, 'supported_modes', 'available color modes');
+								await this.setStateAsync('DECT_' + identifier + '.supported_modes', {
+									val: parseInt(device.colorcontrol.supported_modes),
+									ack: true
+								});
+							} else if (key === 'current_mode') {
+								await this.createModeState(identifier, 'current_mode', 'current color mode');
+								await this.setStateAsync('DECT_' + identifier + '.current_mode', {
+									val: parseInt(device.colorcontrol.current_mode),
+									ack: true
+								});
+							} else if (key === 'fullcolorsupport') {
+								await this.createIndicatorState(identifier, 'fullcolorsupport', 'Full Color Support');
+								await this.setStateAsync('DECT_' + identifier + '.fullcolorsupport', {
+									val: device.colorcontrol.fullcolorsupport == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'mapped') {
+								await this.createIndicatorState(identifier, 'mapped', 'Mapped Indicator');
+								await this.setStateAsync('DECT_' + identifier + '.mapped', {
+									val: device.colorcontrol.mapped == 1 ? true : false,
+									ack: true
+								});
+							} else if (key === 'hue') {
+								await this.createValueCtrl(identifier, 'hue', 'HUE color', 0, 359, '°', 'value.hue');
+								await this.setStateAsync('DECT_' + identifier + '.hue', {
+									val: device.colorcontrol.hue !== null ? parseInt(device.colorcontrol.hue) : null,
+									ack: true
+								});
+							} else if (key === 'saturation') {
+								await this.createValueCtrl(
+									identifier,
+									'saturation',
+									'Saturation',
+									0,
+									255,
+									'',
+									'value.saturation'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.saturation', {
+									val:
+										device.colorcontrol.saturation !== null
+											? parseInt(device.colorcontrol.saturation)
+											: null,
+									ack: true
+								});
+							} else if (key === 'unmapped_hue') {
+								await this.createValueState(
+									identifier,
+									'unmapped_hue',
+									'unmapped hue value',
+									0,
+									359,
+									'°'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.unmapped_hue', {
+									val: parseInt(device.colorcontrol.unmapped_hue),
+									ack: true
+								});
+							} else if (key === 'unmapped_saturation') {
+								await this.createValueState(
+									identifier,
+									'unmapped_saturation',
+									'unmapped saturation value',
+									0,
+									255,
+									''
+								);
+								await this.setStateAsync('DECT_' + identifier + '.unmapped_saturation', {
+									val: parseInt(device.colorcontrol.unmapped_saturation),
+									ack: true
+								});
+							} else if (key === 'temperature') {
+								await this.createValueCtrl(
+									identifier,
+									'temperature',
+									'color temperature',
+									2700,
+									6500,
+									'K',
+									'value.temperature'
+								);
+								await this.setStateAsync('DECT_' + identifier + '.temperature', {
+									val:
+										device.colorcontrol.temperature !== null
+											? parseInt(device.colorcontrol.temperature)
+											: null,
+									ack: true
+								});
+							} else {
+								this.log.warn(' new datapoint in API detected -> ' + key);
+							}
+						})
+					);
+				}
+			}
+			//})
+			//);
+		}
 	}
 	async createObject(typ, newId, name, role) {
-		this.log.debug('____________________________________________');
-		this.log.debug('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
+		this.log.info('____________________________________________');
+		this.log.info('create Main object ' + typ + ' ' + newId + ' ' + name + ' ' + role);
 		await this.setObjectNotExistsAsync(typ + newId, {
 			type: 'channel',
 			common: {
@@ -2616,6 +3005,7 @@ class Fritzdect extends utils.Adapter {
 			},
 			native: {}
 		});
+		await this.setStateAsync(typ + newId + '.toggle', { val: false, ack: true });
 		return;
 	}
 	async createThermostat(newId) {
@@ -2674,6 +3064,10 @@ class Fritzdect extends utils.Adapter {
 				desc: 'Current operation mode'
 			},
 			native: {}
+		});
+		await this.setStateAsync('DECT_' + newId + '.operationmode', {
+			val: 'waiting',
+			ack: true
 		});
 		await this.setObjectNotExistsAsync('DECT_' + newId + '.setmodeoff', {
 			type: 'state',

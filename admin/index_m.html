@@ -215,7 +215,7 @@
 		<div class="section">
 			<div class="row">
 				<div class="col s12">
-					<h6 class="translate sub-title">FritzBox Login</h6>
+					<h6 class="translate sub-title">FritzBox Login and Polling</h6>
 				</div>
 			</div>
 			<div class="row">
@@ -234,11 +234,18 @@
 						class="translate">Fritzbox Password</label>
 				</div>
 			</div>
+			<div class="row">
+				<div class="col s6">
+					<input class="value" id="fritz_interval" type="number" /><label for="fritz_interval"
+						class="translate">Fritzbox
+						Polling Interval (sek.)</label>
+				</div>
+			</div>
 		</div>
 		<div class="section">
 			<div class="row">
 				<div class="col s12">
-					<h6 class="translate sub-title">FritzBox Adapter Special</h6>
+					<h6 class="translate sub-title">Thermostat Settings</h6>
 				</div>
 			</div>
 			<div class="row">
@@ -259,15 +266,31 @@
 					<input class="value" id="fritz_tsolldefault" type="number" /><label for="fritz_tsolldefault"
 						class="translate">default target temperature</label>
 				</div>
-				<div class="col s6">
-					<input class="value" id="fritz_interval" type="number" /><label for="fritz_interval"
-						class="translate">Fritzbox
-						Polling Interval (sek.)</label>
+			</div>
+		</div>
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+					<h6 class="translate sub-title">Write only Changes to Objects</h6>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col s6">
-					<input class="value" id="fritz_options" /><label class="translate">options for the http.request
+					<input class="value" id="fritz_writeonhyst" type="checkbox" /><span class="translate">
+						must be checked (true) to activate the reduced logging</span>
+				</div>
+			</div>
+		</div>
+		<div class="section">
+			<div class="row">
+				<div class="col s12">
+					<h6 class="translate sub-title">Adapter Options</h6>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col s6">
+					<input class="value" id="fritz_options" /><label class="translate">options for the
+						http.request
 						(usually
 						empty, unless you make test)</label>
 				</div>

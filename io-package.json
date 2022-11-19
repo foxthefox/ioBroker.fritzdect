@@ -1,8 +1,20 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.2.6",
+		"version": "2.3.0",
 		"news": {
+			"2.3.0": {
+				"en": "option to set for logging only when a difference to the old value is detected",
+				"de": "option zum loggen nur dann einzustellen, wenn eine differenz zum alten wert erkannt wird",
+				"ru": "возможность установки для входа только при обнаружении разницы в старое значение",
+				"pt": "opção para definir para log somente quando uma diferença para o valor antigo é detectada",
+				"nl": "de optie om te smeren alleen als een verschil tegen de oude waarde wordt ontdekt",
+				"fr": "option pour l'enregistrement seulement lorsqu'une différence avec l'ancienne valeur est détectée",
+				"it": "opzione per la registrazione solo quando viene rilevata una differenza al vecchio valore",
+				"es": "opción para establecer para el registro sólo cuando se detecta una diferencia al valor antiguo",
+				"pl": "opcjonalnie ustawiany jest tylko wtedy, gdy różnica w starej wartości jest wykryta",
+				"zh-cn": "只有在发现与旧值有区别时才确定伐木的选择。"
+			},
 			"2.2.6": {
 				"en": "new objects for thermostat",
 				"de": "neue Objekte für Thermostat",
@@ -244,6 +256,7 @@
 		"fritz_interval": 300,
 		"fritz_options": null,
 		"fritz_writeonhyst": false,
+		"fritz_analogchange": true,
 		"fritz_hysteresis": 1,
 		"fritz_boosttime": 5,
 		"fritz_windowtime": 5,

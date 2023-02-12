@@ -196,8 +196,8 @@ otherwise it is more complex and individually to be parametrized.
 
 ## Changelog
 ### 2.3.1
-* new function gettrigger, settrigger
-* corrected xml2json-light (included drirectly until PR#8 is merged in repo)
+* new function gettriggerlist in admin
+* corrected xml2json-light (included drirectly in repo until PR#8 is merged in repo), caused problems with templates in newer FB-firmware
 
 ### 2.3.0
 * option to set for logging only when a difference to the old value is detected

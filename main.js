@@ -1041,7 +1041,7 @@ class Fritzdect extends utils.Adapter {
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
 								throw {
-									msg: 'issue getting templates',
+									msg: 'issue getting trigger',
 									function: 'onMessage',
 									error: e
 								};

@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.3.0",
+		"version": "2.3.1",
 		"news": {
+			"2.3.1": {
+				"en": "fault correction on xml2json conversion at templates from newer FB firmware",
+				"de": "Fehlerkorrektur bei xml2json Konvertierung bei Vorlagen aus neuerer FB Firmware",
+				"ru": "коррекция неисправности на конверсии xml2json в шаблонах от новой прошивки FB",
+				"pt": "correção de falha na conversão xml2json em modelos de firmware FB mais recente",
+				"nl": "vertaling:",
+				"fr": "correction de la faute sur la conversion xml2json à des modèles du nouveau firmware FB",
+				"it": "correzione guasto sulla conversione xml2json a modelli dal nuovo firmware FB",
+				"es": "corrección de fallas en la conversión de xml2json en plantillas de firmware FB más reciente",
+				"pl": "poprawka w błędzie na konwersji xml2json w szablonach od nowszego FB",
+				"uk": "виправлення несправностей на xml2json перетворення на шаблони з нової прошивки FB",
+				"zh-cn": "fB公司新软件的模板对×ml2json转换的错误"
+			},
 			"2.3.0": {
 				"en": "option to set for logging only when a difference to the old value is detected",
 				"de": "option zum loggen nur dann einzustellen, wenn eine differenz zum alten wert erkannt wird",

@@ -175,6 +175,22 @@
 				showMessage(JSON.stringify(result), _('Result: '));
 			});
 		}
+		function testr() {
+			if (!common.enabled) {
+				showToast(null, _('Enable first the adapter to test client.'));
+				return;
+			}
+			if (changed) {
+				showToast(null, _('First save the adapter'));
+				return;
+			}
+			$('#testr').addClass('disabled');
+			sendTo(null, 'trigger', null, function (result) {
+				$('#testr').removeClass('disabled');
+				console.log("result is " + JSON.stringify(result));
+				showMessage(JSON.stringify(result), _('Result: '));
+			});
+		}
 		// This will be called by the admin adapter when the user presses the save button
 		function save(callback) {
 			// example: select elements with class=value and build settings object
@@ -317,6 +333,9 @@
 				</div>
 				<div class="col s2">
 					<a id="testo" class="btn"><span class="translate">My Rights</span></a>
+				</div>
+				<div class="col s2">
+					<a id="testr" class="btn"><span class="translate">My Trigger</span></a>
 				</div>
 			</div>
 		</div>

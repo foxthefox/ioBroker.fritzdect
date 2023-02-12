@@ -195,6 +195,10 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.3.1
+* new function gettrigger, settrigger
+* corrected xml2json-light (included drirectly until PR#8 is merged in repo)
+
 ### 2.3.0
 * option to set for logging only when a difference to the old value is detected
 * fritzdect-aha-nodejs as dependency

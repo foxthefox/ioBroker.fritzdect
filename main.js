@@ -20,7 +20,7 @@ let Fritz;
 	Fritz = fb.Fritz;
 })().catch((err) => console.error(err));
 */
-const parser = require('xml2json-light');
+const parser = require('./lib/xml2json.js');
 
 let polling;
 
@@ -1025,6 +1025,29 @@ class Fritzdect extends utils.Adapter {
 							});
 						wait = true;
 						break;
+					case 'trigger':
+						this.fritz
+							.getTriggerListInfos()
+							.then(function(triggerlistinfos) {
+								let trigger = parser.xml2json(triggerlistinfos);
+								trigger = [].concat((trigger.triggerlist || {}).trigger || []).map((trigger) => {
+									return trigger;
+								});
+								result = trigger;
+							})
+							.then(async () => {
+								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+							})
+							.catch((e) => {
+								this.log.debug('error calling in msgbox');
+								throw {
+									msg: 'issue getting templates',
+									function: 'onMessage',
+									error: e
+								};
+							});
+						wait = true;
+						break;
 					case 'statistic':
 						this.fritz
 							.getBasicDeviceStats(obj.message) //ain muß übergeben werden aus message
@@ -1050,7 +1073,8 @@ class Fritzdect extends utils.Adapter {
 						this.fritz
 							.getColorDefaults()
 							.then(function(colorinfos) {
-								result = colorinfos;
+								let colors = parser.xml2json(colorinfos);
+								result = colors;
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);

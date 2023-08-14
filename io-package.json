@@ -238,7 +238,7 @@
 		"docs": {
 			"de": "docs/de/install.md"
 		},
-		"keywords": [ "smart home", "DECT ULE", "lighting", "heating", "switching", "fritzbox" ],
+		"keywords": [ "smart home", "DECT ULE", "lighting", "heating", "switching", "fritzbox", "AVM" ],
 		"license": "MIT",
 		"platform": "Javascript/Node.js",
 		"main": "main.js",

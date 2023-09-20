@@ -1,0 +1,21 @@
+{
+    "FritzBox Adapter Debugging": "Налагодження адаптера FritzBox",
+    "Fritzbox IP": "Fritzbox IP",
+    "Fritzbox Password": "Пароль Fritzbox",
+    "Fritzbox Polling Interval (sek.)": "Інтервал опитування Fritzbox (сек.)",
+    "Fritzbox User": "Користувач Fritzbox",
+    "Instance": "Екземпляр",
+    "My Devices": "Мої пристрої",
+    "My Groups": "Мої групи",
+    "My Rights": "Мої права",
+    "default target temperature": "цільова температура за замовчуванням",
+    "default time (minutes) for boost activation": "час за замовчуванням (хвилини) для активації посилення",
+    "default time (minutes) for open window activation": "час за замовчуванням (хвилини) для активації відкритого вікна",
+    "extraAttr": "extraAttr",
+    "fritzdect adapter settings": "Налаштування адаптера для fritzdect",
+    "group_extraMyset": "extraMyset",
+    "htmlText": "htmlТекст",
+    "myColor": "myColor",
+    "myColor_tooltip": "Опис\nmyColor",
+    "options for the http.request (usually empty, unless you make test)": "параметри для http.request (зазвичай пусті, якщо ви не робите тест)"
+}

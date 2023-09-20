@@ -171,6 +171,11 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 |toggle|boolean|x|toggle switch for template activation|
 |lasttemplate|text|-|last confirmed template|
 
+### routines
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|active|boolean|x|toggle switch for routine activation|
+
 
 ## API limitations
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command
@@ -195,6 +200,10 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.4.0
+* new function for routines which activatetrigger
+* correction for templates and scenario (all templates are buttons, no need to check functionbitmask)
+
 ### 2.3.1
 * new function gettriggerlist in admin
 * corrected xml2json-light (included drirectly in repo until PR#8 is merged in repo), caused problems with templates in newer FB-firmware

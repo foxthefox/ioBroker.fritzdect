@@ -1,8 +1,21 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.3.1",
+		"version": "2.4.0",
 		"news": {
+			"2.4.0": {
+				"en": "new function for routines, correction for templates",
+				"de": "neue funktion für routinen, korrektur für vorlagen",
+				"ru": "новая функция для рутин, коррекция для шаблонов",
+				"pt": "nova função para rotinas, correção para modelos",
+				"nl": "nieuwe functie voor routines, correctie voor templates",
+				"fr": "nouvelle fonction pour les routines, correction pour les modèles",
+				"it": "nuova funzione per le routine, correzione per i modelli",
+				"es": "nueva función para rutinas, corrección para plantillas",
+				"pl": "nowe funkcje dla rutynów, poprawki do szablonów",
+				"uk": "нова функція для рутин, виправлення шаблонів",
+				"zh-cn": "例行的新职能,模板的更正"
+			},
 			"2.3.1": {
 				"en": "fault correction on xml2json conversion at templates from newer FB firmware",
 				"de": "Fehlerkorrektur bei xml2json Konvertierung bei Vorlagen aus neuerer FB Firmware",

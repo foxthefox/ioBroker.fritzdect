@@ -1,6 +1,6 @@
 {
 	"name": "iobroker.fritzdect",
-	"version": "2.4.0",
+	"version": "2.4.1",
 	"description": "ioBroker fritzbox DECT Adapter",
 	"author": {
 		"name": "foxthefox",
@@ -11,16 +11,7 @@
 	},
 	"homepage": "https://github.com/foxthefox/ioBroker.fritzdect",
 	"license": "MIT",
-	"keywords": [
-		"ioBroker",
-		"DECT2x0",
-		"DECT3x0",
-		"DECT4x0",
-		"DECT500",
-		"Contacts",
-		"Blinds",
-		"fritzbox"
-	],
+	"keywords": [ "ioBroker", "DECT2x0", "DECT3x0", "DECT4x0", "DECT500", "Contacts", "Blinds", "fritzbox" ],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/foxthefox/ioBroker.fritzdect"
@@ -32,6 +23,7 @@
 		"fritzdect-aha-nodejs": "^2.1.0"
 	},
 	"devDependencies": {
+		"@iobroker/adapter-dev": "^1.2.0",
 		"@iobroker/testing": "^4.1.0",
 		"@types/chai": "^4.3.5",
 		"@types/chai-as-promised": "^7.1.5",
@@ -61,7 +53,8 @@
 		"test": "npm run test:js && npm run test:package",
 		"check": "tsc --noEmit -p tsconfig.check.json",
 		"lint": "eslint",
-		"mockserver": "node test/lib/fritz_mockserver.js"
+		"mockserver": "node test/lib/fritz_mockserver.js",
+		"translate": "translate-adapter"
 	},
 	"bugs": {
 		"url": "https://github.com/foxthefox/ioBroker.fritzdect/issues"

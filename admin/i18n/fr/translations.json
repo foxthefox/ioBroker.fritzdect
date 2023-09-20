@@ -1,0 +1,21 @@
+{
+    "FritzBox Adapter Debugging": "Débogage de l'adaptateur FritzBox",
+    "Fritzbox IP": "Fritzbox IP",
+    "Fritzbox Password": "Mot de passe Fritzbox",
+    "Fritzbox Polling Interval (sek.)": "Fritzbox Intervalle d'interrogation (sek.)",
+    "Fritzbox User": "Utilisateur de Fritzbox",
+    "Instance": "Instance",
+    "My Devices": "Mes appareils",
+    "My Groups": "Mes groupes",
+    "My Rights": "Mes droits",
+    "default target temperature": "température cible par défaut",
+    "default time (minutes) for boost activation": "temps par défaut (minutes) pour l'activation du boost",
+    "default time (minutes) for open window activation": "temps par défaut (minutes) pour l'activation de la fenêtre ouverte",
+    "extraAttr": "extraAttr",
+    "fritzdect adapter settings": "Paramètres d'adaptateur pour fritzdect",
+    "group_extraMyset": "extraMyset",
+    "htmlText": "htmlText",
+    "myColor": "maCouleur",
+    "myColor_tooltip": "Description de\nmyColor",
+    "options for the http.request (usually empty, unless you make test)": "options pour le http.request (généralement vide, sauf si vous faites un test)"
+}

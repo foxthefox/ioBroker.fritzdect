@@ -1,0 +1,21 @@
+{
+    "FritzBox Adapter Debugging": "FritzBox Adapter Debuggen",
+    "Fritzbox IP": "Fritzbox IP",
+    "Fritzbox Password": "Fritzbox Password",
+    "Fritzbox Polling Interval (sek.)": "Fritzbox Abrufintervall (sek.)",
+    "Fritzbox User": "Fritzbox User",
+    "Instance": "Instanz",
+    "My Devices": "Meine Geräte",
+    "My Groups": "Meine Gruppen",
+    "My Rights": "Meine Rechte",
+    "default target temperature": "voreingestellte Zieltemperatur",
+    "default time (minutes) for boost activation": "Standardzeit (Minuten) für die Boost-Aktivierung",
+    "default time (minutes) for open window activation": "Standardzeit (Minuten) für die Aktivierung des offenen Fensters",
+    "extraAttr": "extraAttr",
+    "fritzdect adapter settings": "Adaptereinstellungen für fritzdect",
+    "group_extraMyset": "extraMyset",
+    "htmlText": "htmlText",
+    "myColor": "meineColor",
+    "myColor_tooltip": "Beschreibung von\nmyColor",
+    "options for the http.request (usually empty, unless you make test)": "Optionen für http.request (normalerweise leer, es sei denn, Sie machen einen Test)"
+}

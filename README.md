@@ -200,6 +200,9 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.4.1
+* correctionts reported by adapter-checker
+
 ### 2.4.0
 * new function for routines which activatetrigger
 * correction for templates and scenario (all templates are buttons, no need to check functionbitmask)
@@ -485,4 +488,4 @@ otherwise it is more complex and individually to be parametrized.
 
 The MIT License (MIT)
 
-Copyright (c) 2018 - 2022 foxthefox <foxthefox@wysiwis.net>
+Copyright (c) 2018 - 2023 foxthefox <foxthefox@wysiwis.net>

@@ -1,0 +1,21 @@
+{
+    "FritzBox Adapter Debugging": "FritzBox适配器调试",
+    "Fritzbox IP": "Fritzbox IP",
+    "Fritzbox Password": "Fritzbox密码",
+    "Fritzbox Polling Interval (sek.)": "Fritzbox轮询间隔（sek。）",
+    "Fritzbox User": "Fritzbox用户",
+    "Instance": "例",
+    "My Devices": "我的设备",
+    "My Groups": "我的团队",
+    "My Rights": "我的权利",
+    "default target temperature": "默认目标温度",
+    "default time (minutes) for boost activation": "增强激活的默认时间（分钟）",
+    "default time (minutes) for open window activation": "打开窗口激活的默认时间（分钟）",
+    "extraAttr": "extraAttr",
+    "fritzdect adapter settings": "fritzdect的适配器设置",
+    "group_extraMyset": "extraMyset",
+    "htmlText": "htmlText",
+    "myColor": "我的颜色",
+    "myColor_tooltip": "\nmyColor的描述",
+    "options for the http.request (usually empty, unless you make test)": "http.request 的选项（通常为空，除非您进行测试）"
+}

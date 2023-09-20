@@ -10,6 +10,7 @@ console.log('PATH ist ' + path.join(__dirname, './data/'));
 
 const xmlDevicesGroups = fs.readFileSync(path.join(__dirname, './data/') + 'test_api_response.xml');
 const xmlTemplate = fs.readFileSync(path.join(__dirname, './data/') + 'template_answer.xml');
+//const xmlTemplate = fs.readFileSync(path.join(__dirname, './data/') + 'template.xml');
 const xmlTriggerlist = fs.readFileSync(path.join(__dirname, './data/') + 'getriggerlistinfos.xml');
 const xmlTempStat = fs.readFileSync(path.join(__dirname, './data/') + 'devicestat_temp_answer.xml');
 const xmlPowerStats = fs.readFileSync(path.join(__dirname, './data/') + 'devicestat_power_answer.xml');
@@ -2931,7 +2932,34 @@ tests.integration(path.join(__dirname, '..'), {
 					);
 				});
 			}).timeout(2000);
-
+			//hier für routines ein neues describe?
+			it('Check values of routine 1, should be created', () => {
+				return new Promise(async (resolve) => {
+					harness.states.getState('fritzdect.0.routine_trg695F2D-3CBF1DC25.name', function(err, state) {
+						if (err) console.error(err);
+						expect(state).to.exist;
+						if (!state) {
+							console.error('state "fritzdect.0.routine_trg695F2D-3CBF1DC25.name" not set');
+						} else {
+							console.log('fritzdect.0.routine_trg695F2D-3CBF1DC25.name         ... ' + state.val);
+						}
+						expect(state.val).to.exist;
+						expect(state.val).to.be.equal('Trigger AlertOn');
+						harness.states.getState('fritzdect.0.routine_trg695F2D-3CBF1DC25.active', function(err, state) {
+							if (err) console.error(err);
+							expect(state).to.exist;
+							if (!state) {
+								console.error('state "fritzdect.0.routine_trg695F2D-3CBF1DC25.active" not set');
+							} else {
+								console.log('fritzdect.0.routine_trg695F2D-3CBF1DC25.active ... ' + state.val);
+								expect(state.val).to.exist;
+								expect(state.val).to.be.equal(true);
+								resolve();
+							}
+						});
+					});
+				});
+			}).timeout(2000);
 			/*
 			it('Should work, to send a message', () => {
 				return new Promise(async (resolve) => {

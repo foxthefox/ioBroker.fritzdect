@@ -193,6 +193,9 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('start creating templates ');
 							await this.createTemplates(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished creating templates (if any) ');
+							this.log.info('start creating routines ');
+							await this.createRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
+							this.log.info('finished creating routines (if any) ');
 							this.log.info('start initial updating devices/groups');
 							await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished initial updating devices/groups');
@@ -205,6 +208,7 @@ class Fritzdect extends utils.Adapter {
 									try {
 										this.log.debug('polling! fritzdect is alive');
 										await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
+										await this.updateRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 									} catch (e) {
 										this.log.warn(`[Polling] <== ${e}`);
 									}
@@ -889,6 +893,28 @@ class Fritzdect extends utils.Adapter {
 									.catch((e) => this.errorHandlerApi(e));
 							}
 						}
+					} else if (idx.startsWith('routine_')) {
+						//must be fritzbox routine
+						id = idx.replace(/routine_/g, ''); //routine
+						this.log.info('Routine ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
+						if (dp == 'active') {
+							if (
+								state.val === 1 ||
+								state.val === '1' ||
+								state.val === 'true' ||
+								state.val === true ||
+								state.val === 'on' ||
+								state.val === 'ON'
+							) {
+								this.fritz
+									.applyTrigger(id)
+									.then((sid) => {
+										this.log.debug('cmd Active to template ' + id + ' to ' + state.val);
+										this.log.debug('response ' + sid);
+									})
+									.catch((e) => this.errorHandlerApi(e));
+							}
+						}
 					}
 				}
 			} //from if state&ack
@@ -1141,7 +1167,7 @@ class Fritzdect extends utils.Adapter {
 			if (error == '0000000000000000') {
 				this.log.error('Did not get session id -> invalid username or password?');
 			} else if (!error.response) {
-				this.log.error('no response part in returned message');
+				this.log.error('no response part in returned error message');
 			} else if (error.response.statusCode) {
 				if (error.response.statusCode == 403) {
 					this.log.error(
@@ -1176,6 +1202,42 @@ class Fritzdect extends utils.Adapter {
 			//this.log.error('iob  err  => ' + error.error);
 		} catch (e) {
 			this.log.error('try/catch error in function errorHandlerAdapter' + e);
+		}
+	}
+	async updateRoutines(fritz) {
+		this.log.debug('__________________________');
+		this.log.debug('updating Routines ');
+		try {
+			const routineslistinfos = await fritz.getTriggerListInfos().catch((e) => this.errorHandlerApi(e));
+			let typ = '';
+			let role = '';
+			if (routineslistinfos) {
+				let routines = parser.xml2json(routineslistinfos);
+				routines = [].concat((routines.triggerlist || {}).trigger || []).map((trigger) => {
+					return trigger;
+				});
+				this.log.debug('__________________________');
+				this.log.debug('routines\n');
+				this.log.debug(JSON.stringify(routines));
+				if (routines.length) {
+					this.log.debug('update routines ' + routines.length);
+					await Promise.all(
+						routines.map(async (routine) => {
+							this.log.debug('__________________________');
+							this.log.debug('updating Routine ' + routine.name);
+							let active = routine.active == 0 ? false : true;
+							await this.setStateAsync('routine_' + routine.identifier.replace(/\s/g, '') + '.active', {
+								val: active,
+								ack: true
+							});
+							this.log.debug('activation is ' + active);
+						})
+					);
+				}
+			}
+			return Promise.resolve();
+		} catch (e) {
+			return Promise.reject(this.log.error('try/catch updateRoutines ' + e));
 		}
 	}
 	async updateDevices(fritz) {
@@ -1822,49 +1884,19 @@ class Fritzdect extends utils.Adapter {
 					//await this.asyncForEach(templates, async (template) => {
 					await Promise.all(
 						templates.map(async (template) => {
-							if (
-								(template.functionbitmask & 320) == 320 ||
-								(template.functionbitmask & 4160) == 4160 ||
-								(template.functionbitmask & 2688) == 2688 ||
-								(template.functionbitmask & 40960) == 40960 ||
-								(template.functionbitmask & 36864) == 36864 ||
-								(template.functionbitmask & 335888) == 335888 ||
-								(template.functionbitmask & 2944) == 2944
-							) {
-								//heating template
-								typ = 'template_';
-								role = 'switch';
-								this.log.debug('__________________________');
-								this.log.debug('setting up Template ' + template.name);
-								await this.createTemplate(
-									typ,
-									template.identifier.replace(/\s/g, ''),
-									template.name,
-									role,
-									template.id
-								);
-							} else if (template.functionbitmask == 0 && template.applymask[0] == 256) {
-								// no other way to identify this one, role as switch may be not right
-								//telefon template
-								typ = 'template_';
-								role = 'switch';
-								this.log.debug('__________________________');
-								this.log.debug('setting up Template ' + template.name);
-								await this.createTemplate(
-									typ,
-									template.identifier.replace(/\s/g, ''),
-									template.name,
-									role,
-									template.id
-								);
-							} else {
-								this.log.debug(
-									'nix vorbereitet für diese Art von Template ' +
-										template.functionbitmask +
-										' -> ' +
-										template.name
-								);
-							}
+							//everything in template is a button to be activated, no need to check the functionbitmask
+							//subtemplates or devices are not taken over to iobroker
+							typ = 'template_';
+							role = 'switch';
+							this.log.debug('__________________________');
+							this.log.debug('setting up Template ' + template.name);
+							await this.createTemplate(
+								typ,
+								template.identifier.replace(/\s/g, ''),
+								template.name,
+								role,
+								template.id
+							);
 						})
 					);
 				}
@@ -1872,6 +1904,45 @@ class Fritzdect extends utils.Adapter {
 			return Promise.resolve();
 		} catch (e) {
 			return Promise.reject(this.log.error('try/catch createTemplates ' + e));
+		}
+	}
+	async createRoutines(fritz) {
+		try {
+			const routineslistinfos = await fritz.getTriggerListInfos().catch((e) => this.errorHandlerApi(e));
+			let typ = '';
+			let role = '';
+			if (routineslistinfos) {
+				let routines = parser.xml2json(routineslistinfos);
+				routines = [].concat((routines.triggerlist || {}).trigger || []).map((trigger) => {
+					return trigger;
+				});
+				this.log.debug('__________________________');
+				this.log.debug('routines\n');
+				this.log.debug(JSON.stringify(routines));
+				if (routines.length) {
+					this.log.info('CREATE Routines ' + routines.length);
+					await Promise.all(
+						routines.map(async (routine) => {
+							//heating template
+							typ = 'routine_';
+							role = 'switch';
+							this.log.debug('__________________________');
+							this.log.debug('setting up Routine ' + routine.name);
+							let active = routine.active == 0 ? false : true;
+							await this.createRoutine(
+								typ,
+								routine.identifier.replace(/\s/g, ''),
+								routine.name,
+								role,
+								active
+							);
+						})
+					);
+				}
+			}
+			return Promise.resolve();
+		} catch (e) {
+			return Promise.reject(this.log.error('try/catch createRoutines ' + e));
 		}
 	}
 	async createDevices(fritz) {
@@ -3045,6 +3116,46 @@ class Fritzdect extends utils.Adapter {
 			native: {}
 		});
 		await this.setStateAsync(typ + newId + '.toggle', { val: false, ack: true });
+		return;
+	}
+	async createRoutine(typ, newId, name, role, val) {
+		this.log.debug('create Template objects ');
+		await this.setObjectNotExistsAsync(typ + newId, {
+			type: 'channel',
+			common: {
+				name: name,
+				role: role
+			},
+			native: {
+				aid: newId
+			}
+		});
+		await this.setObjectNotExistsAsync(typ + newId + '.name', {
+			type: 'state',
+			common: {
+				name: 'Name',
+				type: 'string',
+				read: true,
+				write: false,
+				role: 'info',
+				desc: 'Name'
+			},
+			native: {}
+		});
+		await this.setStateAsync(typ + newId + '.name', { val: name, ack: true });
+		await this.setObjectNotExistsAsync(typ + newId + '.active', {
+			type: 'state',
+			common: {
+				name: 'Routine activation',
+				type: 'boolean',
+				read: true,
+				write: true,
+				role: 'button',
+				desc: 'Routine Activation'
+			},
+			native: {}
+		});
+		await this.setStateAsync(typ + newId + '.active', { val: val, ack: true });
 		return;
 	}
 	async createThermostat(newId) {

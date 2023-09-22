@@ -200,8 +200,12 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.5.0
+* getbasicdevicestats for powermeter (voltage, power, energy)
+* derived values from energy stats -> year to date, month to date, last 12 month, last 31 days, todays accumulation
+
 ### 2.4.1
-* correctionts reported by adapter-checker
+* corrections reported by adapter-checker
 
 ### 2.4.0
 * new function for routines which activatetrigger

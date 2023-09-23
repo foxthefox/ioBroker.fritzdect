@@ -1529,7 +1529,7 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 						let monthnum = parseInt(new Date(datatimem * 1000).toISOString().slice(6, 8));
-						let ytd = montharr.splice(monthnum, 12 - monthnum).reduce((pv, cv) => pv + cv, 0);
+						let ytd = montharr.splice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_ytd', {
 							val: ytd,
 							ack: true
@@ -1559,14 +1559,13 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 						let daynum = parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10));
-						let mtd = dayarr.splice(daynum, 31 - daynum).reduce((pv, cv) => pv + cv, 0);
+						let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
 							val: mtd,
 							ack: true
 						});
-						let dtd = obj['stats'][1]['_@attribute'].split(',').map(Number)[0];
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
-							val: parseInt(dtd),
+							val: parseInt(dayarr[0]),
 							ack: true
 						});
 					} else {
@@ -1582,8 +1581,9 @@ class Fritzdect extends utils.Adapter {
 							val: parseInt(obj['stats']['datatime']),
 							ack: true
 						});
+						let otherarr = obj['stats']['_@attribute'].split(',').map(Number);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {
-							val: JSON.stringify(obj['stats']['_@attribute']),
+							val: JSON.stringify(otherarr),
 							ack: true
 						});
 					}

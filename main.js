@@ -1501,7 +1501,7 @@ class Fritzdect extends utils.Adapter {
 						});
 						let montharr = obj['stats'][0]['_@attribute'].split(',').map(Number);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_months', {
-							val: montharr,
+							val: JSON.stringify(montharr),
 							ack: true
 						});
 						let last12m = montharr.reduce((pv, cv) => pv + cv, 0);
@@ -1531,7 +1531,7 @@ class Fritzdect extends utils.Adapter {
 						});
 						let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
-							val: dayarr,
+							val: JSON.stringify(dayarr),
 							ack: true
 						});
 						let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
@@ -1564,7 +1564,7 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {
-							val: obj['stats']['_@attribute'],
+							val: JSON.stringify(obj['stats']['_@attribute']),
 							ack: true
 						});
 					}
@@ -2496,9 +2496,13 @@ class Fritzdect extends utils.Adapter {
 							let oldarr = await this.getStateAsync('global.statdevices').catch((e) => {
 								this.log.warn('problem getting statdevices ' + e);
 							});
+							this.log.info('oldarr = ' + oldarr.val);
 							if (oldarr && oldarr.val) {
 								var newarray = [];
+								this.log.info('newarr = ' + newarray);
 								newarray.push(JSON.parse(String(oldarr.val)));
+								this.log.info('newarr2 = ' + newarray);
+								this.log.info('newarr3 = ' + JSON.stringify(newarray.push(identifier)));
 								await this.setStateAsync('global.statdevices', {
 									val: JSON.stringify(newarray.push(identifier)),
 									ack: true

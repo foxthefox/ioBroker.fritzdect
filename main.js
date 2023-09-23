@@ -2541,7 +2541,7 @@ class Fritzdect extends utils.Adapter {
 									'energy',
 									'Energy consumption',
 									0,
-									999999999,
+									9999999999,
 									'Wh'
 								);
 								await this.setStateAsync('DECT_' + identifier + '.energy', {

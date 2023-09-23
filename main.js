@@ -187,6 +187,9 @@ class Fritzdect extends utils.Adapter {
 									this.log.error('error in permission xml2json ' + error);
 								}
 							}
+							this.log.info('start creating global values ');
+							await this.createGlobal();
+							this.log.info('finished creating global values');
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished creating devices/groups (if any)');
@@ -196,9 +199,6 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('start creating routines ');
 							await this.createRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished creating routines (if any) ');
-							this.log.info('start creating global values ');
-							await this.createGlobal();
-							this.log.info('finished creating global values');
 							this.log.info('start initial updating devices/groups');
 							await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished initial updating devices/groups');
@@ -1479,7 +1479,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async updateStats(identifier, fritz) {
 		this.log.debug('update Stats objects ' + identifier);
-		let devstat = await this.fritz.getBasicDeviceStats().catch((e) => this.errorHandlerApi(e));
+		let devstat = await this.fritz.getBasicDeviceStats(identifier).catch((e) => this.errorHandlerApi(e));
 		let statsobj = parser.xml2json(devstat);
 		await Promise.all(
 			Object.entries(statsobj.devicetstats).map(async ([ key, obj ]) => {
@@ -2492,12 +2492,13 @@ class Fritzdect extends utils.Adapter {
 					await Promise.all(
 						Object.keys(device.powermeter).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
-							let oldarr = await this.getStateAsync('global.statsdevices').catch((e) => {
+							// if powermeter then there is a stat available
+							let oldarr = await this.getStateAsync('global.statdevices').catch((e) => {
 								this.log.warn('problem getting statdevices ' + e);
 							});
 							if (oldarr && oldarr.val) {
 								var newarray = JSON.parse(String(oldarr.val));
-								await this.setStateAsync('global.statsdevices', {
+								await this.setStateAsync('global.statdevices', {
 									val: JSON.stringify(newarray.push(identifier)),
 									ack: true
 								});

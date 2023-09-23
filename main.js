@@ -42,6 +42,25 @@ Beim Rollladen als Bitmaske auszuwerten.
 0000 0010 - Temperaturalarm, Motor überhitzt.
 */
 
+/*
+functionbitmask
+Bit 0: HAN-FUN Gerät
+Bit 2: Licht/Lampe
+Bit 4: Alarm-Sensor
+Bit 5: AVM Button
+Bit 6: AVM Heizkörperregler
+Bit 7: AVM Energie Messgerät
+Bit 8: Temperatursensor
+Bit 9: AVM Schaltsteckdose
+Bit 10: AVM DECT Repeater
+Bit 11: AVM Mikrofon
+Bit 13: HAN-FUN-Unit
+Bit 15: an-/ausschaltbares Gerät/Steckdose/Lampe/Aktor
+Bit 16: Gerät mit einstellbarem Dimm-, Höhen- bzw. Niveau-Level Bit 17: Lampe mit einstellbarer Farbe/Farbtemperatur
+Bit 18: Rollladen(Blind) - hoch, runter, stop und level 0% bis 100 % Bit 20: Luftfeuchtigkeitssensor
+Die Bits 5,6,7,9,10 und 11 werden nur von FRITZ!-Geräten verwendet und nicht von HANFUN- oder Zigbee-Geräten.
+*/
+
 /* HANFUN unittypes
 256 = SIMPLE_ON_OFF_SWITCHABLE
 257 = SIMPLE_ON_OFF_SWITCH
@@ -1517,15 +1536,15 @@ class Fritzdect extends utils.Adapter {
 						});
 						// days
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
-							val: obj['stats'][1]['count'],
+							val: parseInt(obj['stats'][1]['count']),
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
-							val: obj['stats'][1]['grid'],
+							val: parseInt(obj['stats'][1]['grid']),
 							ack: true
 						});
 						let datatimed = parseInt(obj['stats'][0]['datatime']);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datetimed', {
+						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
 							val: datatimed,
 							ack: true
 						});
@@ -1545,22 +1564,22 @@ class Fritzdect extends utils.Adapter {
 							val: mtd,
 							ack: true
 						});
-						let dtd = obj[1]['stats']['_@attribute'].split(',').map(Number)[0];
+						let dtd = obj['stats'][1]['_@attribute'].split(',').map(Number)[0];
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
-							val: dtd,
+							val: parseInt(dtd),
 							ack: true
 						});
 					} else {
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
-							val: obj['stats']['count'],
+							val: parseInt(obj['stats']['count']),
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
-							val: obj['stats']['grid'],
+							val: parseInt(obj['stats']['grid']),
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
-							val: obj['stats']['datatime'],
+							val: parseInt(obj['stats']['datatime']),
 							ack: true
 						});
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {

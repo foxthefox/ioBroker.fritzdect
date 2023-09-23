@@ -1482,7 +1482,7 @@ class Fritzdect extends utils.Adapter {
 		let devstat = await fritz.getBasicDeviceStats(identifier).catch((e) => this.errorHandlerApi(e));
 		let statsobj = parser.xml2json(devstat);
 		await Promise.all(
-			Object.entries(statsobj.devicetstats).map(async ([ key, obj ]) => {
+			Object.entries(statsobj.devicestats).map(async ([ key, obj ]) => {
 				if (key !== 'temperature') {
 					if (key == 'energy') {
 						//months

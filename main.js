@@ -219,6 +219,7 @@ class Fritzdect extends utils.Adapter {
 										});
 
 										if (deviceswithstat && deviceswithstat.val) {
+											this.log.info('glob state ' + deviceswithstat.val);
 											let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
 											for (let i = 0; i < devstat.length; i++) {
 												this.log.debug('updating device ' + devstat[i]);
@@ -1478,7 +1479,7 @@ class Fritzdect extends utils.Adapter {
 	}
 	async updateStats(identifier, fritz) {
 		this.log.debug('update Stats objects ' + identifier);
-		let devstat = await this.fritz.getBasicDeviceStats(identifier).catch((e) => this.errorHandlerApi(e));
+		let devstat = await fritz.getBasicDeviceStats(identifier).catch((e) => this.errorHandlerApi(e));
 		let statsobj = parser.xml2json(devstat);
 		await Promise.all(
 			Object.entries(statsobj.devicetstats).map(async ([ key, obj ]) => {
@@ -2491,10 +2492,8 @@ class Fritzdect extends utils.Adapter {
 					let oldarr = await this.getStateAsync('global.statdevices').catch((e) => {
 						this.log.warn('problem getting statdevices ' + e);
 					});
-					this.log.info('oldarr = ' + JSON.stringify(oldarr.val));
 					if (oldarr && oldarr.val) {
 						var newarray = [].concat(JSON.parse(String(oldarr.val)), identifier);
-						this.log.info('newarr = ' + JSON.stringify(newarray));
 						await this.setStateAsync('global.statdevices', {
 							val: JSON.stringify(newarray),
 							ack: true

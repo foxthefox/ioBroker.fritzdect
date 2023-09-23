@@ -2488,26 +2488,28 @@ class Fritzdect extends utils.Adapter {
 				// powermeter
 				if (device.powermeter) {
 					this.log.debug('setting up powermeter ');
-
+					// if powermeter then there is a stat available
+					let oldarr = await this.getStateAsync('global.statdevices').catch((e) => {
+						this.log.warn('problem getting statdevices ' + e);
+					});
+					this.log.info('oldarr = ' + oldarr.val);
+					if (oldarr && oldarr.val) {
+						var newarray = [];
+						this.log.info('newarr1 = ' + JSON.stringify(newarray));
+						this.log.info('oldarr1str = ' + String(oldarr.val));
+						this.log.info('oldarr2str = ' + JSON.stringify(JSON.parse(String(oldarr.val))));
+						newarray.push(JSON.parse(String(oldarr.val)));
+						this.log.info('newarr2 = ' + JSON.stringify(newarray));
+						this.log.info('newarr3 = ' + JSON.stringify(newarray.push(identifier)));
+						this.log.info('ident = ' + identifier);
+						await this.setStateAsync('global.statdevices', {
+							val: JSON.stringify(newarray.push(identifier)),
+							ack: true
+						});
+					}
 					await Promise.all(
 						Object.keys(device.powermeter).map(async (key) => {
 							//await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
-							// if powermeter then there is a stat available
-							let oldarr = await this.getStateAsync('global.statdevices').catch((e) => {
-								this.log.warn('problem getting statdevices ' + e);
-							});
-							this.log.info('oldarr = ' + oldarr.val);
-							if (oldarr && oldarr.val) {
-								var newarray = [];
-								this.log.info('newarr = ' + newarray);
-								newarray.push(JSON.parse(String(oldarr.val)));
-								this.log.info('newarr2 = ' + newarray);
-								this.log.info('newarr3 = ' + JSON.stringify(newarray.push(identifier)));
-								await this.setStateAsync('global.statdevices', {
-									val: JSON.stringify(newarray.push(identifier)),
-									ack: true
-								});
-							}
 							if (key === 'power') {
 								await this.createValueState(identifier, 'power', 'actual Power', 0, 4000, 'W');
 								await this.setStateAsync('DECT_' + identifier + '.power', {

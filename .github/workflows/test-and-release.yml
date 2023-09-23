@@ -22,8 +22,7 @@ jobs:
 
         strategy:
             matrix:
-                node-version: [16.x]
-
+                node-version: [18.x]
         steps:
             - name: Checkout code
               uses: actions/checkout@v3
@@ -50,7 +49,7 @@ jobs:
         runs-on: ${{ matrix.os }}
         strategy:
             matrix:
-                node-version: [16, 18]
+                node-version: [18]
                 os: [ubuntu-latest, windows-latest, macos-latest]
 
         steps:

@@ -2497,7 +2497,8 @@ class Fritzdect extends utils.Adapter {
 								this.log.warn('problem getting statdevices ' + e);
 							});
 							if (oldarr && oldarr.val) {
-								var newarray = JSON.parse(String(oldarr.val));
+								var newarray = [];
+								newarray.push(JSON.parse(String(oldarr.val)));
 								await this.setStateAsync('global.statdevices', {
 									val: JSON.stringify(newarray.push(identifier)),
 									ack: true

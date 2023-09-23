@@ -157,6 +157,23 @@ The datapoints are created on the basis of the returned values of the Fritz AHA 
 |*enpositionsset*|boolean|-|status configuration | | | | | |Blinds| |
 |*mode*|text|-|modus | | | | | |Blinds| |
 
+### stats (part of device)
+|Object|Value|settable|Description|
+|--------|-------|:-:|--------|
+|count|number|-|count of the values in array|
+|grid|number|-|time between values in array in s|
+|datatime|number|-|reference timestamp for array|
+|stats|array|-|array of values|
+
+Above is available for power and voltage. 
+Additional the energy has monthly and daily array and their belonging descriptive data.
+Furthermore for energy the array values are summed up for:
+* today
+* last 31 days
+* month to date
+* last 12 month
+* year to date 
+
 ### groups
 |Object|Value|settable|Description|
 |--------|-------|:-:|--------|

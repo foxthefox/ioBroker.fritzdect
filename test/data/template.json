@@ -1,0 +1,76 @@
+{
+	"template": [
+		{
+			"identifier": "tmp5665DB-3F25643BD",
+			"id": "60018",
+			"functionbitmask": "0",
+			"autocreate": "0",
+			"applymask": [ "8192", { "guest_wifi": "" } ],
+			"name": "Gäste WLAN EIN",
+			"metadata": "",
+			"devices": "",
+			"triggers": "",
+			"sub_templates": ""
+		},
+		{
+			"identifier": "tmp5665DB-3F2564404",
+			"id": "60030",
+			"functionbitmask": "16384",
+			"autocreate": "0",
+			"applymask": [ "2048", { "sub_templates": "" } ],
+			"name": "WLAN Gäste EIN",
+			"metadata": { "type": "generic", "icon": 3 },
+			"devices": "",
+			"triggers": "",
+			"sub_templates": { "template": { "identifier": "tmp5665DB-3F25643BD" } }
+		},
+		{
+			"identifier": "tmp5665DB-3A12B8D82",
+			"id": "60001",
+			"functionbitmask": "320",
+			"autocreate": "0",
+			"applymask": [ "2", { "hkr_summer": "" } ],
+			"name": "alles aus",
+			"metadata": "",
+			"devices": "",
+			"triggers": "",
+			"sub_templates": ""
+		},
+		{
+			"identifier": "tmp5665DB-3E6BC84CE",
+			"id": "60004",
+			"functionbitmask": "16384",
+			"autocreate": "0",
+			"applymask": [ "2048", { "sub_templates": "" } ],
+			"name": "testSzenario",
+			"metadata": { "type": "generic", "icon": 3 },
+			"devices": "",
+			"triggers": "",
+			"sub_templates": { "template": { "identifier": "tmp5665DB-3A12B8D82" } }
+		},
+		{
+			"identifier": "tmp5665DB-3A1C9EFDD",
+			"id": "60003",
+			"functionbitmask": "35456",
+			"autocreate": "0",
+			"applymask": [ "64", { "relay_automatic": "" } ],
+			"name": "vorlage210200",
+			"metadata": "",
+			"devices": { "device": [ { "identifier": "08761 0006102" }, { "identifier": "11657 0074380" } ] },
+			"triggers": "",
+			"sub_templates": ""
+		},
+		{
+			"identifier": "tmp5665DB-3A1C9EC6F",
+			"id": "60002",
+			"functionbitmask": "35456",
+			"autocreate": "0",
+			"applymask": [ "64", { "relay_automatic": "" } ],
+			"name": "vorlage_dect200",
+			"metadata": "",
+			"devices": { "device": { "identifier": "08761 0006102" } },
+			"triggers": "",
+			"sub_templates": ""
+		}
+	]
+}

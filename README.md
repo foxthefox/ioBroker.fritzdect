@@ -217,11 +217,14 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.5.1
+* correction for energy today value
+
 ### 2.5.0
 * getbasicdevicestats for powermeter (voltage, power, energy)
 * derived values from energy stats -> year to date, month to date, last 12 month, last 31 days, todays accumulation
 
-### 2.4.1
+### 2.4.1 (npm)
 * corrections reported by adapter-checker
 
 ### 2.4.0

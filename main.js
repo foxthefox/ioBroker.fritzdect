@@ -1543,7 +1543,7 @@ class Fritzdect extends utils.Adapter {
 							val: parseInt(obj['stats'][1]['grid']),
 							ack: true
 						});
-						let datatimed = parseInt(obj['stats'][0]['datatime']);
+						let datatimed = parseInt(obj['stats'][1]['datatime']);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
 							val: datatimed,
 							ack: true
@@ -1551,6 +1551,11 @@ class Fritzdect extends utils.Adapter {
 						let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
 							val: JSON.stringify(dayarr),
+							ack: true
+						});
+						// dayvalue here, because the mtd alters the array
+						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
+							val: parseInt(dayarr[0]),
 							ack: true
 						});
 						let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
@@ -1562,10 +1567,6 @@ class Fritzdect extends utils.Adapter {
 						let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
 						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
 							val: mtd,
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
-							val: parseInt(dayarr[0]),
 							ack: true
 						});
 					} else {

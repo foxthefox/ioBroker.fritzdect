@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.5.0",
+        "version": "2.5.1",
         "news": {
+            "2.5.1": {
+                "en": "correction for energy today value",
+                "de": "Korrektur für den heutigen Energiewert",
+                "ru": "поправка на сегодняшнюю стоимость энергии",
+                "pt": "correção para valor de energia hoje",
+                "nl": "correctie voor de huidige energiewaarde",
+                "fr": "correction de la valeur de l'énergie aujourd'hui",
+                "it": "correzione per il valore dell'energia oggi",
+                "es": "Corrección del valor de energía de hoy.",
+                "pl": "korekta dzisiejszej wartości energii",
+                "uk": "поправка на сьогоднішнє значення енергії",
+                "zh-cn": "今日能源值修正"
+            },
             "2.5.0": {
                 "en": "getbasicdevicestats for powermeter (voltage, power, energy)",
                 "de": "getbasicdevicestats für Leistungsmesser (Spannung, Leistung, Energie)",

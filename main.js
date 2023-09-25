@@ -1676,7 +1676,9 @@ class Fritzdect extends utils.Adapter {
 							}
 						} else if (key == 'komfort' || key == 'absenk' || key == 'tist' || key == 'tchange') {
 							// if.old?
-
+							/* old variant 2.5.1
+							//neue Interpretation, die obigen temperaturen sollten kein Einfluß auf den Mode haben
+							//da im Thermostat beim Triggern das tsoll entsprechend eingestellt wird
 							if (value == 253) {
 								this.log.debug('DECT_' + ain + ' with value ' + key + ' : ' + 'mode => Closed');
 								await this.setStateAsync('DECT_' + ain + '.' + 'hkrmode', {
@@ -1716,7 +1718,26 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									});
 								}
+								
 							}
+							*/
+							let newtemp = 0;
+							if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
+								if (value < 57) {
+									newtemp = parseFloat(value) / 2;
+								} else if (value == 253) {
+									newtemp = 8;
+								} else {
+									newtemp = 32;
+								}
+							}
+							this.log.debug(
+								'updating data DECT_' + ain + ' : ' + key + ' new: ' + newtemp + ' old: ' + old.val
+							);
+							await this.setStateAsync('DECT_' + ain + '.' + key, {
+								val: newtemp,
+								ack: true
+							});
 						} else if (key == 'humidity') {
 							//e.g humidity
 							if (old.val !== parseFloat(value) || !this.config.fritz_writeonhyst) {
@@ -2700,16 +2721,45 @@ class Fritzdect extends utils.Adapter {
 									32,
 									'°C'
 								);
-								await this.setStateAsync('DECT_' + identifier + '.absenk', {
-									val: parseFloat(device.hkr.absenk) / 2,
-									ack: true
-								});
+								if (device.hkr.absenk < 57) {
+									//war tsoll
+									await this.setStateAsync('DECT_' + identifier + '.absenk', {
+										val: parseFloat(device.hkr.absenk) / 2,
+										ack: true
+									});
+								} else {
+									if (device.hkr.absenk == 253) {
+										await this.setStateAsync('DECT_' + identifier + '.absenk', {
+											val: 8,
+											ack: true
+										});
+									} else {
+										await this.setStateAsync('DECT_' + identifier + '.absenk', {
+											val: 32,
+											ack: true
+										});
+									}
+								}
 							} else if (key === 'komfort') {
 								await this.createValueState(identifier, 'komfort', 'comfort temperature', 8, 32, '°C');
-								await this.setStateAsync('DECT_' + identifier + '.komfort', {
-									val: parseFloat(device.hkr.komfort) / 2,
-									ack: true
-								});
+								if (device.hkr.komfort < 57) {
+									await this.setStateAsync('DECT_' + identifier + '.komfort', {
+										val: parseFloat(device.hkr.komfort) / 2,
+										ack: true
+									});
+								} else {
+									if (device.hkr.komfort == 253) {
+										await this.setStateAsync('DECT_' + identifier + '.komfort', {
+											val: 8,
+											ack: true
+										});
+									} else {
+										await this.setStateAsync('DECT_' + identifier + '.komfort', {
+											val: 32,
+											ack: true
+										});
+									}
+								}
 							} else if (key === 'lock') {
 								await this.createIndicatorState(identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked
 								await this.setStateAsync('DECT_' + identifier + '.lock', {

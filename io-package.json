@@ -3,6 +3,19 @@
         "name": "fritzdect",
         "version": "2.5.1",
         "news": {
+            "2.5.2": {
+                "en": "correction for komfort, absenk if receiving 253/254 for OFF/ON",
+                "de": "Korrektur für Komfort, Abwesenheit bei Empfang von 253/254 für AUS/EIN",
+                "ru": "поправка на комфорт, абсенк при получении 253/254 на ВЫКЛ/ВКЛ",
+                "pt": "correção para conforto, ausente se receber 253/254 para OFF/ON",
+                "nl": "correctie voor comfort, afwezig bij ontvangst van 253/254 voor UIT/AAN",
+                "fr": "correction pour le confort, absenk si réception 253/254 pour OFF/ON",
+                "it": "correzione per comfort, assente se si riceve 253/254 per OFF/ON",
+                "es": "corrección para comodidad, ausente si recibe 253/254 para APAGADO/ENCENDIDO",
+                "pl": "korekta dla komfortu, absenk w przypadku odbioru 253/254 dla WYŁ./WŁ",
+                "uk": "поправка на комфорт, відсутність при отриманні 253/254 для ВИМК/УВІМК",
+                "zh-cn": "修正 komfort，如果收到 253/254 的 OFF/ON，则缺席"
+            },
             "2.5.1": {
                 "en": "correction for energy today value",
                 "de": "Korrektur für den heutigen Energiewert",

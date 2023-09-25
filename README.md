@@ -217,6 +217,9 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.5.2
+* correction for komfort, absenk if receiving 253/254 for OFF/ON
+
 ### 2.5.1
 * correction for energy today value
 

@@ -1725,10 +1725,8 @@ class Fritzdect extends utils.Adapter {
 							if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
 								if (value < 57) {
 									newtemp = parseFloat(value) / 2;
-								} else if (value == 253) {
-									newtemp = 8;
 								} else {
-									newtemp = 32;
+									newtemp = NaN;
 								}
 							}
 							this.log.debug(
@@ -2728,17 +2726,11 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									});
 								} else {
-									if (device.hkr.absenk == 253) {
-										await this.setStateAsync('DECT_' + identifier + '.absenk', {
-											val: 8,
-											ack: true
-										});
-									} else {
-										await this.setStateAsync('DECT_' + identifier + '.absenk', {
-											val: 32,
-											ack: true
-										});
-									}
+									// Off or ON willl be NaN
+									await this.setStateAsync('DECT_' + identifier + '.absenk', {
+										val: NaN,
+										ack: true
+									});
 								}
 							} else if (key === 'komfort') {
 								await this.createValueState(identifier, 'komfort', 'comfort temperature', 8, 32, '°C');
@@ -2748,17 +2740,11 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									});
 								} else {
-									if (device.hkr.komfort == 253) {
-										await this.setStateAsync('DECT_' + identifier + '.komfort', {
-											val: 8,
-											ack: true
-										});
-									} else {
-										await this.setStateAsync('DECT_' + identifier + '.komfort', {
-											val: 32,
-											ack: true
-										});
-									}
+									// Off or ON willl be NaN
+									await this.setStateAsync('DECT_' + identifier + '.komfort', {
+										val: NaN,
+										ack: true
+									});
 								}
 							} else if (key === 'lock') {
 								await this.createIndicatorState(identifier, 'lock', 'Thermostat UI/API lock'); //thermostat lock 0=unlocked, 1=locked

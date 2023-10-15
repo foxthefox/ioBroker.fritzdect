@@ -238,10 +238,10 @@ class Fritzdect extends utils.Adapter {
 										});
 
 										if (deviceswithstat && deviceswithstat.val) {
-											this.log.info('glob state ' + deviceswithstat.val);
+											this.log.debug('glob state ' + deviceswithstat.val);
 											let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
 											for (let i = 0; i < devstat.length; i++) {
-												this.log.debug('updating device ' + devstat[i]);
+												this.log.debug('updating Stats of device ' + devstat[i]);
 												await this.updateStats(devstat[i], this.fritz);
 											}
 										}
@@ -1020,7 +1020,7 @@ class Fritzdect extends utils.Adapter {
 									// device.identifier = device.identifier.replace(/\s/g, '');
 									return device;
 								});
-								result = devices;
+								result.push(devices);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1046,7 +1046,7 @@ class Fritzdect extends utils.Adapter {
 									// group.identifier = group.identifier.replace(/\s/g, '');
 									return group;
 								});
-								result = groups;
+								result.push(groups);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1073,7 +1073,7 @@ class Fritzdect extends utils.Adapter {
 										// template.identifier = group.identifier.replace(/\s/g, '');
 										return template;
 									});
-								result = templates;
+								result.push(templates);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1096,7 +1096,7 @@ class Fritzdect extends utils.Adapter {
 								trigger = [].concat((trigger.triggerlist || {}).trigger || []).map((trigger) => {
 									return trigger;
 								});
-								result = trigger;
+								result.push(trigger);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1112,24 +1112,27 @@ class Fritzdect extends utils.Adapter {
 						wait = true;
 						break;
 					case 'statistic':
-						this.fritz
-							.getBasicDeviceStats(obj.message) //ain muß übergeben werden aus message
-							.then(function(statisticinfos) {
-								//obj.message should be ain of device requested
-								const devicestats = parser.xml2json(statisticinfos);
-								result = devicestats;
-							})
-							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting statistics',
-									function: 'onMessage',
-									error: e
-								};
-							});
+						const deviceswithstat = await this.getStateAsync('global.statdevices').catch((e) => {
+							this.log.warn('problem getting statdevices ' + e);
+						});
+						//let result = '';
+						if (deviceswithstat && deviceswithstat.val) {
+							this.log.debug('msg statistics ' + deviceswithstat.val);
+							let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
+							for (let i = 0; i < devstat.length; i++) {
+								let stats = await this.fritz.getBasicDeviceStats(devstat[i]).catch((e) => {
+									this.log.debug('error calling in msgbox');
+									throw {
+										msg: 'issue getting statistics',
+										function: 'onMessage',
+										error: e
+									};
+								});
+								let statsobj = parser.xml2json(stats);
+								result.push(statsobj);
+							}
+						}
+						if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
 						wait = true;
 						break;
 					case 'color':
@@ -1137,7 +1140,7 @@ class Fritzdect extends utils.Adapter {
 							.getColorDefaults()
 							.then(function(colorinfos) {
 								let colors = parser.xml2json(colorinfos);
-								result = colors;
+								result.push(colors);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1157,7 +1160,7 @@ class Fritzdect extends utils.Adapter {
 							.getUserPermissions()
 							.then(function(rights) {
 								const permission = parser.xml2json(rights);
-								result = permission;
+								result.push(permission);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);

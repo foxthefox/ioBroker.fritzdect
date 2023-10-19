@@ -1,155 +1,182 @@
 {
-	"common": {
-		"name": "fritzdect",
-		"version": "2.5.2",
-		"news": {
-			"2.5.2": {
-				"en": "correction for komfort, absenk if receiving 253/254 for OFF/ON",
-				"de": "Korrektur für Komfort, Abwesenheit bei Empfang von 253/254 für AUS/EIN",
-				"ru": "поправка на комфорт, абсенк при получении 253/254 на ВЫКЛ/ВКЛ",
-				"pt": "correção para conforto, ausente se receber 253/254 para OFF/ON",
-				"nl": "correctie voor comfort, afwezig bij ontvangst van 253/254 voor UIT/AAN",
-				"fr": "correction pour le confort, absenk si réception 253/254 pour OFF/ON",
-				"it": "correzione per comfort, assente se si riceve 253/254 per OFF/ON",
-				"es": "corrección para comodidad, ausente si recibe 253/254 para APAGADO/ENCENDIDO",
-				"pl": "korekta dla komfortu, absenk w przypadku odbioru 253/254 dla WYŁ./WŁ",
-				"uk": "поправка на комфорт, відсутність при отриманні 253/254 для ВИМК/УВІМК",
-				"zh-cn": "修正 komfort，如果收到 253/254 的 OFF/ON，则缺席"
-			},
-			"2.5.1": {
-				"en": "correction for energy today value",
-				"de": "Korrektur für den heutigen Energiewert",
-				"ru": "поправка на сегодняшнюю стоимость энергии",
-				"pt": "correção para valor de energia hoje",
-				"nl": "correctie voor de huidige energiewaarde",
-				"fr": "correction de la valeur de l'énergie aujourd'hui",
-				"it": "correzione per il valore dell'energia oggi",
-				"es": "Corrección del valor de energía de hoy.",
-				"pl": "korekta dzisiejszej wartości energii",
-				"uk": "поправка на сьогоднішнє значення енергії",
-				"zh-cn": "今日能源值修正"
-			},
-			"2.5.0": {
-				"en": "getbasicdevicestats for powermeter (voltage, power, energy)",
-				"de": "getbasicdevicestats für Leistungsmesser (Spannung, Leistung, Energie)",
-				"ru": "getbasicdevicestats для измерителя мощности (напряжение, мощность, энергия)",
-				"pt": "getbasicdevicestats para medidor de energia (tensão, potência, energia)",
-				"nl": "krijg basisapparaatstatistieken voor vermogensmeter (spanning, vermogen, energie)",
-				"fr": "getbasicdevicestats pour le powermeter (tension, puissance, énergie)",
-				"it": "getbasicdevicestats per misuratore di potenza (tensione, potenza, energia)",
-				"es": "getbasicdevicestats para medidor de potencia (voltaje, potencia, energía)",
-				"pl": "getbasicdevicestats dla miernika mocy (napięcie, moc, energia)",
-				"uk": "getbasicdevicestats для вимірювача потужності (напруга, потужність, енергія)",
-				"zh-cn": "getbasicdevicestats 功率计（电压、功率、能量）"
-			},
-			"2.4.1": {
-				"en": "correctionts reported by adapter-checker",
-				"de": "von adapter-checker gemeldete korrekturen",
-				"ru": "коррекции, представленные адаптером-чеком",
-				"pt": "correções relatadas pelo verificador do adaptador",
-				"nl": "vertaling:",
-				"fr": "corrections signalées par le contrôleur de l'adaptateur",
-				"it": "correzioni segnalate da adattatore-checker",
-				"es": "correcciones notificadas por adaptador",
-				"pl": "poprawki doniesione przez adjuster-checker",
-				"uk": "виправлень, які повідомляються перехідником",
-				"zh-cn": "适应者报告的管教"
-			},
-			"2.4.0": {
-				"en": "new function for routines, correction for templates",
-				"de": "neue funktion für routinen, korrektur für vorlagen",
-				"ru": "новая функция для рутин, коррекция для шаблонов",
-				"pt": "nova função para rotinas, correção para modelos",
-				"nl": "nieuwe functie voor routines, correctie voor templates",
-				"fr": "nouvelle fonction pour les routines, correction pour les modèles",
-				"it": "nuova funzione per le routine, correzione per i modelli",
-				"es": "nueva función para rutinas, corrección para plantillas",
-				"pl": "nowe funkcje dla rutynów, poprawki do szablonów",
-				"uk": "нова функція для рутин, виправлення шаблонів",
-				"zh-cn": "例行的新职能,模板的更正"
-			},
-			"2.3.1": {
-				"en": "fault correction on xml2json conversion at templates from newer FB firmware",
-				"de": "Fehlerkorrektur bei xml2json Konvertierung bei Vorlagen aus neuerer FB Firmware",
-				"ru": "коррекция неисправности на конверсии xml2json в шаблонах от новой прошивки FB",
-				"pt": "correção de falha na conversão xml2json em modelos de firmware FB mais recente",
-				"nl": "vertaling:",
-				"fr": "correction de la faute sur la conversion xml2json à des modèles du nouveau firmware FB",
-				"it": "correzione guasto sulla conversione xml2json a modelli dal nuovo firmware FB",
-				"es": "corrección de fallas en la conversión de xml2json en plantillas de firmware FB más reciente",
-				"pl": "poprawka w błędzie na konwersji xml2json w szablonach od nowszego FB",
-				"uk": "виправлення несправностей на xml2json перетворення на шаблони з нової прошивки FB",
-				"zh-cn": "fB公司新软件的模板对×ml2json转换的错误"
-			}
-		},
-		"title": "fritzbox DECT",
-		"titleLang": {
-			"en": "fritzbox dect ",
-			"de": "fritzbox dect",
-			"ru": "fritzbox дект",
-			"pt": "fritzbox dect",
-			"nl": "flitzbox dect",
-			"fr": "fritzbox dect",
-			"it": "fritzbox dect",
-			"es": "fritzbox dect",
-			"pl": "fritzbox dect",
-			"uk": "фріцбокс дект",
-			"zh-cn": "摩茨箱"
-		},
-		"desc": {
-			"en": "connects DECT ULE devices (fritzdect) to ioBroker",
-			"de": "verbindet DECT ULE Geräte (fritzdect) mit ioBroker",
-			"ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
-			"pt": "conecta dispositivos DECT ULE (fritzdect) ao ioBroker",
-			"nl": "verbindt DECT ULE apparaten met ioBroker",
-			"fr": "connecte les appareils DECT ULE (fritzdect) à ioBroker",
-			"it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
-			"es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
-			"pl": "łączy DECT ULE (fritzdect) z ioBrokerem",
-			"uk": "з'єднання пристроїв DECT ULE (фрицдект) до ioBroker",
-			"zh-cn": "broker的连接"
-		},
-		"authors": [ "foxthefox <foxthefox@wysiwis.net>" ],
-		"docs": {
-			"de": "docs/de/install.md"
-		},
-		"keywords": [ "DECT ULE", "lighting", "heating", "switching", "fritzbox", "AVM" ],
-		"license": "MIT",
-		"platform": "Javascript/Node.js",
-		"main": "main.js",
-		"icon": "fritzdect_logo.png",
-		"enabled": false,
-		"extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
-		"readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
-		"loglevel": "info",
-		"restartAdapters": [ "vis" ],
-		"mode": "daemon",
-		"type": "hardware",
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"materialize": true,
-		"supportCustoms": false,
-		"dependencies": [
-			{
-				"js-controller": ">=2.0.0"
-			}
-		]
-	},
-	"native": {
-		"fritz_ip": "http://192.168.x.x",
-		"fritz_user": "admin",
-		"fritz_pw": "pw",
-		"fritz_interval": 300,
-		"fritz_options": null,
-		"fritz_writeonhyst": false,
-		"fritz_analogchange": true,
-		"fritz_hysteresis": 1,
-		"fritz_boosttime": 5,
-		"fritz_windowtime": 5,
-		"fritz_tsolldefault": 23
-	},
-	"objects": [],
-	"instanceObjects": []
+    "common": {
+        "name": "fritzdect",
+        "version": "2.5.3",
+        "news": {
+            "2.5.3": {
+                "en": "correction for komfort, absenk; correction ytd; new exclusion for template/routines/statistics",
+                "de": "Korrektur für Komfort, Abwesenheit; Korrektur ytd; Neue Ausschlussvorlage/Routinen/Statistiken",
+                "ru": "поправка на комфорт, абсенк; коррекция с начала года; новый шаблон/процедуры/статистика исключения",
+                "pt": "correção para conforto, ausência; correção acumulada no ano; novo modelo/rotinas/estatísticas de exclusão",
+                "nl": "correctie voor comfort, afwezig; correctie jaar; nieuwe uitsluitingssjabloon/routines/statistieken",
+                "fr": "correction pour confort, absence; correction depuis le début de l'année ; nouveaux modèles/routines/statistiques d'exclusion",
+                "it": "correzione per comfort, assenza; correzione da inizio anno; nuovo modello/routine/statistiche di esclusione",
+                "es": "corrección por comodidad, ausencia; corrección hasta la fecha; nueva plantilla/rutinas/estadísticas de exclusión",
+                "pl": "poprawka dla komfortu, absenk; korekta na początku; nowy szablon/procedury/statystyki wykluczeń",
+                "uk": "поправка на комфорт, абсенк; корекція ytd; новий шаблон виключення/процедури/статистика",
+                "zh-cn": "修正 kofort、absenk；年初至今的修正；新的排除模板/例程/统计"
+            },
+            "2.5.2": {
+                "en": "correction for komfort, absenk if receiving 253/254 for OFF/ON",
+                "de": "Korrektur für Komfort, Abwesenheit bei Empfang von 253/254 für AUS/EIN",
+                "ru": "поправка на комфорт, абсенк при получении 253/254 на ВЫКЛ/ВКЛ",
+                "pt": "correção para conforto, ausente se receber 253/254 para OFF/ON",
+                "nl": "correctie voor comfort, afwezig bij ontvangst van 253/254 voor UIT/AAN",
+                "fr": "correction pour le confort, absenk si réception 253/254 pour OFF/ON",
+                "it": "correzione per comfort, assente se si riceve 253/254 per OFF/ON",
+                "es": "corrección para comodidad, ausente si recibe 253/254 para APAGADO/ENCENDIDO",
+                "pl": "korekta dla komfortu, absenk w przypadku odbioru 253/254 dla WYŁ./WŁ",
+                "uk": "поправка на комфорт, відсутність при отриманні 253/254 для ВИМК/УВІМК",
+                "zh-cn": "修正 komfort，如果收到 253/254 的 OFF/ON，则缺席"
+            },
+            "2.5.1": {
+                "en": "correction for energy today value",
+                "de": "Korrektur für den heutigen Energiewert",
+                "ru": "поправка на сегодняшнюю стоимость энергии",
+                "pt": "correção para valor de energia hoje",
+                "nl": "correctie voor de huidige energiewaarde",
+                "fr": "correction de la valeur de l'énergie aujourd'hui",
+                "it": "correzione per il valore dell'energia oggi",
+                "es": "Corrección del valor de energía de hoy.",
+                "pl": "korekta dzisiejszej wartości energii",
+                "uk": "поправка на сьогоднішнє значення енергії",
+                "zh-cn": "今日能源值修正"
+            },
+            "2.5.0": {
+                "en": "getbasicdevicestats for powermeter (voltage, power, energy)",
+                "de": "getbasicdevicestats für Leistungsmesser (Spannung, Leistung, Energie)",
+                "ru": "getbasicdevicestats для измерителя мощности (напряжение, мощность, энергия)",
+                "pt": "getbasicdevicestats para medidor de energia (tensão, potência, energia)",
+                "nl": "krijg basisapparaatstatistieken voor vermogensmeter (spanning, vermogen, energie)",
+                "fr": "getbasicdevicestats pour le powermeter (tension, puissance, énergie)",
+                "it": "getbasicdevicestats per misuratore di potenza (tensione, potenza, energia)",
+                "es": "getbasicdevicestats para medidor de potencia (voltaje, potencia, energía)",
+                "pl": "getbasicdevicestats dla miernika mocy (napięcie, moc, energia)",
+                "uk": "getbasicdevicestats для вимірювача потужності (напруга, потужність, енергія)",
+                "zh-cn": "getbasicdevicestats 功率计（电压、功率、能量）"
+            },
+            "2.4.1": {
+                "en": "correctionts reported by adapter-checker",
+                "de": "von adapter-checker gemeldete korrekturen",
+                "ru": "коррекции, представленные адаптером-чеком",
+                "pt": "correções relatadas pelo verificador do adaptador",
+                "nl": "vertaling:",
+                "fr": "corrections signalées par le contrôleur de l'adaptateur",
+                "it": "correzioni segnalate da adattatore-checker",
+                "es": "correcciones notificadas por adaptador",
+                "pl": "poprawki doniesione przez adjuster-checker",
+                "uk": "виправлень, які повідомляються перехідником",
+                "zh-cn": "适应者报告的管教"
+            },
+            "2.4.0": {
+                "en": "new function for routines, correction for templates",
+                "de": "neue funktion für routinen, korrektur für vorlagen",
+                "ru": "новая функция для рутин, коррекция для шаблонов",
+                "pt": "nova função para rotinas, correção para modelos",
+                "nl": "nieuwe functie voor routines, correctie voor templates",
+                "fr": "nouvelle fonction pour les routines, correction pour les modèles",
+                "it": "nuova funzione per le routine, correzione per i modelli",
+                "es": "nueva función para rutinas, corrección para plantillas",
+                "pl": "nowe funkcje dla rutynów, poprawki do szablonów",
+                "uk": "нова функція для рутин, виправлення шаблонів",
+                "zh-cn": "例行的新职能,模板的更正"
+            },
+            "2.3.1": {
+                "en": "fault correction on xml2json conversion at templates from newer FB firmware",
+                "de": "Fehlerkorrektur bei xml2json Konvertierung bei Vorlagen aus neuerer FB Firmware",
+                "ru": "коррекция неисправности на конверсии xml2json в шаблонах от новой прошивки FB",
+                "pt": "correção de falha na conversão xml2json em modelos de firmware FB mais recente",
+                "nl": "vertaling:",
+                "fr": "correction de la faute sur la conversion xml2json à des modèles du nouveau firmware FB",
+                "it": "correzione guasto sulla conversione xml2json a modelli dal nuovo firmware FB",
+                "es": "corrección de fallas en la conversión de xml2json en plantillas de firmware FB más reciente",
+                "pl": "poprawka w błędzie na konwersji xml2json w szablonach od nowszego FB",
+                "uk": "виправлення несправностей на xml2json перетворення на шаблони з нової прошивки FB",
+                "zh-cn": "fB公司新软件的模板对×ml2json转换的错误"
+            }
+        },
+        "title": "fritzbox DECT",
+        "titleLang": {
+            "en": "fritzbox dect ",
+            "de": "fritzbox dect",
+            "ru": "fritzbox дект",
+            "pt": "fritzbox dect",
+            "nl": "flitzbox dect",
+            "fr": "fritzbox dect",
+            "it": "fritzbox dect",
+            "es": "fritzbox dect",
+            "pl": "fritzbox dect",
+            "uk": "фріцбокс дект",
+            "zh-cn": "摩茨箱"
+        },
+        "desc": {
+            "en": "connects DECT ULE devices (fritzdect) to ioBroker",
+            "de": "verbindet DECT ULE Geräte (fritzdect) mit ioBroker",
+            "ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
+            "pt": "conecta dispositivos DECT ULE (fritzdect) ao ioBroker",
+            "nl": "verbindt DECT ULE apparaten met ioBroker",
+            "fr": "connecte les appareils DECT ULE (fritzdect) à ioBroker",
+            "it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
+            "es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
+            "pl": "łączy DECT ULE (fritzdect) z ioBrokerem",
+            "uk": "з'єднання пристроїв DECT ULE (фрицдект) до ioBroker",
+            "zh-cn": "broker的连接"
+        },
+        "authors": [
+            "foxthefox <foxthefox@wysiwis.net>"
+        ],
+        "docs": {
+            "de": "docs/de/install.md"
+        },
+        "keywords": [
+            "DECT ULE",
+            "lighting",
+            "heating",
+            "switching",
+            "fritzbox",
+            "AVM"
+        ],
+        "license": "MIT",
+        "platform": "Javascript/Node.js",
+        "main": "main.js",
+        "icon": "fritzdect_logo.png",
+        "enabled": false,
+        "extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
+        "readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
+        "loglevel": "info",
+        "restartAdapters": [
+            "vis"
+        ],
+        "mode": "daemon",
+        "type": "hardware",
+        "compact": true,
+        "messagebox": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "materialize": true,
+        "supportCustoms": false,
+        "dependencies": [
+            {
+                "js-controller": ">=2.0.0"
+            }
+        ]
+    },
+    "native": {
+        "fritz_ip": "http://192.168.x.x",
+        "fritz_user": "admin",
+        "fritz_pw": "pw",
+        "fritz_interval": 300,
+        "fritz_options": null,
+        "fritz_writeonhyst": false,
+        "fritz_analogchange": true,
+        "fritz_hysteresis": 1,
+        "fritz_boosttime": 5,
+        "fritz_windowtime": 5,
+        "fritz_tsolldefault": 23,
+        "fritz_exclude_templates": false,
+        "fritz_exclude_routines": false,
+        "fritz_exclude_stats": false
+    },
+    "objects": [],
+    "instanceObjects": []
 }

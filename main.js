@@ -154,6 +154,9 @@ class Fritzdect extends utils.Adapter {
 			settings.windowtime = this.windowtime = this.config.fritz_windowtime;
 			settings.tsolldefault = this.tsolldefault = this.config.fritz_tsolldefault;
 			settings.fritz_writeonhyst = this.fritz_writeonhyst = this.config.fritz_writeonhyst;
+			settings.exclude_templates = this.exclude_templates = this.config.fritz_exclude_templates;
+			settings.exclude_routines = this.exclude_routines = this.config.fritz_exclude_routines;
+			settings.exclude_stats = this.exclude_stats = this.config.fritz_exclude_stats;
 
 			// The adapters config (in the instance object everything under the attribute "native") is accessible via
 			// this.config:
@@ -212,12 +215,16 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished creating devices/groups (if any)');
-							this.log.info('start creating templates ');
-							await this.createTemplates(this.fritz).catch((e) => this.errorHandlerAdapter(e));
-							this.log.info('finished creating templates (if any) ');
-							this.log.info('start creating routines ');
-							await this.createRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
-							this.log.info('finished creating routines (if any) ');
+							if (!settings.exclude_templates) {
+								this.log.info('start creating templates ');
+								await this.createTemplates(this.fritz).catch((e) => this.errorHandlerAdapter(e));
+								this.log.info('finished creating templates (if any) ');
+							}
+							if (!settings.exclude_routines) {
+								this.log.info('start creating routines ');
+								await this.createRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
+								this.log.info('finished creating routines (if any) ');
+							}
 							this.log.info('start initial updating devices/groups');
 							await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished initial updating devices/groups');
@@ -228,21 +235,26 @@ class Fritzdect extends utils.Adapter {
 								polling = setInterval(async () => {
 									// poll fritzbox
 									try {
-										this.log.debug('polling! fritzdect is alive');
+										this.log.debug('polling! fritzdect is alive with ' + settings.intervall + ' s');
 										await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
-										await this.updateRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
-										const deviceswithstat = await this.getStateAsync(
-											'global.statdevices'
-										).catch((e) => {
-											this.log.warn('problem getting statdevices ' + e);
-										});
-
-										if (deviceswithstat && deviceswithstat.val) {
-											this.log.info('glob state ' + deviceswithstat.val);
-											let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
-											for (let i = 0; i < devstat.length; i++) {
-												this.log.debug('updating device ' + devstat[i]);
-												await this.updateStats(devstat[i], this.fritz);
+										if (settings.exclude_routines) {
+											await this.updateRoutines(this.fritz).catch((e) =>
+												this.errorHandlerAdapter(e)
+											);
+										}
+										if (!settings.exclude_stats) {
+											const deviceswithstat = await this.getStateAsync(
+												'global.statdevices'
+											).catch((e) => {
+												this.log.warn('problem getting statdevices ' + e);
+											});
+											if (deviceswithstat && deviceswithstat.val) {
+												this.log.debug('glob state ' + deviceswithstat.val);
+												let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
+												for (let i = 0; i < devstat.length; i++) {
+													this.log.debug('updating Stats of device ' + devstat[i]);
+													await this.updateStats(devstat[i], this.fritz);
+												}
 											}
 										}
 									} catch (e) {
@@ -1020,7 +1032,7 @@ class Fritzdect extends utils.Adapter {
 									// device.identifier = device.identifier.replace(/\s/g, '');
 									return device;
 								});
-								result = devices;
+								result.push(devices);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1046,7 +1058,7 @@ class Fritzdect extends utils.Adapter {
 									// group.identifier = group.identifier.replace(/\s/g, '');
 									return group;
 								});
-								result = groups;
+								result.push(groups);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1073,7 +1085,7 @@ class Fritzdect extends utils.Adapter {
 										// template.identifier = group.identifier.replace(/\s/g, '');
 										return template;
 									});
-								result = templates;
+								result.push(templates);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1096,7 +1108,7 @@ class Fritzdect extends utils.Adapter {
 								trigger = [].concat((trigger.triggerlist || {}).trigger || []).map((trigger) => {
 									return trigger;
 								});
-								result = trigger;
+								result.push(trigger);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1112,24 +1124,33 @@ class Fritzdect extends utils.Adapter {
 						wait = true;
 						break;
 					case 'statistic':
-						this.fritz
-							.getBasicDeviceStats(obj.message) //ain muß übergeben werden aus message
-							.then(function(statisticinfos) {
-								//obj.message should be ain of device requested
-								const devicestats = parser.xml2json(statisticinfos);
-								result = devicestats;
-							})
-							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting statistics',
-									function: 'onMessage',
-									error: e
-								};
+						let statfeedback = {};
+						try {
+							const deviceswithstat = await this.getStateAsync('global.statdevices').catch((e) => {
+								this.log.warn('problem getting statdevices ' + e);
 							});
+							if (deviceswithstat && deviceswithstat.val) {
+								this.log.debug('msg statistics ' + deviceswithstat.val);
+								let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
+								for (let i = 0; i < devstat.length; i++) {
+									let stats = await this.fritz.getBasicDeviceStats(devstat[i]).catch((e) => {
+										this.log.debug('error calling in msgbox');
+										throw {
+											msg: 'issue getting statistics',
+											function: 'onMessage',
+											error: e
+										};
+									});
+									let statsobj = parser.xml2json(stats);
+									this.log.debug('processed ' + devstat[i]);
+									statfeedback[devstat[i]] = statsobj;
+								}
+							}
+							result.push(statfeedback);
+						} catch (error) {
+							this.log.warn('problem msg statistics' + error);
+						}
+						if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
 						wait = true;
 						break;
 					case 'color':
@@ -1137,7 +1158,7 @@ class Fritzdect extends utils.Adapter {
 							.getColorDefaults()
 							.then(function(colorinfos) {
 								let colors = parser.xml2json(colorinfos);
-								result = colors;
+								result.push(colors);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1157,7 +1178,7 @@ class Fritzdect extends utils.Adapter {
 							.getUserPermissions()
 							.then(function(rights) {
 								const permission = parser.xml2json(rights);
-								result = permission;
+								result.push(permission);
 							})
 							.then(async () => {
 								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
@@ -1260,14 +1281,22 @@ class Fritzdect extends utils.Adapter {
 					this.log.debug('update routines ' + routines.length);
 					await Promise.all(
 						routines.map(async (routine) => {
-							this.log.debug('__________________________');
-							this.log.debug('updating Routine ' + routine.name);
 							let active = routine.active == 0 ? false : true;
-							await this.setStateAsync('routine_' + routine.identifier.replace(/\s/g, '') + '.active', {
-								val: active,
-								ack: true
-							});
-							this.log.debug('activation is ' + active);
+							let old = await this.getStateAsync(
+								'routine_' + routine.identifier.replace(/\s/g, '') + '.active'
+							);
+							if (old.val !== active || !this.config.fritz_writeonhyst) {
+								this.log.debug('__________________________');
+								this.log.debug('updating Routine ' + routine.name);
+								await this.setStateAsync(
+									'routine_' + routine.identifier.replace(/\s/g, '') + '.active',
+									{
+										val: active,
+										ack: true
+									}
+								);
+								this.log.debug('activation is ' + active);
+							}
 						})
 					);
 				}
@@ -1343,14 +1372,19 @@ class Fritzdect extends utils.Adapter {
 										currentMode = 'Night';
 									}
 									//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
-									await this.setStateAsync(
-										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
-										{
-											val: currentMode,
-											ack: true
-										}
+									let oldval = await this.getStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode'
 									);
-									this.log.debug('preset oprationmode ' + currentMode);
+									if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
+										await this.setStateAsync(
+											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
+											{
+												val: currentMode,
+												ack: true
+											}
+										);
+									}
+									this.log.debug('preset operationmode ' + currentMode);
 								}
 								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 								// some weird id usage, the website shows the id of the etsiunit
@@ -1500,93 +1534,122 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('update Stats objects ' + identifier);
 		let devstat = await fritz.getBasicDeviceStats(identifier).catch((e) => this.errorHandlerApi(e));
 		let statsobj = parser.xml2json(devstat);
+		this.log.debug('With ' + identifier + 'got the following to parse' + JSON.stringify(statsobj));
+		// when device is not plugged in, the temperature and voltage objects are empty
 		await Promise.all(
 			Object.entries(statsobj.devicestats).map(async ([ key, obj ]) => {
 				if (key !== 'temperature') {
+					let old;
 					if (key == 'energy') {
 						//months
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countm', {
-							val: parseInt(obj['stats'][0]['count']),
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridm', {
-							val: parseInt(obj['stats'][0]['grid']),
-							ack: true
-						});
-						let datatimem = parseInt(obj['stats'][0]['datatime']);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimem', {
-							val: datatimem,
-							ack: true
-						});
-						let montharr = obj['stats'][0]['_@attribute'].split(',').map(Number);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_months', {
-							val: JSON.stringify(montharr),
-							ack: true
-						});
-						let last12m = montharr.reduce((pv, cv) => pv + cv, 0);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last12m', {
-							val: last12m,
-							ack: true
-						});
-						let monthnum = parseInt(new Date(datatimem * 1000).toISOString().slice(6, 8));
-						let ytd = montharr.splice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_ytd', {
-							val: ytd,
-							ack: true
-						});
-						// days
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
-							val: parseInt(obj['stats'][1]['count']),
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
-							val: parseInt(obj['stats'][1]['grid']),
-							ack: true
-						});
-						let datatimed = parseInt(obj['stats'][1]['datatime']);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
-							val: datatimed,
-							ack: true
-						});
-						let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
-							val: JSON.stringify(dayarr),
-							ack: true
-						});
-						// dayvalue here, because the mtd alters the array
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
-							val: parseInt(dayarr[0]),
-							ack: true
-						});
-						let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last31d', {
-							val: last31d,
-							ack: true
-						});
-						let daynum = parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10));
-						let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
-							val: mtd,
-							ack: true
-						});
+						if (obj['stats']) {
+							if (obj['stats'][0]) {
+								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.countm');
+								if (old.val !== parseInt(obj['stats'][0]['count'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countm', {
+										val: parseInt(obj['stats'][0]['count']),
+										ack: true
+									});
+								}
+								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.gridm');
+								if (old.val !== parseInt(obj['stats'][0]['grid'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridm', {
+										val: parseInt(obj['stats'][0]['grid']),
+										ack: true
+									});
+								}
+								let datatimem = parseInt(obj['stats'][0]['datatime']);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimem', {
+									val: datatimem,
+									ack: true
+								});
+								let montharr = obj['stats'][0]['_@attribute'].split(',').map(Number);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_months', {
+									val: JSON.stringify(montharr),
+									ack: true
+								});
+								let last12m = montharr.reduce((pv, cv) => pv + cv, 0);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last12m', {
+									val: last12m,
+									ack: true
+								});
+								let monthnum = parseInt(new Date(datatimem * 1000).toISOString().slice(5, 7));
+								let ytd = montharr.splice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_ytd', {
+									val: ytd,
+									ack: true
+								});
+							}
+							// days
+							if (obj['stats'][1]) {
+								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.countd');
+								if (old.val !== parseInt(obj['stats'][1]['count'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
+										val: parseInt(obj['stats'][1]['count']),
+										ack: true
+									});
+								}
+								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd');
+								if (old.val !== parseInt(obj['stats'][1]['grid'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
+										val: parseInt(obj['stats'][1]['grid']),
+										ack: true
+									});
+								}
+								let datatimed = parseInt(obj['stats'][1]['datatime']);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
+									val: datatimed,
+									ack: true
+								});
+								let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
+									val: JSON.stringify(dayarr),
+									ack: true
+								});
+								// dayvalue here, because the mtd alters the array
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
+									val: parseInt(dayarr[0]),
+									ack: true
+								});
+								let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last31d', {
+									val: last31d,
+									ack: true
+								});
+								let daynum = parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10));
+								let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
+									val: mtd,
+									ack: true
+								});
+							}
+						}
 					} else {
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
-							val: parseInt(obj['stats']['count']),
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
-							val: parseInt(obj['stats']['grid']),
-							ack: true
-						});
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
-							val: parseInt(obj['stats']['datatime']),
-							ack: true
-						});
-						let otherarr = obj['stats']['_@attribute'].split(',').map(Number);
-						await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {
-							val: JSON.stringify(otherarr),
-							ack: true
-						});
+						if (obj['stats']) {
+							old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.count');
+							if (old.val !== parseInt(obj['stats']['count'])) {
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
+									val: parseInt(obj['stats']['count']),
+									ack: true
+								});
+							}
+							old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.grid');
+							if (old.val !== parseInt(obj['stats']['grid'])) {
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
+									val: parseInt(obj['stats']['grid']),
+									ack: true
+								});
+							}
+							await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
+								val: parseInt(obj['stats']['datatime']),
+								ack: true
+							});
+							let otherarr = obj['stats']['_@attribute'].split(',').map(Number);
+							await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {
+								val: JSON.stringify(otherarr),
+								ack: true
+							});
+						}
 					}
 				}
 			})
@@ -1597,12 +1660,16 @@ class Fritzdect extends utils.Adapter {
 		let old;
 		try {
 			if (!value || value == '') {
-				this.log.debug(' no value for updating in ' + ain + '  ' + key);
+				this.log.debug(' no value for updating in ' + ain + '  ' + key + ' writing null');
 				//wirklich mit "null" beschreiben?
-				await this.setStateAsync('DECT_' + ain + '.' + key, {
-					val: null,
-					ack: true
-				});
+				old = await this.getStateAsync('DECT_' + ain + '.' + key);
+				if (old.val != null || !this.config.fritz_writeonhyst) {
+					this.log.debug('updating data DECT_' + ain + ' : ' + key + ' new: ' + null + ' old: ' + old.val);
+					await this.setStateAsync('DECT_' + ain + '.' + key, {
+						val: null,
+						ack: true
+					});
+				}
 			} else {
 				try {
 					old = await this.getStateAsync('DECT_' + ain + '.' + key);
@@ -1721,21 +1788,64 @@ class Fritzdect extends utils.Adapter {
 								
 							}
 							*/
-							let newtemp = 0;
-							if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
+							let newtemp = 8;
+							// ohne old.val !== parseFloat(value) / 2 ||
+							// individual check
+							if (!this.config.fritz_writeonhyst) {
+								// read value is a temperature
 								if (value < 57) {
 									newtemp = parseFloat(value) / 2;
+									if (old.val !== newtemp) {
+										this.log.debug(
+											'updating data DECT_' +
+												ain +
+												' : ' +
+												key +
+												' new: ' +
+												newtemp +
+												' old: ' +
+												old.val
+										);
+										await this.setStateAsync('DECT_' + ain + '.' + key, {
+											val: newtemp,
+											ack: true
+										});
+									}
 								} else {
+									// read value is 253 or 254 and therfore set to NaN
 									newtemp = NaN;
+									// previous was a temp
+									if (!isNaN(old.val)) {
+										this.log.debug(
+											'updating data DECT_' +
+												ain +
+												' : ' +
+												key +
+												' new: ' +
+												newtemp +
+												' old: ' +
+												old.val
+										);
+										await this.setStateAsync('DECT_' + ain + '.' + key, {
+											val: newtemp,
+											ack: true
+										});
+									} else {
+										//previous was already no temperature
+										// skip new setting
+										this.log.debug(
+											'no update data DECT_' +
+												ain +
+												' : ' +
+												key +
+												' new: ' +
+												newtemp +
+												' old: ' +
+												old.val
+										);
+									}
 								}
 							}
-							this.log.debug(
-								'updating data DECT_' + ain + ' : ' + key + ' new: ' + newtemp + ' old: ' + old.val
-							);
-							await this.setStateAsync('DECT_' + ain + '.' + key, {
-								val: newtemp,
-								ack: true
-							});
 						} else if (key == 'humidity') {
 							//e.g humidity
 							if (old.val !== parseFloat(value) || !this.config.fritz_writeonhyst) {
@@ -1756,15 +1866,19 @@ class Fritzdect extends utils.Adapter {
 							}
 						} else if (key == 'tsoll') {
 							//neu 2.3.0c
-							if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
+							if (!this.config.fritz_writeonhyst) {
 								let targettemp;
 								let tsoll;
+								let oldval;
 								if (value < 57) {
 									// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
-									await this.setStateAsync('DECT_' + ain + '.tsoll', {
-										val: parseFloat(value) / 2,
-										ack: true
-									});
+									if (old.val !== parseFloat(value) / 2 || !this.config.fritz_writeonhyst) {
+										await this.setStateAsync('DECT_' + ain + '.tsoll', {
+											val: parseFloat(value) / 2,
+											ack: true
+										});
+									}
+
 									await this.setStateAsync('DECT_' + ain + '.lasttarget', {
 										val: parseFloat(value) / 2,
 										ack: true
@@ -1782,7 +1896,7 @@ class Fritzdect extends utils.Adapter {
 								});
 								*/
 								} else if (value == 253) {
-									this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Closed');
+									this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode: Off');
 									// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 7, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
 									targettemp = await this.getStateAsync('DECT_' + ain + '.tsoll').catch((e) => {
 										this.log.warn('problem getting the tsoll status ' + e);
@@ -1793,23 +1907,40 @@ class Fritzdect extends utils.Adapter {
 										tsoll = settings.tsolldefault || this.tsolldefault;
 										this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
 									}
-									await this.setStateAsync('DECT_' + ain + '.tsoll', {
-										val: tsoll,
-										ack: true
+									if (old.val !== tsoll) {
+										await this.setStateAsync('DECT_' + ain + '.tsoll', {
+											val: tsoll,
+											ack: true
+										});
+									}
+									oldval = await this.getStateAsync('DECT_' + ain + '.lasttarget').catch((e) => {
+										this.log.warn('problem getting the lasttarget status ' + e);
 									});
-									await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-										val: tsoll,
-										ack: true
+									if (oldval.val !== tsoll) {
+										await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+											val: tsoll,
+											ack: true
+										});
+									}
+									oldval = await this.getStateAsync('DECT_' + ain + '.hkrmode').catch((e) => {
+										this.log.warn('problem getting the hkrmode status ' + e);
 									});
-									await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-										val: 1,
-										ack: true
-									});
+									if (oldval.val !== 1) {
+										await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+											val: 1,
+											ack: true
+										});
+									}
 									const currentMode = 'Off';
-									await this.setStateAsync('DECT_' + ain + '.operationmode', {
-										val: currentMode,
-										ack: true
+									oldval = await this.getStateAsync('DECT_' + ain + '.operationmode').catch((e) => {
+										this.log.warn('problem getting the operationmode status ' + e);
 									});
+									if (oldval.val !== currentMode) {
+										await this.setStateAsync('DECT_' + ain + '.operationmode', {
+											val: currentMode,
+											ack: true
+										});
+									}
 								} else if (value == 254) {
 									this.log.debug('DECT_' + ain + ' (tsoll) : ' + 'mode : Opened');
 									// this.setStateAsync('DECT_'+ ain +'.tsoll', {val: 29, ack: true}); // zum setzen der Temperatur außerhalb der Anzeige?
@@ -1822,23 +1953,40 @@ class Fritzdect extends utils.Adapter {
 										tsoll = settings.tsolldefault || this.tsolldefault;
 										this.log.debug('DECT_' + ain + ' tsoll will be set to default value');
 									}
-									await this.setStateAsync('DECT_' + ain + '.tsoll', {
-										val: tsoll,
-										ack: true
+									if (old.val !== tsoll) {
+										await this.setStateAsync('DECT_' + ain + '.tsoll', {
+											val: tsoll,
+											ack: true
+										});
+									}
+									oldval = await this.getStateAsync('DECT_' + ain + '.lasttarget').catch((e) => {
+										this.log.warn('problem getting the lasttarget status ' + e);
 									});
-									await this.setStateAsync('DECT_' + ain + '.lasttarget', {
-										val: tsoll,
-										ack: true
+									if (oldval.val !== tsoll) {
+										await this.setStateAsync('DECT_' + ain + '.lasttarget', {
+											val: tsoll,
+											ack: true
+										});
+									}
+									oldval = await this.getStateAsync('DECT_' + ain + '.hkrmode').catch((e) => {
+										this.log.warn('problem getting the hkrmode status ' + e);
 									});
-									await this.setStateAsync('DECT_' + ain + '.hkrmode', {
-										val: 2,
-										ack: true
-									});
+									if (oldval.val !== 2) {
+										await this.setStateAsync('DECT_' + ain + '.hkrmode', {
+											val: 2,
+											ack: true
+										});
+									}
 									const currentMode = 'On';
-									await this.setStateAsync('DECT_' + ain + '.operationmode', {
-										val: currentMode,
-										ack: true
+									oldval = await this.getStateAsync('DECT_' + ain + '.operationmode').catch((e) => {
+										this.log.warn('problem getting the operationmode status ' + e);
 									});
+									if (oldval.val !== currentMode) {
+										await this.setStateAsync('DECT_' + ain + '.operationmode', {
+											val: currentMode,
+											ack: true
+										});
+									}
 								} else {
 									this.log.warn('undefined tsoll submitted from fritzbox !');
 								}

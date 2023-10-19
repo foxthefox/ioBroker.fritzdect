@@ -1372,14 +1372,19 @@ class Fritzdect extends utils.Adapter {
 										currentMode = 'Night';
 									}
 									//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
-									await this.setStateAsync(
-										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
-										{
-											val: currentMode,
-											ack: true
-										}
+									let oldval = await this.getStateAsync(
+										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode'
 									);
-									this.log.debug('preset oprationmode ' + currentMode);
+									if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
+										await this.setStateAsync(
+											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
+											{
+												val: currentMode,
+												ack: true
+											}
+										);
+									}
+									this.log.debug('preset operationmode ' + currentMode);
 								}
 								// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 								// some weird id usage, the website shows the id of the etsiunit
@@ -1655,12 +1660,16 @@ class Fritzdect extends utils.Adapter {
 		let old;
 		try {
 			if (!value || value == '') {
-				this.log.debug(' no value for updating in ' + ain + '  ' + key);
+				this.log.debug(' no value for updating in ' + ain + '  ' + key + ' writing null');
 				//wirklich mit "null" beschreiben?
-				await this.setStateAsync('DECT_' + ain + '.' + key, {
-					val: null,
-					ack: true
-				});
+				old = await this.getStateAsync('DECT_' + ain + '.' + key);
+				if (old.val != null || !this.config.fritz_writeonhyst) {
+					this.log.debug('updating data DECT_' + ain + ' : ' + key + ' new: ' + null + ' old: ' + old.val);
+					await this.setStateAsync('DECT_' + ain + '.' + key, {
+						val: null,
+						ack: true
+					});
+				}
 			} else {
 				try {
 					old = await this.getStateAsync('DECT_' + ain + '.' + key);
@@ -1779,11 +1788,11 @@ class Fritzdect extends utils.Adapter {
 								
 							}
 							*/
-							let newtemp = 0;
+							let newtemp = 8;
 							// ohne old.val !== parseFloat(value) / 2 ||
 							// individual check
 							if (!this.config.fritz_writeonhyst) {
-								// read value is a temperatur
+								// read value is a temperature
 								if (value < 57) {
 									newtemp = parseFloat(value) / 2;
 									if (old.val !== newtemp) {

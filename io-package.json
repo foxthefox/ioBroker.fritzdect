@@ -148,7 +148,10 @@
 		"fritz_hysteresis": 1,
 		"fritz_boosttime": 5,
 		"fritz_windowtime": 5,
-		"fritz_tsolldefault": 23
+		"fritz_tsolldefault": 23,
+		"fritz_exclude_templates": false,
+		"fritz_exclude_routines": false,
+		"fritz_exclude_stats": false
 	},
 	"objects": [],
 	"instanceObjects": []

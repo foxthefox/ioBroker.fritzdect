@@ -114,7 +114,9 @@ const settings = {
 	intervall: 300,
 	boosttime: 5,
 	windowtime: 5,
-	tsolldefault: 23
+	tsolldefault: 23,
+	exclude_templates: false,
+	exclude_routines: false
 };
 
 class Fritzdect extends utils.Adapter {
@@ -215,11 +217,15 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('start creating devices/groups');
 							await this.createDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished creating devices/groups (if any)');
+							const templinfo = settings.exclude_templates ? 'not used ' : 'used';
+							this.log.info('templates are ' + templinfo + '(' + settings.exclude_templates + ')');
 							if (!settings.exclude_templates) {
 								this.log.info('start creating templates ');
 								await this.createTemplates(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 								this.log.info('finished creating templates (if any) ');
 							}
+							const routineinfo = settings.exclude_routines ? 'not used ' : 'used';
+							this.log.info('routines are ' + routineinfo + '(' + settings.exclude_routines + ')');
 							if (!settings.exclude_routines) {
 								this.log.info('start creating routines ');
 								await this.createRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
@@ -237,7 +243,7 @@ class Fritzdect extends utils.Adapter {
 									try {
 										this.log.debug('polling! fritzdect is alive with ' + settings.intervall + ' s');
 										await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
-										if (settings.exclude_routines) {
+										if (!settings.exclude_routines) {
 											await this.updateRoutines(this.fritz).catch((e) =>
 												this.errorHandlerAdapter(e)
 											);

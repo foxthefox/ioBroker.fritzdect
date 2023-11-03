@@ -1165,7 +1165,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(colors);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');

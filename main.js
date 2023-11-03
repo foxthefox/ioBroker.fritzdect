@@ -1034,7 +1034,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(devices);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1060,7 +1061,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(groups);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1087,7 +1089,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(templates);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1110,7 +1113,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(trigger);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1149,7 +1153,8 @@ class Fritzdect extends utils.Adapter {
 						} catch (error) {
 							this.log.warn('problem msg statistics' + error);
 						}
-						if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+						if (obj.callback)
+							this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 						wait = true;
 						break;
 					case 'color':
@@ -1180,7 +1185,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(permission);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');

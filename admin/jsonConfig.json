@@ -6,7 +6,6 @@
 		"_userdata": {
 			"type": "header",
 			"newLine": true,
-			"hidden": "true",
 			"text": "FritzBox Login",
 			"sm": 12,
 			"md": 12,

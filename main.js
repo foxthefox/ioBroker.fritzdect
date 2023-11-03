@@ -171,16 +171,9 @@ class Fritzdect extends utils.Adapter {
 				throw `ioBroker system configuration not found.`;
 			}
 
-			// Check if credentials are not empty and decrypt stored password
+			// jsonUI should transfer PW decrypted
 			if (settings.Username !== '' && settings.Password !== '') {
 				this.getForeignObject('system.config', async (err, obj) => {
-					if (obj && obj.native && obj.native.secret) {
-						//noinspection JSUnresolvedVariable
-						settings.Password = this.decryptfc(obj.native.secret, settings.Password); // this.config.fritz_pw);
-					} else {
-						//noinspection JSUnresolvedVariable
-						settings.Password = this.decryptfc('Zgfr56gFe87jJOM', settings.Password);
-					}
 					// Adapter is alive, make API call
 					// Make a call to fritzboxAPI and get a list devices/groups and templates
 
@@ -1041,7 +1034,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(devices);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1067,7 +1061,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(groups);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1094,7 +1089,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(templates);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1117,7 +1113,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(trigger);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1156,7 +1153,8 @@ class Fritzdect extends utils.Adapter {
 						} catch (error) {
 							this.log.warn('problem msg statistics' + error);
 						}
-						if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+						if (obj.callback)
+							this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 						wait = true;
 						break;
 					case 'color':
@@ -1167,7 +1165,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(colors);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');
@@ -1187,7 +1186,8 @@ class Fritzdect extends utils.Adapter {
 								result.push(permission);
 							})
 							.then(async () => {
-								if (obj.callback) this.sendTo(obj.from, obj.command, result, obj.callback);
+								if (obj.callback)
+									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							})
 							.catch((e) => {
 								this.log.debug('error calling in msgbox');

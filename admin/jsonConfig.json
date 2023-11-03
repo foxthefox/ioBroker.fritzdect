@@ -1,0 +1,153 @@
+{
+	"i18n": true,
+	"type": "panel",
+	"label": "iobroker.fritzdect",
+	"items": {
+		"_userdata": {
+			"type": "header",
+			"newLine": true,
+			"text": "FritzBox Login",
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"size": 3
+		},
+		"fritz_user": {
+			"type": "text",
+			"label": "Fritzbox User",
+			"newLine": false
+		},
+		"fritz_pw": {
+			"type": "password",
+			"label": "Fritzbox Password",
+			"newLine": false
+		},
+		"_connection": {
+			"newLine": true,
+			"type": "header",
+			"text": "Connection settings and Polling",
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"size": 3
+		},
+		"fritz_ip": {
+			"type": "text",
+			"label": "Fritzbox IP",
+			"newLine": false
+		},
+		"fritz_interval": {
+			"type": "number",
+			"label": "Fritzbox Polling Interval (sek.)",
+			"newLine": false,
+			"default": 300
+		},
+		"fritz_writeonhyst": {
+			"type": "checkbox",
+			"label": "must be checked (true) to activate the reduced logging",
+			"newLine": false
+		},
+		"_thermostat": {
+			"newLine": true,
+			"type": "header",
+			"text": "Thermostat Settings",
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"size": 3
+		},
+		"fritz_boosttime": {
+			"type": "number",
+			"label": "default time (minutes) for boost activation",
+			"newLine": false,
+			"default": 5
+		},
+		"fritz_windowtime": {
+			"type": "number",
+			"label": "default time (minutes) for window open activation",
+			"newLine": false,
+			"default": 5
+		},
+		"fritz_tsolldefault": {
+			"type": "number",
+			"label": "default target temperature",
+			"newLine": false,
+			"default": 23
+		},
+		"_excl": {
+			"newLine": true,
+			"type": "header",
+			"text": "Adapter Options",
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"size": 3
+		},
+		"fritz_exclude_templates": {
+			"type": "checkbox",
+			"label": "exclude templates (check if older FB)",
+			"newLine": false
+		},
+		"fritz_exclude_routines": {
+			"type": "checkbox",
+			"label": "exclude routines (check if older FB)",
+			"newLine": false
+		},
+		"fritz_exclude_stats": {
+			"type": "checkbox",
+			"label": "exclude statistics (check if older FB)",
+			"newLine": false
+		},
+		"_debug": {
+			"newLine": true,
+			"type": "header",
+			"text": "FritzBox Adapter Debugging",
+			"sm": 12,
+			"md": 12,
+			"lg": 12,
+			"size": 3
+		},
+		"_testd": {
+			"type": "sendTo",
+			"label": "My Devices",
+			"command": "devices",
+			"variant": "outlined"
+		},
+		"_testg": {
+			"type": "sendTo",
+			"label": "My Groups",
+			"command": "groups",
+			"variant": "outlined"
+		},
+		"_testt": {
+			"type": "sendTo",
+			"label": "My Templates",
+			"command": "templates",
+			"variant": "outlined"
+		},
+		"_tests": {
+			"type": "sendTo",
+			"label": "My Stats",
+			"command": "statistic",
+			"variant": "outlined"
+		},
+		"_testr": {
+			"type": "sendTo",
+			"label": "My Triggers",
+			"command": "trigger",
+			"variant": "outlined"
+		},
+		"_testc": {
+			"type": "sendTo",
+			"label": "My Colors",
+			"command": "color",
+			"variant": "outlined"
+		},
+		"_testo": {
+			"type": "sendTo",
+			"label": "My Rights",
+			"command": "rights",
+			"variant": "outlined"
+		}
+	}
+}

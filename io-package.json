@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.5.6",
+        "version": "2.5.7",
         "news": {
+            "2.5.7": {
+                "en": "password needs to be reentered in version 2.5.5, 2.5.6 and 2.5.7",
+                "de": "Das Passwort muss in Version 2.5.5, 2.5.6 und 2.5.7 erneut eingegeben werden",
+                "ru": "пароль необходимо вводить повторно в версии 2.5.5, 2.5.6 и 2.5.7",
+                "pt": "a senha precisa ser digitada novamente nas versões 2.5.5, 2.5.6 e 2.5.7",
+                "nl": "wachtwoord moet opnieuw worden ingevoerd in versie 2.5.5, 2.5.6 en 2.5.7",
+                "fr": "le mot de passe doit être saisi à nouveau dans les versions 2.5.5, 2.5.6 et 2.5.7",
+                "it": "la password deve essere reinserita nella versione 2.5.5, 2.5.6 e 2.5.7",
+                "es": "Es necesario volver a ingresar la contraseña en las versiones 2.5.5, 2.5.6 y 2.5.7.",
+                "pl": "hasło należy wprowadzić ponownie w wersjach 2.5.5, 2.5.6 i 2.5.7",
+                "uk": "у версіях 2.5.5, 2.5.6 і 2.5.7 пароль потрібно вводити повторно",
+                "zh-cn": "2.5.5、2.5.6、2.5.7版本需要重新输入密码"
+            },
             "2.5.6": {
                 "en": "changes in jsonUIconfig",
                 "de": "Änderungen in jsonUIconfig",

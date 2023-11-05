@@ -1,7 +1,6 @@
 {
 	"i18n": true,
 	"type": "panel",
-	"label": "iobroker.fritzdect",
 	"items": {
 		"_userdata": {
 			"type": "header",

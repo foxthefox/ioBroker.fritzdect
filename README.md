@@ -217,6 +217,9 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.5.6 (npm)
+* change in jsonUIconfig
+
 ### 2.5.5 (npm)
 * implementation of jsonUIconfig
 

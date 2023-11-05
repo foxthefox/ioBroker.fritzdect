@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.5.5",
+        "version": "2.5.6",
         "news": {
+            "2.5.6": {
+                "en": "changes in jsonUIconfig",
+                "de": "Änderungen in jsonUIconfig",
+                "ru": "изменения в jsonUIconfig",
+                "pt": "mudanças no jsonUIconfig",
+                "nl": "wijzigingen in jsonUIconfig",
+                "fr": "changements dans jsonUIconfig",
+                "it": "modifiche in jsonUIconfig",
+                "es": "cambios en jsonUIconfig",
+                "pl": "zmiany w jsonUIconfig",
+                "uk": "зміни в jsonUIconfig",
+                "zh-cn": "jsonUIconfig 的更改"
+            },
             "2.5.5": {
                 "en": "implementation of jsonUIconfig",
                 "de": "Implementierung von jsonUIconfig",

@@ -1545,20 +1545,44 @@ class Fritzdect extends utils.Adapter {
 		await Promise.all(
 			Object.entries(statsobj.devicestats).map(async ([ key, obj ]) => {
 				if (key !== 'temperature') {
-					let old;
+					let old = null;
 					if (key == 'energy') {
 						//months
 						if (obj['stats']) {
 							if (obj['stats'][0]) {
-								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.countm');
-								if (old.val !== parseInt(obj['stats'][0]['count'])) {
+								//hier noch catch rein
+								old = await this.getStateAsync(
+									'DECT_' + identifier + '.' + key + '_stats.countm'
+								).catch((error) => {
+									this.log.error('DECT_' + identifier + '.' + key + '_stats.countm' + error);
+								});
+								if (old && old.val) {
+									if (old.val !== parseInt(obj['stats'][0]['count'])) {
+										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countm', {
+											val: parseInt(obj['stats'][0]['count']),
+											ack: true
+										});
+									}
+								} else {
 									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countm', {
 										val: parseInt(obj['stats'][0]['count']),
 										ack: true
 									});
 								}
-								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.gridm');
-								if (old.val !== parseInt(obj['stats'][0]['grid'])) {
+
+								old = await this.getStateAsync(
+									'DECT_' + identifier + '.' + key + '_stats.gridm'
+								).catch((error) => {
+									this.log.error('DECT_' + identifier + '.' + key + '_stats.gridm' + error);
+								});
+								if (old && old.val) {
+									if (old.val !== parseInt(obj['stats'][0]['grid'])) {
+										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridm', {
+											val: parseInt(obj['stats'][0]['grid']),
+											ack: true
+										});
+									}
+								} else {
 									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridm', {
 										val: parseInt(obj['stats'][0]['grid']),
 										ack: true
@@ -1588,15 +1612,37 @@ class Fritzdect extends utils.Adapter {
 							}
 							// days
 							if (obj['stats'][1]) {
-								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.countd');
-								if (old.val !== parseInt(obj['stats'][1]['count'])) {
+								old = await this.getStateAsync(
+									'DECT_' + identifier + '.' + key + '_stats.countd'
+								).catch((error) => {
+									this.log.error('DECT_' + identifier + '.' + key + '_stats.countd' + error);
+								});
+								if (old && old.val) {
+									if (old.val !== parseInt(obj['stats'][1]['count'])) {
+										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
+											val: parseInt(obj['stats'][1]['count']),
+											ack: true
+										});
+									}
+								} else {
 									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
 										val: parseInt(obj['stats'][1]['count']),
 										ack: true
 									});
 								}
-								old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd');
-								if (old.val !== parseInt(obj['stats'][1]['grid'])) {
+								old = await this.getStateAsync(
+									'DECT_' + identifier + '.' + key + '_stats.gridd'
+								).catch((error) => {
+									this.log.error('DECT_' + identifier + '.' + key + '_stats.gridd' + error);
+								});
+								if (old && old.val) {
+									if (old.val !== parseInt(obj['stats'][1]['grid'])) {
+										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
+											val: parseInt(obj['stats'][1]['grid']),
+											ack: true
+										});
+									}
+								} else {
 									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
 										val: parseInt(obj['stats'][1]['grid']),
 										ack: true
@@ -1632,14 +1678,22 @@ class Fritzdect extends utils.Adapter {
 						}
 					} else {
 						if (obj['stats']) {
-							old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.count');
+							old = await this.getStateAsync(
+								'DECT_' + identifier + '.' + key + '_stats.count'
+							).catch((error) => {
+								this.log.error('DECT_' + identifier + '.' + key + '_stats.count' + error);
+							});
 							if (old.val !== parseInt(obj['stats']['count'])) {
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
 									val: parseInt(obj['stats']['count']),
 									ack: true
 								});
 							}
-							old = await this.getStateAsync('DECT_' + identifier + '.' + key + '_stats.grid');
+							old = await this.getStateAsync(
+								'DECT_' + identifier + '.' + key + '_stats.grid'
+							).catch((error) => {
+								this.log.error('DECT_' + identifier + '.' + key + '_stats.grid' + error);
+							});
 							if (old.val !== parseInt(obj['stats']['grid'])) {
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
 									val: parseInt(obj['stats']['grid']),

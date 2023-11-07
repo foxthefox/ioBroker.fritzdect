@@ -1,6 +1,6 @@
 {
 	"name": "iobroker.fritzdect",
-	"version": "2.5.7",
+	"version": "2.5.8",
 	"description": "ioBroker fritzbox DECT Adapter",
 	"author": {
 		"name": "foxthefox",

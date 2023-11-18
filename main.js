@@ -1240,7 +1240,7 @@ class Fritzdect extends utils.Adapter {
 					this.log.error('statuscode not in errorHandlerApi of fritzdect');
 				}
 			}
-			this.log.error('API  err  => ' + error.error);
+			this.log.error('API  err  => ' + JSON.stringify(error.error));
 		} catch (e) {
 			this.log.error('catched error in function errorHandlerApi() ' + e);
 		}

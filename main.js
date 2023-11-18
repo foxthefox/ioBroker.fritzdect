@@ -1024,7 +1024,8 @@ class Fritzdect extends utils.Adapter {
 					case 'devices':
 						try {
 							let xml = await this.fritz.getDeviceListInfos();
-							result.push(xml);
+							this.log.debug('devices' + xml);
+							result.push(String(xml));
 							if (obj.callback) {
 								this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							}

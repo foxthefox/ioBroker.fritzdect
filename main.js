@@ -1027,7 +1027,7 @@ class Fritzdect extends utils.Adapter {
 							this.log.debug('devices' + xml);
 							result = xml;
 							if (obj.callback) {
-								this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
 							}
 						} catch (error) {
 							this.log.warn('error calling in msgbox devices' + error);

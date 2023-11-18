@@ -999,7 +999,7 @@ class Fritzdect extends utils.Adapter {
 				}
 			} else if (obj) {
 				//my own messages for detectiung are without a message
-				let result = [];
+				let result = '';
 				if (!this.fritz) {
 					this.fritz = new Fritz(
 						settings.Username,
@@ -1022,108 +1022,88 @@ class Fritzdect extends utils.Adapter {
 
 				switch (obj.command) {
 					case 'devices':
-						this.fritz
-							.getDeviceListInfos()
-							.then((devicelistinfos) => {
-								let devices = parser.xml2json(devicelistinfos);
-								devices = [].concat((devices.devicelist || {}).device || []).map(function(device) {
-									// remove spaces in AINs
-									// device.identifier = device.identifier.replace(/\s/g, '');
-									return device;
-								});
-								result.push(devices);
-							})
-							.then(async () => {
-								if (obj.callback)
-									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting devices',
-									function: 'onMessage',
-									error: e
-								};
-							});
-
+						try {
+							let xml = await this.fritz.getDeviceListInfos();
+							this.log.debug('devices' + xml);
+							result = xml;
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn('error calling in msgbox devices' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get devices' + error },
+									obj.callback
+								);
+							}
+						}
 						wait = true;
 						break;
 					case 'groups':
-						this.fritz
-							.getDeviceListInfos()
-							.then((devicelistinfos) => {
-								let groups = parser.xml2json(devicelistinfos);
-								groups = [].concat((groups.devicelist || {}).group || []).map(function(group) {
-									// remove spaces in AINs
-									// group.identifier = group.identifier.replace(/\s/g, '');
-									return group;
-								});
-								result.push(groups);
-							})
-							.then(async () => {
-								if (obj.callback)
-									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting groups',
-									function: 'onMessage',
-									error: e
-								};
-							});
+						//eigentlich jetzt mit devices zusammen, da xml nicht geteilt wird
+						try {
+							let xml = await this.fritz.getDeviceListInfos();
+							this.log.debug('groups' + xml);
+							result = xml;
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn('error calling in msgbox groups' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get groups' + error },
+									obj.callback
+								);
+							}
+						}
 						wait = true;
 						break;
 					case 'templates':
-						this.fritz
-							.getTemplateListInfos()
-							.then(function(templatelistinfos) {
-								let templates = parser.xml2json(templatelistinfos);
-								templates = []
-									.concat((templates.templatelist || {}).template || [])
-									.map(function(template) {
-										// remove spaces in AINs
-										// template.identifier = group.identifier.replace(/\s/g, '');
-										return template;
-									});
-								result.push(templates);
-							})
-							.then(async () => {
-								if (obj.callback)
-									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting templates',
-									function: 'onMessage',
-									error: e
-								};
-							});
+						try {
+							let xml = await this.fritz.getTemplateListInfos();
+							this.log.debug('templates' + xml);
+							result = xml;
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn('error calling in msgbox templates' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get templates' + error },
+									obj.callback
+								);
+							}
+						}
 						wait = true;
 						break;
 					case 'trigger':
-						this.fritz
-							.getTriggerListInfos()
-							.then(function(triggerlistinfos) {
-								let trigger = parser.xml2json(triggerlistinfos);
-								trigger = [].concat((trigger.triggerlist || {}).trigger || []).map((trigger) => {
-									return trigger;
-								});
-								result.push(trigger);
-							})
-							.then(async () => {
-								if (obj.callback)
-									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting trigger',
-									function: 'onMessage',
-									error: e
-								};
-							});
+						try {
+							let xml = await this.fritz.getTriggerListInfos();
+							this.log.debug('trigger' + xml);
+							result = xml;
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn('error calling in msgbox trigger' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get trigger' + error },
+									obj.callback
+								);
+							}
+						}
 						wait = true;
 						break;
 					case 'statistic':
@@ -1144,59 +1124,68 @@ class Fritzdect extends utils.Adapter {
 											error: e
 										};
 									});
-									let statsobj = parser.xml2json(stats);
 									this.log.debug('processed ' + devstat[i]);
-									statfeedback[devstat[i]] = statsobj;
+									statfeedback[devstat[i]] = stats;
 								}
 							}
-							result.push(statfeedback);
+							result = JSON.stringify(statfeedback);
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
+							}
 						} catch (error) {
-							this.log.warn('problem msg statistics' + error);
+							this.log.warn('error calling in msgbox statistic' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get statistic' + error },
+									obj.callback
+								);
+							}
 						}
-						if (obj.callback)
-							this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
+
 						wait = true;
 						break;
 					case 'color':
-						this.fritz
-							.getColorDefaults()
-							.then(function(colorinfos) {
-								let colors = parser.xml2json(colorinfos);
-								result.push(colors);
-							})
-							.then(async () => {
-								if (obj.callback)
-									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting color',
-									function: 'onMessage',
-									error: e
-								};
-							});
+						try {
+							let xml = await this.fritz.getColorDefaults();
+							this.log.debug('color' + xml);
+							result = xml;
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn('error calling in msgbox color' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get color' + error },
+									obj.callback
+								);
+							}
+						}
 						wait = true;
 						break;
 					case 'rights':
-						this.fritz
-							.getUserPermissions()
-							.then(function(rights) {
-								const permission = parser.xml2json(rights);
-								result.push(permission);
-							})
-							.then(async () => {
-								if (obj.callback)
-									this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
-							})
-							.catch((e) => {
-								this.log.debug('error calling in msgbox');
-								throw {
-									msg: 'issue getting UserRights',
-									function: 'onMessage',
-									error: e
-								};
-							});
+						try {
+							let xml = await this.fritz.getUserPermissions();
+							this.log.debug('rights' + xml);
+							result = xml;
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: result }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn('error calling in msgbox rights' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get rights' + error },
+									obj.callback
+								);
+							}
+						}
 						wait = true;
 						break;
 					//idea for other statistics: call of message returns everything (loop over all devices)
@@ -1683,18 +1672,33 @@ class Fritzdect extends utils.Adapter {
 							).catch((error) => {
 								this.log.error('DECT_' + identifier + '.' + key + '_stats.count' + error);
 							});
-							if (old.val !== parseInt(obj['stats']['count'])) {
+							if (old && old.val) {
+								if (old.val !== parseInt(obj['stats']['count'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
+										val: parseInt(obj['stats']['count']),
+										ack: true
+									});
+								}
+							} else {
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
 									val: parseInt(obj['stats']['count']),
 									ack: true
 								});
 							}
+
 							old = await this.getStateAsync(
 								'DECT_' + identifier + '.' + key + '_stats.grid'
 							).catch((error) => {
 								this.log.error('DECT_' + identifier + '.' + key + '_stats.grid' + error);
 							});
-							if (old.val !== parseInt(obj['stats']['grid'])) {
+							if (old && old.val) {
+								if (old.val !== parseInt(obj['stats']['grid'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
+										val: parseInt(obj['stats']['grid']),
+										ack: true
+									});
+								}
+							} else {
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
 									val: parseInt(obj['stats']['grid']),
 									ack: true
@@ -3757,14 +3761,7 @@ class Fritzdect extends utils.Adapter {
 		});
 
 		if (type == 'energy') {
-			await this.createValueState(
-				identifier,
-				type + '_stats' + '.countm',
-				'stats count of months',
-				0,
-				12,
-				'months'
-			);
+			await this.createValueState(identifier, type + '_stats.countm', 'stats count of months', 0, 12, 'months');
 			await this.createValueState(identifier, type + '_stats.gridm', 'grid of months', 0, 2678400, 's');
 			await this.setObjectNotExistsAsync('DECT_' + identifier + '.' + type + '_stats.datatimem', {
 				type: 'state',

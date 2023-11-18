@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.5.8",
+        "version": "2.5.9",
         "news": {
+            "2.5.9": {
+                "en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
+                "de": "Neues Meldungsfeld, Korrektur für Statistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",
+                "ru": "новое окно сообщений, исправление статистики, в версиях >2.5.4 пароль необходимо вводить заново",
+                "pt": "nova caixa de mensagem, correção de estatísticas, senha precisa ser digitada novamente nas versões >2.5.4",
+                "nl": "nieuw berichtvenster, correctie voor statistieken, wachtwoord moet opnieuw worden ingevoerd in versies >2.5.4",
+                "fr": "nouvelle boîte de message, correction des statistiques, le mot de passe doit être ressaisi dans les versions >2.5.4",
+                "it": "nuova finestra di messaggio, correzione per le statistiche, la password deve essere reinserita nelle versioni >2.5.4",
+                "es": "Nuevo cuadro de mensaje, corrección de estadísticas, es necesario volver a ingresar la contraseña en las versiones >2.5.4",
+                "pl": "nowe okno komunikatu, korekta statystyk, w wersjach >2.5.4 konieczne jest ponowne wprowadzenie hasła",
+                "uk": "нове вікно повідомлення, виправлення статистики, пароль потрібно ввести повторно у версіях >2.5.4",
+                "zh-cn": "新消息框，统计修正，2.5.4以上版本需要重新输入密码"
+            },
             "2.5.8": {
                 "en": "more error checking processing statistics, password needs to be reentered in versions >2.5.4",
                 "de": "mehr Fehlerprüfungs-Verarbeitungsstatistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",
@@ -160,6 +173,48 @@
                 "zh-cn": "fB公司新软件的模板对×ml2json转换的错误"
             }
         },
+        "messages": [
+            {
+                "condition": {
+                    "operand": "and",
+                    "rules": [
+                        "oldVersion<2.5.3",
+                        "newVersion>=2.5.4"
+                    ]
+                },
+                "title": {
+                    "en": "Important notice!",
+                    "de": "Wichtiger Hinweis!",
+                    "ru": "Важное замечание!",
+                    "pt": "Notícia importante!",
+                    "nl": "Belangrijke mededeling!",
+                    "fr": "Avis important!",
+                    "it": "Avviso IMPORTANTE!",
+                    "es": "Noticia importante!",
+                    "pl": "Ważna uwaga!",
+                    "uk": "Погода!",
+                    "zh-cn": "重要通知!"
+                },
+                "text": {
+                    "en": "Please re-enter the password in the admin page. ",
+                    "de": "Bitte geben Sie das Passwort auf der Admin-Seite erneut ein.",
+                    "ru": "Пожалуйста, повторно введите пароль на странице администратора.",
+                    "pt": "Por favor, digite novamente a senha na página de administração.",
+                    "nl": "Voer het wachtwoord opnieuw in op de beheerderspagina.",
+                    "fr": "Veuillez saisir à nouveau le mot de passe dans la page d'administration.",
+                    "it": "Si prega di reinserire la password nella pagina di amministrazione.",
+                    "es": "Vuelva a ingresar la contraseña en la página de administración.",
+                    "pl": "Wprowadź ponownie hasło na stronie administratora.",
+                    "uk": "Повторно введіть пароль на сторінці адміністратора.",
+                    "zh-cn": "请在管理页面重新输入密码。"
+                },
+                "level": "warn",
+                "buttons": [
+                    "ok",
+                    "cancel"
+                ]
+            }
+        ],
         "title": "fritzbox DECT",
         "titleLang": {
             "en": "fritzbox dect ",

@@ -999,7 +999,7 @@ class Fritzdect extends utils.Adapter {
 				}
 			} else if (obj) {
 				//my own messages for detectiung are without a message
-				let result = [];
+				let result = '';
 				if (!this.fritz) {
 					this.fritz = new Fritz(
 						settings.Username,
@@ -1022,6 +1022,31 @@ class Fritzdect extends utils.Adapter {
 
 				switch (obj.command) {
 					case 'devices':
+						try {
+							let xml = this.fritz.getDeviceListInfos();
+							result = xml;
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
+							}
+						} catch (error) {
+							this.log.debug('error calling in msgbox');
+							/*
+								throw {
+									msg: 'issue getting devices',
+									function: 'onMessage',
+									error: error
+								};
+								*/
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ error: 'unable to get devices' + error },
+									obj.callback
+								);
+							}
+						}
+						/*
 						this.fritz
 							.getDeviceListInfos()
 							.then((devicelistinfos) => {
@@ -1045,7 +1070,7 @@ class Fritzdect extends utils.Adapter {
 									error: e
 								};
 							});
-
+							*/
 						wait = true;
 						break;
 					case 'groups':
@@ -1683,18 +1708,33 @@ class Fritzdect extends utils.Adapter {
 							).catch((error) => {
 								this.log.error('DECT_' + identifier + '.' + key + '_stats.count' + error);
 							});
-							if (old.val !== parseInt(obj['stats']['count'])) {
+							if (old && old.val) {
+								if (old.val !== parseInt(obj['stats']['count'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
+										val: parseInt(obj['stats']['count']),
+										ack: true
+									});
+								}
+							} else {
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
 									val: parseInt(obj['stats']['count']),
 									ack: true
 								});
 							}
+
 							old = await this.getStateAsync(
 								'DECT_' + identifier + '.' + key + '_stats.grid'
 							).catch((error) => {
 								this.log.error('DECT_' + identifier + '.' + key + '_stats.grid' + error);
 							});
-							if (old.val !== parseInt(obj['stats']['grid'])) {
+							if (old && old.val) {
+								if (old.val !== parseInt(obj['stats']['grid'])) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
+										val: parseInt(obj['stats']['grid']),
+										ack: true
+									});
+								}
+							} else {
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
 									val: parseInt(obj['stats']['grid']),
 									ack: true
@@ -3757,14 +3797,7 @@ class Fritzdect extends utils.Adapter {
 		});
 
 		if (type == 'energy') {
-			await this.createValueState(
-				identifier,
-				type + '_stats' + '.countm',
-				'stats count of months',
-				0,
-				12,
-				'months'
-			);
+			await this.createValueState(identifier, type + '_stats.countm', 'stats count of months', 0, 12, 'months');
 			await this.createValueState(identifier, type + '_stats.gridm', 'grid of months', 0, 2678400, 's');
 			await this.setObjectNotExistsAsync('DECT_' + identifier + '.' + type + '_stats.datatimem', {
 				type: 'state',

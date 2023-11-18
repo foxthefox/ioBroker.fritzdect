@@ -999,7 +999,7 @@ class Fritzdect extends utils.Adapter {
 				}
 			} else if (obj) {
 				//my own messages for detectiung are without a message
-				let result = '';
+				let result = [];
 				if (!this.fritz) {
 					this.fritz = new Fritz(
 						settings.Username,
@@ -1023,8 +1023,8 @@ class Fritzdect extends utils.Adapter {
 				switch (obj.command) {
 					case 'devices':
 						try {
-							let xml = this.fritz.getDeviceListInfos();
-							result = xml;
+							let xml = await this.fritz.getDeviceListInfos();
+							result.push(xml);
 							if (obj.callback) {
 								this.sendTo(obj.from, obj.command, { error: JSON.stringify(result) }, obj.callback);
 							}

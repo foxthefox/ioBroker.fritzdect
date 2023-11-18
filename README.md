@@ -220,6 +220,7 @@ otherwise it is more complex and individually to be parametrized.
 ### 2.5.9 (npm)
 * correction for statistics,
 * new message box password needs to be reentered in versions >=2.5.4
+* xml output for buttons "my ..."
 
 ### 2.5.8 (npm)
 * more error checking processing statistics

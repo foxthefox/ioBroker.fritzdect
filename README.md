@@ -217,6 +217,10 @@ otherwise it is more complex and individually to be parametrized.
 * blind alert state -> decode bit array
 
 ## Changelog
+### 2.5.10 (npm)
+* more loggimg for issue #500 of restart loop
+* some error messages downgraded to warnings
+
 ### 2.5.9 (npm)
 * correction for statistics,
 * new message box password needs to be reentered in versions >=2.5.4
@@ -541,4 +545,4 @@ otherwise it is more complex and individually to be parametrized.
 
 The MIT License (MIT)
 
-Copyright (c) 2018 - 2023 foxthefox <foxthefox@wysiwis.net>
+Copyright (c) 2018 - 2024 foxthefox <foxthefox@wysiwis.net>

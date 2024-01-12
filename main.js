@@ -591,7 +591,11 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'on' ||
 								state.val === 'ON'
 							) {
-								const minutes = await this.getStateAsync('DECT_' + id + '.boostactivetime');
+								const minutes = await this.getStateAsync(
+									'DECT_' + id + '.boostactivetime'
+								).catch((error) => {
+									this.log.warn('DECT_' + +id + '.boostactivetime  did not get state -> ' + error);
+								});
 								if (minutes && minutes.val !== null) {
 									let activetime = minutes.val;
 									const jetzt = +new Date();
@@ -674,7 +678,13 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'on' ||
 								state.val === 'ON'
 							) {
-								const minutes = await this.getStateAsync('DECT_' + id + '.windowopenactivetime');
+								const minutes = await this.getStateAsync(
+									'DECT_' + id + '.windowopenactivetime'
+								).catch((error) => {
+									this.log.warn(
+										'DECT_' + +id + '.windowopenactivetime  did not get state -> ' + error
+									);
+								});
 								if (minutes && minutes.val !== null) {
 									let activetime = minutes.val;
 									const jetzt = +new Date();
@@ -727,7 +737,11 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'off' ||
 								state.val === 'OFF'
 							) {
-								const switchtyp = await this.getStateAsync('DECT_' + id + '.switchtype');
+								const switchtyp = await this.getStateAsync(
+									'DECT_' + id + '.switchtype'
+								).catch((error) => {
+									this.log.warn('DECT_' + +id + '.switchtype  did not get state -> ' + error);
+								});
 								if (switchtyp && switchtyp.val !== null) {
 									if (switchtyp.val === 'switch') {
 										this.fritz
@@ -763,7 +777,11 @@ class Fritzdect extends utils.Adapter {
 								state.val === 'on' ||
 								state.val === 'ON'
 							) {
-								const switchtyp = await this.getStateAsync('DECT_' + id + '.switchtype');
+								const switchtyp = await this.getStateAsync(
+									'DECT_' + id + '.switchtype'
+								).catch((error) => {
+									this.log.warn('DECT_' + +id + '.switchtype  did not get state -> ' + error);
+								});
 								if (switchtyp && switchtyp.val !== null) {
 									if (switchtyp.val === 'switch') {
 										this.fritz
@@ -843,7 +861,9 @@ class Fritzdect extends utils.Adapter {
 								.catch((e) => this.errorHandlerApi(e));
 						}
 						if (dp == 'hue') {
-							const saturation = await this.getStateAsync('DECT_' + id + '.saturation');
+							const saturation = await this.getStateAsync('DECT_' + id + '.saturation').catch((error) => {
+								this.log.warn('DECT_' + +id + '.saturation  did not get state -> ' + error);
+							});
 							if (saturation && saturation.val !== null) {
 								// oder hier die Verwendung von lasttarget
 								const setSaturation = saturation.val;
@@ -875,7 +895,9 @@ class Fritzdect extends utils.Adapter {
 							}
 						}
 						if (dp == 'saturation') {
-							const hue = await this.getStateAsync('DECT_' + id + '.hue');
+							const hue = await this.getStateAsync('DECT_' + id + '.hue').catch((error) => {
+								this.log.warn('DECT_' + +id + '.hue  did not get state -> ' + error);
+							});
 							if (hue && hue.val !== null) {
 								const setHue = hue.val;
 								if (setHue == '') {
@@ -1279,7 +1301,14 @@ class Fritzdect extends utils.Adapter {
 							let active = routine.active == 0 ? false : true;
 							let old = await this.getStateAsync(
 								'routine_' + routine.identifier.replace(/\s/g, '') + '.active'
-							);
+							).catch((error) => {
+								this.log.warn(
+									'problem getting routine_' +
+										routine.identifier.replace(/\s/g, '') +
+										'.active ' +
+										error
+								);
+							});
 							if (old.val !== active || !this.config.fritz_writeonhyst) {
 								this.log.debug('__________________________');
 								this.log.debug('updating Routine ' + routine.name);
@@ -1369,7 +1398,14 @@ class Fritzdect extends utils.Adapter {
 									//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
 									let oldval = await this.getStateAsync(
 										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode'
-									);
+									).catch((error) => {
+										this.log.warn(
+											'problem getting DECT_' +
+												devices[i].identifier.replace(/\s/g, '') +
+												'.operationmode ' +
+												error
+										);
+									});
 									if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
 										await this.setStateAsync(
 											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode',
@@ -1397,7 +1433,14 @@ class Fritzdect extends utils.Adapter {
 								if (devices[i].simpleonoff) {
 									let switchtype = await this.getStateAsync(
 										'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype'
-									);
+									).catch((error) => {
+										this.log.warn(
+											'problem getting DECT_' +
+												devices[i].identifier.replace(/\s/g, '') +
+												'.switchtype ' +
+												error
+										);
+									});
 									if (switchtype.val !== 'simpleonoff') {
 										await this.setStateAsync(
 											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
@@ -1543,7 +1586,7 @@ class Fritzdect extends utils.Adapter {
 								old = await this.getStateAsync(
 									'DECT_' + identifier + '.' + key + '_stats.countm'
 								).catch((error) => {
-									this.log.error('DECT_' + identifier + '.' + key + '_stats.countm' + error);
+									this.log.warn('DECT_' + identifier + '.' + key + '_stats.countm' + error);
 								});
 								if (old && old.val) {
 									if (old.val !== parseInt(obj['stats'][0]['count'])) {
@@ -1562,7 +1605,7 @@ class Fritzdect extends utils.Adapter {
 								old = await this.getStateAsync(
 									'DECT_' + identifier + '.' + key + '_stats.gridm'
 								).catch((error) => {
-									this.log.error('DECT_' + identifier + '.' + key + '_stats.gridm' + error);
+									this.log.warn('DECT_' + identifier + '.' + key + '_stats.gridm' + error);
 								});
 								if (old && old.val) {
 									if (old.val !== parseInt(obj['stats'][0]['grid'])) {
@@ -1604,7 +1647,7 @@ class Fritzdect extends utils.Adapter {
 								old = await this.getStateAsync(
 									'DECT_' + identifier + '.' + key + '_stats.countd'
 								).catch((error) => {
-									this.log.error('DECT_' + identifier + '.' + key + '_stats.countd' + error);
+									this.log.warn('DECT_' + identifier + '.' + key + '_stats.countd' + error);
 								});
 								if (old && old.val) {
 									if (old.val !== parseInt(obj['stats'][1]['count'])) {
@@ -1622,7 +1665,7 @@ class Fritzdect extends utils.Adapter {
 								old = await this.getStateAsync(
 									'DECT_' + identifier + '.' + key + '_stats.gridd'
 								).catch((error) => {
-									this.log.error('DECT_' + identifier + '.' + key + '_stats.gridd' + error);
+									this.log.warn('DECT_' + identifier + '.' + key + '_stats.gridd' + error);
 								});
 								if (old && old.val) {
 									if (old.val !== parseInt(obj['stats'][1]['grid'])) {
@@ -1670,7 +1713,7 @@ class Fritzdect extends utils.Adapter {
 							old = await this.getStateAsync(
 								'DECT_' + identifier + '.' + key + '_stats.count'
 							).catch((error) => {
-								this.log.error('DECT_' + identifier + '.' + key + '_stats.count' + error);
+								this.log.warn('DECT_' + identifier + '.' + key + '_stats.count ' + error);
 							});
 							if (old && old.val) {
 								if (old.val !== parseInt(obj['stats']['count'])) {
@@ -1689,7 +1732,7 @@ class Fritzdect extends utils.Adapter {
 							old = await this.getStateAsync(
 								'DECT_' + identifier + '.' + key + '_stats.grid'
 							).catch((error) => {
-								this.log.error('DECT_' + identifier + '.' + key + '_stats.grid' + error);
+								this.log.warn('DECT_' + identifier + '.' + key + '_stats.grid  ' + error);
 							});
 							if (old && old.val) {
 								if (old.val !== parseInt(obj['stats']['grid'])) {
@@ -1726,7 +1769,9 @@ class Fritzdect extends utils.Adapter {
 			if (!value || value == '') {
 				this.log.debug(' no value for updating in ' + ain + '  ' + key + ' writing null');
 				//wirklich mit "null" beschreiben?
-				old = await this.getStateAsync('DECT_' + ain + '.' + key);
+				old = await this.getStateAsync('DECT_' + ain + '.' + key).catch((error) => {
+					this.log.warn('DECT_' + ain + '.' + key + ' did not get state -> ' + error);
+				});
 				if (old.val != null || !this.config.fritz_writeonhyst) {
 					this.log.debug('updating data DECT_' + ain + ' : ' + key + ' new: ' + null + ' old: ' + old.val);
 					await this.setStateAsync('DECT_' + ain + '.' + key, {
@@ -1736,7 +1781,9 @@ class Fritzdect extends utils.Adapter {
 				}
 			} else {
 				try {
-					old = await this.getStateAsync('DECT_' + ain + '.' + key);
+					old = await this.getStateAsync('DECT_' + ain + '.' + key).catch((error) => {
+						this.log.warn('DECT_' + ain + '.' + key + ' did not get state -> ' + error);
+					});
 					if (old !== null || !this.config.fritz_writeonhyst) {
 						if (key == 'nextchange') {
 							//fasthack anstatt neue objekterkennung

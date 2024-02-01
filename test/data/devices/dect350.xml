@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<devicelist>
+    <device identifier="15282 0249257" id="26" functionbitmask="1" fwversion="03.56" manufacturer="AVM" productname="FRITZ!DECT 350">
+        <present>1</present>
+        <txbusy>0</txbusy>
+        <name>Fenster1Bad</name>
+        <battery>100</battery>
+        <batterylow>0</batterylow>
+    </device>
+    <device identifier="15282 0249257-1" id="2000" functionbitmask="8208" fwversion="0.0" manufacturer="AVM" productname="FRITZ!DECT 350">
+        <present>1</present>
+        <txbusy>0</txbusy>
+        <name>FRITZ!DECT #11</name>
+        <etsiunitinfo>
+            <etsideviceid>26</etsideviceid>
+            <unittype>514</unittype>
+            <interfaces>256</interfaces>
+        </etsiunitinfo>
+        <alert>
+            <state>0</state>
+            <lastalertchgtimestamp>1706271938</lastalertchgtimestamp>
+        </alert>
+    </device>
+</devicelist>

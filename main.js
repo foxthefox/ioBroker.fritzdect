@@ -3072,7 +3072,7 @@ class Fritzdect extends utils.Adapter {
 									ack: true
 								});
 							} else if (key === 'tsoll') {
-								await this.createValueCtrl(
+								await this.createValueCtrlmixed(
 									identifier,
 									'tsoll',
 									'Setpoint Temperature',
@@ -3177,7 +3177,7 @@ class Fritzdect extends utils.Adapter {
 									ack: true
 								});
 								//create the user definde end time for manual setting the window open active state
-								await this.createValueCtrl(
+								await this.createValueCtrlmixed(
 									identifier,
 									'boostactivetime',
 									'boost active time for cmd',
@@ -3208,7 +3208,7 @@ class Fritzdect extends utils.Adapter {
 									ack: true
 								});
 								//create the user definde end time for manual setting the window open active state
-								await this.createValueCtrl(
+								await this.createValueCtrlmixed(
 									identifier,
 									'windowopenactivetime',
 									'window open active time for cmd',
@@ -3624,6 +3624,25 @@ class Fritzdect extends utils.Adapter {
 		});
 		return;
 	}
+	async createValueCtrlmixed(newId, datapoint, name, min, max, unit, role) {
+	this.log.debug('create datapoint ' + newId + ' with  ' + datapoint);
+	await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {
+		type: 'state',
+		common: {
+			name: name,
+			type: 'mixed',
+			min: min,
+			max: max,
+			unit: unit,
+			read: true,
+			write: true,
+			role: role,
+			desc: name
+		},
+		native: {}
+	});
+	return;
+}
 	async createList(newId, datapoint, name) {
 		this.log.debug('create list' + newId + ' with  ' + datapoint);
 		await this.setObjectNotExistsAsync('DECT_' + newId + '.' + datapoint, {

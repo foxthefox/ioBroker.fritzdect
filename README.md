@@ -223,6 +223,7 @@ otherwise it is more complex and individually to be parametrized.
 * more loggimg for issue #500 of restart loop
 * some error messages downgraded to warnings
 * correction related to thermostat value take over, when reduced setting is activated
+* update devDeps
 
 ### 2.5.9 (npm)
 * correction for statistics,

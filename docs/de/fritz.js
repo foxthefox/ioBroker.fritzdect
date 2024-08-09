@@ -1,7 +1,7 @@
 const Fritz = require('fritzdect-aha-nodejs');
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
-const parser = require('xml2json-light');
+const parser = require('../../lib/xml2json.js');
 
 const cmdOptionsDefinition = [
 	{ name: 'username', alias: 'u', type: String, description: 'username for FB login' },

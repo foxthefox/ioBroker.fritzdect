@@ -70,7 +70,8 @@ tests.integration(path.join(__dirname, '..'), {
 						//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
 						fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
 						fritz_interval: 300,
-						fritz_strictssl: true
+						fritz_strictssl: true,
+						fritz_writeonhyst: true
 					}
 				};
 				await harness.changeAdapterConfig('fritzdect', obj);

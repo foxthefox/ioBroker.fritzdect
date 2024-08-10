@@ -222,6 +222,7 @@ otherwise it is more complex and individually to be parametrized.
 
 ### 2.5.11 (npm)
 * upadate devDeps, linting error corrections
+* iob checker corrections
 
 ### 2.5.10
 * more loggimg for issue #500 of restart loop

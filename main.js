@@ -173,7 +173,7 @@ class Fritzdect extends utils.Adapter {
 
 			// jsonUI should transfer PW decrypted
 			if (settings.Username !== '' && settings.Password !== '') {
-				this.getForeignObject('system.config', async (err, obj) => {
+				this.getForeignObject('system.config', async (err) => {
 					// Adapter is alive, make API call
 					// Make a call to fritzboxAPI and get a list devices/groups and templates
 
@@ -304,6 +304,7 @@ class Fritzdect extends utils.Adapter {
 			this.log.info('cleaned everything up...');
 			callback();
 		} catch (e) {
+			this.log.error(e);
 			callback();
 		}
 	}
@@ -373,7 +374,7 @@ class Fritzdect extends utils.Adapter {
 								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 1, ack: false }); //damit das Ventil auch regelt
 								await this.fritz
 									.setTempTarget(id, 'off')
-									.then((sid) => {
+									.then(() => {
 										this.log.debug('Switched Mode' + id + ' to closed');
 									})
 									.catch((e) => this.errorHandlerApi(e));
@@ -442,7 +443,7 @@ class Fritzdect extends utils.Adapter {
 							} else if (state.val === 1) {
 								await this.fritz
 									.setTempTarget(id, 'off')
-									.then((sid) => {
+									.then(() => {
 										this.log.debug('Switched Mode' + id + ' to closed.');
 										this.setStateAsync('DECT_' + id + '.operationmode', {
 											val: 'Off',
@@ -453,7 +454,7 @@ class Fritzdect extends utils.Adapter {
 							} else if (state.val === 2) {
 								await this.fritz
 									.setTempTarget(id, 'on')
-									.then((sid) => {
+									.then(() => {
 										this.log.debug('Switched Mode' + id + ' to opened permanently');
 										this.setStateAsync('DECT_' + id + '.operationmode', {
 											val: 'On',
@@ -517,7 +518,7 @@ class Fritzdect extends utils.Adapter {
 							});
 							await this.fritz
 								.setTempTarget(id, 'off')
-								.then((sid) => {
+								.then(() => {
 									this.log.debug('Switched Mode' + id + ' to closed.');
 									this.setStateAsync('DECT_' + id + '.operationmode', {
 										val: 'Off',
@@ -538,7 +539,7 @@ class Fritzdect extends utils.Adapter {
 							});
 							await this.fritz
 								.setTempTarget(id, 'on')
-								.then((sid) => {
+								.then(() => {
 									this.log.debug('Switched Mode' + id + ' to opened permanently');
 									this.setStateAsync('DECT_' + id + '.operationmode', {
 										val: 'On',
@@ -656,7 +657,7 @@ class Fritzdect extends utils.Adapter {
 							) {
 								this.fritz
 									.setWindowOpen(id, 0)
-									.then((sid) => {
+									.then(() => {
 										this.log.debug('Reset thermostat windowopen ' + id + ' to ' + state.val);
 										this.setStateAsync('DECT_' + id + '.windowopenactiv', {
 											val: state.val,
@@ -746,7 +747,7 @@ class Fritzdect extends utils.Adapter {
 									if (switchtyp.val === 'switch') {
 										this.fritz
 											.setSwitchOff(id)
-											.then((sid) => {
+											.then(() => {
 												this.log.debug('Turned switch ' + id + ' off');
 												this.setStateAsync('DECT_' + id + '.state', {
 													val: false,
@@ -757,7 +758,7 @@ class Fritzdect extends utils.Adapter {
 									} else {
 										this.fritz
 											.setSimpleOff(id)
-											.then((sid) => {
+											.then(() => {
 												this.log.debug('Turned switch ' + id + ' off');
 												this.setStateAsync('DECT_' + id + '.state', {
 													val: false,
@@ -786,7 +787,7 @@ class Fritzdect extends utils.Adapter {
 									if (switchtyp.val === 'switch') {
 										this.fritz
 											.setSwitchOn(id)
-											.then((sid) => {
+											.then(() => {
 												this.log.debug('Turned switch ' + id + ' on');
 												this.setStateAsync('DECT_' + id + '.state', {
 													val: true,
@@ -797,7 +798,7 @@ class Fritzdect extends utils.Adapter {
 									} else {
 										this.fritz
 											.setSimpleOn(id)
-											.then((sid) => {
+											.then(() => {
 												this.log.debug('Turned switch ' + id + ' on');
 												this.setStateAsync('DECT_' + id + '.state', {
 													val: true,
@@ -814,7 +815,7 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'blindsclose') {
 							this.fritz
 								.setBlind(id, 'close')
-								.then(async (sid) => {
+								.then(async () => {
 									this.log.debug('Started blind ' + id + ' to close');
 									await this.setStateAsync('DECT_' + id + '.blindsclose', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
@@ -823,7 +824,7 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'blindsopen') {
 							this.fritz
 								.setBlind(id, 'open')
-								.then(async (sid) => {
+								.then(async () => {
 									this.log.debug('Started blind ' + id + ' to open');
 									await this.setStateAsync('DECT_' + id + '.blindsopen', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
@@ -832,7 +833,7 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'blindsstop') {
 							this.fritz
 								.setBlind(id, 'stop')
-								.then((sid) => {
+								.then(() => {
 									this.log.debug('Set blind ' + id + ' to stop');
 									this.setStateAsync('DECT_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
@@ -841,7 +842,7 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'level') {
 							this.fritz
 								.setLevel(id, state.val)
-								.then((sid) => {
+								.then(() => {
 									this.log.debug('Set level' + id + ' to ' + state.val);
 									this.setStateAsync('DECT_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 								})
@@ -850,7 +851,7 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'levelpercentage') {
 							this.fritz
 								.setLevel(id, Math.floor(Number(state.val) / 100 * 255))
-								.then((sid) => {
+								.then(() => {
 									//level is in 0...255
 									this.log.debug('Set level %' + id + ' to ' + state.val);
 									this.setStateAsync('DECT_' + id + '.levelpercentage', {
@@ -874,7 +875,7 @@ class Fritzdect extends utils.Adapter {
 								} else {
 									this.fritz
 										.setColor(id, setSaturation, state.val)
-										.then((sid) => {
+										.then(() => {
 											this.log.debug(
 												'Set lamp color hue ' +
 													id +
@@ -907,7 +908,7 @@ class Fritzdect extends utils.Adapter {
 								} else {
 									this.fritz
 										.setColor(id, state.val, setHue)
-										.then((sid) => {
+										.then(() => {
 											this.log.debug(
 												'Set lamp color saturation ' +
 													id +
@@ -930,7 +931,7 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'temperature') {
 							this.fritz
 								.setColorTemperature(id, state.val)
-								.then((sid) => {
+								.then(() => {
 									this.log.debug('Set lamp color temperature ' + id + ' to ' + state.val);
 									this.setStateAsync('DECT_' + id + '.temperature', {
 										val: state.val,
@@ -1041,7 +1042,7 @@ class Fritzdect extends utils.Adapter {
 					}
 				}
 				// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
-
+				let statfeedback = {};
 				switch (obj.command) {
 					case 'devices':
 						try {
@@ -1129,7 +1130,6 @@ class Fritzdect extends utils.Adapter {
 						wait = true;
 						break;
 					case 'statistic':
-						let statfeedback = {};
 						try {
 							const deviceswithstat = await this.getStateAsync('global.statdevices').catch((e) => {
 								this.log.warn('problem getting statdevices ' + e);
@@ -1284,8 +1284,8 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('updating Routines ');
 		try {
 			const routineslistinfos = await fritz.getTriggerListInfos().catch((e) => this.errorHandlerApi(e));
-			let typ = '';
-			let role = '';
+			//let typ = '';
+			//let role = '';
 			if (routineslistinfos) {
 				let routines = parser.xml2json(routineslistinfos);
 				routines = [].concat((routines.triggerlist || {}).trigger || []).map((trigger) => {

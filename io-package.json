@@ -15,7 +15,7 @@
 				"pl": "zaktualizuj devDeps, korekta błędów lintingu",
 				"uk": "оновлення devDeps, виправлення помилок linting",
 				"zh-cn": "更新 devDeps，linting 错误修正"
-			}
+			},
 			"2.5.9": {
 				"en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
 				"de": "Neues Meldungsfeld, Korrektur für Statistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",

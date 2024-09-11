@@ -121,7 +121,7 @@
 		"supportCustoms": false,
 		"dependencies": [
 			{
-				"js-controller": ">=4.0.24"
+				"js-controller": ">=5.0.12"
 			}
 		],
 		"globalDependencies": [

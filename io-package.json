@@ -1,8 +1,11 @@
 {
 	"common": {
 		"name": "fritzdect",
-		"version": "2.5.11",
+		"version": "2.5.12",
 		"news": {
+			"2.5.12": {
+				"en": "error correction for devices with empty identifier; update responsive settings"
+			},
 			"2.5.11": {
 				"en": "update devDeps, linting error correction",
 				"de": "Update devDeps, Linting-Fehlerkorrektur",

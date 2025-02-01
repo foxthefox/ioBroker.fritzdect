@@ -23,7 +23,7 @@
 		"fritzdect-aha-nodejs": "^2.1.0"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.9.0",
+		"@eslint/js": "^9.19.0",
 		"@iobroker/adapter-dev": "^1.0.1",
 		"@iobroker/testing": "^5.0.0",
 		"@types/chai": "^4.3.11",

@@ -25,7 +25,7 @@
 	"devDependencies": {
 		"@eslint/js": "^9.9.0",
 		"@iobroker/adapter-dev": "^1.0.1",
-		"@iobroker/testing": "^5.0.0",
+		"@iobroker/testing": "^5.0.3",
 		"@types/chai": "^4.3.11",
 		"@types/chai-as-promised": "^8.0.1",
 		"@types/mocha": "^10.0.7",

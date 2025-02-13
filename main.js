@@ -227,35 +227,14 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('start initial updating devices/groups');
 							await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished initial updating devices/groups');
-							this.log.info(
-								'going over to cyclic polling, messages to poll activity only in debug-mode '
-							);
-							if (!polling) {
+
+							if (!polling && settings.intervall > 0) {
+								this.log.info('going over to cyclic polling, messages to poll activity only in debug-mode ');
 								polling = setInterval(async () => {
 									// poll fritzbox
 									try {
 										this.log.debug('polling! fritzdect is alive with ' + settings.intervall + ' s');
-										await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
-										if (!settings.exclude_routines) {
-											await this.updateRoutines(this.fritz).catch((e) =>
-												this.errorHandlerAdapter(e)
-											);
-										}
-										if (!settings.exclude_stats) {
-											const deviceswithstat = await this.getStateAsync(
-												'global.statdevices'
-											).catch((e) => {
-												this.log.warn('problem getting statdevices ' + e);
-											});
-											if (deviceswithstat && deviceswithstat.val) {
-												this.log.debug('glob state ' + deviceswithstat.val);
-												let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
-												for (let i = 0; i < devstat.length; i++) {
-													this.log.debug('updating Stats of device ' + devstat[i]);
-													await this.updateStats(devstat[i], this.fritz);
-												}
-											}
-										}
+										this.update();
 									} catch (e) {
 										this.log.warn(`[Polling] <== ${e}`);
 									}
@@ -1044,6 +1023,25 @@ class Fritzdect extends utils.Adapter {
 				// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 				let statfeedback = {};
 				switch (obj.command) {
+					case 'update':
+						try {
+							await this.update();
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { result: true }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn("${error}");
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ result: false, error: "${error}" },
+									obj.callback
+								);
+							}
+						}
+						wait = true;
+						break;
 					case 'devices':
 						try {
 							let xml = await this.fritz.getDeviceListInfos();
@@ -1279,6 +1277,31 @@ class Fritzdect extends utils.Adapter {
 			this.log.error('try/catch error in function errorHandlerAdapter' + e);
 		}
 	}
+
+	async update() {
+		await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
+		if (!settings.exclude_routines) {
+			await this.updateRoutines(this.fritz).catch((e) =>
+				this.errorHandlerAdapter(e)
+			);
+		}
+		if (!settings.exclude_stats) {
+			const deviceswithstat = await this.getStateAsync(
+				'global.statdevices'
+			).catch((e) => {
+				this.log.warn('problem getting statdevices ' + e);
+			});
+			if (deviceswithstat && deviceswithstat.val) {
+				this.log.debug('glob state ' + deviceswithstat.val);
+				let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
+				for (let i = 0; i < devstat.length; i++) {
+					this.log.debug('updating Stats of device ' + devstat[i]);
+					await this.updateStats(devstat[i], this.fritz);
+				}
+			}
+		}
+	}
+
 	async updateRoutines(fritz) {
 		this.log.debug('__________________________');
 		this.log.debug('updating Routines ');

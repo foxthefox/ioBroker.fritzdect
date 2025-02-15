@@ -138,6 +138,7 @@ class Fritzdect extends utils.Adapter {
 		this.boosttime = 5;
 		this.windowtime = 5;
 		this.tsolldefault = 23;
+		this.updatePromise = null;
 	}
 
 	/**
@@ -1279,6 +1280,16 @@ class Fritzdect extends utils.Adapter {
 	}
 
 	async update() {
+		if (!this.updatePromise) {
+			this.updatePromise = this._update()
+				.finally(() => {
+					this.updatePromise = null;
+				});
+		}
+		return this.updatePromise;
+	}
+
+	async _update() {
 		await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 		if (!settings.exclude_routines) {
 			await this.updateRoutines(this.fritz).catch((e) =>

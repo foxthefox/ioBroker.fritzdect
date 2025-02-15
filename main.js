@@ -1572,27 +1572,27 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('======================================');
 		this.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
 		try {
-			Object.entries(array).forEach(async ([ key, value ]) => {
+			await Promise.all( Object.entries(array).map(async ([ key, value ]) => {
 				if (Array.isArray(value)) {
 					this.log.debug('processing datapoint ' + key + ' as array');
-					value.forEach(async (subarray) => {
+					await Promise.all( value.map(async (subarray) => {
 						//subarray.identifier = subarray.identifier.replace(/\s/g, '');
 						await this.updateData(
 							subarray,
 							ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')
 						); // hier wirds erst schwierig wenn array in array
-					});
+					}));
 				} else if (typeof value === 'object' && value !== null) {
 					this.log.debug('processing datapoint ' + key + ' as object');
-					Object.entries(value).forEach(async ([ key2, value2 ]) => {
+					await Promise.all( Object.entries(value).map(async ([ key2, value2 ]) => {
 						this.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
 						await this.updateDatapoint(key2, value2, ident);
-					});
+					}));
 				} else {
 					this.log.debug('processing datapoint ' + key + ' directly');
 					await this.updateDatapoint(key, value, ident);
 				}
-			});
+			}));
 		} catch (e) {
 			this.log.debug(' issue in updateData ' + e);
 			throw {

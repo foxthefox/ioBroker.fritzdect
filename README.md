@@ -209,6 +209,10 @@ otherwise it is more complex and individually to be parametrized.
 
 ## Changelog
 
+### 2.5.13 (npm)
+* same as 2.5.12 with corrected IOB checker issues
+
+
 ### 2.5.12 (npm)
 * skipping devices with empty identified (#598, #599), transmitted in FW8.01
 * update responsive settings

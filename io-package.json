@@ -1,154 +1,194 @@
 {
-	"common": {
-		"name": "fritzdect",
-		"version": "2.5.12",
-		"news": {
-			"2.5.12": {
-				"en": "error correction for devices with empty identifier; update responsive settings"
-			},
-			"2.5.11": {
-				"en": "update devDeps, linting error correction",
-				"de": "Update devDeps, Linting-Fehlerkorrektur",
-				"ru": "обновление devDeps, исправление ошибок линтинга",
-				"pt": "atualizar devDeps, correção de erros de linting",
-				"nl": "update devDeps, correctie van lintingfouten",
-				"fr": "mettre à jour devDeps, correction d'erreur de peluchage",
-				"it": "aggiornamento devDeps, correzione degli errori di linting",
-				"es": "actualizar devDeps, corrección de errores de linting",
-				"pl": "zaktualizuj devDeps, korekta błędów lintingu",
-				"uk": "оновлення devDeps, виправлення помилок linting",
-				"zh-cn": "更新 devDeps，linting 错误修正"
-			},
-			"2.5.9": {
-				"en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
-				"de": "Neues Meldungsfeld, Korrektur für Statistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",
-				"ru": "новое окно сообщений, исправление статистики, в версиях >2.5.4 пароль необходимо вводить заново",
-				"pt": "nova caixa de mensagem, correção de estatísticas, senha precisa ser digitada novamente nas versões >2.5.4",
-				"nl": "nieuw berichtvenster, correctie voor statistieken, wachtwoord moet opnieuw worden ingevoerd in versies >2.5.4",
-				"fr": "nouvelle boîte de message, correction des statistiques, le mot de passe doit être ressaisi dans les versions >2.5.4",
-				"it": "nuova finestra di messaggio, correzione per le statistiche, la password deve essere reinserita nelle versioni >2.5.4",
-				"es": "Nuevo cuadro de mensaje, corrección de estadísticas, es necesario volver a ingresar la contraseña en las versiones >2.5.4",
-				"pl": "nowe okno komunikatu, korekta statystyk, w wersjach >2.5.4 konieczne jest ponowne wprowadzenie hasła",
-				"uk": "нове вікно повідомлення, виправлення статистики, пароль потрібно ввести повторно у версіях >2.5.4",
-				"zh-cn": "新消息框，统计修正，2.5.4以上版本需要重新输入密码"
-			}
-		},
-		"messages": [
-			{
-				"condition": {
-					"operand": "and",
-					"rules": [ "oldVersion<2.5.3", "newVersion>=2.5.4" ]
-				},
-				"title": {
-					"en": "Important notice!",
-					"de": "Wichtiger Hinweis!",
-					"ru": "Важное замечание!",
-					"pt": "Notícia importante!",
-					"nl": "Belangrijke mededeling!",
-					"fr": "Avis important!",
-					"it": "Avviso IMPORTANTE!",
-					"es": "Noticia importante!",
-					"pl": "Ważna uwaga!",
-					"uk": "Погода!",
-					"zh-cn": "重要通知!"
-				},
-				"text": {
-					"en": "Please re-enter the password in the admin page. ",
-					"de": "Bitte geben Sie das Passwort auf der Admin-Seite erneut ein.",
-					"ru": "Пожалуйста, повторно введите пароль на странице администратора.",
-					"pt": "Por favor, digite novamente a senha na página de administração.",
-					"nl": "Voer het wachtwoord opnieuw in op de beheerderspagina.",
-					"fr": "Veuillez saisir à nouveau le mot de passe dans la page d'administration.",
-					"it": "Si prega di reinserire la password nella pagina di amministrazione.",
-					"es": "Vuelva a ingresar la contraseña en la página de administración.",
-					"pl": "Wprowadź ponownie hasło na stronie administratora.",
-					"uk": "Повторно введіть пароль на сторінці адміністратора.",
-					"zh-cn": "请在管理页面重新输入密码。"
-				},
-				"level": "warn",
-				"buttons": [ "ok", "cancel" ]
-			}
-		],
-		"titleLang": {
-			"en": "fritzbox dect ",
-			"de": "fritzbox dect",
-			"ru": "fritzbox дект",
-			"pt": "fritzbox dect",
-			"nl": "flitzbox dect",
-			"fr": "fritzbox dect",
-			"it": "fritzbox dect",
-			"es": "fritzbox dect",
-			"pl": "fritzbox dect",
-			"uk": "фріцбокс дект",
-			"zh-cn": "摩茨箱"
-		},
-		"desc": {
-			"en": "connects DECT ULE devices (fritzdect) to ioBroker",
-			"de": "verbindet DECT ULE Geräte (fritzdect) mit ioBroker",
-			"ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
-			"pt": "conecta dispositivos DECT ULE (fritzdect) ao ioBroker",
-			"nl": "verbindt DECT ULE apparaten met ioBroker",
-			"fr": "connecte les appareils DECT ULE (fritzdect) à ioBroker",
-			"it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
-			"es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
-			"pl": "łączy DECT ULE (fritzdect) z ioBrokerem",
-			"uk": "з'єднання пристроїв DECT ULE (фрицдект) до ioBroker",
-			"zh-cn": "broker的连接"
-		},
-		"authors": [ "foxthefox <foxthefox@wysiwis.net>" ],
-		"docs": {
-			"de": "docs/de/install.md"
-		},
-		"keywords": [ "DECT ULE", "lighting", "heating", "switching", "fritzbox", "AVM" ],
-		"licenseInformation": {
-			"license": "MIT",
-			"type": "free"
-		},
-		"platform": "Javascript/Node.js",
-		"icon": "fritzdect_logo.png",
-		"enabled": false,
-		"extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
-		"readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
-		"loglevel": "info",
-		"restartAdapters": [ "vis" ],
-		"mode": "daemon",
-		"tier": 3,
-		"type": "hardware",
-		"adminUI": {
-			"config": "json"
-		},
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"supportCustoms": false,
-		"dependencies": [
-			{
-				"js-controller": ">=5.0.12"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"native": {
-		"fritz_ip": "http://192.168.x.x",
-		"fritz_user": "admin",
-		"fritz_pw": "pw",
-		"fritz_interval": 300,
-		"fritz_options": null,
-		"fritz_writeonhyst": false,
-		"fritz_analogchange": true,
-		"fritz_hysteresis": 1,
-		"fritz_boosttime": 5,
-		"fritz_windowtime": 5,
-		"fritz_tsolldefault": 23,
-		"fritz_exclude_templates": false,
-		"fritz_exclude_routines": false,
-		"fritz_exclude_stats": false
-	},
-	"objects": [],
-	"instanceObjects": []
+    "common": {
+        "name": "fritzdect",
+        "version": "2.5.13",
+        "news": {
+            "2.5.13": {
+                "en": "same as 2.5.12 with corrected IOB checker issues",
+                "de": "Gleich wie 2.5.12 mit korrigierten IOB -Checker -Problemen",
+                "ru": "То же, что 2.5.12 с исправленными проблемами проверки IOB",
+                "pt": "O mesmo que 2.5.12 com problemas de verificador de IOB corrigidos",
+                "nl": "Hetzelfde als 2.5.12 met gecorrigeerde IOB -checker -problemen",
+                "fr": "Identique à 2.5.12 avec des problèmes de vérification IOB corrigés",
+                "it": "Come 2.5.12 con problemi di controllo IOB corretti",
+                "es": "Igual que 2.5.12 con problemas de verificador de IOB corregido",
+                "pl": "Tak samo jak 2.5.12 z poprawionymi problemami z sprawdzaniem IOB",
+                "uk": "Те саме, що 2.5.12 з виправленими проблемами перевірки IOB",
+                "zh-cn": "与2.5.12相同，带有校正后的IOB检查器问题"
+            },
+            "2.5.12": {
+                "en": "error correction for devices with empty identifier; update responsive settings",
+                "de": "Fehlerkorrektur für Geräte mit leerem Kennung; Aktualisieren Sie die Reaktionseinstellungen",
+                "ru": "коррекция ошибок для устройств с пустым идентификатором; Обновление адаптивных настроек",
+                "pt": "Correção de erros para dispositivos com identificador vazio; Atualize configurações responsivas",
+                "nl": "Foutcorrectie voor apparaten met een lege identificatie; Update responsieve instellingen",
+                "fr": "Correction d'erreur pour les appareils avec identifiant vide; Mettre à jour les paramètres réactifs",
+                "it": "correzione dell'errore per dispositivi con identificatore vuoto; Aggiorna le impostazioni reattive",
+                "es": "Corrección de errores para dispositivos con identificador vacío; Actualizar la configuración receptiva",
+                "pl": "Korekta błędów dla urządzeń z pustym identyfikatorem; Zaktualizuj ustawienia responsywne",
+                "uk": "Виправлення помилок для пристроїв з порожнім ідентифікатором; Оновіть чуйні налаштування",
+                "zh-cn": "具有空标识符的设备的误差校正；更新响应式设置"
+            },
+            "2.5.11": {
+                "en": "update devDeps, linting error correction",
+                "de": "Update devDeps, Linting-Fehlerkorrektur",
+                "ru": "обновление devDeps, исправление ошибок линтинга",
+                "pt": "atualizar devDeps, correção de erros de linting",
+                "nl": "update devDeps, correctie van lintingfouten",
+                "fr": "mettre à jour devDeps, correction d'erreur de peluchage",
+                "it": "aggiornamento devDeps, correzione degli errori di linting",
+                "es": "actualizar devDeps, corrección de errores de linting",
+                "pl": "zaktualizuj devDeps, korekta błędów lintingu",
+                "uk": "оновлення devDeps, виправлення помилок linting",
+                "zh-cn": "更新 devDeps，linting 错误修正"
+            },
+            "2.5.9": {
+                "en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
+                "de": "Neues Meldungsfeld, Korrektur für Statistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",
+                "ru": "новое окно сообщений, исправление статистики, в версиях >2.5.4 пароль необходимо вводить заново",
+                "pt": "nova caixa de mensagem, correção de estatísticas, senha precisa ser digitada novamente nas versões >2.5.4",
+                "nl": "nieuw berichtvenster, correctie voor statistieken, wachtwoord moet opnieuw worden ingevoerd in versies >2.5.4",
+                "fr": "nouvelle boîte de message, correction des statistiques, le mot de passe doit être ressaisi dans les versions >2.5.4",
+                "it": "nuova finestra di messaggio, correzione per le statistiche, la password deve essere reinserita nelle versioni >2.5.4",
+                "es": "Nuevo cuadro de mensaje, corrección de estadísticas, es necesario volver a ingresar la contraseña en las versiones >2.5.4",
+                "pl": "nowe okno komunikatu, korekta statystyk, w wersjach >2.5.4 konieczne jest ponowne wprowadzenie hasła",
+                "uk": "нове вікно повідомлення, виправлення статистики, пароль потрібно ввести повторно у версіях >2.5.4",
+                "zh-cn": "新消息框，统计修正，2.5.4以上版本需要重新输入密码"
+            }
+        },
+        "messages": [
+            {
+                "condition": {
+                    "operand": "and",
+                    "rules": [
+                        "oldVersion<2.5.3",
+                        "newVersion>=2.5.4"
+                    ]
+                },
+                "title": {
+                    "en": "Important notice!",
+                    "de": "Wichtiger Hinweis!",
+                    "ru": "Важное замечание!",
+                    "pt": "Notícia importante!",
+                    "nl": "Belangrijke mededeling!",
+                    "fr": "Avis important!",
+                    "it": "Avviso IMPORTANTE!",
+                    "es": "Noticia importante!",
+                    "pl": "Ważna uwaga!",
+                    "uk": "Погода!",
+                    "zh-cn": "重要通知!"
+                },
+                "text": {
+                    "en": "Please re-enter the password in the admin page. ",
+                    "de": "Bitte geben Sie das Passwort auf der Admin-Seite erneut ein.",
+                    "ru": "Пожалуйста, повторно введите пароль на странице администратора.",
+                    "pt": "Por favor, digite novamente a senha na página de administração.",
+                    "nl": "Voer het wachtwoord opnieuw in op de beheerderspagina.",
+                    "fr": "Veuillez saisir à nouveau le mot de passe dans la page d'administration.",
+                    "it": "Si prega di reinserire la password nella pagina di amministrazione.",
+                    "es": "Vuelva a ingresar la contraseña en la página de administración.",
+                    "pl": "Wprowadź ponownie hasło na stronie administratora.",
+                    "uk": "Повторно введіть пароль на сторінці адміністратора.",
+                    "zh-cn": "请在管理页面重新输入密码。"
+                },
+                "level": "warn",
+                "buttons": [
+                    "ok",
+                    "cancel"
+                ]
+            }
+        ],
+        "titleLang": {
+            "en": "fritzbox dect ",
+            "de": "fritzbox dect",
+            "ru": "fritzbox дект",
+            "pt": "fritzbox dect",
+            "nl": "flitzbox dect",
+            "fr": "fritzbox dect",
+            "it": "fritzbox dect",
+            "es": "fritzbox dect",
+            "pl": "fritzbox dect",
+            "uk": "фріцбокс дект",
+            "zh-cn": "摩茨箱"
+        },
+        "desc": {
+            "en": "connects DECT ULE devices (fritzdect) to ioBroker",
+            "de": "verbindet DECT ULE Geräte (fritzdect) mit ioBroker",
+            "ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
+            "pt": "conecta dispositivos DECT ULE (fritzdect) ao ioBroker",
+            "nl": "verbindt DECT ULE apparaten met ioBroker",
+            "fr": "connecte les appareils DECT ULE (fritzdect) à ioBroker",
+            "it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
+            "es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
+            "pl": "łączy DECT ULE (fritzdect) z ioBrokerem",
+            "uk": "з'єднання пристроїв DECT ULE (фрицдект) до ioBroker",
+            "zh-cn": "broker的连接"
+        },
+        "authors": [
+            "foxthefox <foxthefox@wysiwis.net>"
+        ],
+        "docs": {
+            "de": "docs/de/install.md"
+        },
+        "keywords": [
+            "DECT ULE",
+            "lighting",
+            "heating",
+            "switching",
+            "fritzbox",
+            "AVM"
+        ],
+        "licenseInformation": {
+            "license": "MIT",
+            "type": "free"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "fritzdect_logo.png",
+        "enabled": false,
+        "extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
+        "readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
+        "loglevel": "info",
+        "restartAdapters": [
+            "vis"
+        ],
+        "mode": "daemon",
+        "tier": 3,
+        "type": "hardware",
+        "adminUI": {
+            "config": "json"
+        },
+        "compact": true,
+        "messagebox": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "supportCustoms": false,
+        "dependencies": [
+            {
+                "js-controller": ">=5.0.19"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
+    },
+    "native": {
+        "fritz_ip": "http://192.168.x.x",
+        "fritz_user": "admin",
+        "fritz_pw": "pw",
+        "fritz_interval": 300,
+        "fritz_options": null,
+        "fritz_writeonhyst": false,
+        "fritz_analogchange": true,
+        "fritz_hysteresis": 1,
+        "fritz_boosttime": 5,
+        "fritz_windowtime": 5,
+        "fritz_tsolldefault": 23,
+        "fritz_exclude_templates": false,
+        "fritz_exclude_routines": false,
+        "fritz_exclude_stats": false
+    },
+    "objects": [],
+    "instanceObjects": []
 }

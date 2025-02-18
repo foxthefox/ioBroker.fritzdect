@@ -2,7 +2,8 @@ const { tests } = require('@iobroker/testing');
 
 const FritzEmu = require('fritzdect-aha-nodejs').FritzEmu;
 
-const expect = require('chai').expect;
+//const expect = require('chai').expect;
+import { expect } from "chai";
 
 const fs = require('fs');
 const path = require('path');

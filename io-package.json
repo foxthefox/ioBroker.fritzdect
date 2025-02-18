@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.5.13",
+        "version": "2.6.0",
         "news": {
+            "2.6.0": {
+                "en": "changes"
+            },
             "2.5.13": {
                 "en": "same as 2.5.12 with corrected IOB checker issues",
                 "de": "Gleich wie 2.5.12 mit korrigierten IOB -Checker -Problemen",

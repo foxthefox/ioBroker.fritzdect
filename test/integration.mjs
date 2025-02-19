@@ -1,13 +1,26 @@
-const { tests } = require('@iobroker/testing');
 
-const FritzEmu = require('fritzdect-aha-nodejs').FritzEmu;
 
+import {  tests } from '@iobroker/testing';
+import  pkg from 'fritzdect-aha-nodejs';
+const { FritzEmu } = pkg; 
+
+//const { tests } = require('@iobroker/testing');
+//const FritzEmu = require('fritzdect-aha-nodejs').FritzEmu;
 //const expect = require('chai').expect;
 import { expect } from "chai";
+import fs from "fs";
 
-const fs = require('fs');
-const path = require('path');
+import path from "path";
+//const fs = require('fs');VDI 4500
+//const path = require('path');
+/*
+const __dirname = import.meta.dirname;
 console.log('PATH ist ' + path.join(__dirname, './data/'));
+*/
+import { dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
+    
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const xmlDevicesGroups = fs.readFileSync(path.join(__dirname, './data/') + 'test_api_response.xml');
 const xmlTemplate = fs.readFileSync(path.join(__dirname, './data/') + 'template_answer.xml');
@@ -18,6 +31,17 @@ const xmlPowerStats = fs.readFileSync(path.join(__dirname, './data/') + 'devices
 const xmlColorDefaults = fs.readFileSync(path.join(__dirname, './data/') + 'color_defaults.xml');
 const hkr_batt = fs.readFileSync(path.join(__dirname, './data/') + 'hkr_response.xml');
 const guestWlan = fs.readFileSync(path.join(__dirname, './data/') + 'guest_wlan_form.xml');
+/*
+const xmlDevicesGroups = fs.readFileSync(new URL('./data/test_api_response.xml', import.meta.url));
+const xmlTemplate = fs.readFileSync(new URL('./data/template_answer.xml', import.meta.url));
+//const xmlTemplate = fs.readFileSync(new URL('./data/template.xml', import.meta.url));
+const xmlTriggerlist = fs.readFileSync(new URL('./data/getriggerlistinfos.xml', import.meta.url));
+const xmlTempStat = fs.readFileSync(new URL('./data/devicestat_temp_answer.xml', import.meta.url));
+const xmlPowerStats = fs.readFileSync(new URL('./data/devicestat_power_answer.xml', import.meta.url));
+const xmlColorDefaults = fs.readFileSync(new URL('./data/color_defaults.xml', import.meta.url));
+const hkr_batt = fs.readFileSync(new URL('./data/hkr_response.xml', import.meta.url));
+const guestWlan = fs.readFileSync(new URL('./data/guest_wlan_form.xml', import.meta.url));
+*/
 
 function encrypt(key, value) {
 	let result = '';
@@ -42,6 +66,10 @@ tests.integration(path.join(__dirname, '..'), {
 	// If the adapter may call process.exit during startup, define here which exit codes are allowed.
 	// By default, termination during startup is not allowed.
 	allowedExitCodes: [ 11 ],
+
+		// To test against a different version of JS-Controller, you can change the version or dist-tag here.
+	// Make sure to remove this setting when you're done testing.
+	controllerVersion: "latest", // or a specific version like "4.0.1"
 
 	// Define your own tests inside defineAdditionalTests
 	// Since the tests are heavily instrumented, you need to create and use a so called "harness" to control the tests.

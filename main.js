@@ -1031,12 +1031,12 @@ class Fritzdect extends utils.Adapter {
 								this.sendTo(obj.from, obj.command, { result: true }, obj.callback);
 							}
 						} catch (error) {
-							this.log.warn("${error}");
+							this.log.warn('unable to get manual updates' + error );
 							if (obj.callback) {
 								this.sendTo(
 									obj.from,
 									obj.command,
-									{ result: false, error: "${error}" },
+									{ result: false, error: 'unable to get manual updates' + error  },
 									obj.callback
 								);
 							}

@@ -1031,12 +1031,12 @@ class Fritzdect extends utils.Adapter {
 								this.sendTo(obj.from, obj.command, { result: true }, obj.callback);
 							}
 						} catch (error) {
-							this.log.warn("${error}");
+							this.log.warn('unable to get manual updates' + error );
 							if (obj.callback) {
 								this.sendTo(
 									obj.from,
 									obj.command,
-									{ result: false, error: "${error}" },
+									{ result: false, error: 'unable to get manual updates' + error  },
 									obj.callback
 								);
 							}
@@ -1974,7 +1974,7 @@ class Fritzdect extends utils.Adapter {
 						// individual check
 
 						// read value is a temperature
-						if (value < 57) {
+						if (value < 70) {
 							newtemp = parseFloat(value) / 2;
 							if (old) {
 								if (old.val !== newtemp) {
@@ -2044,7 +2044,7 @@ class Fritzdect extends utils.Adapter {
 						let targettemp;
 						let tsoll;
 						let oldval;
-						if (value < 57) {
+						if (value < 70) {
 							// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 							if (old) {
 								if (old.val !== parseFloat(value) / 2) {
@@ -3156,7 +3156,7 @@ class Fritzdect extends utils.Adapter {
 										'°C',
 										'value.temperature'
 									);
-									if (device.hkr.tsoll < 57) {
+									if (device.hkr.tsoll < 70) {
 										await this.setStateAsync('DECT_' + identifier + '.tsoll', {
 											val: parseFloat(device.hkr.tsoll) / 2,
 											ack: true
@@ -3176,7 +3176,7 @@ class Fritzdect extends utils.Adapter {
 										32,
 										'°C'
 									);
-									if (device.hkr.absenk < 57) {
+									if (device.hkr.absenk < 70) {
 										//war tsoll
 										await this.setStateAsync('DECT_' + identifier + '.absenk', {
 											val: parseFloat(device.hkr.absenk) / 2,
@@ -3198,7 +3198,7 @@ class Fritzdect extends utils.Adapter {
 										32,
 										'°C'
 									);
-									if (device.hkr.komfort < 57) {
+									if (device.hkr.komfort < 70) {
 										await this.setStateAsync('DECT_' + identifier + '.komfort', {
 											val: parseFloat(device.hkr.komfort) / 2,
 											ack: true

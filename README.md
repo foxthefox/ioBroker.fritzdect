@@ -228,6 +228,11 @@ otherwise it is more complex and individually to be parametrized.
 
 ## Changelog
 
+### 2.6.0 (npm)
+* (khnz) PR#618 support on-demand updates
+* change temperature checking < 28°C extended to < 35°C (issue #619)
+* change dependencies
+
 ### 2.5.13 (npm)
 * same as 2.5.12 with corrected IOB checker issues
 

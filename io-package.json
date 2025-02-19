@@ -4,7 +4,17 @@
         "version": "2.6.0",
         "news": {
             "2.6.0": {
-                "en": "changes"
+                "en": "support on-demand updates, temperature range",
+                "de": "Unterstützen Sie On-Demand-Updates, Temperaturbereich",
+                "ru": "Поддержка обновлений по требованию, температурный диапазон",
+                "pt": "Suporte atualizações sob demanda, faixa de temperatura",
+                "nl": "Ondersteuning on-demand updates, temperatuurbereik",
+                "fr": "Prise en charge des mises à jour à la demande, plage de température",
+                "it": "Supportare aggiornamenti su richiesta, intervallo di temperatura",
+                "es": "admitir actualizaciones a pedido, rango de temperatura",
+                "pl": "Obsługa aktualizacji na żądanie, zakres temperatur",
+                "uk": "Підтримуйте оновлення на вимогу, діапазон температури",
+                "zh-cn": "支持按需更新，温度范围"
             },
             "2.5.13": {
                 "en": "same as 2.5.12 with corrected IOB checker issues",

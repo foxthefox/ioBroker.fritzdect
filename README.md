@@ -20,6 +20,8 @@ The devices are detected automatically during startup of fritzdect instance. If 
 
 Several permissions have to be set in the fritzbox in order to interact with the adapter!
 
+If the polling interval is set to 0 in the adapter configuration, automatic cyclic polling is disabled and updates are performed only on demand (via the `update` command).
+
 A german explanatory doc is available here: [install_de](./docs/de/install.md)
 
 The widget requires that also vis-metro and vis-jqui-mfd are installed
@@ -182,6 +184,23 @@ Furthermore for energy the array values are summed up for:
 |--------|-------|:-:|--------|
 |active|boolean|x|toggle switch for routine activation|
 
+## Manual Update
+It is possible to trigger a manual update, for example between polling intervals or when polling is disabled.
+To do this, send a message with the text "update" and no parameters to the adapter instance.
+The optional callback will be executed once the update is complete.
+
+Below is an example demonstrating how to trigger the manual update:
+```javascript
+sendTo('fritzdect.0', 'update', null,
+    (e) => {
+        if (e["result"]) {
+            // update successful
+        } else {
+            console.log(e["error"]);
+        }
+    }
+);
+```
 
 ## API limitations
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command

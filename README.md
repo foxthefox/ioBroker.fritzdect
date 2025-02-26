@@ -217,16 +217,24 @@ If it is activated, a different feedback must be present to the actual state. In
 - values scaled to 100 are transmitted in steps of 1, so a threshold of 1% is capturing the same steps
 otherwise it is more complex and individually to be parametrized.
 
+## 3rd party devices (HAN-FUN, ZigBee)
+These devices are split into a device and an unit (the function itself). The device has usually no interactions and therefore is not created in the adapter. The information portion and datapoints (i.e. battery status) of the device is merged into the unit. The id shown in the adapter belongs to the unit (which is not shown in the FB-App).
+
 ## Known Adapter Limitations:
 * Not all FW-versions of fritz.box support all objects.
 * use exclude possibility in adapter config, to disable communication related to newer functions
+* some datapoints are unavailable in newer FB-FW-versions (i.e. buttons of DECT440)
 
 ## TODO:
 * map of data input from user to valid predefined colors (nearest match)
 * blind alert state -> decode bit array
-* DECT 350 (batterylow, battery)
 
 ## Changelog
+
+### 2.6.1 (npm)
+* log FW version of FB
+* DECT350 now with battery data (issue #513)
+* merge etsi devices into etsiunits (issue #597)
 
 ### 2.6.0 (npm)
 * (khnz) PR#618 support on-demand updates
@@ -235,7 +243,6 @@ otherwise it is more complex and individually to be parametrized.
 
 ### 2.5.13 (npm)
 * same as 2.5.12 with corrected IOB checker issues
-
 
 ### 2.5.12 (npm)
 * skipping devices with empty identified (#598, #599), transmitted in FW8.01

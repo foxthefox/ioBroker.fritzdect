@@ -1,6 +1,6 @@
 {
 	"name": "iobroker.fritzdect",
-	"version": "2.6.0",
+	"version": "2.6.1",
 	"description": "ioBroker fritzbox DECT Adapter",
 	"author": {
 		"name": "foxthefox",
@@ -11,7 +11,16 @@
 	},
 	"homepage": "https://github.com/foxthefox/ioBroker.fritzdect",
 	"license": "MIT",
-	"keywords": [ "ioBroker", "DECT2x0", "DECT3x0", "DECT4x0", "DECT500", "Contacts", "Blinds", "fritzbox" ],
+	"keywords": [
+		"ioBroker",
+		"DECT2x0",
+		"DECT3x0",
+		"DECT4x0",
+		"DECT500",
+		"Contacts",
+		"Blinds",
+		"fritzbox"
+	],
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/foxthefox/ioBroker.fritzdect"

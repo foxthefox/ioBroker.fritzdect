@@ -66,7 +66,7 @@ Die Bits 5,6,7,9,10 und 11 werden nur von FRITZ!-Geräten verwendet und nicht v
 257 = SIMPLE_ON_OFF_SWITCH
 262 = AC_OUTLET
 263 = AC_OUTLET_SIMPLE_POWER_METERING
-264 = SIMPLE_LIGHT 265 = DIMMABLE_LIGHT
+264 = SIMPLE_LIGHT
 265 = DIMMABLE_LIGHT
 266 = DIMMER_SWITCH
 273 = SIMPLE_BUTTON
@@ -230,7 +230,9 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('finished initial updating devices/groups');
 
 							if (!polling && settings.intervall > 0) {
-								this.log.info('going over to cyclic polling, messages to poll activity only in debug-mode ');
+								this.log.info(
+									'going over to cyclic polling, messages to poll activity only in debug-mode '
+								);
 								polling = setInterval(async () => {
 									// poll fritzbox
 									try {
@@ -1031,12 +1033,12 @@ class Fritzdect extends utils.Adapter {
 								this.sendTo(obj.from, obj.command, { result: true }, obj.callback);
 							}
 						} catch (error) {
-							this.log.warn('unable to get manual updates' + error );
+							this.log.warn('unable to get manual updates' + error);
 							if (obj.callback) {
 								this.sendTo(
 									obj.from,
 									obj.command,
-									{ result: false, error: 'unable to get manual updates' + error  },
+									{ result: false, error: 'unable to get manual updates' + error },
 									obj.callback
 								);
 							}
@@ -1279,12 +1281,90 @@ class Fritzdect extends utils.Adapter {
 		}
 	}
 
+	/**
+	 * @param {any[]} devicearray
+	 */
+	unifyDevicesUnits(devicearray) {
+		let id = [];
+		let etsiunit = [];
+		let etsidelete = [];
+		for (let i = 0; i < devicearray.length; i++) {
+			id.push(devicearray[i].id);
+			//if there is no identifier, then the dataset is useless (issue #598)
+			if (!devicearray[i].identifier) {
+				etsidelete.push(i);
+			}
+			if (devicearray[i]['etsiunitinfo']) {
+				//prepare array with etsi units for later merge with etsidevice
+				etsiunit.push(i);
+				//setting the role of device
+				if (Number(devicearray[i].etsiunitinfo.unittype) > 510) {
+					devicearray[i]['role'] = 'sensor';
+				} else if (Number(devicearray[i].etsiunitinfo.unittype) > 280) {
+					devicearray[i]['role'] = 'blinds';
+				} else if (Number(devicearray[i].etsiunitinfo.unittype) == 273) {
+					devicearray[i]['role'] = 'sensor';
+				} else if (Number(devicearray[i].etsiunitinfo.unittype) > 263) {
+					devicearray[i]['role'] = 'light';
+				} else if (Number(devicearray[i].etsiunitinfo.unittype) > 255) {
+					devicearray[i]['role'] = 'switch';
+				}
+			} else {
+				//setting the role of device
+				if (devicearray[i].switch) {
+					devicearray[i]['role'] = 'switch';
+				} else if (devicearray[i].hkr) {
+					devicearray[i]['role'] = 'thermo.heat';
+				} else if (devicearray[i].blind) {
+					devicearray[i]['role'] = 'blinds';
+				} else if (devicearray[i].colortemperature) {
+					devicearray[i]['role'] = 'light';
+				} else if (devicearray[i].levelcontrol) {
+					devicearray[i]['role'] = 'light';
+				} else if (devicearray[i].temperature) {
+					devicearray[i]['role'] = 'thermo';
+				} else if (devicearray[i].button) {
+					devicearray[i]['role'] = 'sensor';
+				} else if (devicearray[i].alert) {
+					devicearray[i]['role'] = 'sensor';
+				} else {
+					devicearray[i]['role'] = 'etsi';
+				}
+				//setting the switchtype
+				if (devicearray[i].switch) {
+					devicearray[i]['switchtype'] = 'switch';
+				} else if (devicearray[i].simpleonoff) {
+					devicearray[i]['switchtype'] = 'simpleonoff';
+				}
+			}
+		}
+		for (let etsiunitpos of etsiunit) {
+			//find the matching etsidevice for etsiunit
+			let etsidevpos = id.indexOf(devicearray[etsiunitpos]['etsiunitinfo']['etsideviceid']);
+			//prepare array for deletion of etsidevices
+			if (etsidelete.indexOf(etsidevpos) === -1 && etsidevpos !== -1) {
+				etsidelete.push(etsidevpos);
+				//merge etsidevice info into etsiunit
+				for (let item in devicearray[etsidevpos]) {
+					if (item !== 'id' && item !== 'identifier' && item !== 'functionbitmask' && item !== 'role') {
+						devicearray[etsiunitpos][item] = devicearray[etsidevpos][item];
+					}
+				}
+			}
+		}
+		etsidelete.sort();
+		//delete the etsidevices
+		for (let k = 0; k < etsidelete.length; k++) {
+			devicearray.splice(etsidelete[k] - k, 1);
+		}
+		return devicearray;
+	}
+
 	async update() {
 		if (!this.updatePromise) {
-			this.updatePromise = this._update()
-				.finally(() => {
-					this.updatePromise = null;
-				});
+			this.updatePromise = this._update().finally(() => {
+				this.updatePromise = null;
+			});
 		}
 		return this.updatePromise;
 	}
@@ -1292,14 +1372,10 @@ class Fritzdect extends utils.Adapter {
 	async _update() {
 		await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 		if (!settings.exclude_routines) {
-			await this.updateRoutines(this.fritz).catch((e) =>
-				this.errorHandlerAdapter(e)
-			);
+			await this.updateRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 		}
 		if (!settings.exclude_stats) {
-			const deviceswithstat = await this.getStateAsync(
-				'global.statdevices'
-			).catch((e) => {
+			const deviceswithstat = await this.getStateAsync('global.statdevices').catch((e) => {
 				this.log.warn('problem getting statdevices ' + e);
 			});
 			if (deviceswithstat && deviceswithstat.val) {
@@ -1371,13 +1447,16 @@ class Fritzdect extends utils.Adapter {
 			const devicelistinfos = await fritz.getDeviceListInfos().catch((e) => this.errorHandlerApi(e));
 			let currentMode = null;
 			if (devicelistinfos) {
-				let devices = parser.xml2json(devicelistinfos);
+				let devlistanswer = parser.xml2json(devicelistinfos);
 				// devices
-				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
+				let devices = this.unifyDevicesUnits(devlistanswer.devicelist.device);
+				/*
+				let devices = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
 					//device.identifier = device.identifier.replace(/\s/g, '');
 					return device;
 				});
+				*/
 				this.log.debug('devices\n');
 				this.log.debug(JSON.stringify(devices));
 				if (devices.length) {
@@ -1459,6 +1538,7 @@ class Fritzdect extends utils.Adapter {
 										}
 										this.log.debug('preset operationmode ' + currentMode);
 									}
+									/*
 									// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 									// some weird id usage, the website shows the id of the etsiunit
 									if (devices[i].etsiunitinfo) {
@@ -1470,6 +1550,7 @@ class Fritzdect extends utils.Adapter {
 											this.log.debug('id nachher ' + devices[i].id);
 										}
 									}
+									*/
 									//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
 									//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
 									if (devices[i].simpleonoff) {
@@ -1583,27 +1664,33 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('======================================');
 		this.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
 		try {
-			await Promise.all( Object.entries(array).map(async ([ key, value ]) => {
-				if (Array.isArray(value)) {
-					this.log.debug('processing datapoint ' + key + ' as array');
-					await Promise.all( value.map(async (subarray) => {
-						//subarray.identifier = subarray.identifier.replace(/\s/g, '');
-						await this.updateData(
-							subarray,
-							ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')
-						); // hier wirds erst schwierig wenn array in array
-					}));
-				} else if (typeof value === 'object' && value !== null) {
-					this.log.debug('processing datapoint ' + key + ' as object');
-					await Promise.all( Object.entries(value).map(async ([ key2, value2 ]) => {
-						this.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
-						await this.updateDatapoint(key2, value2, ident);
-					}));
-				} else {
-					this.log.debug('processing datapoint ' + key + ' directly');
-					await this.updateDatapoint(key, value, ident);
-				}
-			}));
+			await Promise.all(
+				Object.entries(array).map(async ([ key, value ]) => {
+					if (Array.isArray(value)) {
+						this.log.debug('processing datapoint ' + key + ' as array');
+						await Promise.all(
+							value.map(async (subarray) => {
+								//subarray.identifier = subarray.identifier.replace(/\s/g, '');
+								await this.updateData(
+									subarray,
+									ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')
+								); // hier wirds erst schwierig wenn array in array
+							})
+						);
+					} else if (typeof value === 'object' && value !== null) {
+						this.log.debug('processing datapoint ' + key + ' as object');
+						await Promise.all(
+							Object.entries(value).map(async ([ key2, value2 ]) => {
+								this.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
+								await this.updateDatapoint(key2, value2, ident);
+							})
+						);
+					} else {
+						this.log.debug('processing datapoint ' + key + ' directly');
+						await this.updateDatapoint(key, value, ident);
+					}
+				})
+			);
 		} catch (e) {
 			this.log.debug(' issue in updateData ' + e);
 			throw {
@@ -2526,12 +2613,18 @@ class Fritzdect extends utils.Adapter {
 		try {
 			const devicelistinfos = await fritz.getDeviceListInfos().catch((e) => this.errorHandlerApi(e));
 			if (devicelistinfos) {
-				let devices = parser.xml2json(devicelistinfos);
-				devices = [].concat((devices.devicelist || {}).device || []).map((device) => {
+				let devlistanswer = parser.xml2json(devicelistinfos);
+				if (devlistanswer.devicelist.fwversion) {
+					this.log.info('FB FW version: ' + devlistanswer.devicelist.fwversion);
+				}
+				let devices = this.unifyDevicesUnits(devlistanswer.devicelist.device);
+				/*
+				let devices = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
 					// device.identifier = device.identifier.replace(/\s/g, '');
 					return device;
 				});
+				*/
 				this.log.debug('devices\n');
 				this.log.debug(JSON.stringify(devices));
 				if (devices.length) {
@@ -2713,6 +2806,7 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 					}
+					/*
 					//always ID
 					await this.createInfoState(identifier, 'id', 'Device ID');
 					//etsideviceid im gleichen Object
@@ -2748,7 +2842,22 @@ class Fritzdect extends utils.Adapter {
 							});
 						}
 					}
-
+					*/
+					//check for blinds control
+					if (device.etsiunitinfo) {
+						if (device.etsiunitinfo.unittype == 281) {
+							//additional blind datapoints
+							await this.createBlind(identifier);
+						}
+					}
+					//device.id
+					this.log.debug('device.id ' + JSON.stringify(device));
+					if (device.id) {
+						await this.setStateAsync('DECT_' + identifier + '.id', {
+							val: device.id,
+							ack: true
+						});
+					}
 					// create battery devices
 					if (device.battery) {
 						await this.createValueState(identifier, 'battery', 'Battery Charge State', 0, 100, '%');

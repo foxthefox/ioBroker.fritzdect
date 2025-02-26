@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.6.0",
+        "version": "2.6.1",
         "news": {
+            "2.6.1": {
+                "en": "log FW version, merge etsidevice into etsiunit",
+                "de": "Log FW -Version, fusion Eetsidevice in EtsIunit zusammen",
+                "ru": "Log FW версия, слияние etsidevice в etsiunit",
+                "pt": "Log FW Versão, Mesclar Etsidevice em Etsiunit",
+                "nl": "Log FW -versie, samenvoeg etsidevice in etsiunit",
+                "fr": "Log FW Version, fusionnez Etsidevice dans EtsiUnit",
+                "it": "Regdi versione fw, unisci Etsidevice in etsiunit",
+                "es": "Registro de la versión FW, fusionar etsidevice en Etsiunit",
+                "pl": "Zaloguj wersję FW, scal Etsidevice do EtsiUnit",
+                "uk": "Log FW версія, об'єднати etsidevice в etsiunit",
+                "zh-cn": "日志FW版本，将EtsideVice合并到Etsiunit"
+            },
             "2.6.0": {
                 "en": "support on-demand updates, temperature range",
                 "de": "Unterstützen Sie On-Demand-Updates, Temperaturbereich",
@@ -54,6 +67,19 @@
                 "pl": "zaktualizuj devDeps, korekta błędów lintingu",
                 "uk": "оновлення devDeps, виправлення помилок linting",
                 "zh-cn": "更新 devDeps，linting 错误修正"
+            },
+            "2.5.10": {
+                "en": "more loggimg for issue #500 of restart loop",
+                "de": "Weitere Protokollierung für Problem Nr. 500 der Neustartschleife",
+                "ru": "больше loggimg для проблемы № 500 цикла перезапуска",
+                "pt": "mais loggimg para o problema nº 500 do loop de reinicialização",
+                "nl": "meer loggimg voor probleem #500 van de herstartlus",
+                "fr": "plus de loggimg pour le numéro 500 de la boucle de redémarrage",
+                "it": "ulteriori registrazioni per il problema n. 500 del ciclo di riavvio",
+                "es": "más registros para el problema #500 del ciclo de reinicio",
+                "pl": "więcej loggimg dla problemu nr 500 pętli restartu",
+                "uk": "більше loggimg для проблеми №500 циклу перезапуску",
+                "zh-cn": "有关重新启动循环的问题 #500 的更多 loggimg"
             },
             "2.5.9": {
                 "en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
@@ -182,7 +208,7 @@
         ],
         "globalDependencies": [
             {
-                "admin": ">=5.1.13"
+                "admin": ">=6.17.14"
             }
         ]
     },

@@ -1,0 +1,79 @@
+<devicelist version="1" fwversion="8.01">
+<device identifier="Z001788010DF738E8" id="6000" functionbitmask="524289" fwversion="2.53.6" manufacturer="0x100b" productname="Signify Netherlands B.V. SML004">
+	<present>1</present>
+	<txbusy>0</txbusy>
+	<name>Bewegungmelder</name>
+	<battery>100</battery>
+	<batterylow>0</batterylow>
+</device>
+<device identifier="Z001788010DF738E802" id="2002" functionbitmask="8464" fwversion="0.0" manufacturer="0x100b" productname="Signify Netherlands B.V. SML004">
+	<present>1</present>
+	<txbusy>0</txbusy>
+	<name>Bewegungmelder</name>
+	<temperature>
+		<celsius>35</celsius>
+		<offset>0</offset>
+	</temperature>
+	<etsiunitinfo>
+		<etsideviceid>6000</etsideviceid>
+		<unittype>515</unittype>
+		<interfaces>769,256</interfaces>
+	</etsiunitinfo>
+	<alert>
+		<state>0</state>
+		<lastalertchgtimestamp>1735767989</lastalertchgtimestamp>
+	</alert>
+</device>
+<device identifier="Z44E2F8FFFE4CCB05" id="6001" functionbitmask="524289" fwversion="1.0.38" manufacturer="0x117c" productname="IKEA of Sweden TRADFRI bulb E27">
+	<present>1</present>
+	<txbusy>0</txbusy>
+	<name>Bunte Lampe Ikea</name>
+</device>
+<device identifier="Z44E2F8FFFE4CCB0501" id="2001" functionbitmask="237572" fwversion="0.0" manufacturer="0x117c" productname="IKEA of Sweden TRADFRI bulb E27">
+	<present>1</present>
+	<txbusy>0</txbusy>
+	<name>Bunte Lampe Ikea</name>
+	<simpleonoff>
+		<state>1</state>
+	</simpleonoff>
+	<levelcontrol>
+		<level>199</level>
+		<levelpercentage>78</levelpercentage>
+	</levelcontrol>
+	<colorcontrol supported_modes="7" current_mode="1" fullcolorsupport="1" mapped="1">
+		<hue>52</hue>
+		<saturation>102</saturation>
+		<unmapped_hue>40</unmapped_hue>
+		<unmapped_saturation>225</unmapped_saturation>
+		<temperature/>
+	</colorcontrol>
+	<etsiunitinfo>
+		<etsideviceid>6001</etsideviceid>
+		<unittype>278</unittype>
+		<interfaces>512,513,514</interfaces>
+	</etsiunitinfo>
+</device>
+<device identifier="Z8C65A3FFFEE21E03" id="6002" functionbitmask="524289" fwversion="1.0.010" manufacturer="0x117c" productname="IKEA of Sweden TRADFRIbulbE27WW">
+	<present>0</present>
+	<txbusy>0</txbusy>
+	<name>Lampe Ikea1</name>
+</device>
+<device identifier="Z8C65A3FFFEE21E0301" id="2000" functionbitmask="106500" fwversion="0.0" manufacturer="0x117c" productname="IKEA of Sweden TRADFRIbulbE27WW">
+	<present>0</present>
+	<txbusy>0</txbusy>
+	<name>Lampe Ikea1</name>
+	<simpleonoff>
+		<state/>
+	</simpleonoff>
+	<levelcontrol>
+		<level/>
+		<levelpercentage/>
+	</levelcontrol>
+	<etsiunitinfo>
+		<etsideviceid>6002</etsideviceid>
+		<unittype>265</unittype>
+		<interfaces>512,513</interfaces>
+	</etsiunitinfo>
+</device>
+<device identifier="15282 0249257" id="26" functionbitmask="1" fwversion="03.56" manufacturer="AVM" productname="FRITZ!DECT 350"><present>1</present><txbusy>0</txbusy><name>Fenster1Bad</name><battery>100</battery><batterylow>0</batterylow></device><device identifier="15282 0249257-1" id="2000" functionbitmask="8208" fwversion="0.0" manufacturer="AVM" productname="FRITZ!DECT 350"><present>1</present><txbusy>0</txbusy><name>FRITZ!DECT #11</name><etsiunitinfo><etsideviceid>26</etsideviceid><unittype>514</unittype><interfaces>256</interfaces></etsiunitinfo><alert><state>0</state><lastalertchgtimestamp>1706271938</lastalertchgtimestamp></alert></device>
+</devicelist>

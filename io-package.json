@@ -1,167 +1,207 @@
 {
-	"common": {
-		"name": "fritzdect",
-		"version": "2.5.12",
-		"news": {
-			"2.5.12": {
-				"en": "error correction for devices with empty identifier; update responsive settings"
-			},
-			"2.5.11": {
-				"en": "update devDeps, linting error correction",
-				"de": "Update devDeps, Linting-Fehlerkorrektur",
-				"ru": "обновление devDeps, исправление ошибок линтинга",
-				"pt": "atualizar devDeps, correção de erros de linting",
-				"nl": "update devDeps, correctie van lintingfouten",
-				"fr": "mettre à jour devDeps, correction d'erreur de peluchage",
-				"it": "aggiornamento devDeps, correzione degli errori di linting",
-				"es": "actualizar devDeps, corrección de errores de linting",
-				"pl": "zaktualizuj devDeps, korekta błędów lintingu",
-				"uk": "оновлення devDeps, виправлення помилок linting",
-				"zh-cn": "更新 devDeps，linting 错误修正"
-			},
-			"2.5.10": {
-				"en": "more loggimg for issue #500 of restart loop",
-				"de": "Weitere Protokollierung für Problem Nr. 500 der Neustartschleife",
-				"ru": "больше loggimg для проблемы № 500 цикла перезапуска",
-				"pt": "mais loggimg para o problema nº 500 do loop de reinicialização",
-				"nl": "meer loggimg voor probleem #500 van de herstartlus",
-				"fr": "plus de loggimg pour le numéro 500 de la boucle de redémarrage",
-				"it": "ulteriori registrazioni per il problema n. 500 del ciclo di riavvio",
-				"es": "más registros para el problema #500 del ciclo de reinicio",
-				"pl": "więcej loggimg dla problemu nr 500 pętli restartu",
-				"uk": "більше loggimg для проблеми №500 циклу перезапуску",
-				"zh-cn": "有关重新启动循环的问题 #500 的更多 loggimg"
-			},
-			"2.5.9": {
-				"en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
-				"de": "Neues Meldungsfeld, Korrektur für Statistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",
-				"ru": "новое окно сообщений, исправление статистики, в версиях >2.5.4 пароль необходимо вводить заново",
-				"pt": "nova caixa de mensagem, correção de estatísticas, senha precisa ser digitada novamente nas versões >2.5.4",
-				"nl": "nieuw berichtvenster, correctie voor statistieken, wachtwoord moet opnieuw worden ingevoerd in versies >2.5.4",
-				"fr": "nouvelle boîte de message, correction des statistiques, le mot de passe doit être ressaisi dans les versions >2.5.4",
-				"it": "nuova finestra di messaggio, correzione per le statistiche, la password deve essere reinserita nelle versioni >2.5.4",
-				"es": "Nuevo cuadro de mensaje, corrección de estadísticas, es necesario volver a ingresar la contraseña en las versiones >2.5.4",
-				"pl": "nowe okno komunikatu, korekta statystyk, w wersjach >2.5.4 konieczne jest ponowne wprowadzenie hasła",
-				"uk": "нове вікно повідомлення, виправлення статистики, пароль потрібно ввести повторно у версіях >2.5.4",
-				"zh-cn": "新消息框，统计修正，2.5.4以上版本需要重新输入密码"
-			}
-		},
-		"messages": [
-			{
-				"condition": {
-					"operand": "and",
-					"rules": [ "oldVersion<2.5.3", "newVersion>=2.5.4" ]
-				},
-				"title": {
-					"en": "Important notice!",
-					"de": "Wichtiger Hinweis!",
-					"ru": "Важное замечание!",
-					"pt": "Notícia importante!",
-					"nl": "Belangrijke mededeling!",
-					"fr": "Avis important!",
-					"it": "Avviso IMPORTANTE!",
-					"es": "Noticia importante!",
-					"pl": "Ważna uwaga!",
-					"uk": "Погода!",
-					"zh-cn": "重要通知!"
-				},
-				"text": {
-					"en": "Please re-enter the password in the admin page. ",
-					"de": "Bitte geben Sie das Passwort auf der Admin-Seite erneut ein.",
-					"ru": "Пожалуйста, повторно введите пароль на странице администратора.",
-					"pt": "Por favor, digite novamente a senha na página de administração.",
-					"nl": "Voer het wachtwoord opnieuw in op de beheerderspagina.",
-					"fr": "Veuillez saisir à nouveau le mot de passe dans la page d'administration.",
-					"it": "Si prega di reinserire la password nella pagina di amministrazione.",
-					"es": "Vuelva a ingresar la contraseña en la página de administración.",
-					"pl": "Wprowadź ponownie hasło na stronie administratora.",
-					"uk": "Повторно введіть пароль на сторінці адміністратора.",
-					"zh-cn": "请在管理页面重新输入密码。"
-				},
-				"level": "warn",
-				"buttons": [ "ok", "cancel" ]
-			}
-		],
-		"titleLang": {
-			"en": "fritzbox dect ",
-			"de": "fritzbox dect",
-			"ru": "fritzbox дект",
-			"pt": "fritzbox dect",
-			"nl": "flitzbox dect",
-			"fr": "fritzbox dect",
-			"it": "fritzbox dect",
-			"es": "fritzbox dect",
-			"pl": "fritzbox dect",
-			"uk": "фріцбокс дект",
-			"zh-cn": "摩茨箱"
-		},
-		"desc": {
-			"en": "connects DECT ULE devices (fritzdect) to ioBroker",
-			"de": "verbindet DECT ULE Geräte (fritzdect) mit ioBroker",
-			"ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
-			"pt": "conecta dispositivos DECT ULE (fritzdect) ao ioBroker",
-			"nl": "verbindt DECT ULE apparaten met ioBroker",
-			"fr": "connecte les appareils DECT ULE (fritzdect) à ioBroker",
-			"it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
-			"es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
-			"pl": "łączy DECT ULE (fritzdect) z ioBrokerem",
-			"uk": "з'єднання пристроїв DECT ULE (фрицдект) до ioBroker",
-			"zh-cn": "broker的连接"
-		},
-		"authors": [ "foxthefox <foxthefox@wysiwis.net>" ],
-		"docs": {
-			"de": "docs/de/install.md"
-		},
-		"keywords": [ "DECT ULE", "lighting", "heating", "switching", "fritzbox", "AVM" ],
-		"licenseInformation": {
-			"license": "MIT",
-			"type": "free"
-		},
-		"platform": "Javascript/Node.js",
-		"icon": "fritzdect_logo.png",
-		"enabled": false,
-		"extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
-		"readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
-		"loglevel": "info",
-		"restartAdapters": [ "vis" ],
-		"mode": "daemon",
-		"tier": 3,
-		"type": "hardware",
-		"adminUI": {
-			"config": "json"
-		},
-		"compact": true,
-		"messagebox": true,
-		"connectionType": "local",
-		"dataSource": "poll",
-		"supportCustoms": false,
-		"dependencies": [
-			{
-				"js-controller": ">=4.0.24"
-			}
-		],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		]
-	},
-	"native": {
-		"fritz_ip": "http://192.168.x.x",
-		"fritz_user": "admin",
-		"fritz_pw": "pw",
-		"fritz_interval": 300,
-		"fritz_options": null,
-		"fritz_writeonhyst": false,
-		"fritz_analogchange": true,
-		"fritz_hysteresis": 1,
-		"fritz_boosttime": 5,
-		"fritz_windowtime": 5,
-		"fritz_tsolldefault": 23,
-		"fritz_exclude_templates": false,
-		"fritz_exclude_routines": false,
-		"fritz_exclude_stats": false
-	},
-	"objects": [],
-	"instanceObjects": []
+    "common": {
+        "name": "fritzdect",
+        "version": "2.6.1",
+        "news": {
+            "2.6.1": {
+                "en": "log FW version, merge etsidevice into etsiunit",
+                "de": "Log FW -Version, fusion Eetsidevice in EtsIunit zusammen",
+                "ru": "Log FW версия, слияние etsidevice в etsiunit",
+                "pt": "Log FW Versão, Mesclar Etsidevice em Etsiunit",
+                "nl": "Log FW -versie, samenvoeg etsidevice in etsiunit",
+                "fr": "Log FW Version, fusionnez Etsidevice dans EtsiUnit",
+                "it": "Regdi versione fw, unisci Etsidevice in etsiunit",
+                "es": "Registro de la versión FW, fusionar etsidevice en Etsiunit",
+                "pl": "Zaloguj wersję FW, scal Etsidevice do EtsiUnit",
+                "uk": "Log FW версія, об'єднати etsidevice в etsiunit",
+                "zh-cn": "日志FW版本，将EtsideVice合并到Etsiunit"
+            },
+            "2.5.12": {
+                "en": "error correction for devices with empty identifier; update responsive settings",
+                "de": "Fehlerkorrektur für Geräte mit leerer Kennung; Aktualisieren Sie die Reaktionseinstellungen",
+                "ru": "исправление ошибок для устройств с пустым идентификатором; обновить адаптивные настройки",
+                "pt": "correção de erros para dispositivos com identificador vazio; atualizar configurações responsivas",
+                "nl": "Foutcorrectie voor apparaten met lege identificatie; update responsieve instellingen",
+                "fr": "Correction d'erreurs pour les appareils avec un identifiant vide ; mettre à jour les paramètres réactifs",
+                "it": "correzione errori per dispositivi con identificatore vuoto; aggiornare le impostazioni reattive",
+                "es": "corrección de errores para dispositivos con identificador vacío; actualizar la configuración responsiva",
+                "pl": "korekta błędów dla urządzeń z pustym identyfikatorem; zaktualizuj ustawienia responsywności",
+                "uk": "виправлення помилок для пристроїв з порожнім ідентифікатором; оновити адаптивні налаштування",
+                "zh-cn": "对空标识符的设备进行纠错；更新响应设置"
+            },
+            "2.5.11": {
+                "en": "update devDeps, linting error correction",
+                "de": "Update devDeps, Linting-Fehlerkorrektur",
+                "ru": "обновление devDeps, исправление ошибок линтинга",
+                "pt": "atualizar devDeps, correção de erros de linting",
+                "nl": "update devDeps, correctie van lintingfouten",
+                "fr": "mettre à jour devDeps, correction d'erreur de peluchage",
+                "it": "aggiornamento devDeps, correzione degli errori di linting",
+                "es": "actualizar devDeps, corrección de errores de linting",
+                "pl": "zaktualizuj devDeps, korekta błędów lintingu",
+                "uk": "оновлення devDeps, виправлення помилок linting",
+                "zh-cn": "更新 devDeps，linting 错误修正"
+            },
+            "2.5.10": {
+                "en": "more loggimg for issue #500 of restart loop",
+                "de": "Weitere Protokollierung für Problem Nr. 500 der Neustartschleife",
+                "ru": "больше loggimg для проблемы № 500 цикла перезапуска",
+                "pt": "mais loggimg para o problema nº 500 do loop de reinicialização",
+                "nl": "meer loggimg voor probleem #500 van de herstartlus",
+                "fr": "plus de loggimg pour le numéro 500 de la boucle de redémarrage",
+                "it": "ulteriori registrazioni per il problema n. 500 del ciclo di riavvio",
+                "es": "más registros para el problema #500 del ciclo de reinicio",
+                "pl": "więcej loggimg dla problemu nr 500 pętli restartu",
+                "uk": "більше loggimg для проблеми №500 циклу перезапуску",
+                "zh-cn": "有关重新启动循环的问题 #500 的更多 loggimg"
+            },
+            "2.5.9": {
+                "en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
+                "de": "Neues Meldungsfeld, Korrektur für Statistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",
+                "ru": "новое окно сообщений, исправление статистики, в версиях >2.5.4 пароль необходимо вводить заново",
+                "pt": "nova caixa de mensagem, correção de estatísticas, senha precisa ser digitada novamente nas versões >2.5.4",
+                "nl": "nieuw berichtvenster, correctie voor statistieken, wachtwoord moet opnieuw worden ingevoerd in versies >2.5.4",
+                "fr": "nouvelle boîte de message, correction des statistiques, le mot de passe doit être ressaisi dans les versions >2.5.4",
+                "it": "nuova finestra di messaggio, correzione per le statistiche, la password deve essere reinserita nelle versioni >2.5.4",
+                "es": "Nuevo cuadro de mensaje, corrección de estadísticas, es necesario volver a ingresar la contraseña en las versiones >2.5.4",
+                "pl": "nowe okno komunikatu, korekta statystyk, w wersjach >2.5.4 konieczne jest ponowne wprowadzenie hasła",
+                "uk": "нове вікно повідомлення, виправлення статистики, пароль потрібно ввести повторно у версіях >2.5.4",
+                "zh-cn": "新消息框，统计修正，2.5.4以上版本需要重新输入密码"
+            }
+        },
+        "messages": [
+            {
+                "condition": {
+                    "operand": "and",
+                    "rules": [
+                        "oldVersion<2.5.3",
+                        "newVersion>=2.5.4"
+                    ]
+                },
+                "title": {
+                    "en": "Important notice!",
+                    "de": "Wichtiger Hinweis!",
+                    "ru": "Важное замечание!",
+                    "pt": "Notícia importante!",
+                    "nl": "Belangrijke mededeling!",
+                    "fr": "Avis important!",
+                    "it": "Avviso IMPORTANTE!",
+                    "es": "Noticia importante!",
+                    "pl": "Ważna uwaga!",
+                    "uk": "Погода!",
+                    "zh-cn": "重要通知!"
+                },
+                "text": {
+                    "en": "Please re-enter the password in the admin page. ",
+                    "de": "Bitte geben Sie das Passwort auf der Admin-Seite erneut ein.",
+                    "ru": "Пожалуйста, повторно введите пароль на странице администратора.",
+                    "pt": "Por favor, digite novamente a senha na página de administração.",
+                    "nl": "Voer het wachtwoord opnieuw in op de beheerderspagina.",
+                    "fr": "Veuillez saisir à nouveau le mot de passe dans la page d'administration.",
+                    "it": "Si prega di reinserire la password nella pagina di amministrazione.",
+                    "es": "Vuelva a ingresar la contraseña en la página de administración.",
+                    "pl": "Wprowadź ponownie hasło na stronie administratora.",
+                    "uk": "Повторно введіть пароль на сторінці адміністратора.",
+                    "zh-cn": "请在管理页面重新输入密码。"
+                },
+                "level": "warn",
+                "buttons": [
+                    "ok",
+                    "cancel"
+                ]
+            }
+        ],
+        "titleLang": {
+            "en": "fritzbox dect ",
+            "de": "fritzbox dect",
+            "ru": "fritzbox дект",
+            "pt": "fritzbox dect",
+            "nl": "flitzbox dect",
+            "fr": "fritzbox dect",
+            "it": "fritzbox dect",
+            "es": "fritzbox dect",
+            "pl": "fritzbox dect",
+            "uk": "фріцбокс дект",
+            "zh-cn": "摩茨箱"
+        },
+        "desc": {
+            "en": "connects DECT ULE devices (fritzdect) to ioBroker",
+            "de": "verbindet DECT ULE Geräte (fritzdect) mit ioBroker",
+            "ru": "подключает устройства DECT ULE (fritzdect) к ioBroker",
+            "pt": "conecta dispositivos DECT ULE (fritzdect) ao ioBroker",
+            "nl": "verbindt DECT ULE apparaten met ioBroker",
+            "fr": "connecte les appareils DECT ULE (fritzdect) à ioBroker",
+            "it": "collega i dispositivi DECT ULE (fritzdect) a ioBroker",
+            "es": "conecta dispositivos DECT ULE (fritzdect) a ioBroker",
+            "pl": "łączy DECT ULE (fritzdect) z ioBrokerem",
+            "uk": "з'єднання пристроїв DECT ULE (фрицдект) до ioBroker",
+            "zh-cn": "broker的连接"
+        },
+        "authors": [
+            "foxthefox <foxthefox@wysiwis.net>"
+        ],
+        "docs": {
+            "de": "docs/de/install.md"
+        },
+        "keywords": [
+            "DECT ULE",
+            "lighting",
+            "heating",
+            "switching",
+            "fritzbox",
+            "AVM"
+        ],
+        "licenseInformation": {
+            "license": "MIT",
+            "type": "free"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "fritzdect_logo.png",
+        "enabled": false,
+        "extIcon": "https://raw.githubusercontent.com/foxthefox/ioBroker.fritzdect/master/admin/fritzdect_logo.png",
+        "readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
+        "loglevel": "info",
+        "restartAdapters": [
+            "vis"
+        ],
+        "mode": "daemon",
+        "tier": 3,
+        "type": "hardware",
+        "adminUI": {
+            "config": "json"
+        },
+        "compact": true,
+        "messagebox": true,
+        "connectionType": "local",
+        "dataSource": "poll",
+        "supportCustoms": false,
+        "dependencies": [
+            {
+                "js-controller": ">=4.0.24"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": ">=5.1.13"
+            }
+        ]
+    },
+    "native": {
+        "fritz_ip": "http://192.168.x.x",
+        "fritz_user": "admin",
+        "fritz_pw": "pw",
+        "fritz_interval": 300,
+        "fritz_options": null,
+        "fritz_writeonhyst": false,
+        "fritz_analogchange": true,
+        "fritz_hysteresis": 1,
+        "fritz_boosttime": 5,
+        "fritz_windowtime": 5,
+        "fritz_tsolldefault": 23,
+        "fritz_exclude_templates": false,
+        "fritz_exclude_routines": false,
+        "fritz_exclude_stats": false
+    },
+    "objects": [],
+    "instanceObjects": []
 }

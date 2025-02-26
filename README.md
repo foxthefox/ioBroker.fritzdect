@@ -216,9 +216,13 @@ otherwise it is more complex and individually to be parametrized.
 ## TODO:
 * map of data input from user to valid predefined colors (nearest match)
 * blind alert state -> decode bit array
-* DECT 350 (batterylow, battery)
 
 ## Changelog
+
+### 2.6.1 (npm)
+* log FW version of FB
+* DECT350 now with battery data (issue #513)
+* merge etsi devices into etsiunits (issue #597)
 
 ### 2.5.12 (npm)
 * skipping devices with empty identified (#598, #599), transmitted in FW8.01

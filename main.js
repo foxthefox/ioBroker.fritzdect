@@ -1300,6 +1300,8 @@ class Fritzdect extends utils.Adapter {
 					devicearray[i]['role'] = 'sensor';
 				} else if (Number(devicearray[i].etsiunitinfo.unittype) > 280) {
 					devicearray[i]['role'] = 'blinds';
+				} else if (Number(devicearray[i].etsiunitinfo.unittype) == 273) {
+					devicearray[i]['role'] = 'sensor';
 				} else if (Number(devicearray[i].etsiunitinfo.unittype) > 263) {
 					devicearray[i]['role'] = 'light';
 				} else if (Number(devicearray[i].etsiunitinfo.unittype) > 255) {
@@ -1340,11 +1342,11 @@ class Fritzdect extends utils.Adapter {
 			//prepare array for deletion of etsidevices
 			if (etsidelete.indexOf(etsidevpos) === -1 && etsidevpos !== -1) {
 				etsidelete.push(etsidevpos);
-			}
-			//merge etsidevice info into etsiunit
-			for (let item in devicearray[etsidevpos]) {
-				if (item !== 'id' && item !== 'identifier' && item !== 'functionbitmask' && item !== 'role') {
-					devicearray[etsiunitpos][item] = devicearray[etsidevpos][item];
+				//merge etsidevice info into etsiunit
+				for (let item in devicearray[etsidevpos]) {
+					if (item !== 'id' && item !== 'identifier' && item !== 'functionbitmask' && item !== 'role') {
+						devicearray[etsiunitpos][item] = devicearray[etsidevpos][item];
+					}
 				}
 			}
 		}

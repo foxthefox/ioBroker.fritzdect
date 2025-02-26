@@ -1052,7 +1052,7 @@ tests.integration(path.join(__dirname, '..'), {
 										console.log('fritzdect.0.DECT_119340141058-2.id           ... ' + state.val);
 									}
 									expect(state.val).to.exist;
-									expect(state.val).to.be.equal('406');
+									expect(state.val).to.be.equal('411');
 									harness.states.getState('fritzdect.0.DECT_119340141058-2.name', function(
 										err,
 										state
@@ -1485,7 +1485,7 @@ tests.integration(path.join(__dirname, '..'), {
 										console.log('fritzdect.0.DECT_123456789012-1.id             ... ' + state.val);
 									}
 									expect(state.val).to.exist;
-									expect(state.val).to.be.equal('406');
+									expect(state.val).to.be.equal('414');
 									harness.states.getState('fritzdect.0.DECT_123456789012-1.name', function(
 										err,
 										state
@@ -2551,7 +2551,7 @@ tests.integration(path.join(__dirname, '..'), {
 									console.log('fritzdect.0.DECT_119340395779-1.id            ... ' + state.val);
 								}
 								expect(state.val).to.exist;
-								expect(state.val).to.be.equal('406');
+								expect(state.val).to.be.equal('2000');
 								harness.states.getState('fritzdect.0.DECT_119340395779-1.fwversion', function(
 									err,
 									state
@@ -2564,7 +2564,7 @@ tests.integration(path.join(__dirname, '..'), {
 										console.log('fritzdect.0.DECT_119340395779-1.fwversion     ... ' + state.val);
 									}
 									expect(state.val).to.exist;
-									expect(state.val).to.be.equal('0.0');
+									expect(state.val).to.be.equal('34.24.01#0.9.8.21.1#7B#14400036');
 									harness.states.getState('fritzdect.0.DECT_119340395779-1.manufacturer', function(
 										err,
 										state

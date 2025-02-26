@@ -11,7 +11,7 @@
 		<present>1</present>
 		<name>DectTaster_F1</name>
 		<etsiunitinfo>
-			<etsideviceid>406</etsideviceid>
+			<etsideviceid>411</etsideviceid>
 			<unittype>273</unittype>
 			<interfaces>772</interfaces>
 		</etsiunitinfo>
@@ -240,7 +240,7 @@
 			<temperature>3400</temperature>
 		</colorcontrol>
 		<etsiunitinfo>
-			<etsideviceid>406</etsideviceid>
+			<etsideviceid>414</etsideviceid>
 			<unittype>278</unittype>
 			<interfaces>512,514,513</interfaces>
 		</etsiunitinfo>
@@ -292,7 +292,7 @@
 	</device>
 	<device>
 		<identifier>12345 6789012</identifier>
-		<id>406</id>
+		<id>414</id>
 		<functionbitmask>1</functionbitmask>
 		<fwversion>34.10.16.16.011</fwversion>
 		<manufacturer>AVM</manufacturer>
@@ -563,7 +563,7 @@
 	</device>
 	<device>
 		<identifier>11324 0596882</identifier>
-		<id>408</id>
+		<id>415</id>
 		<functionbitmask>1</functionbitmask>
 		<fwversion>30.17.03.02.016</fwversion>
 		<manufacturer>0x2c3c</manufacturer>
@@ -574,7 +574,7 @@
 	</device>
 	<device>
 		<identifier>11324 0596831</identifier>
-		<id>406</id>
+		<id>413</id>
 		<functionbitmask>1</functionbitmask>
 		<fwversion>30.17.03.02.016</fwversion>
 		<manufacturer>0x2c3c</manufacturer>
@@ -597,7 +597,7 @@
 			<state>0</state>
 		</simpleonoff>
 		<etsiunitinfo>
-			<etsideviceid>406</etsideviceid>
+			<etsideviceid>413</etsideviceid>
 			<unittype>263</unittype>
 			<interfaces>512,768</interfaces>
 		</etsiunitinfo>
@@ -616,7 +616,7 @@
 			<state>0</state>
 		</simpleonoff>
 		<etsiunitinfo>
-			<etsideviceid>408</etsideviceid>
+			<etsideviceid>415</etsideviceid>
 			<unittype>263</unittype>
 			<interfaces>512,768</interfaces>
 		</etsiunitinfo>

@@ -528,7 +528,7 @@
 	</device>
 	<device>
 		<identifier>119340395779-1</identifier>
-		<id>2000</id>
+		<id>2005</id>
 		<functionbitmask>335888</functionbitmask>
 		<fwversion>0.0</fwversion>
 		<manufacturer>0x0feb</manufacturer>

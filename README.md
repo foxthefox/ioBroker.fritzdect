@@ -11,17 +11,6 @@
 
 Fritzbox DECT adapter for ioBroker
 
-## Installation:
-released version on npm with
-```javascript
- npm install iobroker.fritzdect
-```
-
-
-or the actual version from github with 
-```javascript
-npm install https://github.com/foxthefox/ioBroker.fritzdect/tarball/master --production
-```
 ## Setup
 
 IP-address and password of Fritzbox should be defined via admin page, before the first start of the instance.
@@ -30,6 +19,8 @@ The IP-address must be written with leading 'http://'
 The devices are detected automatically during startup of fritzdect instance. If devices are added to the fritzbox during a running adapter instance, then please restart the adapter for object creation.
 
 Several permissions have to be set in the fritzbox in order to interact with the adapter!
+
+If the polling interval is set to 0 in the adapter configuration, automatic cyclic polling is disabled and updates are performed only on demand (via the `update` command).
 
 A german explanatory doc is available here: [install_de](./docs/de/install.md)
 
@@ -193,6 +184,23 @@ Furthermore for energy the array values are summed up for:
 |--------|-------|:-:|--------|
 |active|boolean|x|toggle switch for routine activation|
 
+## Manual Update
+It is possible to trigger a manual update, for example between polling intervals or when polling is disabled.
+To do this, send a message with the text "update" and no parameters to the adapter instance.
+The optional callback will be executed once the update is complete.
+
+Below is an example demonstrating how to trigger the manual update:
+```javascript
+sendTo('fritzdect.0', 'update', null,
+    (e) => {
+        if (e["result"]) {
+            // update successful
+        } else {
+            console.log(e["error"]);
+        }
+    }
+);
+```
 
 ## API limitations
 * Boost and WindowOpen can only be set for the next 24h. time=0 is cancelling the command
@@ -227,6 +235,14 @@ These devices are split into a device and an unit (the function itself). The dev
 * log FW version of FB
 * DECT350 now with battery data (issue #513)
 * merge etsi devices into etsiunits (issue #597)
+
+### 2.6.0 (npm)
+* (khnz) PR#618 support on-demand updates
+* change temperature checking < 28°C extended to < 35°C (issue #619)
+* change dependencies
+
+### 2.5.13 (npm)
+* same as 2.5.12 with corrected IOB checker issues
 
 ### 2.5.12 (npm)
 * skipping devices with empty identified (#598, #599), transmitted in FW8.01

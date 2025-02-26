@@ -138,6 +138,7 @@ class Fritzdect extends utils.Adapter {
 		this.boosttime = 5;
 		this.windowtime = 5;
 		this.tsolldefault = 23;
+		this.updatePromise = null;
 	}
 
 	/**
@@ -227,35 +228,16 @@ class Fritzdect extends utils.Adapter {
 							this.log.info('start initial updating devices/groups');
 							await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
 							this.log.info('finished initial updating devices/groups');
-							this.log.info(
-								'going over to cyclic polling, messages to poll activity only in debug-mode '
-							);
-							if (!polling) {
+
+							if (!polling && settings.intervall > 0) {
+								this.log.info(
+									'going over to cyclic polling, messages to poll activity only in debug-mode '
+								);
 								polling = setInterval(async () => {
 									// poll fritzbox
 									try {
 										this.log.debug('polling! fritzdect is alive with ' + settings.intervall + ' s');
-										await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
-										if (!settings.exclude_routines) {
-											await this.updateRoutines(this.fritz).catch((e) =>
-												this.errorHandlerAdapter(e)
-											);
-										}
-										if (!settings.exclude_stats) {
-											const deviceswithstat = await this.getStateAsync(
-												'global.statdevices'
-											).catch((e) => {
-												this.log.warn('problem getting statdevices ' + e);
-											});
-											if (deviceswithstat && deviceswithstat.val) {
-												this.log.debug('glob state ' + deviceswithstat.val);
-												let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
-												for (let i = 0; i < devstat.length; i++) {
-													this.log.debug('updating Stats of device ' + devstat[i]);
-													await this.updateStats(devstat[i], this.fritz);
-												}
-											}
-										}
+										this.update();
 									} catch (e) {
 										this.log.warn(`[Polling] <== ${e}`);
 									}
@@ -1044,6 +1026,25 @@ class Fritzdect extends utils.Adapter {
 				// const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 				let statfeedback = {};
 				switch (obj.command) {
+					case 'update':
+						try {
+							await this.update();
+							if (obj.callback) {
+								this.sendTo(obj.from, obj.command, { result: true }, obj.callback);
+							}
+						} catch (error) {
+							this.log.warn('unable to get manual updates' + error);
+							if (obj.callback) {
+								this.sendTo(
+									obj.from,
+									obj.command,
+									{ result: false, error: 'unable to get manual updates' + error },
+									obj.callback
+								);
+							}
+						}
+						wait = true;
+						break;
 					case 'devices':
 						try {
 							let xml = await this.fritz.getDeviceListInfos();
@@ -1279,6 +1280,7 @@ class Fritzdect extends utils.Adapter {
 			this.log.error('try/catch error in function errorHandlerAdapter' + e);
 		}
 	}
+
 	/**
 	 * @param {any[]} devicearray
 	 */
@@ -1356,6 +1358,35 @@ class Fritzdect extends utils.Adapter {
 			devicearray.splice(etsidelete[k] - k, 1);
 		}
 		return devicearray;
+	}
+
+	async update() {
+		if (!this.updatePromise) {
+			this.updatePromise = this._update().finally(() => {
+				this.updatePromise = null;
+			});
+		}
+		return this.updatePromise;
+	}
+
+	async _update() {
+		await this.updateDevices(this.fritz).catch((e) => this.errorHandlerAdapter(e));
+		if (!settings.exclude_routines) {
+			await this.updateRoutines(this.fritz).catch((e) => this.errorHandlerAdapter(e));
+		}
+		if (!settings.exclude_stats) {
+			const deviceswithstat = await this.getStateAsync('global.statdevices').catch((e) => {
+				this.log.warn('problem getting statdevices ' + e);
+			});
+			if (deviceswithstat && deviceswithstat.val) {
+				this.log.debug('glob state ' + deviceswithstat.val);
+				let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
+				for (let i = 0; i < devstat.length; i++) {
+					this.log.debug('updating Stats of device ' + devstat[i]);
+					await this.updateStats(devstat[i], this.fritz);
+				}
+			}
+		}
 	}
 
 	async updateRoutines(fritz) {
@@ -1633,27 +1664,33 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('======================================');
 		this.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
 		try {
-			Object.entries(array).forEach(async ([ key, value ]) => {
-				if (Array.isArray(value)) {
-					this.log.debug('processing datapoint ' + key + ' as array');
-					value.forEach(async (subarray) => {
-						//subarray.identifier = subarray.identifier.replace(/\s/g, '');
-						await this.updateData(
-							subarray,
-							ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')
-						); // hier wirds erst schwierig wenn array in array
-					});
-				} else if (typeof value === 'object' && value !== null) {
-					this.log.debug('processing datapoint ' + key + ' as object');
-					Object.entries(value).forEach(async ([ key2, value2 ]) => {
-						this.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
-						await this.updateDatapoint(key2, value2, ident);
-					});
-				} else {
-					this.log.debug('processing datapoint ' + key + ' directly');
-					await this.updateDatapoint(key, value, ident);
-				}
-			});
+			await Promise.all(
+				Object.entries(array).map(async ([ key, value ]) => {
+					if (Array.isArray(value)) {
+						this.log.debug('processing datapoint ' + key + ' as array');
+						await Promise.all(
+							value.map(async (subarray) => {
+								//subarray.identifier = subarray.identifier.replace(/\s/g, '');
+								await this.updateData(
+									subarray,
+									ident + '.' + key + '.' + subarray.identifier.replace(/\s/g, '')
+								); // hier wirds erst schwierig wenn array in array
+							})
+						);
+					} else if (typeof value === 'object' && value !== null) {
+						this.log.debug('processing datapoint ' + key + ' as object');
+						await Promise.all(
+							Object.entries(value).map(async ([ key2, value2 ]) => {
+								this.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
+								await this.updateDatapoint(key2, value2, ident);
+							})
+						);
+					} else {
+						this.log.debug('processing datapoint ' + key + ' directly');
+						await this.updateDatapoint(key, value, ident);
+					}
+				})
+			);
 		} catch (e) {
 			this.log.debug(' issue in updateData ' + e);
 			throw {
@@ -2024,7 +2061,7 @@ class Fritzdect extends utils.Adapter {
 						// individual check
 
 						// read value is a temperature
-						if (value < 57) {
+						if (value < 70) {
 							newtemp = parseFloat(value) / 2;
 							if (old) {
 								if (old.val !== newtemp) {
@@ -2094,7 +2131,7 @@ class Fritzdect extends utils.Adapter {
 						let targettemp;
 						let tsoll;
 						let oldval;
-						if (value < 57) {
+						if (value < 70) {
 							// die Abfrage auf <57 brauchen wir wahrscheinlich nicht
 							if (old) {
 								if (old.val !== parseFloat(value) / 2) {
@@ -3228,7 +3265,7 @@ class Fritzdect extends utils.Adapter {
 										'°C',
 										'value.temperature'
 									);
-									if (device.hkr.tsoll < 57) {
+									if (device.hkr.tsoll < 70) {
 										await this.setStateAsync('DECT_' + identifier + '.tsoll', {
 											val: parseFloat(device.hkr.tsoll) / 2,
 											ack: true
@@ -3248,7 +3285,7 @@ class Fritzdect extends utils.Adapter {
 										32,
 										'°C'
 									);
-									if (device.hkr.absenk < 57) {
+									if (device.hkr.absenk < 70) {
 										//war tsoll
 										await this.setStateAsync('DECT_' + identifier + '.absenk', {
 											val: parseFloat(device.hkr.absenk) / 2,
@@ -3270,7 +3307,7 @@ class Fritzdect extends utils.Adapter {
 										32,
 										'°C'
 									);
-									if (device.hkr.komfort < 57) {
+									if (device.hkr.komfort < 70) {
 										await this.setStateAsync('DECT_' + identifier + '.komfort', {
 											val: parseFloat(device.hkr.komfort) / 2,
 											ack: true

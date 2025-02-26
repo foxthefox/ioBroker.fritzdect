@@ -16,18 +16,44 @@
                 "uk": "Log FW версія, об'єднати etsidevice в etsiunit",
                 "zh-cn": "日志FW版本，将EtsideVice合并到Etsiunit"
             },
+            "2.6.0": {
+                "en": "support on-demand updates, temperature range",
+                "de": "Unterstützen Sie On-Demand-Updates, Temperaturbereich",
+                "ru": "Поддержка обновлений по требованию, температурный диапазон",
+                "pt": "Suporte atualizações sob demanda, faixa de temperatura",
+                "nl": "Ondersteuning on-demand updates, temperatuurbereik",
+                "fr": "Prise en charge des mises à jour à la demande, plage de température",
+                "it": "Supportare aggiornamenti su richiesta, intervallo di temperatura",
+                "es": "admitir actualizaciones a pedido, rango de temperatura",
+                "pl": "Obsługa aktualizacji na żądanie, zakres temperatur",
+                "uk": "Підтримуйте оновлення на вимогу, діапазон температури",
+                "zh-cn": "支持按需更新，温度范围"
+            },
+            "2.5.13": {
+                "en": "same as 2.5.12 with corrected IOB checker issues",
+                "de": "Gleich wie 2.5.12 mit korrigierten IOB -Checker -Problemen",
+                "ru": "То же, что 2.5.12 с исправленными проблемами проверки IOB",
+                "pt": "O mesmo que 2.5.12 com problemas de verificador de IOB corrigidos",
+                "nl": "Hetzelfde als 2.5.12 met gecorrigeerde IOB -checker -problemen",
+                "fr": "Identique à 2.5.12 avec des problèmes de vérification IOB corrigés",
+                "it": "Come 2.5.12 con problemi di controllo IOB corretti",
+                "es": "Igual que 2.5.12 con problemas de verificador de IOB corregido",
+                "pl": "Tak samo jak 2.5.12 z poprawionymi problemami z sprawdzaniem IOB",
+                "uk": "Те саме, що 2.5.12 з виправленими проблемами перевірки IOB",
+                "zh-cn": "与2.5.12相同，带有校正后的IOB检查器问题"
+            },
             "2.5.12": {
                 "en": "error correction for devices with empty identifier; update responsive settings",
-                "de": "Fehlerkorrektur für Geräte mit leerer Kennung; Aktualisieren Sie die Reaktionseinstellungen",
-                "ru": "исправление ошибок для устройств с пустым идентификатором; обновить адаптивные настройки",
-                "pt": "correção de erros para dispositivos com identificador vazio; atualizar configurações responsivas",
-                "nl": "Foutcorrectie voor apparaten met lege identificatie; update responsieve instellingen",
-                "fr": "Correction d'erreurs pour les appareils avec un identifiant vide ; mettre à jour les paramètres réactifs",
-                "it": "correzione errori per dispositivi con identificatore vuoto; aggiornare le impostazioni reattive",
-                "es": "corrección de errores para dispositivos con identificador vacío; actualizar la configuración responsiva",
-                "pl": "korekta błędów dla urządzeń z pustym identyfikatorem; zaktualizuj ustawienia responsywności",
-                "uk": "виправлення помилок для пристроїв з порожнім ідентифікатором; оновити адаптивні налаштування",
-                "zh-cn": "对空标识符的设备进行纠错；更新响应设置"
+                "de": "Fehlerkorrektur für Geräte mit leerem Kennung; Aktualisieren Sie die Reaktionseinstellungen",
+                "ru": "коррекция ошибок для устройств с пустым идентификатором; Обновление адаптивных настроек",
+                "pt": "Correção de erros para dispositivos com identificador vazio; Atualize configurações responsivas",
+                "nl": "Foutcorrectie voor apparaten met een lege identificatie; Update responsieve instellingen",
+                "fr": "Correction d'erreur pour les appareils avec identifiant vide; Mettre à jour les paramètres réactifs",
+                "it": "correzione dell'errore per dispositivi con identificatore vuoto; Aggiorna le impostazioni reattive",
+                "es": "Corrección de errores para dispositivos con identificador vacío; Actualizar la configuración receptiva",
+                "pl": "Korekta błędów dla urządzeń z pustym identyfikatorem; Zaktualizuj ustawienia responsywne",
+                "uk": "Виправлення помилок для пристроїв з порожнім ідентифікатором; Оновіть чуйні налаштування",
+                "zh-cn": "具有空标识符的设备的误差校正；更新响应式设置"
             },
             "2.5.11": {
                 "en": "update devDeps, linting error correction",
@@ -177,7 +203,7 @@
         "supportCustoms": false,
         "dependencies": [
             {
-                "js-controller": ">=4.0.24"
+                "js-controller": ">=5.0.19"
             }
         ],
         "globalDependencies": [

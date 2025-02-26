@@ -973,7 +973,7 @@ tests.integration(path.join(__dirname, '..'), {
 										console.log('fritzdect.0.DECT_112240205290-1.id             ... ' + state.val);
 									}
 									expect(state.val).to.exist;
-									expect(state.val).to.be.equal('2413');
+									expect(state.val).to.be.equal('2001');
 									harness.states.getState('fritzdect.0.DECT_112240205290-1.name', function(
 										err,
 										state
@@ -1052,7 +1052,7 @@ tests.integration(path.join(__dirname, '..'), {
 										console.log('fritzdect.0.DECT_119340141058-2.id           ... ' + state.val);
 									}
 									expect(state.val).to.exist;
-									expect(state.val).to.be.equal('411');
+									expect(state.val).to.be.equal('2000');
 									harness.states.getState('fritzdect.0.DECT_119340141058-2.name', function(
 										err,
 										state

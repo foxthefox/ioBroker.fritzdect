@@ -1507,6 +1507,7 @@ class Fritzdect extends utils.Adapter {
 										}
 										this.log.debug('preset operationmode ' + currentMode);
 									}
+									/*
 									// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
 									// some weird id usage, the website shows the id of the etsiunit
 									if (devices[i].etsiunitinfo) {
@@ -1518,6 +1519,7 @@ class Fritzdect extends utils.Adapter {
 											this.log.debug('id nachher ' + devices[i].id);
 										}
 									}
+									*/
 									//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
 									//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
 									if (devices[i].simpleonoff) {

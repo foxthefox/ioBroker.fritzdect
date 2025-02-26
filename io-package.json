@@ -182,7 +182,7 @@
         ],
         "globalDependencies": [
             {
-                "admin": ">=5.1.13"
+                "admin": ">=6.17.14"
             }
         ]
     },

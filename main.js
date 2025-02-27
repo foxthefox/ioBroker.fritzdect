@@ -1926,7 +1926,9 @@ class Fritzdect extends utils.Adapter {
 						key == 'functionbitmask' ||
 						key == 'etsideviceid' ||
 						key == 'unittype' ||
-						key == 'interfaces'
+						key == 'interfaces' ||
+						key == 'switchtype' ||
+						key == 'role'
 					) {
 						// skip it
 					} else if (key === 'batterylow') {

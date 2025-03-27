@@ -910,6 +910,73 @@ class Fritzdect extends utils.Adapter {
 								throw { error: 'hue were NULL' };
 							}
 						}
+						if (dp == 'unmapped_hue') {
+							const saturation = await this.getStateAsync('DECT_' + id + '.unmapped_saturation').catch((error) => {
+								this.log.warn('DECT_' + +id + '.unmapped_saturation  did not get state -> ' + error);
+							});
+							if (saturation && saturation.val !== null) {
+								// oder hier die Verwendung von lasttarget
+								const setSaturation = saturation.val;
+								if (setSaturation == '') {
+									this.log.error(
+										'No saturation value exists when setting hue, please set saturation to a value '
+									);
+								} else {
+									this.fritz
+										.setUnmappedColor(id, setSaturation, state.val)
+										.then(() => {
+											this.log.debug(
+												'Set lamp color hue ' +
+												id +
+												' to ' +
+												state.val +
+												' and saturation of ' +
+												setSaturation
+											);
+											this.setStateAsync('DECT_' + id + '.hue', {
+												val: state.val,
+												ack: true
+											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								}
+							} else {
+								throw { error: 'minutes were NULL' };
+							}
+						}
+						if (dp == 'unmapped_saturation') {
+							const hue = await this.getStateAsync('DECT_' + id + '.unmapped_hue').catch((error) => {
+								this.log.warn('DECT_' + +id + '.unmapped_hue  did not get state -> ' + error);
+							});
+							if (hue && hue.val !== null) {
+								const setHue = hue.val;
+								if (setHue == '') {
+									this.log.error(
+										'No hue value exists when setting saturation, please set hue to a value '
+									);
+								} else {
+									this.fritz
+										.setUnmappedColor(id, state.val, setHue)
+										.then(() => {
+											this.log.debug(
+												'Set lamp color saturation ' +
+												id +
+												' to ' +
+												state.val +
+												' and hue of ' +
+												setHue
+											);
+											this.setStateAsync('DECT_' + id + '.saturation', {
+												val: state.val,
+												ack: true
+											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								}
+							} else {
+								throw { error: 'hue were NULL' };
+							}
+						}
 						if (dp == 'temperature') {
 							this.fritz
 								.setColorTemperature(id, state.val)

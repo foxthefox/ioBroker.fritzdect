@@ -232,6 +232,10 @@ These devices are split into a device and an unit (the function itself). The dev
 ## Changelog
 
 ### 2.6.1 (npm)
+* new IKEA lamp commands issue #625
+* release script
+
+### 2.6.1 (npm)
 * log FW version of FB
 * DECT350 now with battery data (issue #513)
 * merge etsi devices into etsiunits (issue #597)

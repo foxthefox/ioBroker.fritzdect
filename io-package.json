@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.6.1",
+        "version": "2.6.2",
         "news": {
+            "2.6.2": {
+                "en": "new cmd ikea lamp"
+            },
             "2.6.1": {
                 "en": "log FW version, merge etsidevice into etsiunit",
                 "de": "Log FW -Version, fusion Eetsidevice in EtsIunit zusammen",

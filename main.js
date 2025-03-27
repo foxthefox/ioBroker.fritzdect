@@ -537,8 +537,8 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'boostactivetime') {
 							this.log.debug(
 								'Nothing to send external, but the boost active time was defined for ' +
-									state.val +
-									' min'
+								state.val +
+								' min'
 							);
 						}
 						if (dp == 'boostactive') {
@@ -594,13 +594,13 @@ class Fritzdect extends utils.Adapter {
 											this.log.debug('window ' + body + ' reading to ' + endtime);
 											this.log.debug(
 												'Set thermostat boost ' +
-													id +
-													' to ' +
-													state.val +
-													' until calculated ' +
-													ende +
-													' ' +
-													new Date(ende * 1000)
+												id +
+												' to ' +
+												state.val +
+												' until calculated ' +
+												ende +
+												' ' +
+												new Date(ende * 1000)
 											);
 											this.setStateAsync('DECT_' + id + '.boostactive', {
 												val: state.val,
@@ -624,8 +624,8 @@ class Fritzdect extends utils.Adapter {
 						if (dp == 'windowopenactivetime') {
 							this.log.debug(
 								'Nothing to send external, but the window open active time was defined for ' +
-									state.val +
-									' min'
+								state.val +
+								' min'
 							);
 						}
 						if (dp == 'windowopenactiv') {
@@ -683,13 +683,13 @@ class Fritzdect extends utils.Adapter {
 											this.log.debug('window ' + body + ' reading to ' + endtime);
 											this.log.debug(
 												'Set thermostat windowopen ' +
-													id +
-													' to ' +
-													state.val +
-													' until calculated ' +
-													ende +
-													' ' +
-													new Date(ende * 1000)
+												id +
+												' to ' +
+												state.val +
+												' until calculated ' +
+												ende +
+												' ' +
+												new Date(ende * 1000)
 											);
 											this.setStateAsync('DECT_' + id + '.windowopenactiv', {
 												val: state.val,
@@ -860,11 +860,11 @@ class Fritzdect extends utils.Adapter {
 										.then(() => {
 											this.log.debug(
 												'Set lamp color hue ' +
-													id +
-													' to ' +
-													state.val +
-													' and saturation of ' +
-													setSaturation
+												id +
+												' to ' +
+												state.val +
+												' and saturation of ' +
+												setSaturation
 											);
 											this.setStateAsync('DECT_' + id + '.hue', {
 												val: state.val,
@@ -893,11 +893,11 @@ class Fritzdect extends utils.Adapter {
 										.then(() => {
 											this.log.debug(
 												'Set lamp color saturation ' +
-													id +
-													' to ' +
-													state.val +
-													' and hue of ' +
-													setHue
+												id +
+												' to ' +
+												state.val +
+												' and hue of ' +
+												setHue
 											);
 											this.setStateAsync('DECT_' + id + '.saturation', {
 												val: state.val,
@@ -1414,9 +1414,9 @@ class Fritzdect extends utils.Adapter {
 							).catch((error) => {
 								this.log.warn(
 									'problem getting routine_' +
-										routine.identifier.replace(/\s/g, '') +
-										'.active ' +
-										error
+									routine.identifier.replace(/\s/g, '') +
+									'.active ' +
+									error
 								);
 							});
 							if (old.val !== active || !this.config.fritz_writeonhyst) {
@@ -1480,15 +1480,15 @@ class Fritzdect extends utils.Adapter {
 									// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
 									const obj = await this.getForeignObjectAsync(
 										this.namespace +
-											'.DECT_' +
-											devices[i].identifier.replace(/\s/g, '') +
-											'.present'
+										'.DECT_' +
+										devices[i].identifier.replace(/\s/g, '') +
+										'.present'
 									);
 									if (!obj || !obj.common) {
 										this.log.debug(
 											'DECT_' +
-												devices[i].identifier.replace(/\s/g, '') +
-												'.present is not present, check the device connection, no values are written'
+											devices[i].identifier.replace(/\s/g, '') +
+											'.present is not present, check the device connection, no values are written'
 										);
 									} else {
 										await this.setStateAsync(
@@ -1499,8 +1499,8 @@ class Fritzdect extends utils.Adapter {
 
 									this.log.debug(
 										'DECT_' +
-											devices[i].identifier.replace(/\s/g, '') +
-											' is not present, check the device connection, no values are written'
+										devices[i].identifier.replace(/\s/g, '') +
+										' is not present, check the device connection, no values are written'
 									);
 									continue;
 								} else {
@@ -1518,17 +1518,17 @@ class Fritzdect extends utils.Adapter {
 										).catch((error) => {
 											this.log.warn(
 												'problem getting DECT_' +
-													devices[i].identifier.replace(/\s/g, '') +
-													'.operationmode ' +
-													error
+												devices[i].identifier.replace(/\s/g, '') +
+												'.operationmode ' +
+												error
 											);
 										});
 										if (oldval) {
 											if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
 												await this.setStateAsync(
 													'DECT_' +
-														devices[i].identifier.replace(/\s/g, '') +
-														'.operationmode',
+													devices[i].identifier.replace(/\s/g, '') +
+													'.operationmode',
 													{
 														val: currentMode,
 														ack: true
@@ -1559,9 +1559,9 @@ class Fritzdect extends utils.Adapter {
 										).catch((error) => {
 											this.log.warn(
 												'problem getting DECT_' +
-													devices[i].identifier.replace(/\s/g, '') +
-													'.switchtype ' +
-													error
+												devices[i].identifier.replace(/\s/g, '') +
+												'.switchtype ' +
+												error
 											);
 										});
 										if (switchtype.val !== 'simpleonoff') {
@@ -1623,8 +1623,8 @@ class Fritzdect extends utils.Adapter {
 							if (device.present === '0' || device.present === 0 || device.present === false) {
 								this.log.debug(
 									'DECT_' +
-										device.identifier.replace(/\s/g, '') +
-										' is not present, check the device connection, no values are written'
+									device.identifier.replace(/\s/g, '') +
+									' is not present, check the device connection, no values are written'
 								);
 							} else {
 								if (device.hkr) {
@@ -1665,7 +1665,7 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('With ' + ident + ' got the following device/group to parse ' + JSON.stringify(array));
 		try {
 			await Promise.all(
-				Object.entries(array).map(async ([ key, value ]) => {
+				Object.entries(array).map(async ([key, value]) => {
 					if (Array.isArray(value)) {
 						this.log.debug('processing datapoint ' + key + ' as array');
 						await Promise.all(
@@ -1680,7 +1680,7 @@ class Fritzdect extends utils.Adapter {
 					} else if (typeof value === 'object' && value !== null) {
 						this.log.debug('processing datapoint ' + key + ' as object');
 						await Promise.all(
-							Object.entries(value).map(async ([ key2, value2 ]) => {
+							Object.entries(value).map(async ([key2, value2]) => {
 								this.log.debug(' object transfer ' + key2 + '  ' + value2 + '  ' + ident);
 								await this.updateDatapoint(key2, value2, ident);
 							})
@@ -1707,7 +1707,7 @@ class Fritzdect extends utils.Adapter {
 		this.log.debug('With ' + identifier + 'got the following to parse' + JSON.stringify(statsobj));
 		// when device is not plugged in, the temperature and voltage objects are empty
 		await Promise.all(
-			Object.entries(statsobj.devicestats).map(async ([ key, obj ]) => {
+			Object.entries(statsobj.devicestats).map(async ([key, obj]) => {
 				if (key !== 'temperature') {
 					let old = null;
 					if (key == 'energy') {
@@ -1973,13 +1973,13 @@ class Fritzdect extends utils.Adapter {
 						if (changed || !this.config.fritz_writeonhyst) {
 							this.log.debug(
 								'updating data DECT_' +
-									ain +
-									' : ' +
-									key +
-									' new: ' +
-									parseFloat(value) / 10 +
-									' old: ' +
-									old.val
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								parseFloat(value) / 10 +
+								' old: ' +
+								old.val
 							);
 							await this.setStateAsync('DECT_' + ain + '.' + key, {
 								val: parseFloat(value) / 10,
@@ -1998,13 +1998,13 @@ class Fritzdect extends utils.Adapter {
 						if (changed || !this.config.fritz_writeonhyst) {
 							this.log.debug(
 								'updating data DECT_' +
-									ain +
-									' : ' +
-									key +
-									' new: ' +
-									parseFloat(value) / 1000 +
-									' old: ' +
-									old.val
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								parseFloat(value) / 1000 +
+								' old: ' +
+								old.val
 							);
 							await this.setStateAsync('DECT_' + ain + '.' + key, {
 								val: parseFloat(value) / 1000,
@@ -2115,13 +2115,13 @@ class Fritzdect extends utils.Adapter {
 						if (changed || !this.config.fritz_writeonhyst) {
 							this.log.debug(
 								'updating data DECT_' +
-									ain +
-									' : ' +
-									key +
-									' new: ' +
-									parseFloat(value) +
-									' old: ' +
-									old.val
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								parseFloat(value) +
+								' old: ' +
+								old.val
 							);
 							await this.setStateAsync('DECT_' + ain + '.' + key, {
 								val: parseFloat(value),
@@ -2453,13 +2453,13 @@ class Fritzdect extends utils.Adapter {
 						if (changed || !this.config.fritz_writeonhyst) {
 							this.log.debug(
 								'updating data DECT_' +
-									ain +
-									' : ' +
-									key +
-									' new: ' +
-									parseInt(value) +
-									' old: ' +
-									old.val
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								parseInt(value) +
+								' old: ' +
+								old.val
 							);
 							await this.setStateAsync('DECT_' + ain + '.' + key, {
 								val: parseInt(value),
@@ -2490,13 +2490,13 @@ class Fritzdect extends utils.Adapter {
 						if (changed || !this.config.fritz_writeonhyst) {
 							this.log.debug(
 								'updating data DECT_' +
-									ain +
-									' : ' +
-									key +
-									' new: ' +
-									value.toString() +
-									' old: ' +
-									old.val
+								ain +
+								' : ' +
+								key +
+								' new: ' +
+								value.toString() +
+								' old: ' +
+								old.val
 							);
 							await this.setStateAsync('DECT_' + ain + '.' + key, {
 								val: value.toString(),
@@ -2507,10 +2507,10 @@ class Fritzdect extends utils.Adapter {
 						// unbekannt
 						this.log.warn(
 							'unknown datapoint DECT_' +
-								ain +
-								'.' +
-								key +
-								' please inform devloper and open issue in github'
+							ain +
+							'.' +
+							key +
+							' please inform devloper and open issue in github'
 						);
 					}
 				} catch (e) {
@@ -2706,8 +2706,9 @@ class Fritzdect extends utils.Adapter {
 				if ((device.functionbitmask & 64) == 64) {
 					//DECT300/301
 					role = 'thermo.heat';
-				} else if ((device.functionbitmask & 32768) == 32768 || (device.functionbitmask & 512) == 512) {
+				} else if ((device.functionbitmask & 32768) == 32768 || (device.functionbitmask & 512) == 512 || (device.functionbitmask & 128) == 128) {
 					//DECT200/210
+					//128 only energy DECT250
 					role = 'switch';
 				} else if ((device.functionbitmask & 256) == 256) {
 					// == 1024 || 1024)
@@ -2746,13 +2747,13 @@ class Fritzdect extends utils.Adapter {
 				// other might be created, but better to warn, if during runtime it changes the updates will work until restart and new creation of datapoints
 				this.log.debug(
 					'device ' +
-						identifier +
-						' named ' +
-						device.name +
-						' mask ' +
-						device.functionbitmask +
-						' assigned to ' +
-						role
+					identifier +
+					' named ' +
+					device.name +
+					' mask ' +
+					device.functionbitmask +
+					' assigned to ' +
+					role
 				);
 				if (role != 'etsi') {
 					// create Master Object
@@ -2880,7 +2881,7 @@ class Fritzdect extends utils.Adapter {
 					if (device.button) {
 						if (!Array.isArray(device.button)) {
 							await Promise.all(
-								Object.entries(device.button).map(async ([ key, value ]) => {
+								Object.entries(device.button).map(async ([key, value]) => {
 									//await this.asyncForEach(Object.keys(device.button), async (key) => {
 									if (key === 'lastpressedtimestamp') {
 										await this.createTimeState(
@@ -3096,7 +3097,7 @@ class Fritzdect extends utils.Adapter {
 							Object.keys(device.powermeter).map(async (key) => {
 								//await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
 								if (key === 'power') {
-									await this.createValueState(identifier, 'power', 'actual Power', 0, 4000, 'W');
+									await this.createValueState(identifier, 'power', 'actual Power', 0, 40000, 'W');
 									await this.setStateAsync('DECT_' + identifier + '.power', {
 										val: parseFloat(device.powermeter.power) / 1000,
 										ack: true
@@ -3460,8 +3461,8 @@ class Fritzdect extends utils.Adapter {
 														val:
 															device.hkr.nextchange.endperiod !== null
 																? String(
-																		new Date(device.hkr.nextchange.endperiod * 1000)
-																	)
+																	new Date(device.hkr.nextchange.endperiod * 1000)
+																)
 																: null,
 														ack: true
 													});

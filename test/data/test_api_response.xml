@@ -681,4 +681,5 @@
 			<lastalertchgtimestamp>1706271938</lastalertchgtimestamp>
 		</alert>
 	</device>
+	<device identifier="15282 1234567-1" id="25" functionbitmask="130" fwversion="03.60" manufacturer="AVM" productname="FRITZ!Smart Energy 250"><present>1</present><txbusy>0</txbusy><name>FRITZ!Smart Energy 250</name><battery>100</battery><batterylow>0</batterylow><powermeter><voltage>0</voltage><power>0</power><energy>19025000</energy></powermeter></device>
 </devicelist>

@@ -1515,161 +1515,166 @@ class Fritzdect extends utils.Adapter {
 			let currentMode = null;
 			if (devicelistinfos) {
 				let devlistanswer = parser.xml2json(devicelistinfos);
-				// devices
-				let devices = this.unifyDevicesUnits(devlistanswer.devicelist.device);
-				/*
-				let devices = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
+				// deviceslist, the answer from xml2json returns no array, if only one device		
+				let devicelist = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
 					//device.identifier = device.identifier.replace(/\s/g, '');
 					return device;
 				});
-				*/
+
+				let devices = this.unifyDevicesUnits(devicelist);
+
 				this.log.debug('devices\n');
 				this.log.debug(JSON.stringify(devices));
-				if (devices.length) {
-					this.log.debug('update Devices ' + devices.length);
-					try {
-						for (let i = 0; i < devices.length; i++) {
-							if (devices[i].identifier !== '' && devices[i].identifier) {
-								this.log.debug('_____________________________________________');
-								this.log.debug('updating Device ' + devices[i].name);
-								if (
-									devices[i].present === '0' ||
-									devices[i].present === 0 ||
-									devices[i].present === false
-								) {
-									/*
-								await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
-									val: false,
-									ack: true
-								});
-								*/
-									// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
-									const obj = await this.getForeignObjectAsync(
-										this.namespace +
-										'.DECT_' +
-										devices[i].identifier.replace(/\s/g, '') +
-										'.present'
-									);
-									if (!obj || !obj.common) {
+				if (devices) {
+					if (devices.length) {
+						this.log.debug('update Devices ' + devices.length);
+						try {
+							for (let i = 0; i < devices.length; i++) {
+								if (devices[i].identifier !== '' && devices[i].identifier) {
+									this.log.debug('_____________________________________________');
+									this.log.debug('updating Device ' + devices[i].name);
+									if (
+										devices[i].present === '0' ||
+										devices[i].present === 0 ||
+										devices[i].present === false
+									) {
+										/*
+									await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
+										val: false,
+										ack: true
+									});
+									*/
+										// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
+										const obj = await this.getForeignObjectAsync(
+											this.namespace +
+											'.DECT_' +
+											devices[i].identifier.replace(/\s/g, '') +
+											'.present'
+										);
+										if (!obj || !obj.common) {
+											this.log.debug(
+												'DECT_' +
+												devices[i].identifier.replace(/\s/g, '') +
+												'.present is not present, check the device connection, no values are written'
+											);
+										} else {
+											await this.setStateAsync(
+												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
+												{ val: false, ack: true }
+											);
+										}
+
 										this.log.debug(
 											'DECT_' +
 											devices[i].identifier.replace(/\s/g, '') +
-											'.present is not present, check the device connection, no values are written'
+											' is not present, check the device connection, no values are written'
 										);
+										continue;
 									} else {
-										await this.setStateAsync(
-											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
-											{ val: false, ack: true }
-										);
-									}
-
-									this.log.debug(
-										'DECT_' +
-										devices[i].identifier.replace(/\s/g, '') +
-										' is not present, check the device connection, no values are written'
-									);
-									continue;
-								} else {
-									if (devices[i].hkr) {
-										currentMode = 'Auto';
-										if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
-											currentMode = 'Comfort';
-										}
-										if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
-											currentMode = 'Night';
-										}
-										//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
-										let oldval = await this.getStateAsync(
-											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode'
-										).catch((error) => {
-											this.log.warn(
-												'problem getting DECT_' +
-												devices[i].identifier.replace(/\s/g, '') +
-												'.operationmode ' +
-												error
-											);
-										});
-										if (oldval) {
-											if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
-												await this.setStateAsync(
-													'DECT_' +
+										if (devices[i].hkr) {
+											currentMode = 'Auto';
+											if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
+												currentMode = 'Comfort';
+											}
+											if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
+												currentMode = 'Night';
+											}
+											//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
+											let oldval = await this.getStateAsync(
+												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode'
+											).catch((error) => {
+												this.log.warn(
+													'problem getting DECT_' +
 													devices[i].identifier.replace(/\s/g, '') +
-													'.operationmode',
+													'.operationmode ' +
+													error
+												);
+											});
+											if (oldval) {
+												if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
+													await this.setStateAsync(
+														'DECT_' +
+														devices[i].identifier.replace(/\s/g, '') +
+														'.operationmode',
+														{
+															val: currentMode,
+															ack: true
+														}
+													);
+												}
+											}
+											this.log.debug('preset operationmode ' + currentMode);
+										}
+										/*
+										// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
+										// some weird id usage, the website shows the id of the etsiunit
+										if (devices[i].etsiunitinfo) {
+											if (devices[i].etsiunitinfo.etsideviceid) {
+												//replace id with etsi
+												this.log.debug('shifting etsideviceid in dataset');
+												this.log.debug('id vorher ' + devices[i].id);
+												devices[i].id = devices[i].etsiunitinfo.etsideviceid;
+												this.log.debug('id nachher ' + devices[i].id);
+											}
+										}
+										*/
+										//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
+										//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
+										if (devices[i].simpleonoff) {
+											let switchtype = await this.getStateAsync(
+												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype'
+											).catch((error) => {
+												this.log.warn(
+													'problem getting DECT_' +
+													devices[i].identifier.replace(/\s/g, '') +
+													'.switchtype ' +
+													error
+												);
+											});
+											if (switchtype.val !== 'simpleonoff') {
+												await this.setStateAsync(
+													'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
 													{
-														val: currentMode,
+														val: 'simpleonoff',
 														ack: true
 													}
 												);
+												this.log.debug('switchtype simpleonoff set for ' + devices[i].id);
 											}
 										}
-										this.log.debug('preset operationmode ' + currentMode);
-									}
-									/*
-									// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
-									// some weird id usage, the website shows the id of the etsiunit
-									if (devices[i].etsiunitinfo) {
-										if (devices[i].etsiunitinfo.etsideviceid) {
-											//replace id with etsi
-											this.log.debug('shifting etsideviceid in dataset');
-											this.log.debug('id vorher ' + devices[i].id);
-											devices[i].id = devices[i].etsiunitinfo.etsideviceid;
-											this.log.debug('id nachher ' + devices[i].id);
+										// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
+										if (devices[i].functionbitmask == 1) {
+											this.log.debug(' functionbitmask 1');
+											// search and find the device id and replace fwversion
+											// todo
+											// find the device.identifier mit der etsi_id
+											//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
+											// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
+											// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
+											// reihenfolge, id immer vorher und dann erst etsi in json?
+											continue;
+										} else {
+											this.log.debug(' calling update data .....');
+											try {
+												await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
+											} catch (e) {
+												this.log.error(' issue updating device calling updateData' + e);
+											}
 										}
 									}
-									*/
-									//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
-									//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
-									if (devices[i].simpleonoff) {
-										let switchtype = await this.getStateAsync(
-											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype'
-										).catch((error) => {
-											this.log.warn(
-												'problem getting DECT_' +
-												devices[i].identifier.replace(/\s/g, '') +
-												'.switchtype ' +
-												error
-											);
-										});
-										if (switchtype.val !== 'simpleonoff') {
-											await this.setStateAsync(
-												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
-												{
-													val: 'simpleonoff',
-													ack: true
-												}
-											);
-											this.log.debug('switchtype simpleonoff set for ' + devices[i].id);
-										}
-									}
-									// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
-									if (devices[i].functionbitmask == 1) {
-										this.log.debug(' functionbitmask 1');
-										// search and find the device id and replace fwversion
-										// todo
-										// find the device.identifier mit der etsi_id
-										//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
-										// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
-										// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
-										// reihenfolge, id immer vorher und dann erst etsi in json?
-										continue;
-									} else {
-										this.log.debug(' calling update data .....');
-										try {
-											await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
-										} catch (e) {
-											this.log.error(' issue updating device calling updateData' + e);
-										}
-									}
+								} else {
+									this.log.debug('update skipped: ' + JSON.stringify(devices[i]));
 								}
-							} else {
-								this.log.debug('update skipped: ' + JSON.stringify(devices[i]));
 							}
+						} catch (e) {
+							this.log.error('try/catch issue updating device in updateDevices ' + e);
 						}
-					} catch (e) {
-						this.log.error('try/catch issue updating device in updateDevices ' + e);
 					}
+				} else {
+					this.log.debug('no devices received')
 				}
+
 
 				// groups
 				let groups = parser.xml2json(devicelistinfos);
@@ -2696,15 +2701,21 @@ class Fritzdect extends utils.Adapter {
 				*/
 				this.log.debug('devices\n');
 				this.log.debug(JSON.stringify(devices));
-				if (devices.length) {
-					this.log.info('CREATE Devices ' + devices.length);
-					try {
-						await this.createData(devices);
-					} catch (e) {
-						this.log.debug(' issue creating devices calling createData' + e);
-						throw e;
+				if (devices) {
+					// needed to check for devices, since it is not ensured that unifyDeviceUnits will return an array, even with length 0, issue #651
+					if (devices.length) {
+						this.log.info('CREATE Devices ' + devices.length);
+						try {
+							await this.createData(devices);
+						} catch (e) {
+							this.log.debug(' issue creating devices calling createData' + e);
+							throw e;
+						}
 					}
+				} else {
+					this.log.debug('no devices to be processed');
 				}
+
 
 				let groups = parser.xml2json(devicelistinfos);
 				groups = [].concat((groups.devicelist || {}).group || []).map((group) => {

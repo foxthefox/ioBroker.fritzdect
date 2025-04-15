@@ -231,9 +231,10 @@ These devices are split into a device and an unit (the function itself). The dev
 
 ## Changelog
 
-### 2.6.1 (npm)
+### 2.6.2 (npm)
 * new IKEA lamp commands issue #625
 * release script
+* error correction when there is only one device used #651
 
 ### 2.6.1 (npm)
 * log FW version of FB

@@ -2688,17 +2688,13 @@ class Fritzdect extends utils.Adapter {
 			const devicelistinfos = await fritz.getDeviceListInfos().catch((e) => this.errorHandlerApi(e));
 			if (devicelistinfos) {
 				let devlistanswer = parser.xml2json(devicelistinfos);
-				if (devlistanswer.devicelist.fwversion) {
-					this.log.info('FB FW version: ' + devlistanswer.devicelist.fwversion);
-				}
-				let devices = this.unifyDevicesUnits(devlistanswer.devicelist.device);
-				/*
-				let devices = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
+				// deviceslist, the answer from xml2json returns no array, if only one device		
+				let devicelist = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
-					// device.identifier = device.identifier.replace(/\s/g, '');
+					//device.identifier = device.identifier.replace(/\s/g, '');
 					return device;
 				});
-				*/
+				let devices = this.unifyDevicesUnits(devicelist);
 				this.log.debug('devices\n');
 				this.log.debug(JSON.stringify(devices));
 				if (devices) {

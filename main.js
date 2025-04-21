@@ -1419,7 +1419,9 @@ class Fritzdect extends utils.Adapter {
 				}
 			}
 		}
-		etsidelete.sort();
+		//sort is needed, but does return it alphabetically!! workaround needed
+		//https://stackoverflow.com/questions/1063007/how-to-sort-an-array-of-integers
+		etsidelete.sort((a, b) => a - b);
 		//delete the etsidevices
 		for (let k = 0; k < etsidelete.length; k++) {
 			devicearray.splice(etsidelete[k] - k, 1);

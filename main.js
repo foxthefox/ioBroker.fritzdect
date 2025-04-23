@@ -2885,9 +2885,10 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 					}
-					/*
+
 					//always ID
 					await this.createInfoState(identifier, 'id', 'Device ID');
+					/*
 					//etsideviceid im gleichen Object
 					if (device.etsiunitinfo) {
 						this.log.debug('etsi part');

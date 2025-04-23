@@ -235,6 +235,8 @@ These devices are split into a device and an unit (the function itself). The dev
 * new IKEA lamp commands issue #625
 * release script
 * error correction when there is only one device used #651
+* error correction when there are more than 4 etsidevices used #651
+* correction id state creation 
 
 ### 2.6.1 (npm)
 * log FW version of FB

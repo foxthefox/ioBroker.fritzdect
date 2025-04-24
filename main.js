@@ -3724,26 +3724,28 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									});
 								} else if (key === 'unmapped_hue') {
-									await this.createValueState(
+									await this.createValueCtrl(
 										identifier,
 										'unmapped_hue',
 										'unmapped hue value',
 										0,
 										359,
-										'°'
+										'°',
+										'value.hue'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.unmapped_hue', {
 										val: parseInt(device.colorcontrol.unmapped_hue),
 										ack: true
 									});
 								} else if (key === 'unmapped_saturation') {
-									await this.createValueState(
+									await this.createValueCtrl(
 										identifier,
 										'unmapped_saturation',
 										'unmapped saturation value',
 										0,
 										255,
-										''
+										'',
+										'value.saturation'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.unmapped_saturation', {
 										val: parseInt(device.colorcontrol.unmapped_saturation),

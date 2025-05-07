@@ -236,7 +236,9 @@ These devices are split into a device and an unit (the function itself). The dev
 * release script
 * error correction when there is only one device used #651
 * error correction when there are more than 4 etsidevices used #651
-* correction id state creation 
+* correction id state creation
+* handling cases of stats where the returned data does not contain "datatime" #658
+* node version >=20
 
 ### 2.6.1 (npm)
 * log FW version of FB

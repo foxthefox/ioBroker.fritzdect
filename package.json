@@ -7,7 +7,7 @@
 		"email": "foxthefox@wysiwis.net"
 	},
 	"engines": {
-		"node": ">=18"
+		"node": ">=20"
 	},
 	"homepage": "https://github.com/foxthefox/ioBroker.fritzdect",
 	"license": "MIT",

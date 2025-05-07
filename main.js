@@ -1452,7 +1452,13 @@ class Fritzdect extends utils.Adapter {
 				let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
 				for (let i = 0; i < devstat.length; i++) {
 					this.log.debug('updating Stats of device ' + devstat[i]);
-					await this.updateStats(devstat[i], this.fritz);
+					try {
+						await this.updateStats(devstat[i], this.fritz);
+					} catch (error) {
+						this.log.debug('Error in processing stats. Device: ' + devstat[i])
+						this.log.debug(error)
+					}
+
 				}
 			}
 		}
@@ -1826,7 +1832,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									});
 								}
-								let datatimem = parseInt(obj['stats'][0]['datatime']);
+								let datatimem = obj['stats']['datatime'] ? parseInt(obj['stats'][0]['datatime']) : Date.now();
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimem', {
 									val: datatimem,
 									ack: true
@@ -1841,127 +1847,135 @@ class Fritzdect extends utils.Adapter {
 									val: last12m,
 									ack: true
 								});
-								let monthnum = parseInt(new Date(datatimem * 1000).toISOString().slice(5, 7));
+								let monthnum = obj['stats']['datatime'] ? parseInt(new Date(datatimem * 1000).toISOString().slice(5, 7)) : Date.now();
 								let ytd = montharr.splice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_ytd', {
 									val: ytd,
 									ack: true
 								});
-							}
-							// days
-							if (obj['stats'][1]) {
-								old = await this.getStateAsync(
-									'DECT_' + identifier + '.' + key + '_stats.countd'
-								).catch((error) => {
-									this.log.warn('DECT_' + identifier + '.' + key + '_stats.countd' + error);
-								});
-								if (old && old.val) {
-									if (old.val !== parseInt(obj['stats'][1]['count'])) {
+								// days
+								if (obj['stats'][1]) {
+									old = await this.getStateAsync(
+										'DECT_' + identifier + '.' + key + '_stats.countd'
+									).catch((error) => {
+										this.log.warn('DECT_' + identifier + '.' + key + '_stats.countd' + error);
+									});
+									if (old && old.val) {
+										if (old.val !== parseInt(obj['stats'][1]['count'])) {
+											await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
+												val: parseInt(obj['stats'][1]['count']),
+												ack: true
+											});
+										}
+									} else {
 										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
 											val: parseInt(obj['stats'][1]['count']),
 											ack: true
 										});
 									}
-								} else {
-									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
-										val: parseInt(obj['stats'][1]['count']),
-										ack: true
+									old = await this.getStateAsync(
+										'DECT_' + identifier + '.' + key + '_stats.gridd'
+									).catch((error) => {
+										this.log.warn('DECT_' + identifier + '.' + key + '_stats.gridd' + error);
 									});
-								}
-								old = await this.getStateAsync(
-									'DECT_' + identifier + '.' + key + '_stats.gridd'
-								).catch((error) => {
-									this.log.warn('DECT_' + identifier + '.' + key + '_stats.gridd' + error);
-								});
-								if (old && old.val) {
-									if (old.val !== parseInt(obj['stats'][1]['grid'])) {
+									if (old && old.val) {
+										if (old.val !== parseInt(obj['stats'][1]['grid'])) {
+											await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
+												val: parseInt(obj['stats'][1]['grid']),
+												ack: true
+											});
+										}
+									} else {
 										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
 											val: parseInt(obj['stats'][1]['grid']),
 											ack: true
 										});
 									}
-								} else {
-									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
-										val: parseInt(obj['stats'][1]['grid']),
+									let datatimed = obj['stats']['datatime'] ? parseInt(obj['stats'][1]['datatime']) : Date.now();
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
+										val: datatimed,
 										ack: true
 									});
+									let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
+										val: JSON.stringify(dayarr),
+										ack: true
+									});
+									// dayvalue here, because the mtd alters the array
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
+										val: parseInt(dayarr[0]),
+										ack: true
+									});
+									let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last31d', {
+										val: last31d,
+										ack: true
+									});
+									let daynum = obj['stats']['datatime'] ? parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10)) : parseInt(new Date(Date.now() * 1000).toISOString().slice(8, 10));
+									let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
+										val: mtd,
+										ack: true
+									});
+
 								}
-								let datatimed = parseInt(obj['stats'][1]['datatime']);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
-									val: datatimed,
-									ack: true
-								});
-								let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
-									val: JSON.stringify(dayarr),
-									ack: true
-								});
-								// dayvalue here, because the mtd alters the array
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
-									val: parseInt(dayarr[0]),
-									ack: true
-								});
-								let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last31d', {
-									val: last31d,
-									ack: true
-								});
-								let daynum = parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10));
-								let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
-									val: mtd,
-									ack: true
-								});
 							}
-						}
-					} else {
-						if (obj['stats']) {
-							old = await this.getStateAsync(
-								'DECT_' + identifier + '.' + key + '_stats.count'
-							).catch((error) => {
-								this.log.warn('DECT_' + identifier + '.' + key + '_stats.count ' + error);
-							});
-							if (old && old.val) {
-								if (old.val !== parseInt(obj['stats']['count'])) {
+						} else {
+							if (obj['stats']) {
+								old = await this.getStateAsync(
+									'DECT_' + identifier + '.' + key + '_stats.count'
+								).catch((error) => {
+									this.log.warn('DECT_' + identifier + '.' + key + '_stats.count ' + error);
+								});
+								if (old && old.val) {
+									if (old.val !== parseInt(obj['stats']['count'])) {
+										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
+											val: parseInt(obj['stats']['count']),
+											ack: true
+										});
+									}
+								} else {
 									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
 										val: parseInt(obj['stats']['count']),
 										ack: true
 									});
 								}
-							} else {
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.count', {
-									val: parseInt(obj['stats']['count']),
-									ack: true
-								});
-							}
 
-							old = await this.getStateAsync(
-								'DECT_' + identifier + '.' + key + '_stats.grid'
-							).catch((error) => {
-								this.log.warn('DECT_' + identifier + '.' + key + '_stats.grid  ' + error);
-							});
-							if (old && old.val) {
-								if (old.val !== parseInt(obj['stats']['grid'])) {
+								old = await this.getStateAsync(
+									'DECT_' + identifier + '.' + key + '_stats.grid'
+								).catch((error) => {
+									this.log.warn('DECT_' + identifier + '.' + key + '_stats.grid  ' + error);
+								});
+								if (old && old.val) {
+									if (old.val !== parseInt(obj['stats']['grid'])) {
+										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
+											val: parseInt(obj['stats']['grid']),
+											ack: true
+										});
+									}
+								} else {
 									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
 										val: parseInt(obj['stats']['grid']),
 										ack: true
 									});
 								}
-							} else {
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.grid', {
-									val: parseInt(obj['stats']['grid']),
+								if (obj['stats']['datatime']) {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
+										val: parseInt(obj['stats']['datatime']),
+										ack: true
+									});
+								} else {
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
+										val: Date.now(),
+										ack: true
+									});
+								}
+								let otherarr = obj['stats']['_@attribute'].split(',').map(Number);
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {
+									val: JSON.stringify(otherarr),
 									ack: true
 								});
 							}
-							await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
-								val: parseInt(obj['stats']['datatime']),
-								ack: true
-							});
-							let otherarr = obj['stats']['_@attribute'].split(',').map(Number);
-							await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {
-								val: JSON.stringify(otherarr),
-								ack: true
-							});
 						}
 					}
 				}
@@ -2906,7 +2920,7 @@ class Fritzdect extends utils.Adapter {
 								ack: true
 							});
 						}
-
+	
 						//check for blinds control
 						if (device.etsiunitinfo.unittype == 281) {
 							//additional blind datapoints
@@ -4246,7 +4260,6 @@ class Fritzdect extends utils.Adapter {
 					name: 'time of stats of months',
 					type: 'number',
 					min: 0,
-					max: 2147483648,
 					read: true,
 					write: false,
 					role: 'date',
@@ -4262,7 +4275,6 @@ class Fritzdect extends utils.Adapter {
 					name: 'time of stats of days',
 					type: 'number',
 					min: 0,
-					max: 2147483648,
 					read: true,
 					write: false,
 					role: 'date',
@@ -4314,7 +4326,6 @@ class Fritzdect extends utils.Adapter {
 					name: 'time of stats',
 					type: 'number',
 					min: 0,
-					max: 2147483648,
 					read: true,
 					write: false,
 					role: 'date',

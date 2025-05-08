@@ -341,53 +341,119 @@ class Fritzdect extends utils.Adapter {
 			if (state && !state.ack && state.val !== null && id !== null) {
 				this.log.debug('ack is not set! -> command');
 				//hier noch eine Abfrage ob das Gerät present=false hat und Fehlermeldung das man Nichterreichbares Gerät bedienen wiil
-				const tmp = id.split('.');
-				const dp = tmp.pop();
-				const idx = tmp.pop(); //is the name after fritzdect.x.
-				// devices or groups
-				if (idx && idx !== null) {
-					if (idx.startsWith('DECT_')) {
-						// braucht man nicht wenn kein toggle in devices vorkommt
-						id = idx.replace(/DECT_/g, ''); //Thermostat
-						this.log.info('DECT ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
-						if (dp === 'tsoll') {
-							if (state.val < 8) {
-								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 1, ack: false }); //damit das Ventil auch regelt
-								await this.fritz
-									.setTempTarget(id, 'off')
-									.then(() => {
-										this.log.debug('Switched Mode' + id + ' to closed');
-									})
-									.catch((e) => this.errorHandlerApi(e));
-							} else if (state.val > 28) {
-								//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
-								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt (false= Befehl und nochmaliger Einsprung )
-								await this.fritz
-									.setTempTarget(id, 'on')
-									.then(() => {
-										this.log.debug('Switched Mode' + id + ' to opened permanently');
-									})
-									.catch((e) => this.errorHandlerApi(e));
-							} else {
-								await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 0, ack: false }); //damit das Ventil auch regelt
-								await this.fritz
-									.setTempTarget(id, state.val)
-									.then(() => {
-										this.log.debug('Set target temp ' + id + state.val + ' °C');
-										this.setStateAsync('DECT_' + id + '.lasttarget', {
-											val: state.val,
-											ack: true
-										}); //iobroker Tempwahl wird zum letzten Wert gespeichert
-										this.setStateAsync('DECT_' + id + '.tsoll', {
-											val: state.val,
-											ack: true
-										}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-									})
-									.catch((e) => this.errorHandlerApi(e));
+				try {
+					const tmp = id.split('.');
+					const dp = tmp.pop();
+					const idx = tmp.pop(); //is the name after fritzdect.x.
+					// devices or groups
+					if (idx && idx !== null) {
+						if (idx.startsWith('DECT_')) {
+							// braucht man nicht wenn kein toggle in devices vorkommt
+							id = idx.replace(/DECT_/g, ''); //Thermostat
+							this.log.info('DECT ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
+							if (dp === 'tsoll') {
+								if (state.val < 8) {
+									//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+									await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 1, ack: false }); //damit das Ventil auch regelt
+									await this.fritz
+										.setTempTarget(id, 'off')
+										.then(() => {
+											this.log.debug('Switched Mode' + id + ' to closed');
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								} else if (state.val > 28) {
+									//kann gelöscht werden, wenn Temperaturvorwahl nicht zur Moduswahl benutzt werden soll
+									await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 2, ack: false }); //damit das Ventil auch regelt (false= Befehl und nochmaliger Einsprung )
+									await this.fritz
+										.setTempTarget(id, 'on')
+										.then(() => {
+											this.log.debug('Switched Mode' + id + ' to opened permanently');
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								} else {
+									await this.setStateAsync('DECT_' + id + '.hkrmode', { val: 0, ack: false }); //damit das Ventil auch regelt
+									await this.fritz
+										.setTempTarget(id, state.val)
+										.then(() => {
+											this.log.debug('Set target temp ' + id + state.val + ' °C');
+											this.setStateAsync('DECT_' + id + '.lasttarget', {
+												val: state.val,
+												ack: true
+											}); //iobroker Tempwahl wird zum letzten Wert gespeichert
+											this.setStateAsync('DECT_' + id + '.tsoll', {
+												val: state.val,
+												ack: true
+											}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								}
+							} else if (dp === 'hkrmode') {
+								if (state.val === 0) {
+									const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll').catch((e) => {
+										this.log.warn('problem getting the tsoll status ' + e);
+									});
+									// oder hier die Verwendung von lasttarget
+									if (targettemp && targettemp.val !== null) {
+										if (targettemp.val) {
+											let setTemp = targettemp.val;
+											if (setTemp < 8) {
+												await this.setStateAsync('DECT_' + id + '.tsoll', { val: 8, ack: true });
+												setTemp = 8;
+											} else if (setTemp > 28) {
+												await this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
+												setTemp = 28;
+											}
+											await this.fritz
+												.setTempTarget(id, setTemp)
+												.then(() => {
+													this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
+													this.setStateAsync('DECT_' + id + '.tsoll', {
+														val: setTemp,
+														ack: true
+													}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+													this.setStateAsync('DECT_' + id + '.operationmode', {
+														val: 'Auto',
+														ack: true
+													}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandlerApi(e));
+										} else {
+											this.log.error('no data in targettemp for setting mode');
+										}
+									} else {
+										throw { error: ' targettemp is NULL ' };
+									}
+								} else if (state.val === 1) {
+									await this.fritz
+										.setTempTarget(id, 'off')
+										.then(() => {
+											this.log.debug('Switched Mode' + id + ' to closed.');
+											this.setStateAsync('DECT_' + id + '.operationmode', {
+												val: 'Off',
+												ack: true
+											}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								} else if (state.val === 2) {
+									await this.fritz
+										.setTempTarget(id, 'on')
+										.then(() => {
+											this.log.debug('Switched Mode' + id + ' to opened permanently');
+											this.setStateAsync('DECT_' + id + '.operationmode', {
+												val: 'On',
+												ack: true
+											}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								}
 							}
-						} else if (dp === 'hkrmode') {
-							if (state.val === 0) {
+							//no need to check the state.val, it is a button
+							if (dp === 'setmodeauto') {
+								//zurücksetzen wegen toggle/button click
+								await this.setStateAsync('DECT_' + id + '.setmodeauto', {
+									val: false,
+									ack: true
+								});
 								const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll').catch((e) => {
 									this.log.warn('problem getting the tsoll status ' + e);
 								});
@@ -402,7 +468,7 @@ class Fritzdect extends utils.Adapter {
 											await this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
 											setTemp = 28;
 										}
-										await this.fritz
+										this.fritz
 											.setTempTarget(id, setTemp)
 											.then(() => {
 												this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
@@ -414,6 +480,10 @@ class Fritzdect extends utils.Adapter {
 													val: 'Auto',
 													ack: true
 												}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.hkrmode', {
+													val: 0,
+													ack: true
+												}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 											})
 											.catch((e) => this.errorHandlerApi(e));
 									} else {
@@ -422,7 +492,13 @@ class Fritzdect extends utils.Adapter {
 								} else {
 									throw { error: ' targettemp is NULL ' };
 								}
-							} else if (state.val === 1) {
+							}
+							if (dp === 'setmodeoff') {
+								//zurücksetzen wegen toggle/button click
+								await this.setStateAsync('DECT_' + id + '.setmodeoff', {
+									val: false,
+									ack: true
+								});
 								await this.fritz
 									.setTempTarget(id, 'off')
 									.then(() => {
@@ -431,9 +507,19 @@ class Fritzdect extends utils.Adapter {
 											val: 'Off',
 											ack: true
 										}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+										this.setStateAsync('DECT_' + id + '.hkrmode', {
+											val: 1,
+											ack: true
+										}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 									})
 									.catch((e) => this.errorHandlerApi(e));
-							} else if (state.val === 2) {
+							}
+							if (dp === 'setmodeon') {
+								//zurücksetzen wegen toggle/button click
+								await this.setStateAsync('DECT_' + id + '.setmodeon', {
+									val: false,
+									ack: true
+								});
 								await this.fritz
 									.setTempTarget(id, 'on')
 									.then(() => {
@@ -442,534 +528,520 @@ class Fritzdect extends utils.Adapter {
 											val: 'On',
 											ack: true
 										}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+										this.setStateAsync('DECT_' + id + '.hkrmode', {
+											val: 2,
+											ack: true
+										}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
 									})
 									.catch((e) => this.errorHandlerApi(e));
 							}
-						}
-						//no need to check the state.val, it is a button
-						if (dp === 'setmodeauto') {
-							//zurücksetzen wegen toggle/button click
-							await this.setStateAsync('DECT_' + id + '.setmodeauto', {
-								val: false,
-								ack: true
-							});
-							const targettemp = await this.getStateAsync('DECT_' + id + '.tsoll').catch((e) => {
-								this.log.warn('problem getting the tsoll status ' + e);
-							});
-							// oder hier die Verwendung von lasttarget
-							if (targettemp && targettemp.val !== null) {
-								if (targettemp.val) {
-									let setTemp = targettemp.val;
-									if (setTemp < 8) {
-										await this.setStateAsync('DECT_' + id + '.tsoll', { val: 8, ack: true });
-										setTemp = 8;
-									} else if (setTemp > 28) {
-										await this.setStateAsync('DECT_' + id + '.tsoll', { val: 28, ack: true });
-										setTemp = 28;
-									}
+							if (dp == 'boostactivetime') {
+								this.log.debug(
+									'Nothing to send external, but the boost active time was defined for ' +
+									state.val +
+									' min'
+								);
+							}
+							if (dp == 'boostactive') {
+								if (
+									state.val === 0 ||
+									state.val === '0' ||
+									state.val === 'false' ||
+									state.val === false ||
+									state.val === 'off' ||
+									state.val === 'OFF'
+								) {
 									this.fritz
-										.setTempTarget(id, setTemp)
+										.setHkrBoost(id, 0)
 										.then(() => {
-											this.log.debug('Set target temp ' + id + ' ' + setTemp + ' °C');
-											this.setStateAsync('DECT_' + id + '.tsoll', {
-												val: setTemp,
-												ack: true
-											}); //iobroker Tempwahl wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-											this.setStateAsync('DECT_' + id + '.operationmode', {
-												val: 'Auto',
-												ack: true
-											}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
-											this.setStateAsync('DECT_' + id + '.hkrmode', {
-												val: 0,
-												ack: true
-											}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
-										})
-										.catch((e) => this.errorHandlerApi(e));
-								} else {
-									this.log.error('no data in targettemp for setting mode');
-								}
-							} else {
-								throw { error: ' targettemp is NULL ' };
-							}
-						}
-						if (dp === 'setmodeoff') {
-							//zurücksetzen wegen toggle/button click
-							await this.setStateAsync('DECT_' + id + '.setmodeoff', {
-								val: false,
-								ack: true
-							});
-							await this.fritz
-								.setTempTarget(id, 'off')
-								.then(() => {
-									this.log.debug('Switched Mode' + id + ' to closed.');
-									this.setStateAsync('DECT_' + id + '.operationmode', {
-										val: 'Off',
-										ack: true
-									}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
-									this.setStateAsync('DECT_' + id + '.hkrmode', {
-										val: 1,
-										ack: true
-									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-						if (dp === 'setmodeon') {
-							//zurücksetzen wegen toggle/button click
-							await this.setStateAsync('DECT_' + id + '.setmodeon', {
-								val: false,
-								ack: true
-							});
-							await this.fritz
-								.setTempTarget(id, 'on')
-								.then(() => {
-									this.log.debug('Switched Mode' + id + ' to opened permanently');
-									this.setStateAsync('DECT_' + id + '.operationmode', {
-										val: 'On',
-										ack: true
-									}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
-									this.setStateAsync('DECT_' + id + '.hkrmode', {
-										val: 2,
-										ack: true
-									}); //iobroker setzen des hkrmode, da API Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-						if (dp == 'boostactivetime') {
-							this.log.debug(
-								'Nothing to send external, but the boost active time was defined for ' +
-								state.val +
-								' min'
-							);
-						}
-						if (dp == 'boostactive') {
-							if (
-								state.val === 0 ||
-								state.val === '0' ||
-								state.val === 'false' ||
-								state.val === false ||
-								state.val === 'off' ||
-								state.val === 'OFF'
-							) {
-								this.fritz
-									.setHkrBoost(id, 0)
-									.then(() => {
-										this.log.debug('Reset thermostat boost ' + id + ' to ' + state.val);
-										this.setStateAsync('DECT_' + id + '.boostactive', {
-											val: state.val,
-											ack: true
-										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-										//kein pauschales Setzen des Operationmode, da unbekannt wohin es dann geht
-										const convTime = new Date(0);
-										this.setStateAsync('DECT_' + id + '.boostactiveendtime', {
-											val: String(convTime),
-											ack: true
-										});
-									})
-									.catch((e) => this.errorHandlerApi(e));
-							} else if (
-								state.val === 1 ||
-								state.val === '1' ||
-								state.val === 'true' ||
-								state.val === true ||
-								state.val === 'on' ||
-								state.val === 'ON'
-							) {
-								const minutes = await this.getStateAsync(
-									'DECT_' + id + '.boostactivetime'
-								).catch((error) => {
-									this.log.warn('DECT_' + +id + '.boostactivetime  did not get state -> ' + error);
-								});
-								if (minutes && minutes.val !== null) {
-									let activetime = minutes.val;
-									const jetzt = +new Date();
-									if (minutes.val > 1440) {
-										activetime = 1440;
-									}
-									const ende = Math.floor(jetzt / 1000 + Number(activetime) * 60); //time for fritzbox is in seconds
-									this.log.debug(' unix returned ' + ende + ' real ' + new Date(ende * 1000));
-									this.fritz
-										.setHkrBoost(id, ende)
-										.then((body) => {
-											const endtime = new Date(Math.floor(body * 1000));
-											this.log.debug('window ' + body + ' reading to ' + endtime);
-											this.log.debug(
-												'Set thermostat boost ' +
-												id +
-												' to ' +
-												state.val +
-												' until calculated ' +
-												ende +
-												' ' +
-												new Date(ende * 1000)
-											);
+											this.log.debug('Reset thermostat boost ' + id + ' to ' + state.val);
 											this.setStateAsync('DECT_' + id + '.boostactive', {
 												val: state.val,
 												ack: true
 											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+											//kein pauschales Setzen des Operationmode, da unbekannt wohin es dann geht
+											const convTime = new Date(0);
 											this.setStateAsync('DECT_' + id + '.boostactiveendtime', {
-												val: String(endtime),
+												val: String(convTime),
 												ack: true
-											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-											this.setStateAsync('DECT_' + id + '.operationmode', {
-												val: 'Boost',
-												ack: true
-											}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+											});
 										})
 										.catch((e) => this.errorHandlerApi(e));
-								} else {
-									throw { error: 'minutes were NULL' };
+								} else if (
+									state.val === 1 ||
+									state.val === '1' ||
+									state.val === 'true' ||
+									state.val === true ||
+									state.val === 'on' ||
+									state.val === 'ON'
+								) {
+									const minutes = await this.getStateAsync(
+										'DECT_' + id + '.boostactivetime'
+									).catch((error) => {
+										this.log.warn('DECT_' + +id + '.boostactivetime  did not get state -> ' + error);
+									});
+									if (minutes && minutes.val !== null) {
+										let activetime = minutes.val;
+										const jetzt = +new Date();
+										if (minutes.val > 1440) {
+											activetime = 1440;
+										}
+										const ende = Math.floor(jetzt / 1000 + Number(activetime) * 60); //time for fritzbox is in seconds
+										this.log.debug(' unix returned ' + ende + ' real ' + new Date(ende * 1000));
+										this.fritz
+											.setHkrBoost(id, ende)
+											.then((body) => {
+												const endtime = new Date(Math.floor(body * 1000));
+												this.log.debug('window ' + body + ' reading to ' + endtime);
+												this.log.debug(
+													'Set thermostat boost ' +
+													id +
+													' to ' +
+													state.val +
+													' until calculated ' +
+													ende +
+													' ' +
+													new Date(ende * 1000)
+												);
+												this.setStateAsync('DECT_' + id + '.boostactive', {
+													val: state.val,
+													ack: true
+												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.boostactiveendtime', {
+													val: String(endtime),
+													ack: true
+												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.operationmode', {
+													val: 'Boost',
+													ack: true
+												}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+											})
+											.catch((e) => this.errorHandlerApi(e));
+									} else {
+										throw { error: 'minutes were NULL' };
+									}
 								}
 							}
-						}
-						if (dp == 'windowopenactivetime') {
-							this.log.debug(
-								'Nothing to send external, but the window open active time was defined for ' +
-								state.val +
-								' min'
-							);
-						}
-						if (dp == 'windowopenactiv') {
-							if (
-								state.val === 0 ||
-								state.val === '0' ||
-								state.val === 'false' ||
-								state.val === false ||
-								state.val === 'off' ||
-								state.val === 'OFF'
-							) {
-								this.fritz
-									.setWindowOpen(id, 0)
-									.then(() => {
-										this.log.debug('Reset thermostat windowopen ' + id + ' to ' + state.val);
-										this.setStateAsync('DECT_' + id + '.windowopenactiv', {
-											val: state.val,
-											ack: true
-										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-										//keine Nachführung operationmode, da unbekannt wohin es geht
-										const convTime = new Date(0);
-										this.setStateAsync('DECT_' + id + '.windowopenactiveendtime', {
-											val: String(convTime),
-											ack: true
-										});
-									})
-									.catch((e) => this.errorHandlerApi(e));
-							} else if (
-								state.val === 1 ||
-								state.val === '1' ||
-								state.val === 'true' ||
-								state.val === true ||
-								state.val === 'on' ||
-								state.val === 'ON'
-							) {
-								const minutes = await this.getStateAsync(
-									'DECT_' + id + '.windowopenactivetime'
-								).catch((error) => {
-									this.log.warn(
-										'DECT_' + +id + '.windowopenactivetime  did not get state -> ' + error
-									);
-								});
-								if (minutes && minutes.val !== null) {
-									let activetime = minutes.val;
-									const jetzt = +new Date();
-									if (minutes.val > 1440) {
-										activetime = 1440;
-									}
-									const ende = Math.floor(jetzt / 1000 + Number(activetime) * 60); //time for fritzbox is in seconds
-									this.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
+							if (dp == 'windowopenactivetime') {
+								this.log.debug(
+									'Nothing to send external, but the window open active time was defined for ' +
+									state.val +
+									' min'
+								);
+							}
+							if (dp == 'windowopenactiv') {
+								if (
+									state.val === 0 ||
+									state.val === '0' ||
+									state.val === 'false' ||
+									state.val === false ||
+									state.val === 'off' ||
+									state.val === 'OFF'
+								) {
 									this.fritz
-										.setWindowOpen(id, ende)
-										.then((body) => {
-											const endtime = new Date(Math.floor(body * 1000));
-											this.log.debug('window ' + body + ' reading to ' + endtime);
-											this.log.debug(
-												'Set thermostat windowopen ' +
-												id +
-												' to ' +
-												state.val +
-												' until calculated ' +
-												ende +
-												' ' +
-												new Date(ende * 1000)
-											);
+										.setWindowOpen(id, 0)
+										.then(() => {
+											this.log.debug('Reset thermostat windowopen ' + id + ' to ' + state.val);
 											this.setStateAsync('DECT_' + id + '.windowopenactiv', {
 												val: state.val,
 												ack: true
 											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+											//keine Nachführung operationmode, da unbekannt wohin es geht
+											const convTime = new Date(0);
 											this.setStateAsync('DECT_' + id + '.windowopenactiveendtime', {
-												val: String(endtime),
+												val: String(convTime),
 												ack: true
-											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-											this.setStateAsync('DECT_' + id + '.operationmode', {
-												val: 'WindowOpen',
-												ack: true
-											}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+											});
 										})
 										.catch((e) => this.errorHandlerApi(e));
+								} else if (
+									state.val === 1 ||
+									state.val === '1' ||
+									state.val === 'true' ||
+									state.val === true ||
+									state.val === 'on' ||
+									state.val === 'ON'
+								) {
+									const minutes = await this.getStateAsync(
+										'DECT_' + id + '.windowopenactivetime'
+									).catch((error) => {
+										this.log.warn(
+											'DECT_' + +id + '.windowopenactivetime  did not get state -> ' + error
+										);
+									});
+									if (minutes && minutes.val !== null) {
+										let activetime = minutes.val;
+										const jetzt = +new Date();
+										if (minutes.val > 1440) {
+											activetime = 1440;
+										}
+										const ende = Math.floor(jetzt / 1000 + Number(activetime) * 60); //time for fritzbox is in seconds
+										this.log.debug(' unix ' + ende + ' real ' + new Date(ende * 1000));
+										this.fritz
+											.setWindowOpen(id, ende)
+											.then((body) => {
+												const endtime = new Date(Math.floor(body * 1000));
+												this.log.debug('window ' + body + ' reading to ' + endtime);
+												this.log.debug(
+													'Set thermostat windowopen ' +
+													id +
+													' to ' +
+													state.val +
+													' until calculated ' +
+													ende +
+													' ' +
+													new Date(ende * 1000)
+												);
+												this.setStateAsync('DECT_' + id + '.windowopenactiv', {
+													val: state.val,
+													ack: true
+												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.windowopenactiveendtime', {
+													val: String(endtime),
+													ack: true
+												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												this.setStateAsync('DECT_' + id + '.operationmode', {
+													val: 'WindowOpen',
+													ack: true
+												}); //iobroker setzen des operationmode, da API Aufruf erfolgreich
+											})
+											.catch((e) => this.errorHandlerApi(e));
+									} else {
+										throw { error: 'minutes were NULL' };
+									}
+								}
+							}
+							// setswitch reicht scheinbar nicht bei simpleonoff, hier müsste irgendwie unterschieden werden ob DECT200 switch/state oder simpleonoff/state
+							if (dp == 'state') {
+								if (
+									state.val === 0 ||
+									state.val === '0' ||
+									state.val === 'false' ||
+									state.val === false ||
+									state.val === 'off' ||
+									state.val === 'OFF'
+								) {
+									const switchtyp = await this.getStateAsync(
+										'DECT_' + id + '.switchtype'
+									).catch((error) => {
+										this.log.warn('DECT_' + +id + '.switchtype  did not get state -> ' + error);
+									});
+									if (switchtyp && switchtyp.val !== null) {
+										if (switchtyp.val === 'switch') {
+											this.fritz
+												.setSwitchOff(id)
+												.then(() => {
+													this.log.debug('Turned switch ' + id + ' off');
+													this.setStateAsync('DECT_' + id + '.state', {
+														val: false,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandlerApi(e));
+										} else {
+											this.fritz
+												.setSimpleOff(id)
+												.then(() => {
+													this.log.debug('Turned switch ' + id + ' off');
+													this.setStateAsync('DECT_' + id + '.state', {
+														val: false,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandlerApi(e));
+										}
+									} else {
+										throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
+									}
+								} else if (
+									state.val === 1 ||
+									state.val === '1' ||
+									state.val === 'true' ||
+									state.val === true ||
+									state.val === 'on' ||
+									state.val === 'ON'
+								) {
+									const switchtyp = await this.getStateAsync(
+										'DECT_' + id + '.switchtype'
+									).catch((error) => {
+										this.log.warn('DECT_' + +id + '.switchtype  did not get state -> ' + error);
+									});
+									if (switchtyp && switchtyp.val !== null) {
+										if (switchtyp.val === 'switch') {
+											this.fritz
+												.setSwitchOn(id)
+												.then(() => {
+													this.log.debug('Turned switch ' + id + ' on');
+													this.setStateAsync('DECT_' + id + '.state', {
+														val: true,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandlerApi(e));
+										} else {
+											this.fritz
+												.setSimpleOn(id)
+												.then(() => {
+													this.log.debug('Turned switch ' + id + ' on');
+													this.setStateAsync('DECT_' + id + '.state', {
+														val: true,
+														ack: true
+													}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+												})
+												.catch((e) => this.errorHandlerApi(e));
+										}
+									} else {
+										throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
+									}
+								}
+							}
+							if (dp == 'blindsclose') {
+								this.fritz
+									.setBlind(id, 'close')
+									.then(async () => {
+										this.log.debug('Started blind ' + id + ' to close');
+										await this.setStateAsync('DECT_' + id + '.blindsclose', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch((e) => this.errorHandlerApi(e));
+							}
+							if (dp == 'blindsopen') {
+								this.fritz
+									.setBlind(id, 'open')
+									.then(async () => {
+										this.log.debug('Started blind ' + id + ' to open');
+										await this.setStateAsync('DECT_' + id + '.blindsopen', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch((e) => this.errorHandlerApi(e));
+							}
+							if (dp == 'blindsstop') {
+								this.fritz
+									.setBlind(id, 'stop')
+									.then(() => {
+										this.log.debug('Set blind ' + id + ' to stop');
+										this.setStateAsync('DECT_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch((e) => this.errorHandlerApi(e));
+							}
+							if (dp == 'level') {
+								this.fritz
+									.setLevel(id, state.val)
+									.then(() => {
+										this.log.debug('Set level' + id + ' to ' + state.val);
+										this.setStateAsync('DECT_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch((e) => this.errorHandlerApi(e));
+							}
+							if (dp == 'levelpercentage') {
+								this.fritz
+									.setLevel(id, Math.floor(Number(state.val) / 100 * 255))
+									.then(() => {
+										//level is in 0...255
+										this.log.debug('Set level %' + id + ' to ' + state.val);
+										this.setStateAsync('DECT_' + id + '.levelpercentage', {
+											val: state.val,
+											ack: true
+										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch((e) => this.errorHandlerApi(e));
+							}
+							if (dp == 'hue') {
+								const saturation = await this.getStateAsync('DECT_' + id + '.saturation').catch((error) => {
+									this.log.warn('DECT_' + +id + '.saturation  did not get state -> ' + error);
+								});
+								if (saturation && saturation.val !== null) {
+									// oder hier die Verwendung von lasttarget
+									const setSaturation = saturation.val;
+									if (setSaturation == '') {
+										this.log.error(
+											'No saturation value exists when setting hue, please set saturation to a value '
+										);
+									} else {
+										this.fritz
+											.setColor(id, setSaturation, state.val)
+											.then(() => {
+												this.log.debug(
+													'Set lamp color hue ' +
+													id +
+													' to ' +
+													state.val +
+													' and saturation of ' +
+													setSaturation
+												);
+												this.setStateAsync('DECT_' + id + '.hue', {
+													val: state.val,
+													ack: true
+												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+											})
+											.catch((e) => this.errorHandlerApi(e));
+									}
 								} else {
 									throw { error: 'minutes were NULL' };
 								}
 							}
-						}
-						// setswitch reicht scheinbar nicht bei simpleonoff, hier müsste irgendwie unterschieden werden ob DECT200 switch/state oder simpleonoff/state
-						if (dp == 'state') {
-							if (
-								state.val === 0 ||
-								state.val === '0' ||
-								state.val === 'false' ||
-								state.val === false ||
-								state.val === 'off' ||
-								state.val === 'OFF'
-							) {
-								const switchtyp = await this.getStateAsync(
-									'DECT_' + id + '.switchtype'
-								).catch((error) => {
-									this.log.warn('DECT_' + +id + '.switchtype  did not get state -> ' + error);
+							if (dp == 'saturation') {
+								const hue = await this.getStateAsync('DECT_' + id + '.hue').catch((error) => {
+									this.log.warn('DECT_' + +id + '.hue  did not get state -> ' + error);
 								});
-								if (switchtyp && switchtyp.val !== null) {
-									if (switchtyp.val === 'switch') {
-										this.fritz
-											.setSwitchOff(id)
-											.then(() => {
-												this.log.debug('Turned switch ' + id + ' off');
-												this.setStateAsync('DECT_' + id + '.state', {
-													val: false,
-													ack: true
-												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-											})
-											.catch((e) => this.errorHandlerApi(e));
+								if (hue && hue.val !== null) {
+									const setHue = hue.val;
+									if (setHue == '') {
+										this.log.error(
+											'No hue value exists when setting saturation, please set hue to a value '
+										);
 									} else {
 										this.fritz
-											.setSimpleOff(id)
+											.setColor(id, state.val, setHue)
 											.then(() => {
-												this.log.debug('Turned switch ' + id + ' off');
-												this.setStateAsync('DECT_' + id + '.state', {
-													val: false,
+												this.log.debug(
+													'Set lamp color saturation ' +
+													id +
+													' to ' +
+													state.val +
+													' and hue of ' +
+													setHue
+												);
+												this.setStateAsync('DECT_' + id + '.saturation', {
+													val: state.val,
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
 											.catch((e) => this.errorHandlerApi(e));
 									}
 								} else {
-									throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
+									throw { error: 'hue were NULL' };
 								}
-							} else if (
-								state.val === 1 ||
-								state.val === '1' ||
-								state.val === 'true' ||
-								state.val === true ||
-								state.val === 'on' ||
-								state.val === 'ON'
-							) {
-								const switchtyp = await this.getStateAsync(
-									'DECT_' + id + '.switchtype'
-								).catch((error) => {
-									this.log.warn('DECT_' + +id + '.switchtype  did not get state -> ' + error);
+							}
+							if (dp == 'unmapped_hue') {
+								const saturation = await this.getStateAsync('DECT_' + id + '.unmapped_saturation').catch((error) => {
+									this.log.warn('DECT_' + +id + '.unmapped_saturation  did not get state -> ' + error);
 								});
-								if (switchtyp && switchtyp.val !== null) {
-									if (switchtyp.val === 'switch') {
-										this.fritz
-											.setSwitchOn(id)
-											.then(() => {
-												this.log.debug('Turned switch ' + id + ' on');
-												this.setStateAsync('DECT_' + id + '.state', {
-													val: true,
-													ack: true
-												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-											})
-											.catch((e) => this.errorHandlerApi(e));
+								if (saturation && saturation.val !== null) {
+									// oder hier die Verwendung von lasttarget
+									const setSaturation = saturation.val;
+									if (setSaturation == '') {
+										this.log.error(
+											'No saturation value exists when setting hue, please set saturation to a value '
+										);
 									} else {
 										this.fritz
-											.setSimpleOn(id)
+											.setUnmappedColor(id, setSaturation, state.val)
 											.then(() => {
-												this.log.debug('Turned switch ' + id + ' on');
-												this.setStateAsync('DECT_' + id + '.state', {
-													val: true,
+												this.log.debug(
+													'Set lamp color hue ' +
+													id +
+													' to ' +
+													state.val +
+													' and saturation of ' +
+													setSaturation
+												);
+												this.setStateAsync('DECT_' + id + '.hue', {
+													val: state.val,
 													ack: true
 												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
 											})
 											.catch((e) => this.errorHandlerApi(e));
 									}
 								} else {
-									throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
+									throw { error: 'minutes were NULL' };
 								}
 							}
-						}
-						if (dp == 'blindsclose') {
-							this.fritz
-								.setBlind(id, 'close')
-								.then(async () => {
-									this.log.debug('Started blind ' + id + ' to close');
-									await this.setStateAsync('DECT_' + id + '.blindsclose', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-						if (dp == 'blindsopen') {
-							this.fritz
-								.setBlind(id, 'open')
-								.then(async () => {
-									this.log.debug('Started blind ' + id + ' to open');
-									await this.setStateAsync('DECT_' + id + '.blindsopen', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-						if (dp == 'blindsstop') {
-							this.fritz
-								.setBlind(id, 'stop')
-								.then(() => {
-									this.log.debug('Set blind ' + id + ' to stop');
-									this.setStateAsync('DECT_' + id + '.blindsstop', { val: false, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-						if (dp == 'level') {
-							this.fritz
-								.setLevel(id, state.val)
-								.then(() => {
-									this.log.debug('Set level' + id + ' to ' + state.val);
-									this.setStateAsync('DECT_' + id + '.level', { val: state.val, ack: true }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-						if (dp == 'levelpercentage') {
-							this.fritz
-								.setLevel(id, Math.floor(Number(state.val) / 100 * 255))
-								.then(() => {
-									//level is in 0...255
-									this.log.debug('Set level %' + id + ' to ' + state.val);
-									this.setStateAsync('DECT_' + id + '.levelpercentage', {
-										val: state.val,
-										ack: true
-									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-						if (dp == 'hue') {
-							const saturation = await this.getStateAsync('DECT_' + id + '.saturation').catch((error) => {
-								this.log.warn('DECT_' + +id + '.saturation  did not get state -> ' + error);
-							});
-							if (saturation && saturation.val !== null) {
-								// oder hier die Verwendung von lasttarget
-								const setSaturation = saturation.val;
-								if (setSaturation == '') {
-									this.log.error(
-										'No saturation value exists when setting hue, please set saturation to a value '
-									);
+							if (dp == 'unmapped_saturation') {
+								const hue = await this.getStateAsync('DECT_' + id + '.unmapped_hue').catch((error) => {
+									this.log.warn('DECT_' + +id + '.unmapped_hue  did not get state -> ' + error);
+								});
+								if (hue && hue.val !== null) {
+									const setHue = hue.val;
+									if (setHue == '') {
+										this.log.error(
+											'No hue value exists when setting saturation, please set hue to a value '
+										);
+									} else {
+										this.fritz
+											.setUnmappedColor(id, state.val, setHue)
+											.then(() => {
+												this.log.debug(
+													'Set lamp color saturation ' +
+													id +
+													' to ' +
+													state.val +
+													' and hue of ' +
+													setHue
+												);
+												this.setStateAsync('DECT_' + id + '.saturation', {
+													val: state.val,
+													ack: true
+												}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+											})
+											.catch((e) => this.errorHandlerApi(e));
+									}
 								} else {
-									this.fritz
-										.setColor(id, setSaturation, state.val)
-										.then(() => {
-											this.log.debug(
-												'Set lamp color hue ' +
-												id +
-												' to ' +
-												state.val +
-												' and saturation of ' +
-												setSaturation
-											);
-											this.setStateAsync('DECT_' + id + '.hue', {
-												val: state.val,
-												ack: true
-											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-										})
-										.catch((e) => this.errorHandlerApi(e));
+									throw { error: 'hue was NULL' };
 								}
-							} else {
-								throw { error: 'minutes were NULL' };
 							}
-						}
-						if (dp == 'saturation') {
-							const hue = await this.getStateAsync('DECT_' + id + '.hue').catch((error) => {
-								this.log.warn('DECT_' + +id + '.hue  did not get state -> ' + error);
-							});
-							if (hue && hue.val !== null) {
-								const setHue = hue.val;
-								if (setHue == '') {
-									this.log.error(
-										'No hue value exists when setting saturation, please set hue to a value '
-									);
-								} else {
-									this.fritz
-										.setColor(id, state.val, setHue)
-										.then(() => {
-											this.log.debug(
-												'Set lamp color saturation ' +
-												id +
-												' to ' +
-												state.val +
-												' and hue of ' +
-												setHue
-											);
-											this.setStateAsync('DECT_' + id + '.saturation', {
-												val: state.val,
-												ack: true
-											}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-										})
-										.catch((e) => this.errorHandlerApi(e));
-								}
-							} else {
-								throw { error: 'hue were NULL' };
-							}
-						}
-						if (dp == 'temperature') {
-							this.fritz
-								.setColorTemperature(id, state.val)
-								.then(() => {
-									this.log.debug('Set lamp color temperature ' + id + ' to ' + state.val);
-									this.setStateAsync('DECT_' + id + '.temperature', {
-										val: state.val,
-										ack: true
-									}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
-					} else if (idx.startsWith('template_')) {
-						//must be fritzbox template
-						id = idx.replace(/template_/g, ''); //template
-						this.log.info('Template ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
-						if (dp == 'toggle') {
-							if (
-								state.val === 1 ||
-								state.val === '1' ||
-								state.val === 'true' ||
-								state.val === true ||
-								state.val === 'on' ||
-								state.val === 'ON'
-							) {
+							if (dp == 'temperature') {
 								this.fritz
-									.applyTemplate(id)
+									.setColorTemperature(id, state.val)
+									.then(() => {
+										this.log.debug('Set lamp color temperature ' + id + ' to ' + state.val);
+										this.setStateAsync('DECT_' + id + '.temperature', {
+											val: state.val,
+											ack: true
+										}); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
+									})
+									.catch((e) => this.errorHandlerApi(e));
+							}
+						} else if (idx.startsWith('template_')) {
+							//must be fritzbox template
+							id = idx.replace(/template_/g, ''); //template
+							this.log.info('Template ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
+							if (dp == 'toggle') {
+								if (
+									state.val === 1 ||
+									state.val === '1' ||
+									state.val === 'true' ||
+									state.val === true ||
+									state.val === 'on' ||
+									state.val === 'ON'
+								) {
+									this.fritz
+										.applyTemplate(id)
+										.then((sid) => {
+											this.log.debug('cmd Toggle to template ' + id + ' on');
+											this.log.debug('response ' + sid);
+											this.setStateAsync('template.lasttemplate', { val: sid, ack: true }); //when successfull toggle, the API returns the id of the template
+										})
+										.catch((e) => this.errorHandlerApi(e));
+								}
+							}
+						} else if (idx.startsWith('routine_')) {
+							//must be fritzbox routine
+							id = idx.replace(/routine_/g, ''); //routine
+							this.log.info('Routine ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
+							if (dp == 'active') {
+								if (
+									state.val === 1 ||
+									state.val === '1' ||
+									state.val === 'true' ||
+									state.val === true ||
+									state.val === 'on' ||
+									state.val === 'ON'
+								) {
+									state.val = true;
+								}
+								this.fritz
+									.setTriggerActive(id, state.val)
 									.then((sid) => {
-										this.log.debug('cmd Toggle to template ' + id + ' on');
+										this.log.debug('cmd Active to template ' + id + ' to ' + state.val);
 										this.log.debug('response ' + sid);
-										this.setStateAsync('template.lasttemplate', { val: sid, ack: true }); //when successfull toggle, the API returns the id of the template
 									})
 									.catch((e) => this.errorHandlerApi(e));
 							}
 						}
-					} else if (idx.startsWith('routine_')) {
-						//must be fritzbox routine
-						id = idx.replace(/routine_/g, ''); //routine
-						this.log.info('Routine ID: ' + id + ' identified for command (' + dp + ') : ' + state.val);
-						if (dp == 'active') {
-							if (
-								state.val === 1 ||
-								state.val === '1' ||
-								state.val === 'true' ||
-								state.val === true ||
-								state.val === 'on' ||
-								state.val === 'ON'
-							) {
-								state.val = true;
-							}
-							this.fritz
-								.setTriggerActive(id, state.val)
-								.then((sid) => {
-									this.log.debug('cmd Active to template ' + id + ' to ' + state.val);
-									this.log.debug('response ' + sid);
-								})
-								.catch((e) => this.errorHandlerApi(e));
-						}
 					}
+				} catch (error) {
+					this.errorHandlerAdapter(error)
 				}
+
 			} //from if state&ack
 		} else {
 			// The state was deleted
@@ -1352,7 +1424,9 @@ class Fritzdect extends utils.Adapter {
 				}
 			}
 		}
-		etsidelete.sort();
+		//sort is needed, but does return it alphabetically!! workaround needed
+		//https://stackoverflow.com/questions/1063007/how-to-sort-an-array-of-integers
+		etsidelete.sort((a, b) => a - b);
 		//delete the etsidevices
 		for (let k = 0; k < etsidelete.length; k++) {
 			devicearray.splice(etsidelete[k] - k, 1);
@@ -1383,7 +1457,13 @@ class Fritzdect extends utils.Adapter {
 				let devstat = [].concat([], JSON.parse(String(deviceswithstat.val)));
 				for (let i = 0; i < devstat.length; i++) {
 					this.log.debug('updating Stats of device ' + devstat[i]);
-					await this.updateStats(devstat[i], this.fritz);
+					try {
+						await this.updateStats(devstat[i], this.fritz);
+					} catch (error) {
+						this.log.debug('Error in processing stats. Device: ' + devstat[i])
+						this.log.debug(error)
+					}
+
 				}
 			}
 		}
@@ -1448,161 +1528,166 @@ class Fritzdect extends utils.Adapter {
 			let currentMode = null;
 			if (devicelistinfos) {
 				let devlistanswer = parser.xml2json(devicelistinfos);
-				// devices
-				let devices = this.unifyDevicesUnits(devlistanswer.devicelist.device);
-				/*
-				let devices = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
+				// deviceslist, the answer from xml2json returns no array, if only one device		
+				let devicelist = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
 					//device.identifier = device.identifier.replace(/\s/g, '');
 					return device;
 				});
-				*/
+
+				let devices = this.unifyDevicesUnits(devicelist);
+
 				this.log.debug('devices\n');
 				this.log.debug(JSON.stringify(devices));
-				if (devices.length) {
-					this.log.debug('update Devices ' + devices.length);
-					try {
-						for (let i = 0; i < devices.length; i++) {
-							if (devices[i].identifier !== '' && devices[i].identifier) {
-								this.log.debug('_____________________________________________');
-								this.log.debug('updating Device ' + devices[i].name);
-								if (
-									devices[i].present === '0' ||
-									devices[i].present === 0 ||
-									devices[i].present === false
-								) {
-									/*
-								await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
-									val: false,
-									ack: true
-								});
-								*/
-									// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
-									const obj = await this.getForeignObjectAsync(
-										this.namespace +
-										'.DECT_' +
-										devices[i].identifier.replace(/\s/g, '') +
-										'.present'
-									);
-									if (!obj || !obj.common) {
+				if (devices) {
+					if (devices.length) {
+						this.log.debug('update Devices ' + devices.length);
+						try {
+							for (let i = 0; i < devices.length; i++) {
+								if (devices[i].identifier !== '' && devices[i].identifier) {
+									this.log.debug('_____________________________________________');
+									this.log.debug('updating Device ' + devices[i].name);
+									if (
+										devices[i].present === '0' ||
+										devices[i].present === 0 ||
+										devices[i].present === false
+									) {
+										/*
+									await this.setStateAsync('DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present', {
+										val: false,
+										ack: true
+									});
+									*/
+										// https://github.com/foxthefox/ioBroker.fritzdect/issues/224
+										const obj = await this.getForeignObjectAsync(
+											this.namespace +
+											'.DECT_' +
+											devices[i].identifier.replace(/\s/g, '') +
+											'.present'
+										);
+										if (!obj || !obj.common) {
+											this.log.debug(
+												'DECT_' +
+												devices[i].identifier.replace(/\s/g, '') +
+												'.present is not present, check the device connection, no values are written'
+											);
+										} else {
+											await this.setStateAsync(
+												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
+												{ val: false, ack: true }
+											);
+										}
+
 										this.log.debug(
 											'DECT_' +
 											devices[i].identifier.replace(/\s/g, '') +
-											'.present is not present, check the device connection, no values are written'
+											' is not present, check the device connection, no values are written'
 										);
+										continue;
 									} else {
-										await this.setStateAsync(
-											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.present',
-											{ val: false, ack: true }
-										);
-									}
-
-									this.log.debug(
-										'DECT_' +
-										devices[i].identifier.replace(/\s/g, '') +
-										' is not present, check the device connection, no values are written'
-									);
-									continue;
-								} else {
-									if (devices[i].hkr) {
-										currentMode = 'Auto';
-										if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
-											currentMode = 'Comfort';
-										}
-										if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
-											currentMode = 'Night';
-										}
-										//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
-										let oldval = await this.getStateAsync(
-											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode'
-										).catch((error) => {
-											this.log.warn(
-												'problem getting DECT_' +
-												devices[i].identifier.replace(/\s/g, '') +
-												'.operationmode ' +
-												error
-											);
-										});
-										if (oldval) {
-											if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
-												await this.setStateAsync(
-													'DECT_' +
+										if (devices[i].hkr) {
+											currentMode = 'Auto';
+											if (devices[i].hkr.tsoll === devices[i].hkr.komfort) {
+												currentMode = 'Comfort';
+											}
+											if (devices[i].hkr.tsoll === devices[i].hkr.absenk) {
+												currentMode = 'Night';
+											}
+											//hier schon mal operationmode vorbesetzt, wird ggf. später überschrieben wenn es On,Off oder was anderes wird
+											let oldval = await this.getStateAsync(
+												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.operationmode'
+											).catch((error) => {
+												this.log.warn(
+													'problem getting DECT_' +
 													devices[i].identifier.replace(/\s/g, '') +
-													'.operationmode',
+													'.operationmode ' +
+													error
+												);
+											});
+											if (oldval) {
+												if (oldval.val !== currentMode || !this.config.fritz_writeonhyst) {
+													await this.setStateAsync(
+														'DECT_' +
+														devices[i].identifier.replace(/\s/g, '') +
+														'.operationmode',
+														{
+															val: currentMode,
+															ack: true
+														}
+													);
+												}
+											}
+											this.log.debug('preset operationmode ' + currentMode);
+										}
+										/*
+										// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
+										// some weird id usage, the website shows the id of the etsiunit
+										if (devices[i].etsiunitinfo) {
+											if (devices[i].etsiunitinfo.etsideviceid) {
+												//replace id with etsi
+												this.log.debug('shifting etsideviceid in dataset');
+												this.log.debug('id vorher ' + devices[i].id);
+												devices[i].id = devices[i].etsiunitinfo.etsideviceid;
+												this.log.debug('id nachher ' + devices[i].id);
+											}
+										}
+										*/
+										//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
+										//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
+										if (devices[i].simpleonoff) {
+											let switchtype = await this.getStateAsync(
+												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype'
+											).catch((error) => {
+												this.log.warn(
+													'problem getting DECT_' +
+													devices[i].identifier.replace(/\s/g, '') +
+													'.switchtype ' +
+													error
+												);
+											});
+											if (switchtype.val !== 'simpleonoff') {
+												await this.setStateAsync(
+													'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
 													{
-														val: currentMode,
+														val: 'simpleonoff',
 														ack: true
 													}
 												);
+												this.log.debug('switchtype simpleonoff set for ' + devices[i].id);
 											}
 										}
-										this.log.debug('preset operationmode ' + currentMode);
-									}
-									/*
-									// some manipulation for values in etsunitinfo, even the etsidevice is having a separate identifier, the manipulation takes place with main object
-									// some weird id usage, the website shows the id of the etsiunit
-									if (devices[i].etsiunitinfo) {
-										if (devices[i].etsiunitinfo.etsideviceid) {
-											//replace id with etsi
-											this.log.debug('shifting etsideviceid in dataset');
-											this.log.debug('id vorher ' + devices[i].id);
-											devices[i].id = devices[i].etsiunitinfo.etsideviceid;
-											this.log.debug('id nachher ' + devices[i].id);
+										// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
+										if (devices[i].functionbitmask == 1) {
+											this.log.debug(' functionbitmask 1');
+											// search and find the device id and replace fwversion
+											// todo
+											// find the device.identifier mit der etsi_id
+											//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
+											// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
+											// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
+											// reihenfolge, id immer vorher und dann erst etsi in json?
+											continue;
+										} else {
+											this.log.debug(' calling update data .....');
+											try {
+												await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
+											} catch (e) {
+												this.log.error(' issue updating device calling updateData' + e);
+											}
 										}
 									}
-									*/
-									//falls ein switch beides hat (switch und simpleonoff), wird die Vorbesetzung switch ersetzt
-									//falls es nur simpleonoff gibt, dann erstmals hier gesetzt
-									if (devices[i].simpleonoff) {
-										let switchtype = await this.getStateAsync(
-											'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype'
-										).catch((error) => {
-											this.log.warn(
-												'problem getting DECT_' +
-												devices[i].identifier.replace(/\s/g, '') +
-												'.switchtype ' +
-												error
-											);
-										});
-										if (switchtype.val !== 'simpleonoff') {
-											await this.setStateAsync(
-												'DECT_' + devices[i].identifier.replace(/\s/g, '') + '.switchtype',
-												{
-													val: 'simpleonoff',
-													ack: true
-												}
-											);
-											this.log.debug('switchtype simpleonoff set for ' + devices[i].id);
-										}
-									}
-									// some devices deliver the HAN-FUN info separately and the only valuable is the FW version, to be inserted in the main object
-									if (devices[i].functionbitmask == 1) {
-										this.log.debug(' functionbitmask 1');
-										// search and find the device id and replace fwversion
-										// todo
-										// find the device.identifier mit der etsi_id
-										//oder vorher eine Schleife über den empfangenen Datensatz und bei fb==1
-										// position ermitteln und dann FW ersetzen device[position].fwversion = device[aktdatensatz].fwversion]
-										// manipulation der device[i].identifier = gefundene identifier und dann durchlaufen lassen
-										// reihenfolge, id immer vorher und dann erst etsi in json?
-										continue;
-									} else {
-										this.log.debug(' calling update data .....');
-										try {
-											await this.updateData(devices[i], devices[i].identifier.replace(/\s/g, ''));
-										} catch (e) {
-											this.log.error(' issue updating device calling updateData' + e);
-										}
-									}
+								} else {
+									this.log.debug('update skipped: ' + JSON.stringify(devices[i]));
 								}
-							} else {
-								this.log.debug('update skipped: ' + JSON.stringify(devices[i]));
 							}
+						} catch (e) {
+							this.log.error('try/catch issue updating device in updateDevices ' + e);
 						}
-					} catch (e) {
-						this.log.error('try/catch issue updating device in updateDevices ' + e);
 					}
+				} else {
+					this.log.debug('no devices received')
 				}
+
 
 				// groups
 				let groups = parser.xml2json(devicelistinfos);
@@ -1752,7 +1837,7 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									});
 								}
-								let datatimem = parseInt(obj['stats'][0]['datatime']);
+								let datatimem = obj['stats']['datatime'] ? parseInt(obj['stats'][0]['datatime']) : Date.now();
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimem', {
 									val: datatimem,
 									ack: true
@@ -1767,80 +1852,83 @@ class Fritzdect extends utils.Adapter {
 									val: last12m,
 									ack: true
 								});
-								let monthnum = parseInt(new Date(datatimem * 1000).toISOString().slice(5, 7));
+								let monthnum = obj['stats']['datatime'] ? parseInt(new Date(datatimem * 1000).toISOString().slice(5, 7)) : Date.now();
 								let ytd = montharr.splice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
 								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_ytd', {
 									val: ytd,
 									ack: true
 								});
-							}
-							// days
-							if (obj['stats'][1]) {
-								old = await this.getStateAsync(
-									'DECT_' + identifier + '.' + key + '_stats.countd'
-								).catch((error) => {
-									this.log.warn('DECT_' + identifier + '.' + key + '_stats.countd' + error);
-								});
-								if (old && old.val) {
-									if (old.val !== parseInt(obj['stats'][1]['count'])) {
+								// days
+								if (obj['stats'][1]) {
+									old = await this.getStateAsync(
+										'DECT_' + identifier + '.' + key + '_stats.countd'
+									).catch((error) => {
+										this.log.warn('DECT_' + identifier + '.' + key + '_stats.countd' + error);
+									});
+									if (old && old.val) {
+										if (old.val !== parseInt(obj['stats'][1]['count'])) {
+											await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
+												val: parseInt(obj['stats'][1]['count']),
+												ack: true
+											});
+										}
+									} else {
 										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
 											val: parseInt(obj['stats'][1]['count']),
 											ack: true
 										});
 									}
-								} else {
-									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.countd', {
-										val: parseInt(obj['stats'][1]['count']),
-										ack: true
+									old = await this.getStateAsync(
+										'DECT_' + identifier + '.' + key + '_stats.gridd'
+									).catch((error) => {
+										this.log.warn('DECT_' + identifier + '.' + key + '_stats.gridd' + error);
 									});
-								}
-								old = await this.getStateAsync(
-									'DECT_' + identifier + '.' + key + '_stats.gridd'
-								).catch((error) => {
-									this.log.warn('DECT_' + identifier + '.' + key + '_stats.gridd' + error);
-								});
-								if (old && old.val) {
-									if (old.val !== parseInt(obj['stats'][1]['grid'])) {
+									if (old && old.val) {
+										if (old.val !== parseInt(obj['stats'][1]['grid'])) {
+											await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
+												val: parseInt(obj['stats'][1]['grid']),
+												ack: true
+											});
+										}
+									} else {
 										await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
 											val: parseInt(obj['stats'][1]['grid']),
 											ack: true
 										});
 									}
-								} else {
-									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.gridd', {
-										val: parseInt(obj['stats'][1]['grid']),
+									let datatimed = obj['stats']['datatime'] ? parseInt(obj['stats'][1]['datatime']) : Date.now();
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
+										val: datatimed,
 										ack: true
 									});
+									let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
+										val: JSON.stringify(dayarr),
+										ack: true
+									});
+									// dayvalue here, because the mtd alters the array
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
+										val: parseInt(dayarr[0]),
+										ack: true
+									});
+									let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last31d', {
+										val: last31d,
+										ack: true
+									});
+									let daynum = obj['stats']['datatime'] ? parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10)) : parseInt(new Date(Date.now() * 1000).toISOString().slice(8, 10));
+									let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
+									await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
+										val: mtd,
+										ack: true
+									});
+
 								}
-								let datatimed = parseInt(obj['stats'][1]['datatime']);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatimed', {
-									val: datatimed,
-									ack: true
-								});
-								let dayarr = obj['stats'][1]['_@attribute'].split(',').map(Number);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats_days', {
-									val: JSON.stringify(dayarr),
-									ack: true
-								});
-								// dayvalue here, because the mtd alters the array
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_dtd', {
-									val: parseInt(dayarr[0]),
-									ack: true
-								});
-								let last31d = dayarr.reduce((pv, cv) => pv + cv, 0);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_last31d', {
-									val: last31d,
-									ack: true
-								});
-								let daynum = parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10));
-								let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
-								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.energy_mtd', {
-									val: mtd,
-									ack: true
-								});
 							}
 						}
-					} else {
+					}
+					else {
+						this.log.debug('Processing stats ' + key + ' ' + JSON.stringify(obj['stats']))
 						if (obj['stats']) {
 							old = await this.getStateAsync(
 								'DECT_' + identifier + '.' + key + '_stats.count'
@@ -1879,10 +1967,17 @@ class Fritzdect extends utils.Adapter {
 									ack: true
 								});
 							}
-							await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
-								val: parseInt(obj['stats']['datatime']),
-								ack: true
-							});
+							if (obj['stats']['datatime']) {
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
+									val: parseInt(obj['stats']['datatime']),
+									ack: true
+								});
+							} else {
+								await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.datatime', {
+									val: Date.now(),
+									ack: true
+								});
+							}
 							let otherarr = obj['stats']['_@attribute'].split(',').map(Number);
 							await this.setStateAsync('DECT_' + identifier + '.' + key + '_stats.stats', {
 								val: JSON.stringify(otherarr),
@@ -1890,6 +1985,7 @@ class Fritzdect extends utils.Adapter {
 							});
 						}
 					}
+
 				}
 			})
 		);
@@ -2616,28 +2712,30 @@ class Fritzdect extends utils.Adapter {
 			const devicelistinfos = await fritz.getDeviceListInfos().catch((e) => this.errorHandlerApi(e));
 			if (devicelistinfos) {
 				let devlistanswer = parser.xml2json(devicelistinfos);
-				if (devlistanswer.devicelist.fwversion) {
-					this.log.info('FB FW version: ' + devlistanswer.devicelist.fwversion);
-				}
-				let devices = this.unifyDevicesUnits(devlistanswer.devicelist.device);
-				/*
-				let devices = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
+				// deviceslist, the answer from xml2json returns no array, if only one device		
+				let devicelist = [].concat((devlistanswer.devicelist || {}).device || []).map((device) => {
 					// remove spaces in AINs
-					// device.identifier = device.identifier.replace(/\s/g, '');
+					//device.identifier = device.identifier.replace(/\s/g, '');
 					return device;
 				});
-				*/
+				let devices = this.unifyDevicesUnits(devicelist);
 				this.log.debug('devices\n');
 				this.log.debug(JSON.stringify(devices));
-				if (devices.length) {
-					this.log.info('CREATE Devices ' + devices.length);
-					try {
-						await this.createData(devices);
-					} catch (e) {
-						this.log.debug(' issue creating devices calling createData' + e);
-						throw e;
+				if (devices) {
+					// needed to check for devices, since it is not ensured that unifyDeviceUnits will return an array, even with length 0, issue #651
+					if (devices.length) {
+						this.log.info('CREATE Devices ' + devices.length);
+						try {
+							await this.createData(devices);
+						} catch (e) {
+							this.log.debug(' issue creating devices calling createData' + e);
+							throw e;
+						}
 					}
+				} else {
+					this.log.debug('no devices to be processed');
 				}
+
 
 				let groups = parser.xml2json(devicelistinfos);
 				groups = [].concat((groups.devicelist || {}).group || []).map((group) => {
@@ -2809,9 +2907,10 @@ class Fritzdect extends utils.Adapter {
 							ack: true
 						});
 					}
-					/*
+
 					//always ID
 					await this.createInfoState(identifier, 'id', 'Device ID');
+					/*
 					//etsideviceid im gleichen Object
 					if (device.etsiunitinfo) {
 						this.log.debug('etsi part');
@@ -2829,7 +2928,7 @@ class Fritzdect extends utils.Adapter {
 								ack: true
 							});
 						}
-
+	
 						//check for blinds control
 						if (device.etsiunitinfo.unittype == 281) {
 							//additional blind datapoints
@@ -3647,26 +3746,28 @@ class Fritzdect extends utils.Adapter {
 										ack: true
 									});
 								} else if (key === 'unmapped_hue') {
-									await this.createValueState(
+									await this.createValueCtrl(
 										identifier,
 										'unmapped_hue',
 										'unmapped hue value',
 										0,
 										359,
-										'°'
+										'°',
+										'value.hue'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.unmapped_hue', {
 										val: parseInt(device.colorcontrol.unmapped_hue),
 										ack: true
 									});
 								} else if (key === 'unmapped_saturation') {
-									await this.createValueState(
+									await this.createValueCtrl(
 										identifier,
 										'unmapped_saturation',
 										'unmapped saturation value',
 										0,
 										255,
-										''
+										'',
+										'value.saturation'
 									);
 									await this.setStateAsync('DECT_' + identifier + '.unmapped_saturation', {
 										val: parseInt(device.colorcontrol.unmapped_saturation),
@@ -4167,7 +4268,6 @@ class Fritzdect extends utils.Adapter {
 					name: 'time of stats of months',
 					type: 'number',
 					min: 0,
-					max: 2147483648,
 					read: true,
 					write: false,
 					role: 'date',
@@ -4183,7 +4283,6 @@ class Fritzdect extends utils.Adapter {
 					name: 'time of stats of days',
 					type: 'number',
 					min: 0,
-					max: 2147483648,
 					read: true,
 					write: false,
 					role: 'date',
@@ -4235,7 +4334,6 @@ class Fritzdect extends utils.Adapter {
 					name: 'time of stats',
 					type: 'number',
 					min: 0,
-					max: 2147483648,
 					read: true,
 					write: false,
 					role: 'date',

@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.6.1",
+        "version": "2.6.2",
         "news": {
+            "2.6.2": {
+                "en": "new cmd ikea lamp, error correction when there is only one device used",
+                "de": "Neue CMD -IKEA -Lampe, Fehlerkorrektur, wenn nur ein Gerät verwendet wird",
+                "ru": "Новая лампа CMD IKEA, коррекция ошибок, когда используется только одно устройство",
+                "pt": "nova lâmpada de cmd ikea, correção de erros quando há apenas um dispositivo usado",
+                "nl": "Nieuwe CMD IKEA -lamp, foutcorrectie wanneer er maar één apparaat wordt gebruikt",
+                "fr": "Nouvelle lampe CMD IKEA, correction d'erreur lorsqu'il n'y a qu'un seul appareil utilisé",
+                "it": "Nuova lampada Ikea cmd, correzione degli errori quando è utilizzato un solo dispositivo",
+                "es": "nueva lámpara CMD IKEA, corrección de errores cuando solo se usa un dispositivo",
+                "pl": "Nowa lampa CMD IKEA, korekta błędów, gdy używane jest tylko jedno urządzenie",
+                "uk": "Нова лампа CMD IKEA, виправлення помилок, коли використовується лише один пристрій",
+                "zh-cn": "新的CMD宜家灯，仅使用一台设备时校正错误"
+            },
             "2.6.1": {
                 "en": "log FW version, merge etsidevice into etsiunit",
                 "de": "Log FW -Version, fusion Eetsidevice in EtsIunit zusammen",

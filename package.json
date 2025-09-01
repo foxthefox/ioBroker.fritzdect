@@ -26,7 +26,7 @@
 		"url": "https://github.com/foxthefox/ioBroker.fritzdect"
 	},
 	"dependencies": {
-		"@iobroker/adapter-core": "^3.2.3",
+		"@iobroker/adapter-core": "^3.3.2",
 		"command-line-args": "^6.0.0",
 		"command-line-usage": "^7.0.3",
 		"fritzdect-aha-nodejs": "^2.1.0"

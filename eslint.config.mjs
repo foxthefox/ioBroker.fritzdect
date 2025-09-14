@@ -20,6 +20,8 @@ export default [
             'admin/blockly.js',
             '**/adapter-config.d.ts',
             'widgets/fritzdect/js/fritzdect.js',
+            'docs/de/fritz.js',
+            'lib/xml2json.js',
         ],
     },
     {

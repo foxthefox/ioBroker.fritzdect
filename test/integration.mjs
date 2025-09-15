@@ -1,3 +1,5 @@
+/* eslint-disable no-async-promise-executor */
+/* eslint-disable no-undef */
 import { tests } from '@iobroker/testing';
 import pkg from 'fritzdect-aha-nodejs';
 const { FritzEmu } = pkg;

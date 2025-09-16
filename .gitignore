@@ -3,6 +3,8 @@
 *.code-workspace
 node_modules
 nbproject
+.commitinfo
+
 
 # npm package files
 iobroker.*.tgz

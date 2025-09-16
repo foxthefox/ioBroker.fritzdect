@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.6.2",
+        "version": "2.6.3",
         "news": {
+            "2.6.3": {
+                "en": "eslint, adapterchecker",
+                "de": "Eslint, Adapterchecker",
+                "ru": "Эслинт, адаптерхер",
+                "pt": "Eslint, AdapterChecker",
+                "nl": "Eslint, adapterchecker",
+                "fr": "Eslint, adapterchecker",
+                "it": "Eslint, AdapterChecker",
+                "es": "Eslint, adaptchecker",
+                "pl": "Eslint, adapterChecker",
+                "uk": "eslint, адаптеркекер",
+                "zh-cn": "Eslint，AdapterChecker"
+            },
             "2.6.2": {
                 "en": "new cmd ikea lamp, error correction when there is only one device used",
                 "de": "Neue CMD -IKEA -Lampe, Fehlerkorrektur, wenn nur ein Gerät verwendet wird",
@@ -203,12 +216,12 @@
         "supportCustoms": false,
         "dependencies": [
             {
-                "js-controller": ">=5.0.19"
+                "js-controller": ">=6.0.11"
             }
         ],
         "globalDependencies": [
             {
-                "admin": ">=7.4.10"
+                "admin": ">=7.6.17"
             }
         ]
     },

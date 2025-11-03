@@ -1,8 +1,11 @@
 {
     "common": {
         "name": "fritzdect",
-        "version": "2.6.3",
+        "version": "2.6.4",
         "news": {
+            "2.6.4": {
+                "en": "object corrections"
+            },
             "2.6.3": {
                 "en": "eslint, adapterchecker",
                 "de": "Eslint, Adapterchecker",

@@ -183,6 +183,7 @@
             "foxthefox <foxthefox@wysiwis.net>"
         ],
         "docs": {
+            "en":"README.md",
             "de": "docs/de/install.md"
         },
         "keywords": [

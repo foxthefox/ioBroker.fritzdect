@@ -702,5 +702,3 @@ These devices are split into a device and an unit (the function itself). The dev
 The MIT License (MIT)
 
 Copyright (c) 2018-2026 foxthefox <foxthefox@wysiwis.net>
-
-Copyright (c) 2025 foxthefox <foxthefox@wysiwis.net>

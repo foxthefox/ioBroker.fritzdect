@@ -1885,7 +1885,7 @@ class Fritzdect extends utils.Adapter {
                                     ack: true,
                                 });
                                 let monthnum = obj['stats']['datatime']
-                                    ? parseInt(new Date(datatimem * 1000).toISOString().slice(5, 7)) // *1000 entfernen?
+                                    ? parseInt(new Date(datatimem).toISOString().slice(5, 7)) // *1000 entfernen?
                                     : Date.now();
                                 let ytd = montharr.splice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
                                 await this.setStateAsync(`DECT_${identifier}.${key}_stats.energy_ytd`, {
@@ -1953,7 +1953,7 @@ class Fritzdect extends utils.Adapter {
                                         ack: true,
                                     });
                                     let daynum = obj['stats']['datatime']
-                                        ? parseInt(new Date(datatimed * 1000).toISOString().slice(8, 10))
+                                        ? parseInt(new Date(datatimed).toISOString().slice(8, 10)) //*1000 not needed?
                                         : parseInt(new Date(Date.now()).toISOString().slice(8, 10)); //*1000 not needed?
                                     let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
                                     await this.setStateAsync(`DECT_${identifier}.${key}_stats.energy_mtd`, {
@@ -3125,21 +3125,15 @@ class Fritzdect extends utils.Adapter {
                                 if (key === 'state') {
                                     await this.createSwitch(identifier, 'state', 'Switch Status and Control');
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.state`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'switch.light'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.state`,
+                                        { common: { role: 'switch.light' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.state`, {
                                         val: device.switch.state == 1 ? true : false,
                                         ack: true,
@@ -3363,21 +3357,15 @@ class Fritzdect extends utils.Adapter {
                                         'level.temperature',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.tsoll`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level.temperature'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.tsoll`,
+                                        { common: { role: 'level.temperature' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     if (device.hkr.tsoll < 70) {
                                         await this.setStateAsync(`DECT_${identifier}.tsoll`, {
                                             val: parseFloat(device.hkr.tsoll) / 2,
@@ -3485,21 +3473,15 @@ class Fritzdect extends utils.Adapter {
                                 } else if (key === 'boostactive') {
                                     await this.createSwitch(identifier, 'boostactive', 'Boost active status and cmd');
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.boostactive`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'switch.light'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.boostactive`,
+                                        { common: { role: 'switch.light' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.boostactive`, {
                                         val: device.hkr.boostactive == 1 ? true : false,
                                         ack: true,
@@ -3515,21 +3497,15 @@ class Fritzdect extends utils.Adapter {
                                         'level',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.boostactivetime`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.boostactivetime`,
+                                        { common: { role: 'level' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     //preset to 5 min
                                     await this.setStateAsync(`DECT_${identifier}.boostactivetime`, {
                                         val: this.boosttime || settings.boosttime,
@@ -3556,21 +3532,15 @@ class Fritzdect extends utils.Adapter {
                                         'Window open status and cmd',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.windowopenactiv`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.windowactive`,
+                                        { common: { role: 'switch.light' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.windowopenactiv`, {
                                         val: device.hkr.windowopenactiv == 1 ? true : false,
                                         ack: true,
@@ -3586,21 +3556,15 @@ class Fritzdect extends utils.Adapter {
                                         'level',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.windowopenactivetime`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.windowactivetime`,
+                                        { common: { role: 'level' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     //preset to 5 min
                                     await this.setStateAsync(`DECT_${identifier}.windowopenactivetime`, {
                                         val: this.windowtime || settings.windowtime,
@@ -3700,21 +3664,15 @@ class Fritzdect extends utils.Adapter {
                                 if (key === 'state') {
                                     await this.createSwitch(identifier, 'state', 'Simple ON/OFF state and cmd');
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.state`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.state`,
+                                        { common: { role: 'switch.light' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.state`, {
                                         val: device.simpleonoff.state == 1 ? true : false,
                                         ack: true,
@@ -3747,21 +3705,15 @@ class Fritzdect extends utils.Adapter {
                                         'level', //level.dimmer passt nict für blinds
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.level`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.level`,
+                                        { common: { role: 'level' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.level`, {
                                         val: parseInt(device.levelcontrol.level),
                                         ack: true,
@@ -3777,21 +3729,15 @@ class Fritzdect extends utils.Adapter {
                                         'level',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.levelpercentage`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.levelpercentage`,
+                                        { common: { role: 'level' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.levelpercentage`, {
                                         val: parseInt(device.levelcontrol.levelpercentage),
                                         ack: true,
@@ -3847,21 +3793,15 @@ class Fritzdect extends utils.Adapter {
                                         'level.color.hue',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.hue`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level.color.hue'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.hue`,
+                                        { common: { role: 'level.color.hue' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.hue`, {
                                         val:
                                             device.colorcontrol.hue !== null ? parseInt(device.colorcontrol.hue) : null,
@@ -3878,21 +3818,15 @@ class Fritzdect extends utils.Adapter {
                                         'level.color.saturation',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.saturation`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level.color.saturation'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.saturation`,
+                                        { common: { role: 'level.color.saturation' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.saturation`, {
                                         val:
                                             device.colorcontrol.saturation !== null
@@ -3911,21 +3845,15 @@ class Fritzdect extends utils.Adapter {
                                         'level.color.hue',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.unmapped_hue`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level.color.hue'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.unmapped_hue`,
+                                        { common: { role: 'level.color.hue' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.unmapped_hue`, {
                                         val: parseInt(device.colorcontrol.unmapped_hue),
                                         ack: true,
@@ -3941,21 +3869,15 @@ class Fritzdect extends utils.Adapter {
                                         'level.color.saturation',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.unmapped_saturation`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level.color.saturation'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.unmapped_saturation`,
+                                        { common: { role: 'level.color.saturation' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.unmapped_saturation`, {
                                         val: parseInt(device.colorcontrol.unmapped_saturation),
                                         ack: true,
@@ -3971,21 +3893,15 @@ class Fritzdect extends utils.Adapter {
                                         'level.color.temperature',
                                     );
                                     //state role change
-                                    this.getObject(`DECT_${identifier}.temperature`, (err, obj) => {
-                                        if (err) {
-                                            this.log.error(String(err));
-                                        } else {
-                                            this.log.info(JSON.stringify(obj));
-                                            if (obj) {
-                                                obj.common.role = 'level.color.temperature'; // modify object
-                                                this.extendForeignObject(obj._id, obj, err => {
-                                                    if (err) {
-                                                        this.log.error(String(err));
-                                                    }
-                                                });
+                                    this.extendObject(
+                                        `DECT_${identifier}.temperature`,
+                                        { common: { role: 'level.color.temperature' } },
+                                        err => {
+                                            if (err) {
+                                                this.log.error(String(err));
                                             }
-                                        }
-                                    });
+                                        },
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.temperature`, {
                                         val:
                                             device.colorcontrol.temperature !== null
@@ -4089,6 +4005,23 @@ class Fritzdect extends utils.Adapter {
         });
         return;
     }
+    async createTimeNumber(newId, datapoint, name) {
+        this.log.debug(`create datapoint ${newId} with  ${datapoint}`);
+        await this.setObjectNotExistsAsync(`DECT_${newId}.${datapoint}`, {
+            type: 'state',
+            common: {
+                name: name,
+                type: 'number',
+                min: 0,
+                read: true,
+                write: false,
+                role: 'date',
+                desc: name,
+            },
+            native: {},
+        });
+        return;
+    }
     async createButton(newId, datapoint, name) {
         this.log.debug(`create datapoint ${newId} with  ${datapoint}`);
         await this.setObjectNotExistsAsync(`DECT_${newId}.${datapoint}`, {
@@ -4157,7 +4090,7 @@ class Fritzdect extends utils.Adapter {
         return;
     }
     async createList(newId, datapoint, name) {
-        this.log.debug(`create list${newId} with  ${datapoint}`);
+        this.log.debug(`create list ${newId} with  ${datapoint}`);
         await this.setObjectNotExistsAsync(`DECT_${newId}.${datapoint}`, {
             type: 'state',
             common: {
@@ -4534,19 +4467,7 @@ class Fritzdect extends utils.Adapter {
         } else {
             await this.createValueState(identifier, `${type}_stats.count`, 'stats count', 0, 360, 'counts');
             await this.createValueState(identifier, `${type}_stats.grid`, 'grid', 0, 2678400, 's');
-            await this.setObjectNotExistsAsync(`DECT_${identifier}.${type}_stats.datatime`, {
-                type: 'state',
-                common: {
-                    name: 'time of stats',
-                    type: 'number',
-                    min: 0,
-                    read: true,
-                    write: false,
-                    role: 'date',
-                    desc: 'time of stats',
-                },
-                native: {},
-            });
+            await this.createTimeNumber(identifier, `${type}_stats.datatime`, 'time of stats');
             await this.createList(identifier, `${type}_stats.stats`, 'stats array');
         }
 

@@ -4,20 +4,17 @@
         "version": "2.6.4",
         "news": {
             "2.6.4": {
-                "en": "object corrections"
-            },
-            "2.6.3": {
-                "en": "eslint, adapterchecker",
-                "de": "Eslint, Adapterchecker",
-                "ru": "Эслинт, адаптерхер",
-                "pt": "Eslint, AdapterChecker",
-                "nl": "Eslint, adapterchecker",
-                "fr": "Eslint, adapterchecker",
-                "it": "Eslint, AdapterChecker",
-                "es": "Eslint, adaptchecker",
-                "pl": "Eslint, adapterChecker",
-                "uk": "eslint, адаптеркекер",
-                "zh-cn": "Eslint，AdapterChecker"
+                "en": "object corrections",
+                "de": "Objektkorrekturen",
+                "ru": "исправления объектов",
+                "pt": "correções de objetos",
+                "nl": "objectcorrecties",
+                "fr": "corrections d'objets",
+                "it": "correzioni degli oggetti",
+                "es": "correcciones de objetos",
+                "pl": "poprawki obiektów",
+                "uk": "виправлення об'єкта",
+                "zh-cn": "物体修正"
             },
             "2.6.2": {
                 "en": "new cmd ikea lamp, error correction when there is only one device used",
@@ -57,58 +54,6 @@
                 "pl": "Obsługa aktualizacji na żądanie, zakres temperatur",
                 "uk": "Підтримуйте оновлення на вимогу, діапазон температури",
                 "zh-cn": "支持按需更新，温度范围"
-            },
-            "2.5.13": {
-                "en": "same as 2.5.12 with corrected IOB checker issues",
-                "de": "Gleich wie 2.5.12 mit korrigierten IOB -Checker -Problemen",
-                "ru": "То же, что 2.5.12 с исправленными проблемами проверки IOB",
-                "pt": "O mesmo que 2.5.12 com problemas de verificador de IOB corrigidos",
-                "nl": "Hetzelfde als 2.5.12 met gecorrigeerde IOB -checker -problemen",
-                "fr": "Identique à 2.5.12 avec des problèmes de vérification IOB corrigés",
-                "it": "Come 2.5.12 con problemi di controllo IOB corretti",
-                "es": "Igual que 2.5.12 con problemas de verificador de IOB corregido",
-                "pl": "Tak samo jak 2.5.12 z poprawionymi problemami z sprawdzaniem IOB",
-                "uk": "Те саме, що 2.5.12 з виправленими проблемами перевірки IOB",
-                "zh-cn": "与2.5.12相同，带有校正后的IOB检查器问题"
-            },
-            "2.5.12": {
-                "en": "error correction for devices with empty identifier; update responsive settings",
-                "de": "Fehlerkorrektur für Geräte mit leerem Kennung; Aktualisieren Sie die Reaktionseinstellungen",
-                "ru": "коррекция ошибок для устройств с пустым идентификатором; Обновление адаптивных настроек",
-                "pt": "Correção de erros para dispositivos com identificador vazio; Atualize configurações responsivas",
-                "nl": "Foutcorrectie voor apparaten met een lege identificatie; Update responsieve instellingen",
-                "fr": "Correction d'erreur pour les appareils avec identifiant vide; Mettre à jour les paramètres réactifs",
-                "it": "correzione dell'errore per dispositivi con identificatore vuoto; Aggiorna le impostazioni reattive",
-                "es": "Corrección de errores para dispositivos con identificador vacío; Actualizar la configuración receptiva",
-                "pl": "Korekta błędów dla urządzeń z pustym identyfikatorem; Zaktualizuj ustawienia responsywne",
-                "uk": "Виправлення помилок для пристроїв з порожнім ідентифікатором; Оновіть чуйні налаштування",
-                "zh-cn": "具有空标识符的设备的误差校正；更新响应式设置"
-            },
-            "2.5.11": {
-                "en": "update devDeps, linting error correction",
-                "de": "Update devDeps, Linting-Fehlerkorrektur",
-                "ru": "обновление devDeps, исправление ошибок линтинга",
-                "pt": "atualizar devDeps, correção de erros de linting",
-                "nl": "update devDeps, correctie van lintingfouten",
-                "fr": "mettre à jour devDeps, correction d'erreur de peluchage",
-                "it": "aggiornamento devDeps, correzione degli errori di linting",
-                "es": "actualizar devDeps, corrección de errores de linting",
-                "pl": "zaktualizuj devDeps, korekta błędów lintingu",
-                "uk": "оновлення devDeps, виправлення помилок linting",
-                "zh-cn": "更新 devDeps，linting 错误修正"
-            },
-            "2.5.9": {
-                "en": "new message box, correction for statistics, password needs to be reentered in versions >2.5.4",
-                "de": "Neues Meldungsfeld, Korrektur für Statistiken, Passwort muss in Versionen >2.5.4 erneut eingegeben werden",
-                "ru": "новое окно сообщений, исправление статистики, в версиях >2.5.4 пароль необходимо вводить заново",
-                "pt": "nova caixa de mensagem, correção de estatísticas, senha precisa ser digitada novamente nas versões >2.5.4",
-                "nl": "nieuw berichtvenster, correctie voor statistieken, wachtwoord moet opnieuw worden ingevoerd in versies >2.5.4",
-                "fr": "nouvelle boîte de message, correction des statistiques, le mot de passe doit être ressaisi dans les versions >2.5.4",
-                "it": "nuova finestra di messaggio, correzione per le statistiche, la password deve essere reinserita nelle versioni >2.5.4",
-                "es": "Nuevo cuadro de mensaje, corrección de estadísticas, es necesario volver a ingresar la contraseña en las versiones >2.5.4",
-                "pl": "nowe okno komunikatu, korekta statystyk, w wersjach >2.5.4 konieczne jest ponowne wprowadzenie hasła",
-                "uk": "нове вікно повідомлення, виправлення статистики, пароль потрібно ввести повторно у версіях >2.5.4",
-                "zh-cn": "新消息框，统计修正，2.5.4以上版本需要重新输入密码"
             }
         },
         "messages": [
@@ -183,7 +128,7 @@
             "foxthefox <foxthefox@wysiwis.net>"
         ],
         "docs": {
-            "en":"README.md",
+            "en": "README.md",
             "de": "docs/de/install.md"
         },
         "keywords": [
@@ -205,7 +150,8 @@
         "readme": "https://github.com/foxthefox/ioBroker.fritzdect/blob/master/README.md",
         "loglevel": "info",
         "restartAdapters": [
-            "vis"
+            "vis",
+            "vis-2"
         ],
         "mode": "daemon",
         "tier": 3,

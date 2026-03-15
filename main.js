@@ -4,6 +4,8 @@
  * Created with @iobroker/create-adapter v1.31.0
  */
 
+// https://www.iobroker.net/#de/documentation/dev/stateroles.md
+
 // The adapter-core module gives you access to the core ioBroker functions
 // you need to create an adapter
 const utils = require('@iobroker/adapter-core');
@@ -3342,7 +3344,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         35,
                                         '°C',
-                                        'value.temperature',
+                                        'level.temperature',
                                     );
                                     if (device.hkr.tsoll < 70) {
                                         await this.setStateAsync(`DECT_${identifier}.tsoll`, {
@@ -3462,7 +3464,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         1440,
                                         'min',
-                                        'value',
+                                        'level',
                                     );
                                     //preset to 5 min
                                     await this.setStateAsync(`DECT_${identifier}.boostactivetime`, {
@@ -3501,7 +3503,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         1440,
                                         'min',
-                                        'value',
+                                        'level',
                                     );
                                     //preset to 5 min
                                     await this.setStateAsync(`DECT_${identifier}.windowopenactivetime`, {
@@ -3630,7 +3632,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         255,
                                         '',
-                                        'value.level',
+                                        'level', //level.dimmer passt nict für blinds
                                     );
                                     await this.setStateAsync(`DECT_${identifier}.level`, {
                                         val: parseInt(device.levelcontrol.level),
@@ -3644,7 +3646,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         100,
                                         '%',
-                                        'value.level',
+                                        'level',
                                     );
                                     await this.setStateAsync(`DECT_${identifier}.levelpercentage`, {
                                         val: parseInt(device.levelcontrol.levelpercentage),
@@ -3698,7 +3700,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         359,
                                         '°',
-                                        'value.hue',
+                                        'level.color.hue',
                                     );
                                     await this.setStateAsync(`DECT_${identifier}.hue`, {
                                         val:
@@ -3713,7 +3715,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         255,
                                         '',
-                                        'value.saturation',
+                                        'level.color.saturation',
                                     );
                                     await this.setStateAsync(`DECT_${identifier}.saturation`, {
                                         val:
@@ -3730,7 +3732,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         359,
                                         '°',
-                                        'value.hue',
+                                        'level.color.hue',
                                     );
                                     await this.setStateAsync(`DECT_${identifier}.unmapped_hue`, {
                                         val: parseInt(device.colorcontrol.unmapped_hue),
@@ -3744,7 +3746,7 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         255,
                                         '',
-                                        'value.saturation',
+                                        'level.color.saturation',
                                     );
                                     await this.setStateAsync(`DECT_${identifier}.unmapped_saturation`, {
                                         val: parseInt(device.colorcontrol.unmapped_saturation),
@@ -3758,7 +3760,7 @@ class Fritzdect extends utils.Adapter {
                                         2700,
                                         6500,
                                         'K',
-                                        'value.temperature',
+                                        'level.color.temperature',
                                     );
                                     await this.setStateAsync(`DECT_${identifier}.temperature`, {
                                         val:
@@ -3888,7 +3890,7 @@ class Fritzdect extends utils.Adapter {
                 type: 'boolean',
                 read: true,
                 write: true,
-                role: 'switch',
+                role: 'switch.light', //eventuell nicht richtig mit light für alle switches switch.power
                 desc: name,
             },
             native: {},

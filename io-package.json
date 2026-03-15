@@ -4,17 +4,17 @@
         "version": "2.6.4",
         "news": {
             "2.6.4": {
-                "en": "object corrections",
-                "de": "Objektkorrekturen",
-                "ru": "исправления объектов",
-                "pt": "correções de objetos",
-                "nl": "objectcorrecties",
-                "fr": "corrections d'objets",
-                "it": "correzioni degli oggetti",
-                "es": "correcciones de objetos",
-                "pl": "poprawki obiektów",
-                "uk": "виправлення об'єкта",
-                "zh-cn": "物体修正"
+                "en": "object corrections, devDependencies, repo checker",
+                "de": "Objektkorrekturen, DevDependencies, Repo-Checker",
+                "ru": "исправления объектов, devDependency, проверка репо",
+                "pt": "correções de objetos, devDependencies, verificador de repositório",
+                "nl": "objectcorrecties, devDependencies, repo-checker",
+                "fr": "corrections d'objets, devDependencies, vérificateur de dépôt",
+                "it": "correzioni degli oggetti, devDependencies, controllo dei repository",
+                "es": "correcciones de objetos, devDependencies, verificador de repositorios",
+                "pl": "poprawki obiektów, devDependency, sprawdzanie repo",
+                "uk": "виправлення об'єктів, devDependencies, перевірка репо",
+                "zh-cn": "对象修正、devDependency、repo 检查器"
             },
             "2.6.2": {
                 "en": "new cmd ikea lamp, error correction when there is only one device used",
@@ -171,7 +171,7 @@
         ],
         "globalDependencies": [
             {
-                "admin": ">=7.6.17"
+                "admin": ">=7.6.20"
             }
         ]
     },

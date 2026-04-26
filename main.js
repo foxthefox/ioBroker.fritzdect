@@ -3185,7 +3185,14 @@ class Fritzdect extends utils.Adapter {
                             Object.keys(device.powermeter).map(async key => {
                                 //await this.asyncForEach(Object.keys(device.powermeter), async (key) => {
                                 if (key === 'power') {
-                                    await this.createValueState(identifier, 'power', 'actual Power', 0, 40000, 'W');
+                                    await this.createValueState(
+                                        identifier,
+                                        'power',
+                                        'actual Power',
+                                        -40000,
+                                        40000,
+                                        'W',
+                                    );
                                     await this.setStateAsync(`DECT_${identifier}.power`, {
                                         val: parseFloat(device.powermeter.power) / 1000,
                                         ack: true,

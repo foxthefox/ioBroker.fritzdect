@@ -11,7 +11,7 @@
 const utils = require('@iobroker/adapter-core');
 
 // Load your modules here, e.g.:
-// const fs = require("fs");
+// const fs = require("node:fs");
 const Fritz = require('fritzdect-aha-nodejs').Fritz;
 
 /*

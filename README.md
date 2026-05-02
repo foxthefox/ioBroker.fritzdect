@@ -251,6 +251,9 @@ These devices are split into a device and an unit (the function itself). The dev
 
 ## Changelog
 
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 2.6.4 (WIP)
 
 - new IKEA lamp commands issue #625

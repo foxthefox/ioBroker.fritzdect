@@ -260,6 +260,8 @@ These devices are split into a device and an unit (the function itself). The dev
 
 - update to comply with repo checker
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 
 The MIT License (MIT)

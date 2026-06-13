@@ -3540,7 +3540,7 @@ class Fritzdect extends utils.Adapter {
                                     );
                                     //state role change
                                     this.extendObject(
-                                        `DECT_${identifier}.windowactive`,
+                                        `DECT_${identifier}.windowactiv`,
                                         { common: { role: 'switch.light' } },
                                         err => {
                                             if (err) {
@@ -3564,7 +3564,7 @@ class Fritzdect extends utils.Adapter {
                                     );
                                     //state role change
                                     this.extendObject(
-                                        `DECT_${identifier}.windowactivetime`,
+                                        `DECT_${identifier}.windowopenactivetime`,
                                         { common: { role: 'level' } },
                                         err => {
                                             if (err) {

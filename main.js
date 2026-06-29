@@ -3348,7 +3348,7 @@ class Fritzdect extends utils.Adapter {
                                 //await this.asyncForEach(Object.keys(device.hkr), async (key) => {
                                 //create datapoints from the data
                                 if (key === 'tist') {
-                                    await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 65, '°C');
+                                    await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 80, '°C');
                                     await this.setStateAsync(`DECT_${identifier}.tist`, {
                                         val: parseFloat(device.hkr.tist) / 2,
                                         ack: true,
@@ -3359,7 +3359,7 @@ class Fritzdect extends utils.Adapter {
                                         'tsoll',
                                         'Setpoint Temperature',
                                         0,
-                                        35,
+                                        40,
                                         '°C',
                                         'level.temperature',
                                     );

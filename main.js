@@ -24,8 +24,6 @@ let Fritz;
 */
 const parser = require('./lib/xml2json.js');
 
-let polling;
-
 /* errorcodes hkr
 0: kein Fehler
 1: Keine Adaptierung möglich. Gerät korrekt am Heizkörper montiert?
@@ -141,6 +139,7 @@ class Fritzdect extends utils.Adapter {
         this.windowtime = 5;
         this.tsolldefault = 23;
         this.updatePromise = null;
+        this.polling = undefined;
     }
 
     /**
@@ -149,9 +148,13 @@ class Fritzdect extends utils.Adapter {
     async onReady() {
         // Initialize your adapter here
         try {
+            if (this.config.fritz_pw) {
+                await this.migratePassword();
+                return;
+            }
             // Load user settings
             settings.Username = this.config.fritz_user;
-            settings.Password = this.config.fritz_pw;
+            settings.Password = this.config.fritz_password || '';
             settings.Url = this.config.fritz_ip;
             //settings.options = this.config.fritz_options;
             settings.intervall = this.config.fritz_interval;
@@ -231,11 +234,11 @@ class Fritzdect extends utils.Adapter {
                             await this.updateDevices(this.fritz).catch(e => this.errorHandlerAdapter(e));
                             this.log.info('finished initial updating devices/groups');
 
-                            if (!polling && settings.intervall > 0) {
+                            if (!this.polling && settings.intervall > 0) {
                                 this.log.info(
                                     'going over to cyclic polling, messages to poll activity only in debug-mode ',
                                 );
-                                polling = setInterval(
+                                this.polling = this.setInterval(
                                     async () => {
                                         // poll fritzbox
                                         try {
@@ -275,6 +278,27 @@ class Fritzdect extends utils.Adapter {
         }
     }
 
+    async migratePassword() {
+        try {
+            const instance = await this.getForeignObjectAsync(`system.adapter.${this.namespace}`);
+            if (
+                !instance?.encryptedNative?.includes('fritz_password') ||
+                instance.native.fritz_pw !== this.config.fritz_pw ||
+                (instance.native.fritz_password ? this.decrypt(instance.native.fritz_password) : '') !==
+                    (this.config.fritz_password || '')
+            ) {
+                throw new Error();
+            }
+            // Updating native config restarts the instance with the migrated credential.
+            await this.updateConfig({
+                fritz_password: this.config.fritz_password || this.config.fritz_pw,
+                fritz_pw: '',
+            });
+        } catch {
+            this.log.error('Could not migrate the FRITZ!Box password. Check the instance settings and restart.');
+        }
+    }
+
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      *
@@ -287,8 +311,9 @@ class Fritzdect extends utils.Adapter {
             // clearTimeout(timeout2);
             // ...
             // clearInterval(interval1);
-            if (polling) {
-                clearInterval(polling);
+            if (this.polling) {
+                this.clearInterval(this.polling);
+                this.polling = undefined;
             }
             // await this.fritz.logout_SID().catch((e) => this.errorHandlerApi(e));
             this.log.info('cleaned everything up...');
@@ -1080,7 +1105,7 @@ class Fritzdect extends utils.Adapter {
     //  * @param {ioBroker.Message} obj
     //  */
     async onMessage(obj) {
-        let wait = false;
+        let deferredResponse = false;
         this.log.debug(`messagebox received ${JSON.stringify(obj)}`);
         try {
             if (typeof obj === 'object' && obj.message) {
@@ -1143,7 +1168,7 @@ class Fritzdect extends utils.Adapter {
                                 );
                             }
                         }
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     case 'devices':
                         try {
@@ -1164,7 +1189,7 @@ class Fritzdect extends utils.Adapter {
                                 );
                             }
                         }
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     case 'groups':
                         //eigentlich jetzt mit devices zusammen, da xml nicht geteilt wird
@@ -1186,7 +1211,7 @@ class Fritzdect extends utils.Adapter {
                                 );
                             }
                         }
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     case 'templates':
                         try {
@@ -1207,7 +1232,7 @@ class Fritzdect extends utils.Adapter {
                                 );
                             }
                         }
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     case 'trigger':
                         try {
@@ -1228,7 +1253,7 @@ class Fritzdect extends utils.Adapter {
                                 );
                             }
                         }
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     case 'statistic':
                         try {
@@ -1267,7 +1292,7 @@ class Fritzdect extends utils.Adapter {
                             }
                         }
 
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     case 'color':
                         try {
@@ -1288,7 +1313,7 @@ class Fritzdect extends utils.Adapter {
                                 );
                             }
                         }
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     case 'rights':
                         try {
@@ -1309,7 +1334,7 @@ class Fritzdect extends utils.Adapter {
                                 );
                             }
                         }
-                        wait = true;
+                        deferredResponse = true;
                         break;
                     //idea for other statistics: call of message returns everything (loop over all devices)
                     default:
@@ -1317,8 +1342,8 @@ class Fritzdect extends utils.Adapter {
                         break;
                 }
             }
-            if (!wait && obj.callback) {
-                this.log.debug('messagebox landed in last evaluation wait=false and callback');
+            if (!deferredResponse && obj.callback) {
+                this.log.debug('messagebox landed in last evaluation deferredResponse=false and callback');
                 this.sendTo(obj.from, obj.command, obj.message, obj.callback);
             }
         } catch (e) {

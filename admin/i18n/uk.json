@@ -17,5 +17,13 @@
     "htmlText": "htmlТекст",
     "myColor": "myColor",
     "myColor_tooltip": "Опис\nmyColor",
-    "options for the http.request (usually empty, unless you make test)": "параметри для http.request (зазвичай пусті, якщо ви не робите тест)"
+    "options for the http.request (usually empty, unless you make test)": "параметри для http.request (зазвичай пусті, якщо ви не робите тест)",
+    "My Colors": "Мої кольори",
+    "My Stats": "Моя статистика",
+    "My Templates": "Мої шаблони",
+    "My Triggers": "Мої тригери",
+    "exclude routines (check if older FB)": "Пропускати сценарії (увімкніть для старих моделей FRITZ!Box)",
+    "exclude statistics (check if older FB)": "Пропускати статистику (увімкніть для старих моделей FRITZ!Box)",
+    "exclude templates (check if older FB)": "Пропускати шаблони (увімкніть для старих моделей FRITZ!Box)",
+    "must be checked (true) to activate the reduced logging": "За можливості записувати лише змінені значення"
 }

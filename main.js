@@ -24,8 +24,6 @@ let Fritz;
 */
 const parser = require('./lib/xml2json.js');
 
-let polling;
-
 /* errorcodes hkr
 0: kein Fehler
 1: Keine Adaptierung möglich. Gerät korrekt am Heizkörper montiert?
@@ -108,19 +106,6 @@ Die Bits 5,6,7,9,10 und 11 werden nur von FRITZ!-Geräten verwendet und nicht v
 5 =
 */
 
-const settings = {
-    Username: '',
-    Password: '',
-    Url: '',
-    options: {},
-    intervall: 300,
-    boosttime: 5,
-    windowtime: 5,
-    tsolldefault: 23,
-    exclude_templates: false,
-    exclude_routines: false,
-};
-
 class Fritzdect extends utils.Adapter {
     /**
      * @param {Partial<utils.AdapterOptions>} [options] - keine Ahnung
@@ -135,12 +120,25 @@ class Fritzdect extends utils.Adapter {
         // this.on('objectChange', this.onObjectChange.bind(this));
         this.on('message', this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
+        this.settings = {
+            Username: '',
+            Password: '',
+            Url: '',
+            options: {},
+            intervall: 300,
+            boosttime: 5,
+            windowtime: 5,
+            tsolldefault: 23,
+            exclude_templates: false,
+            exclude_routines: false,
+        };
         this.systemConfig = {};
         this.fritz = null;
         this.boosttime = 5;
         this.windowtime = 5;
         this.tsolldefault = 23;
         this.updatePromise = null;
+        this.polling = undefined;
     }
 
     /**
@@ -150,18 +148,18 @@ class Fritzdect extends utils.Adapter {
         // Initialize your adapter here
         try {
             // Load user settings
-            settings.Username = this.config.fritz_user;
-            settings.Password = this.config.fritz_pw;
-            settings.Url = this.config.fritz_ip;
-            //settings.options = this.config.fritz_options;
-            settings.intervall = this.config.fritz_interval;
-            settings.boosttime = this.boosttime = this.config.fritz_boosttime;
-            settings.windowtime = this.windowtime = this.config.fritz_windowtime;
-            settings.tsolldefault = this.tsolldefault = this.config.fritz_tsolldefault;
-            settings.fritz_writeonhyst = this.fritz_writeonhyst = this.config.fritz_writeonhyst;
-            settings.exclude_templates = this.exclude_templates = this.config.fritz_exclude_templates;
-            settings.exclude_routines = this.exclude_routines = this.config.fritz_exclude_routines;
-            settings.exclude_stats = this.exclude_stats = this.config.fritz_exclude_stats;
+            this.settings.Username = this.config.fritz_user;
+            this.settings.Password = this.config.fritz_pw;
+            this.settings.Url = this.config.fritz_ip;
+            //this.settings.options = this.config.fritz_options;
+            this.settings.intervall = this.config.fritz_interval;
+            this.settings.boosttime = this.boosttime = this.config.fritz_boosttime;
+            this.settings.windowtime = this.windowtime = this.config.fritz_windowtime;
+            this.settings.tsolldefault = this.tsolldefault = this.config.fritz_tsolldefault;
+            this.settings.fritz_writeonhyst = this.fritz_writeonhyst = this.config.fritz_writeonhyst;
+            this.settings.exclude_templates = this.exclude_templates = this.config.fritz_exclude_templates;
+            this.settings.exclude_routines = this.exclude_routines = this.config.fritz_exclude_routines;
+            this.settings.exclude_stats = this.exclude_stats = this.config.fritz_exclude_stats;
 
             // The adapters config (in the instance object everything under the attribute "native") is accessible via
             // this.config:
@@ -175,18 +173,13 @@ class Fritzdect extends utils.Adapter {
             }
 
             // jsonUI should transfer PW decrypted
-            if (settings.Username !== '' && settings.Password !== '') {
+            if (this.settings.Username !== '' && this.settings.Password !== '') {
                 this.getForeignObject('system.config', async err => {
                     // Adapter is alive, make API call
                     // Make a call to fritzboxAPI and get a list devices/groups and templates
 
-                    this.fritz = new Fritz(
-                        settings.Username,
-                        settings.Password,
-                        settings.Url || '',
-                        settings.options || {},
-                    );
-                    this.log.info(`fritzdect uses USER: ${settings.Username}`);
+                    this.fritz = this.createFritzClient();
+                    this.log.info(`fritzdect uses USER: ${this.settings.Username}`);
                     try {
                         const login = await this.fritz.login_SID().catch(e => this.errorHandlerApi(e));
                         if (login) {
@@ -213,16 +206,16 @@ class Fritzdect extends utils.Adapter {
                             this.log.info('start creating devices/groups');
                             await this.createDevices(this.fritz).catch(e => this.errorHandlerAdapter(e));
                             this.log.info('finished creating devices/groups (if any)');
-                            const templinfo = settings.exclude_templates ? 'not used ' : 'used';
-                            this.log.info(`templates are ${templinfo}(${settings.exclude_templates})`);
-                            if (!settings.exclude_templates) {
+                            const templinfo = this.settings.exclude_templates ? 'not used ' : 'used';
+                            this.log.info(`templates are ${templinfo}(${this.settings.exclude_templates})`);
+                            if (!this.settings.exclude_templates) {
                                 this.log.info('start creating templates ');
                                 await this.createTemplates(this.fritz).catch(e => this.errorHandlerAdapter(e));
                                 this.log.info('finished creating templates (if any) ');
                             }
-                            const routineinfo = settings.exclude_routines ? 'not used ' : 'used';
-                            this.log.info(`routines are ${routineinfo}(${settings.exclude_routines})`);
-                            if (!settings.exclude_routines) {
+                            const routineinfo = this.settings.exclude_routines ? 'not used ' : 'used';
+                            this.log.info(`routines are ${routineinfo}(${this.settings.exclude_routines})`);
+                            if (!this.settings.exclude_routines) {
                                 this.log.info('start creating routines ');
                                 await this.createRoutines(this.fritz).catch(e => this.errorHandlerAdapter(e));
                                 this.log.info('finished creating routines (if any) ');
@@ -231,21 +224,23 @@ class Fritzdect extends utils.Adapter {
                             await this.updateDevices(this.fritz).catch(e => this.errorHandlerAdapter(e));
                             this.log.info('finished initial updating devices/groups');
 
-                            if (!polling && settings.intervall > 0) {
+                            if (!this.polling && this.settings.intervall > 0) {
                                 this.log.info(
                                     'going over to cyclic polling, messages to poll activity only in debug-mode ',
                                 );
-                                polling = setInterval(
+                                this.polling = this.setInterval(
                                     async () => {
                                         // poll fritzbox
                                         try {
-                                            this.log.debug(`polling! fritzdect is alive with ${settings.intervall} s`);
-                                            this.update();
+                                            this.log.debug(
+                                                `polling! fritzdect is alive with ${this.settings.intervall} s`,
+                                            );
+                                            await this.update();
                                         } catch (e) {
                                             this.log.warn(`[Polling] <== ${e}`);
                                         }
                                     },
-                                    (settings.intervall || 300) * 1000,
+                                    (this.settings.intervall || 300) * 1000,
                                 );
                             }
                         } else {
@@ -275,6 +270,11 @@ class Fritzdect extends utils.Adapter {
         }
     }
 
+    createFritzClient() {
+        const { Username, Password, Url, options } = this.settings;
+        return new Fritz(Username, Password, Url || '', options);
+    }
+
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!
      *
@@ -287,8 +287,9 @@ class Fritzdect extends utils.Adapter {
             // clearTimeout(timeout2);
             // ...
             // clearInterval(interval1);
-            if (polling) {
-                clearInterval(polling);
+            if (this.polling) {
+                this.clearInterval(this.polling);
+                this.polling = undefined;
             }
             // await this.fritz.logout_SID().catch((e) => this.errorHandlerApi(e));
             this.log.info('cleaned everything up...');
@@ -327,12 +328,7 @@ class Fritzdect extends utils.Adapter {
             // The state was changed
             this.log.debug(`onStateChange => state ${id} changed: ${state.val} (ack = ${state.ack})`);
             if (!this.fritz) {
-                this.fritz = new Fritz(
-                    settings.Username,
-                    settings.Password,
-                    settings.moreParam || '',
-                    settings.strictSsl || true,
-                );
+                this.fritz = this.createFritzClient();
                 try {
                     const login = await this.fritz.login_SID();
                     if (login) {
@@ -344,7 +340,6 @@ class Fritzdect extends utils.Adapter {
                     this.errorHandlerApi(error);
                 }
             }
-            //const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
 
             // you can use the ack flag to detect if it is status (true) or command (false)
             if (state && !state.ack && state.val !== null && id !== null) {
@@ -1103,12 +1098,7 @@ class Fritzdect extends utils.Adapter {
                 //my own messages for detectiung are without a message
                 let result = '';
                 if (!this.fritz) {
-                    this.fritz = new Fritz(
-                        settings.Username,
-                        settings.Password,
-                        settings.moreParam || '',
-                        settings.strictSsl || true,
-                    );
+                    this.fritz = this.createFritzClient();
                     try {
                         const login = await this.fritz.login_SID();
                         if (login) {
@@ -1120,7 +1110,6 @@ class Fritzdect extends utils.Adapter {
                         this.errorHandlerApi(error);
                     }
                 }
-                // const fritz = new Fritz(settings.Username, settings.Password, settings.moreParam || '', settings.strictSsl || true);
                 let statfeedback = {};
                 switch (obj.command) {
                     case 'update':
@@ -1473,10 +1462,10 @@ class Fritzdect extends utils.Adapter {
 
     async _update() {
         await this.updateDevices(this.fritz).catch(e => this.errorHandlerAdapter(e));
-        if (!settings.exclude_routines) {
+        if (!this.settings.exclude_routines) {
             await this.updateRoutines(this.fritz).catch(e => this.errorHandlerAdapter(e));
         }
-        if (!settings.exclude_stats) {
+        if (!this.settings.exclude_stats) {
             const deviceswithstat = await this.getStateAsync('global.statdevices').catch(e => {
                 this.log.warn(`problem getting statdevices ${e}`);
             });
@@ -2026,14 +2015,14 @@ class Fritzdect extends utils.Adapter {
         let old;
         let changed = false;
         try {
-            if (!value || value == '') {
+            if (value == null || value === '') {
                 this.log.debug(` no value for updating in ${ain}  ${key} writing null`);
                 //wirklich mit "null" beschreiben?
                 old = await this.getStateAsync(`DECT_${ain}.${key}`).catch(error => {
                     this.log.warn(`DECT_${ain}.${key} did not get state -> ${error}`);
                 });
-                if (old.val != null || !this.config.fritz_writeonhyst) {
-                    this.log.debug(`updating data DECT_${ain} : ${key} new: ${null} old: ${old.val}`);
+                if (old?.val != null || !this.config.fritz_writeonhyst) {
+                    this.log.debug(`updating data DECT_${ain} : ${key} new: ${null} old: ${old?.val}`);
                     await this.setStateAsync(`DECT_${ain}.${key}`, {
                         val: null,
                         ack: true,
@@ -2079,7 +2068,7 @@ class Fritzdect extends utils.Adapter {
                             changed = true;
                         }
                         if (changed || !this.config.fritz_writeonhyst) {
-                            this.log.debug(`updating data DECT_${ain} : ${key} new: ${batt} old: ${old.val}`);
+                            this.log.debug(`updating data DECT_${ain} : ${key} new: ${batt} old: ${old?.val}`);
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: batt,
                                 ack: true,
@@ -2097,7 +2086,7 @@ class Fritzdect extends utils.Adapter {
                         }
                         if (changed || !this.config.fritz_writeonhyst) {
                             this.log.debug(
-                                `updating data DECT_${ain} : ${key} new: ${parseFloat(value) / 10} old: ${old.val}`,
+                                `updating data DECT_${ain} : ${key} new: ${parseFloat(value) / 10} old: ${old?.val}`,
                             );
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: parseFloat(value) / 10,
@@ -2115,7 +2104,7 @@ class Fritzdect extends utils.Adapter {
                         }
                         if (changed || !this.config.fritz_writeonhyst) {
                             this.log.debug(
-                                `updating data DECT_${ain} : ${key} new: ${parseFloat(value) / 1000} old: ${old.val}`,
+                                `updating data DECT_${ain} : ${key} new: ${parseFloat(value) / 1000} old: ${old?.val}`,
                             );
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: parseFloat(value) / 1000,
@@ -2185,7 +2174,7 @@ class Fritzdect extends utils.Adapter {
                                 changed = true;
                             }
                             if (changed || !this.config.fritz_writeonhyst) {
-                                this.log.debug(`updating data DECT_${ain} : ${key} new: ${newtemp} old: ${old.val}`);
+                                this.log.debug(`updating data DECT_${ain} : ${key} new: ${newtemp} old: ${old?.val}`);
                                 await this.setStateAsync(`DECT_${ain}.${key}`, {
                                     val: newtemp,
                                     ack: true,
@@ -2195,16 +2184,16 @@ class Fritzdect extends utils.Adapter {
                             // read value is 253 or 254 and therfore set to NaN
                             newtemp = NaN;
                             // previous was a temp
-                            if (!isNaN(old.val)) {
-                                this.log.debug(`updating data DECT_${ain} : ${key} new: ${newtemp} old: ${old.val}`);
+                            if (old && !isNaN(old.val)) {
+                                this.log.debug(`updating data DECT_${ain} : ${key} new: ${newtemp} old: ${old?.val}`);
                                 await this.setStateAsync(`DECT_${ain}.${key}`, {
                                     val: newtemp,
                                     ack: true,
                                 });
-                            } else {
+                            } else if (old) {
                                 //previous was already no temperature
                                 // skip new setting
-                                this.log.debug(`no update data DECT_${ain} : ${key} new: ${newtemp} old: ${old.val}`);
+                                this.log.debug(`no update data DECT_${ain} : ${key} new: ${newtemp} old: ${old?.val}`);
                             }
                         }
                     } else if (key == 'humidity') {
@@ -2219,7 +2208,7 @@ class Fritzdect extends utils.Adapter {
                         }
                         if (changed || !this.config.fritz_writeonhyst) {
                             this.log.debug(
-                                `updating data DECT_${ain} : ${key} new: ${parseFloat(value)} old: ${old.val}`,
+                                `updating data DECT_${ain} : ${key} new: ${parseFloat(value)} old: ${old?.val}`,
                             );
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: parseFloat(value),
@@ -2273,7 +2262,7 @@ class Fritzdect extends utils.Adapter {
                             if (targettemp && targettemp.val !== null) {
                                 tsoll = targettemp.val;
                             } else {
-                                tsoll = settings.tsolldefault || this.tsolldefault;
+                                tsoll = this.settings.tsolldefault || this.tsolldefault;
                                 this.log.debug(`DECT_${ain} tsoll will be set to default value`);
                             }
                             if (old) {
@@ -2354,7 +2343,7 @@ class Fritzdect extends utils.Adapter {
                             if (targettemp && targettemp.val !== null) {
                                 tsoll = targettemp.val;
                             } else {
-                                tsoll = settings.tsolldefault || this.tsolldefault;
+                                tsoll = this.settings.tsolldefault || this.tsolldefault;
                                 this.log.debug(`DECT_${ain} tsoll will be set to default value`);
                             }
                             if (old) {
@@ -2462,7 +2451,7 @@ class Fritzdect extends utils.Adapter {
                         }
 
                         if (changed || !this.config.fritz_writeonhyst) {
-                            this.log.debug(`updating data DECT_${ain} : ${key} new: ${convertValue} old: ${old.val}`);
+                            this.log.debug(`updating data DECT_${ain} : ${key} new: ${convertValue} old: ${old?.val}`);
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: convertValue,
                                 ack: true,
@@ -2514,7 +2503,7 @@ class Fritzdect extends utils.Adapter {
                             changed = true;
                         }
                         if (changed || !this.config.fritz_writeonhyst) {
-                            this.log.debug(`updating data DECT_${ain} : ${key} new: ${convTime} old: ${old.val}`);
+                            this.log.debug(`updating data DECT_${ain} : ${key} new: ${convTime} old: ${old?.val}`);
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: convTime, //Str()
                                 ack: true,
@@ -2546,7 +2535,7 @@ class Fritzdect extends utils.Adapter {
                         }
                         if (changed || !this.config.fritz_writeonhyst) {
                             this.log.debug(
-                                `updating data DECT_${ain} : ${key} new: ${parseInt(value)} old: ${old.val}`,
+                                `updating data DECT_${ain} : ${key} new: ${parseInt(value)} old: ${old?.val}`,
                             );
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: parseInt(value),
@@ -2576,7 +2565,7 @@ class Fritzdect extends utils.Adapter {
 
                         if (changed || !this.config.fritz_writeonhyst) {
                             this.log.debug(
-                                `updating data DECT_${ain} : ${key} new: ${value.toString()} old: ${old.val}`,
+                                `updating data DECT_${ain} : ${key} new: ${value.toString()} old: ${old?.val}`,
                             );
                             await this.setStateAsync(`DECT_${ain}.${key}`, {
                                 val: value.toString(),
@@ -3515,7 +3504,7 @@ class Fritzdect extends utils.Adapter {
                                     );
                                     //preset to 5 min
                                     await this.setStateAsync(`DECT_${identifier}.boostactivetime`, {
-                                        val: this.boosttime || settings.boosttime,
+                                        val: this.boosttime || this.settings.boosttime,
                                         ack: true,
                                     });
                                 } else if (key === 'boostactiveendtime') {
@@ -3574,7 +3563,7 @@ class Fritzdect extends utils.Adapter {
                                     );
                                     //preset to 5 min
                                     await this.setStateAsync(`DECT_${identifier}.windowopenactivetime`, {
-                                        val: this.windowtime || settings.windowtime,
+                                        val: this.windowtime || this.settings.windowtime,
                                         ack: true,
                                     });
                                 } else if (key === 'windowopenactiveendtime') {

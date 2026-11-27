@@ -141,6 +141,8 @@ class Fritzdect extends utils.Adapter {
         this.windowtime = 5;
         this.tsolldefault = 23;
         this.updatePromise = null;
+        this.switchRevision = 0;
+        this.switchCommands = new Map();
     }
 
     /**
@@ -731,88 +733,11 @@ class Fritzdect extends utils.Adapter {
                                     }
                                 }
                             }
-                            // setswitch reicht scheinbar nicht bei simpleonoff, hier müsste irgendwie unterschieden werden ob DECT200 switch/state oder simpleonoff/state
-                            if (dp == 'state') {
-                                if (
-                                    state.val === 0 ||
-                                    state.val === '0' ||
-                                    state.val === 'false' ||
-                                    state.val === false ||
-                                    state.val === 'off' ||
-                                    state.val === 'OFF'
-                                ) {
-                                    const switchtyp = await this.getStateAsync(`DECT_${id}.switchtype`).catch(error => {
-                                        this.log.warn(`DECT_${+id}.switchtype  did not get state -> ${error}`);
-                                    });
-                                    if (switchtyp && switchtyp.val !== null) {
-                                        if (switchtyp.val === 'switch') {
-                                            this.fritz
-                                                .setSwitchOff(id)
-                                                .then(() => {
-                                                    this.log.debug(`Turned switch ${id} off`);
-                                                    this.setStateAsync(`DECT_${id}.state`, {
-                                                        val: false,
-                                                        ack: true,
-                                                    }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                                                })
-                                                .catch(e => this.errorHandlerApi(e));
-                                        } else {
-                                            this.fritz
-                                                .setSimpleOff(id)
-                                                .then(() => {
-                                                    this.log.debug(`Turned switch ${id} off`);
-                                                    this.setStateAsync(`DECT_${id}.state`, {
-                                                        val: false,
-                                                        ack: true,
-                                                    }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                                                })
-                                                .catch(e => this.errorHandlerApi(e));
-                                        }
-                                    } else {
-                                        throw {
-                                            error: 'could not determine the type of switch (switch/simpleonoff)',
-                                        };
-                                    }
-                                } else if (
-                                    state.val === 1 ||
-                                    state.val === '1' ||
-                                    state.val === 'true' ||
-                                    state.val === true ||
-                                    state.val === 'on' ||
-                                    state.val === 'ON'
-                                ) {
-                                    const switchtyp = await this.getStateAsync(`DECT_${id}.switchtype`).catch(error => {
-                                        this.log.warn(`DECT_${+id}.switchtype  did not get state -> ${error}`);
-                                    });
-                                    if (switchtyp && switchtyp.val !== null) {
-                                        if (switchtyp.val === 'switch') {
-                                            this.fritz
-                                                .setSwitchOn(id)
-                                                .then(() => {
-                                                    this.log.debug(`Turned switch ${id} on`);
-                                                    this.setStateAsync(`DECT_${id}.state`, {
-                                                        val: true,
-                                                        ack: true,
-                                                    }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                                                })
-                                                .catch(e => this.errorHandlerApi(e));
-                                        } else {
-                                            this.fritz
-                                                .setSimpleOn(id)
-                                                .then(() => {
-                                                    this.log.debug(`Turned switch ${id} on`);
-                                                    this.setStateAsync(`DECT_${id}.state`, {
-                                                        val: true,
-                                                        ack: true,
-                                                    }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
-                                                })
-                                                .catch(e => this.errorHandlerApi(e));
-                                        }
-                                    } else {
-                                        throw {
-                                            error: 'could not determine the type of switch (switch/simpleonoff)',
-                                        };
-                                    }
+                            if (dp === 'state') {
+                                if ([0, '0', 'false', false, 'off', 'OFF'].includes(state.val)) {
+                                    await this.setDeviceSwitch(id, false);
+                                } else if ([1, '1', 'true', true, 'on', 'ON'].includes(state.val)) {
+                                    await this.setDeviceSwitch(id, true);
                                 }
                             }
                             if (dp == 'blindsclose') {
@@ -1546,7 +1471,40 @@ class Fritzdect extends utils.Adapter {
             return Promise.reject(this.log.error(`try/catch updateRoutines ${e}`));
         }
     }
+    async setDeviceSwitch(id, on) {
+        const command = this.switchCommands.get(id) ?? { pending: 0, revision: 0, tail: Promise.resolve() };
+        this.switchCommands.set(id, command);
+        command.pending++;
+        const request = command.tail.then(async () => {
+            const type = await this.getStateAsync(`DECT_${id}.switchtype`).catch(error => {
+                this.log.warn(`DECT_${id}.switchtype did not get state -> ${error}`);
+            });
+            if (!type || type.val === null) {
+                throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
+            }
+            const action =
+                type.val === 'switch'
+                    ? on
+                        ? this.fritz.setSwitchOn(id)
+                        : this.fritz.setSwitchOff(id)
+                    : on
+                      ? this.fritz.setSimpleOn(id)
+                      : this.fritz.setSimpleOff(id);
+            await action
+                .then(() => this.setStateAsync(`DECT_${id}.state`, { val: on, ack: true }))
+                .catch(error => this.errorHandlerApi(error));
+        });
+        command.tail = request.catch(() => {});
+        try {
+            await request;
+        } finally {
+            command.revision = ++this.switchRevision;
+            command.pending--;
+        }
+    }
+
     async updateDevices(fritz) {
+        const pollRevision = this.switchRevision;
         this.log.debug('__________________________');
         this.log.debug('updating Devices / Groups ');
         try {
@@ -1702,6 +1660,7 @@ class Fritzdect extends utils.Adapter {
                                                 await this.updateData(
                                                     devices[i],
                                                     devices[i].identifier.replace(/\s/g, ''),
+                                                    pollRevision,
                                                 );
                                             } catch (e) {
                                                 this.log.error(` issue updating device calling updateData${e}`);
@@ -1777,7 +1736,7 @@ class Fritzdect extends utils.Adapter {
             return Promise.reject(this.log.error(`try/catch updateGroups ${e}`));
         }
     }
-    async updateData(array, ident) {
+    async updateData(array, ident, pollRevision = this.switchRevision) {
         this.log.debug('======================================');
         this.log.debug(`With ${ident} got the following device/group to parse ${JSON.stringify(array)}`);
         try {
@@ -1791,6 +1750,7 @@ class Fritzdect extends utils.Adapter {
                                 await this.updateData(
                                     subarray,
                                     `${ident}.${key}.${subarray.identifier.replace(/\s/g, '')}`,
+                                    pollRevision,
                                 ); // hier wirds erst schwierig wenn array in array
                             }),
                         );
@@ -1799,12 +1759,12 @@ class Fritzdect extends utils.Adapter {
                         await Promise.all(
                             Object.entries(value).map(async ([key2, value2]) => {
                                 this.log.debug(` object transfer ${key2}  ${value2}  ${ident}`);
-                                await this.updateDatapoint(key2, value2, ident);
+                                await this.updateDatapoint(key2, value2, ident, pollRevision);
                             }),
                         );
                     } else {
                         this.log.debug(`processing datapoint ${key} directly`);
-                        await this.updateDatapoint(key, value, ident);
+                        await this.updateDatapoint(key, value, ident, pollRevision);
                     }
                 }),
             );
@@ -2022,7 +1982,7 @@ class Fritzdect extends utils.Adapter {
         );
         return;
     }
-    async updateDatapoint(key, value, ain) {
+    async updateDatapoint(key, value, ain, pollRevision = this.switchRevision) {
         let old;
         let changed = false;
         try {
@@ -2450,6 +2410,13 @@ class Fritzdect extends utils.Adapter {
                         // hier Prüfung ob bei rolladen/alert/state mehr als bool drin ist und damit wird es parseInt
                         // if ( value.length() >1 ) { await this.setStateAsync('DECT_' + ain + '.' + key, {	val: value.toString(), ack: true });} else {}
                         // oder eben alles ungleich 0 ist erstmal Fehler
+                        // A response requested before a switch command completed can still contain the old state.
+                        if (key === 'state' || key === 'simpleonoff') {
+                            const command = this.switchCommands.get(ain);
+                            if (command && (command.pending || command.revision > pollRevision)) {
+                                return;
+                            }
+                        }
                         // bool
                         const convertValue = value == 1 ? true : false;
                         if (old) {

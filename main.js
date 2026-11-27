@@ -1449,7 +1449,8 @@ class Fritzdect extends utils.Adapter {
                         item !== 'identifier' &&
                         item !== 'functionbitmask' &&
                         item !== 'role' &&
-                        item !== 'name'
+                        item !== 'name' &&
+                        (item === 'fwversion' || !Object.hasOwn(devicearray[etsiunitpos], item))
                     ) {
                         devicearray[etsiunitpos][item] = devicearray[etsidevpos][item];
                     }

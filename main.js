@@ -2185,7 +2185,7 @@ class Fritzdect extends utils.Adapter {
                                 changed = true;
                             }
                             if (changed || !this.config.fritz_writeonhyst) {
-                                this.log.debug(`updating data DECT_${ain} : ${key} new: ${newtemp} old: ${old.val}`);
+                                this.log.debug(`updating data DECT_${ain} : ${key} new: ${newtemp} old: ${old?.val}`);
                                 await this.setStateAsync(`DECT_${ain}.${key}`, {
                                     val: newtemp,
                                     ack: true,
@@ -2195,13 +2195,13 @@ class Fritzdect extends utils.Adapter {
                             // read value is 253 or 254 and therfore set to NaN
                             newtemp = NaN;
                             // previous was a temp
-                            if (!isNaN(old.val)) {
+                            if (old && !isNaN(old.val)) {
                                 this.log.debug(`updating data DECT_${ain} : ${key} new: ${newtemp} old: ${old.val}`);
                                 await this.setStateAsync(`DECT_${ain}.${key}`, {
                                     val: newtemp,
                                     ack: true,
                                 });
-                            } else {
+                            } else if (old) {
                                 //previous was already no temperature
                                 // skip new setting
                                 this.log.debug(`no update data DECT_${ain} : ${key} new: ${newtemp} old: ${old.val}`);

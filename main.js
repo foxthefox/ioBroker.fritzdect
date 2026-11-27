@@ -4436,6 +4436,13 @@ class Fritzdect extends utils.Adapter {
                 },
                 native: {},
             });
+            for (const period of ['datatimem', 'datatimed']) {
+                const id = `DECT_${identifier}.${type}_stats.${period}`;
+                const object = await this.getObjectAsync(id);
+                if (object?.common.max === 2147483648) {
+                    await this.extendObjectAsync(id, { common: { max: Number.MAX_SAFE_INTEGER } });
+                }
+            }
             await this.createValueState(
                 identifier,
                 `${type}_stats.energy_ytd`,

@@ -8,6 +8,28 @@ const createAdapter = proxyquire('../main', {
 });
 
 describe('Switch polling', () => {
+    it('sends overlapping commands to one switch in order', async () => {
+        const adapter = createAdapter();
+        const off = Promise.withResolvers();
+        const calls = [];
+        adapter.getStateAsync = async () => ({ val: 'switch' });
+        adapter.setStateAsync = async (_id, state) => calls.push(state.val);
+        adapter.fritz = {
+            setSwitchOff: () => {
+                calls.push('off');
+                return off.promise;
+            },
+            setSwitchOn: async () => calls.push('on'),
+        };
+        const first = adapter.setDeviceSwitch('123', false);
+        const second = adapter.setDeviceSwitch('123', true);
+        await new Promise(setImmediate);
+        assert.deepEqual(calls, ['off']);
+        off.resolve();
+        await Promise.all([first, second]);
+        assert.deepEqual(calls, ['off', false, 'on', true]);
+    });
+
     it('keeps the command acknowledgement and accepts a subsequent poll', async () => {
         const adapter = createAdapter();
         const states = new Map([['DECT_123.switchtype', { val: 'switch' }], ['DECT_123.state', { val: true }]]);

@@ -1472,17 +1472,17 @@ class Fritzdect extends utils.Adapter {
         }
     }
     async setDeviceSwitch(id, on) {
-        const command = this.switchCommands.get(id) ?? { pending: 0, revision: 0 };
+        const command = this.switchCommands.get(id) ?? { pending: 0, revision: 0, tail: Promise.resolve() };
         this.switchCommands.set(id, command);
         command.pending++;
-        try {
+        const request = command.tail.then(async () => {
             const type = await this.getStateAsync(`DECT_${id}.switchtype`).catch(error => {
                 this.log.warn(`DECT_${id}.switchtype did not get state -> ${error}`);
             });
             if (!type || type.val === null) {
                 throw { error: 'could not determine the type of switch (switch/simpleonoff)' };
             }
-            const request =
+            const action =
                 type.val === 'switch'
                     ? on
                         ? this.fritz.setSwitchOn(id)
@@ -1490,9 +1490,13 @@ class Fritzdect extends utils.Adapter {
                     : on
                       ? this.fritz.setSimpleOn(id)
                       : this.fritz.setSimpleOff(id);
-            await request
+            await action
                 .then(() => this.setStateAsync(`DECT_${id}.state`, { val: on, ack: true }))
                 .catch(error => this.errorHandlerApi(error));
+        });
+        command.tail = request.catch(() => {});
+        try {
+            await request;
         } finally {
             command.revision = ++this.switchRevision;
             command.pending--;

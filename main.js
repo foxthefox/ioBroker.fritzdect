@@ -3349,6 +3349,9 @@ class Fritzdect extends utils.Adapter {
                                 //create datapoints from the data
                                 if (key === 'tist') {
                                     await this.createValueState(identifier, 'tist', 'Actual temperature', 0, 80, '°C');
+                                    await this.extendObjectAsync(`DECT_${identifier}.tist`, {
+                                        common: { role: 'value.temperature' },
+                                    });
                                     await this.setStateAsync(`DECT_${identifier}.tist`, {
                                         val: parseFloat(device.hkr.tist) / 2,
                                         ack: true,
@@ -3363,16 +3366,9 @@ class Fritzdect extends utils.Adapter {
                                         '°C',
                                         'level.temperature',
                                     );
-                                    //state role change
-                                    this.extendObject(
-                                        `DECT_${identifier}.tsoll`,
-                                        { common: { role: 'level.temperature' } },
-                                        err => {
-                                            if (err) {
-                                                this.log.error(String(err));
-                                            }
-                                        },
-                                    );
+                                    await this.extendObjectAsync(`DECT_${identifier}.tsoll`, {
+                                        common: { role: 'level.temperature' },
+                                    });
                                     if (device.hkr.tsoll < 70) {
                                         await this.setStateAsync(`DECT_${identifier}.tsoll`, {
                                             val: parseFloat(device.hkr.tsoll) / 2,
@@ -3538,16 +3534,9 @@ class Fritzdect extends utils.Adapter {
                                         'windowopenactiv',
                                         'Window open status and cmd',
                                     );
-                                    //state role change
-                                    this.extendObject(
-                                        `DECT_${identifier}.windowactiv`,
-                                        { common: { role: 'switch.light' } },
-                                        err => {
-                                            if (err) {
-                                                this.log.error(String(err));
-                                            }
-                                        },
-                                    );
+                                    await this.extendObjectAsync(`DECT_${identifier}.windowopenactiv`, {
+                                        common: { role: 'switch.mode.windowopen' },
+                                    });
                                     await this.setStateAsync(`DECT_${identifier}.windowopenactiv`, {
                                         val: device.hkr.windowopenactiv == 1 ? true : false,
                                         ack: true,
@@ -4256,10 +4245,20 @@ class Fritzdect extends utils.Adapter {
                 unit: '°C',
                 read: true,
                 write: false,
-                role: 'value.temperature',
+                role: 'value',
                 desc: 'last setting of target temp',
             },
             native: {},
+        });
+        await this.extendObjectAsync(`DECT_${newId}.hkrmode`, {
+            common: {
+                role: 'level.mode.thermostat',
+                // Both regulating and fully open valves report HEAT. HEAT writes select regulation (0).
+                states: { 0: 'HEAT', 1: 'OFF', 2: 'HEAT' },
+            },
+        });
+        await this.extendObjectAsync(`DECT_${newId}.lasttarget`, {
+            common: { role: 'value' },
         });
         await this.setObjectNotExistsAsync(`DECT_${newId}.operationlist`, {
             type: 'state',

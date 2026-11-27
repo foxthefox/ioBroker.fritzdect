@@ -883,7 +883,7 @@ class Fritzdect extends utils.Adapter {
                                 if (saturation && saturation.val !== null) {
                                     // oder hier die Verwendung von lasttarget
                                     const setSaturation = saturation.val;
-                                    if (setSaturation == '') {
+                                    if (setSaturation === '') {
                                         this.log.error(
                                             'No saturation value exists when setting hue, please set saturation to a value ',
                                         );
@@ -913,7 +913,7 @@ class Fritzdect extends utils.Adapter {
                                 });
                                 if (hue && hue.val !== null) {
                                     const setHue = hue.val;
-                                    if (setHue == '') {
+                                    if (setHue === '') {
                                         this.log.error(
                                             'No hue value exists when setting saturation, please set hue to a value ',
                                         );
@@ -946,7 +946,7 @@ class Fritzdect extends utils.Adapter {
                                 if (saturation && saturation.val !== null) {
                                     // oder hier die Verwendung von lasttarget
                                     const setSaturation = saturation.val;
-                                    if (setSaturation == '') {
+                                    if (setSaturation === '') {
                                         this.log.error(
                                             'No saturation value exists when setting hue, please set saturation to a value ',
                                         );
@@ -959,7 +959,7 @@ class Fritzdect extends utils.Adapter {
                                                         setSaturation
                                                     }`,
                                                 );
-                                                this.setStateAsync(`DECT_${id}.hue`, {
+                                                this.setStateAsync(`DECT_${id}.unmapped_hue`, {
                                                     val: state.val,
                                                     ack: true,
                                                 }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich
@@ -976,7 +976,7 @@ class Fritzdect extends utils.Adapter {
                                 });
                                 if (hue && hue.val !== null) {
                                     const setHue = hue.val;
-                                    if (setHue == '') {
+                                    if (setHue === '') {
                                         this.log.error(
                                             'No hue value exists when setting saturation, please set hue to a value ',
                                         );
@@ -989,7 +989,7 @@ class Fritzdect extends utils.Adapter {
                                                         setHue
                                                     }`,
                                                 );
-                                                this.setStateAsync(`DECT_${id}.saturation`, {
+                                                this.setStateAsync(`DECT_${id}.unmapped_saturation`, {
                                                     val: state.val,
                                                     ack: true,
                                                 }); //iobroker State-Bedienung wird nochmal als Status geschrieben, da API-Aufruf erfolgreich

@@ -108,6 +108,14 @@ Die Bits 5,6,7,9,10 und 11 werden nur von FRITZ!-Geräten verwendet und nicht v
 5 =
 */
 
+function numericTarget(value, fallback) {
+    if (typeof value !== 'number' && (typeof value !== 'string' || !value.trim())) {
+        return fallback;
+    }
+    const target = Number(value);
+    return Number.isFinite(target) ? target : fallback;
+}
+
 const settings = {
     Username: '',
     Password: '',
@@ -157,7 +165,7 @@ class Fritzdect extends utils.Adapter {
             settings.intervall = this.config.fritz_interval;
             settings.boosttime = this.boosttime = this.config.fritz_boosttime;
             settings.windowtime = this.windowtime = this.config.fritz_windowtime;
-            settings.tsolldefault = this.tsolldefault = this.config.fritz_tsolldefault;
+            this.tsolldefault = numericTarget(this.config.fritz_tsolldefault, settings.tsolldefault);
             settings.fritz_writeonhyst = this.fritz_writeonhyst = this.config.fritz_writeonhyst;
             settings.exclude_templates = this.exclude_templates = this.config.fritz_exclude_templates;
             settings.exclude_routines = this.exclude_routines = this.config.fritz_exclude_routines;
@@ -2271,9 +2279,9 @@ class Fritzdect extends utils.Adapter {
                                 this.log.warn(`problem getting the tsoll status ${e}`);
                             });
                             if (targettemp && targettemp.val !== null) {
-                                tsoll = targettemp.val;
+                                tsoll = numericTarget(targettemp.val, this.tsolldefault);
                             } else {
-                                tsoll = settings.tsolldefault || this.tsolldefault;
+                                tsoll = this.tsolldefault;
                                 this.log.debug(`DECT_${ain} tsoll will be set to default value`);
                             }
                             if (old) {
@@ -2352,9 +2360,9 @@ class Fritzdect extends utils.Adapter {
                                 this.log.warn(`problem getting the tsoll status ${e}`);
                             });
                             if (targettemp && targettemp.val !== null) {
-                                tsoll = targettemp.val;
+                                tsoll = numericTarget(targettemp.val, this.tsolldefault);
                             } else {
-                                tsoll = settings.tsolldefault || this.tsolldefault;
+                                tsoll = this.tsolldefault;
                                 this.log.debug(`DECT_${ain} tsoll will be set to default value`);
                             }
                             if (old) {
@@ -3380,7 +3388,7 @@ class Fritzdect extends utils.Adapter {
                                         });
                                     } else {
                                         await this.setStateAsync(`DECT_${identifier}.tsoll`, {
-                                            val: this.config.fritz_tsolldefault,
+                                            val: this.tsolldefault,
                                             ack: true,
                                         });
                                     }

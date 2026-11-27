@@ -1441,14 +1441,22 @@ class Fritzdect extends utils.Adapter {
         for (let etsiunitpos of etsiunit) {
             //find the matching etsidevice for etsiunit
             let etsidevpos = id.indexOf(devicearray[etsiunitpos]['etsiunitinfo']['etsideviceid']);
-            //prepare array for deletion of etsidevices
-            if (etsidelete.indexOf(etsidevpos) === -1 && etsidevpos !== -1) {
-                etsidelete.push(etsidevpos);
+            if (etsidevpos !== -1 && devicearray[etsidevpos].identifier) {
                 //merge etsidevice info into etsiunit
                 for (let item in devicearray[etsidevpos]) {
-                    if (item !== 'id' && item !== 'identifier' && item !== 'functionbitmask' && item !== 'role') {
+                    if (
+                        item !== 'id' &&
+                        item !== 'identifier' &&
+                        item !== 'functionbitmask' &&
+                        item !== 'role' &&
+                        item !== 'name' &&
+                        (item === 'fwversion' || !Object.hasOwn(devicearray[etsiunitpos], item))
+                    ) {
                         devicearray[etsiunitpos][item] = devicearray[etsidevpos][item];
                     }
+                }
+                if (!etsidelete.includes(etsidevpos)) {
+                    etsidelete.push(etsidevpos);
                 }
             }
         }

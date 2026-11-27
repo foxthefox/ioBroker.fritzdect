@@ -1867,9 +1867,11 @@ class Fritzdect extends utils.Adapter {
                                         ack: true,
                                     });
                                 }
-                                let datatimem = obj['stats']['datatime']
-                                    ? parseInt(obj['stats'][0]['datatime'])
-                                    : Date.now();
+                                const monthTimestamp = Number(obj['stats'][0]['datatime']) * 1000;
+                                const datatimem =
+                                    monthTimestamp > 0 && Number.isFinite(new Date(monthTimestamp).getTime())
+                                        ? monthTimestamp
+                                        : Date.now();
                                 await this.setStateAsync(`DECT_${identifier}.${key}_stats.datatimem`, {
                                     val: datatimem,
                                     ack: true,
@@ -1884,10 +1886,8 @@ class Fritzdect extends utils.Adapter {
                                     val: last12m,
                                     ack: true,
                                 });
-                                let monthnum = obj['stats']['datatime']
-                                    ? parseInt(new Date(datatimem).toISOString().slice(5, 7)) // *1000 entfernen?
-                                    : Date.now();
-                                let ytd = montharr.splice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
+                                const monthnum = new Date(datatimem).getUTCMonth() + 1;
+                                const ytd = montharr.slice(0, monthnum).reduce((pv, cv) => pv + cv, 0);
                                 await this.setStateAsync(`DECT_${identifier}.${key}_stats.energy_ytd`, {
                                     val: ytd,
                                     ack: true,
@@ -1930,9 +1930,11 @@ class Fritzdect extends utils.Adapter {
                                             ack: true,
                                         });
                                     }
-                                    let datatimed = obj['stats']['datatime']
-                                        ? parseInt(obj['stats'][1]['datatime'])
-                                        : Date.now();
+                                    const dayTimestamp = Number(obj['stats'][1]['datatime']) * 1000;
+                                    const datatimed =
+                                        dayTimestamp > 0 && Number.isFinite(new Date(dayTimestamp).getTime())
+                                            ? dayTimestamp
+                                            : Date.now();
                                     await this.setStateAsync(`DECT_${identifier}.${key}_stats.datatimed`, {
                                         val: datatimed,
                                         ack: true,
@@ -1952,10 +1954,8 @@ class Fritzdect extends utils.Adapter {
                                         val: last31d,
                                         ack: true,
                                     });
-                                    let daynum = obj['stats']['datatime']
-                                        ? parseInt(new Date(datatimed).toISOString().slice(8, 10)) //*1000 not needed?
-                                        : parseInt(new Date(Date.now()).toISOString().slice(8, 10)); //*1000 not needed?
-                                    let mtd = dayarr.splice(0, daynum).reduce((pv, cv) => pv + cv, 0);
+                                    const daynum = new Date(datatimed).getUTCDate();
+                                    const mtd = dayarr.slice(0, daynum).reduce((pv, cv) => pv + cv, 0);
                                     await this.setStateAsync(`DECT_${identifier}.${key}_stats.energy_mtd`, {
                                         val: mtd,
                                         ack: true,

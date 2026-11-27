@@ -2174,7 +2174,7 @@ class Fritzdect extends utils.Adapter {
                         // individual check
 
                         // read value is a temperature
-                        if (value < 70) {
+                        if (key === 'tist' ? value <= 80 : value < 70) {
                             newtemp = parseFloat(value) / 2;
                             if (old) {
                                 if (old.val !== newtemp) {

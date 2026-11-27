@@ -2786,6 +2786,9 @@ class Fritzdect extends utils.Adapter {
                 if ((device.functionbitmask & 64) == 64) {
                     //DECT300/301
                     role = 'thermo.heat';
+                } else if (device.functionbitmask == 237572 || (device.functionbitmask & 131072) == 131072) {
+                    // DECT500
+                    role = 'light';
                 } else if (
                     (device.functionbitmask & 32768) == 32768 ||
                     (device.functionbitmask & 512) == 512 ||
@@ -2801,9 +2804,6 @@ class Fritzdect extends utils.Adapter {
                 } else if (device.functionbitmask == 288 || device.functionbitmask == 1048864) {
                     // DECT440
                     role = 'thermo';
-                } else if (device.functionbitmask == 237572 || (device.functionbitmask & 131072) == 131072) {
-                    // DECT500
-                    role = 'light';
                 } else if (device.functionbitmask == 335888) {
                     //Blinds
                     role = 'blinds';
@@ -3726,6 +3726,7 @@ class Fritzdect extends utils.Adapter {
                                         ack: true,
                                     });
                                 } else if (key === 'levelpercentage') {
+                                    const dimmerRole = role === 'light' ? 'level.dimmer' : 'level';
                                     await this.createValueCtrl(
                                         identifier,
                                         'levelpercentage',
@@ -3733,12 +3734,12 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         100,
                                         '%',
-                                        'level',
+                                        dimmerRole,
                                     );
                                     //state role change
                                     this.extendObject(
                                         `DECT_${identifier}.levelpercentage`,
-                                        { common: { role: 'level' } },
+                                        { common: { role: dimmerRole } },
                                         err => {
                                             if (err) {
                                                 this.log.error(String(err));

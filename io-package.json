@@ -175,10 +175,13 @@
             }
         ]
     },
+    "protectedNative": ["fritz_pw", "fritz_password"],
+    "encryptedNative": ["fritz_password"],
     "native": {
         "fritz_ip": "http://192.168.x.x",
         "fritz_user": "admin",
-        "fritz_pw": "pw",
+        "fritz_pw": "",
+        "fritz_password": "",
         "fritz_interval": 300,
         "fritz_options": null,
         "fritz_writeonhyst": false,

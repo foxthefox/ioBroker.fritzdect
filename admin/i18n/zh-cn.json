@@ -17,5 +17,13 @@
     "htmlText": "htmlText",
     "myColor": "我的颜色",
     "myColor_tooltip": "\nmyColor的描述",
-    "options for the http.request (usually empty, unless you make test)": "http.request 的选项（通常为空，除非您进行测试）"
+    "options for the http.request (usually empty, unless you make test)": "http.request 的选项（通常为空，除非您进行测试）",
+    "My Colors": "我的颜色",
+    "My Stats": "我的统计",
+    "My Templates": "我的模板",
+    "My Triggers": "我的触发器",
+    "exclude routines (check if older FB)": "跳过例程（旧款 FRITZ!Box 请启用）",
+    "exclude statistics (check if older FB)": "跳过统计（旧款 FRITZ!Box 请启用）",
+    "exclude templates (check if older FB)": "跳过模板（旧款 FRITZ!Box 请启用）",
+    "must be checked (true) to activate the reduced logging": "在支持的情况下仅写入已更改的值"
 }

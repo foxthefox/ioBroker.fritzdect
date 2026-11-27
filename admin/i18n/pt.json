@@ -17,5 +17,13 @@
     "htmlText": "htmlText",
     "myColor": "minhaCor",
     "myColor_tooltip": "Descrição de\nmyColor",
-    "options for the http.request (usually empty, unless you make test)": "opções para http.request (geralmente vazio, a menos que você faça um teste)"
+    "options for the http.request (usually empty, unless you make test)": "opções para http.request (geralmente vazio, a menos que você faça um teste)",
+    "My Colors": "Minhas cores",
+    "My Stats": "Minhas estatísticas",
+    "My Templates": "Meus modelos",
+    "My Triggers": "Meus gatilhos",
+    "exclude routines (check if older FB)": "Ignorar rotinas (ativar em modelos FRITZ!Box antigos)",
+    "exclude statistics (check if older FB)": "Ignorar estatísticas (ativar em modelos FRITZ!Box antigos)",
+    "exclude templates (check if older FB)": "Ignorar modelos (ativar em modelos FRITZ!Box antigos)",
+    "must be checked (true) to activate the reduced logging": "Gravar apenas valores alterados quando possível"
 }

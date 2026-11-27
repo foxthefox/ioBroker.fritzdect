@@ -23,7 +23,7 @@
 			"lg": 6,
 			"xl": 6
 		},
-		"fritz_pw": {
+		"fritz_password": {
 			"type": "password",
 			"label": "Fritzbox Password",
 			"newLine": false,
@@ -99,7 +99,7 @@
 		},
 		"fritz_windowtime": {
 			"type": "number",
-			"label": "default time (minutes) for window open activation",
+			"label": "default time (minutes) for open window activation",
 			"newLine": false,
 			"default": 5,
 			"xs": 12,

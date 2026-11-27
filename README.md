@@ -254,6 +254,7 @@ These devices are split into a device and an unit (the function itself). The dev
 ### **WORK IN PROGRESS**
 
 - (copilot) Adapter requires node.js >= 22 now
+- Existing FRITZ!Box passwords are moved to encrypted storage at the first enabled startup. The instance restarts once. If you set a new password in Admin before the first startup, that password takes precedence. When downgrading to a version without encrypted password support, re-enter the password in the older version's configuration.
 
 ### 2.6.4 (WIP)
 
@@ -265,10 +266,15 @@ These devices are split into a device and an unit (the function itself). The dev
 
 - update to comply with repo checker
 
+### 2.6.2
+
+- Fixed single-device detection, multi-unit device handling, ID state creation and statistics without a timestamp.
+- Requires Node.js 20 or later.
+
 [Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 
-The MIT License (MIT)
+[MIT License](LICENSE)
 
 Copyright (c) 2018-2026 foxthefox <foxthefox@wysiwis.net>

@@ -1,39 +1,18 @@
-const Fritz = require('fritzdect-aha-nodejs');
-const commandLineArgs = require('command-line-args');
-const getUsage = require('command-line-usage');
+const { parseArgs } = require('node:util');
+const { Fritz } = require('fritzdect-aha-nodejs');
 const parser = require('../../lib/xml2json.js');
 
-const cmdOptionsDefinition = [
-    { name: 'username', alias: 'u', type: String, description: 'username for FB login' },
-    { name: 'password', alias: 'p', type: String, description: 'password of that user' },
-    {
-        name: 'url',
-        type: String,
-        description: 'the url of the FB',
+const { values: cmdOptions } = parseArgs({
+    options: {
+        username: { short: 'u', type: 'string' },
+        password: { short: 'p', type: 'string' },
+        url: { type: 'string' },
+        help: { short: 'h', type: 'boolean' },
     },
-    { name: 'help', alias: 'h', type: Boolean },
-];
+});
 
-const cmdOptions = commandLineArgs(cmdOptionsDefinition);
-
-if (
-    cmdOptions.username === undefined ||
-    cmdOptions.password === undefined ||
-    cmdOptions.url === undefined ||
-    cmdOptions.help
-) {
-    const sections = [
-        {
-            header: 'Fritzbox Setup Check',
-            content:
-                'A simple app checking the Fritzbox Setup. call: node testscript.js -u admin -p password --url http:/192.168.178.1',
-        },
-        {
-            header: 'Options',
-            optionList: cmdOptionsDefinition,
-        },
-    ];
-    console.log(getUsage(sections));
+if (cmdOptions.help || [cmdOptions.username, cmdOptions.password, cmdOptions.url].includes(undefined)) {
+    console.log('Usage: node fritz.js -u <username> -p <password> --url <FRITZ!Box URL>');
 } else {
     var fritz = new Fritz(cmdOptions.username, cmdOptions.password, cmdOptions.url, null);
 

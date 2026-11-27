@@ -17,5 +17,13 @@
     "htmlText": "htmlText",
     "myColor": "mijnKleur",
     "myColor_tooltip": "Beschrijving van\nmyColor",
-    "options for the http.request (usually empty, unless you make test)": "opties voor het http.request (meestal leeg, tenzij je een test maakt)"
+    "options for the http.request (usually empty, unless you make test)": "opties voor het http.request (meestal leeg, tenzij je een test maakt)",
+    "My Colors": "Mijn kleuren",
+    "My Stats": "Mijn statistieken",
+    "My Templates": "Mijn sjablonen",
+    "My Triggers": "Mijn triggers",
+    "exclude routines (check if older FB)": "Routines overslaan (inschakelen bij oudere FRITZ!Box-modellen)",
+    "exclude statistics (check if older FB)": "Statistieken overslaan (inschakelen bij oudere FRITZ!Box-modellen)",
+    "exclude templates (check if older FB)": "Sjablonen overslaan (inschakelen bij oudere FRITZ!Box-modellen)",
+    "must be checked (true) to activate the reduced logging": "Waar mogelijk alleen gewijzigde waarden schrijven"
 }

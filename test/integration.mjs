@@ -43,14 +43,6 @@ const hkr_batt = fs.readFileSync(new URL('./data/hkr_response.xml', import.meta.
 const guestWlan = fs.readFileSync(new URL('./data/guest_wlan_form.xml', import.meta.url));
 */
 
-function encrypt(key, value) {
-    let result = '';
-    for (let i = 0; i < value.length; ++i) {
-        result += String.fromCharCode(key[i % key.length].charCodeAt(0) ^ value.charCodeAt(i));
-    }
-    return result;
-}
-
 function delay(t, val) {
     return new Promise(function (resolve) {
         setTimeout(function () {
@@ -96,8 +88,7 @@ tests.integration(path.join(__dirname, '..'), {
                     native: {
                         fritz_ip: 'http://localhost:3333',
                         fritz_user: 'admin',
-                        //obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-                        fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
+                        fritz_password: 'password',
                         fritz_interval: 300,
                         fritz_strictssl: true,
                         fritz_writeonhyst: true,
@@ -114,8 +105,7 @@ tests.integration(path.join(__dirname, '..'), {
 						native: {
 							fritz_ip: 'http://localhost:3333',
 							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
+							fritz_password: 'password',
 							fritz_interval: 300,
 							fritz_strictssl: true
 						}
@@ -3196,8 +3186,7 @@ tests.integration(path.join(__dirname, '..'), {
 						native: {
 							fritz_ip: 'http://localhost:3333',
 							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
+							fritz_password: 'password',
 							fritz_interval: 300,
 							fritz_strictssl: true
 						}
@@ -3597,8 +3586,7 @@ tests.integration(path.join(__dirname, '..'), {
 						native: {
 							fritz_ip: 'http://localhost:3333',
 							fritz_user: 'admin',
-							//obj.native.fritz_pw = encrypt(systemConfig.native.secret, 'password');
-							fritz_pw: encrypt('Zgfr56gFe87jJOM', 'password'),
+							fritz_password: 'password',
 							fritz_interval: 300,
 							fritz_strictssl: true
 						}

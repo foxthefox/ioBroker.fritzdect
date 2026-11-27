@@ -3726,6 +3726,7 @@ class Fritzdect extends utils.Adapter {
                                         ack: true,
                                     });
                                 } else if (key === 'levelpercentage') {
+                                    const dimmerRole = role === 'light' ? 'level.dimmer' : 'level';
                                     await this.createValueCtrl(
                                         identifier,
                                         'levelpercentage',
@@ -3733,12 +3734,12 @@ class Fritzdect extends utils.Adapter {
                                         0,
                                         100,
                                         '%',
-                                        'level',
+                                        dimmerRole,
                                     );
                                     //state role change
                                     this.extendObject(
                                         `DECT_${identifier}.levelpercentage`,
-                                        { common: { role: 'level' } },
+                                        { common: { role: dimmerRole } },
                                         err => {
                                             if (err) {
                                                 this.log.error(String(err));
